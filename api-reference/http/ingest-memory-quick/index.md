@@ -1,0 +1,91 @@
+# Quick ingest (storeVerbatim when skip_extraction=true).
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `ingestMemoryQuick` from the vendored `atomicmemory-core` spec.
+
+**POST** `/v1/memories/ingest/quick`
+
+Quick ingest (storeVerbatim when skip_extraction=true).
+
+## Request Body (application/json)
+
+```json
+{
+  "description": "Ingest a conversation transcript. User-scoped unless workspace_id + agent_id are both provided.",
+  "properties": {
+    "agent_id": {
+      "description": "Optional agent identifier. Silently dropped if empty / non-string.",
+      "type": "string"
+    },
+    "config_override": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "description": "Optional per-request overlay on RuntimeConfig. Keys correspond to RuntimeConfig field names; values must be primitives (boolean / number / string / null). Unknown keys are accepted but surfaced via the X-Atomicmem-Unknown-Override-Keys response header and a server-side warning log, they do not cause a 400. Scope: just this request, no server mutation.",
+      "type": "object"
+    },
+    "conversation": {
+      "description": "Required. conversation.",
+      "minLength": 1,
+      "type": "string"
+    },
+    "skip_extraction": {
+      "type": "boolean"
+    },
+    "source_site": {
+      "description": "Required. source_site.",
+      "minLength": 1,
+      "type": "string"
+    },
+    "source_url": {
+      "type": "string"
+    },
+    "user_id": {
+      "description": "Required. user_id.",
+      "minLength": 1,
+      "type": "string"
+    },
+    "visibility": {
+      "description": "Visibility (one of agent_only / restricted / workspace). Invalid values silently drop to undefined.",
+      "enum": [
+        "agent_only",
+        "restricted",
+        "workspace"
+      ],
+      "type": "string"
+    },
+    "workspace_id": {
+      "description": "Optional workspace identifier. Silently dropped if empty / non-string.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_id",
+    "conversation",
+    "source_site"
+  ],
+  "type": "object"
+}
+```
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 200 | Ingest result. |
+| 400 | Input validation error |
+| 500 | Internal server error |

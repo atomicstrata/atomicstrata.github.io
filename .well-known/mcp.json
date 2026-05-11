@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2025-03-26",
+  "name": "atomicmemory",
+  "description": "AtomicMemory MCP server, exposes memory_search, memory_ingest, and memory_package over MCP. Currently local-install (stdio) only; a hosted HTTP endpoint is on the roadmap.",
+  "documentation": "https://docs.atomicmemory.ai/integrations/coding-agents/claude-code",
+  "transport": {
+    "type": "stdio",
+    "install": {
+      "method": "local-build",
+      "repository": "https://github.com/atomicmemory/atomicmemory-integrations",
+      "package": "@atomicmemory/mcp-server",
+      "binary": "packages/mcp-server/dist/bin.js",
+      "instructions": "https://docs.atomicmemory.ai/integrations/coding-agents/claude-code"
+    }
+  },
+  "tools": [
+    {
+      "name": "memory_search",
+      "description": "Semantic retrieval against AtomicMemory. Use before answering questions that reference past work or prior decisions."
+    },
+    {
+      "name": "memory_ingest",
+      "description": "AUDN-mutating ingest (mode: text or messages) or deterministic verbatim ingest (mode: verbatim). Saves durable facts, preferences, decisions."
+    },
+    {
+      "name": "memory_package",
+      "description": "Token-budgeted curated context package. Use when broad context matters more than a single fact lookup."
+    }
+  ],
+  "config": {
+    "env": [
+      { "name": "ATOMICMEMORY_API_URL", "required": true, "description": "URL of the AtomicMemory core HTTP service." },
+      { "name": "ATOMICMEMORY_API_KEY", "required": true, "secret": true, "description": "API key for the AtomicMemory core service." },
+      { "name": "ATOMICMEMORY_PROVIDER", "required": true, "enum": ["atomicmemory", "mem0"], "description": "Backend provider, atomicmemory for AtomicMemory core, mem0 for the mem0 backend." },
+      { "name": "ATOMICMEMORY_SCOPE_USER", "required": false, "description": "User scope for the MCP session." },
+      { "name": "ATOMICMEMORY_SCOPE_WORKSPACE", "required": false, "description": "Workspace scope for the MCP session." },
+      { "name": "ATOMICMEMORY_SCOPE_AGENT", "required": false, "description": "Agent scope for the MCP session." }
+    ]
+  },
+  "status": "local-install-only",
+  "hostedEndpoint": null,
+  "homepage": "https://docs.atomicmemory.ai",
+  "license": "Apache-2.0"
+}
