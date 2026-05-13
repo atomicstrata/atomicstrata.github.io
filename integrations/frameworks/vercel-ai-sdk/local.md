@@ -2,65 +2,34 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Published package
+Give Vercel AI SDK applications persistent memory backed by AtomicMemory. The adapter retrieves relevant memories before a model call, injects them as guarded context, and ingests the completed turn after the model returns.
 
-`@atomicmemory/vercel-ai` is published to npm. Install it in the app that already depends on `@atomicmemory/atomicmemory-sdk`.
+## Quick start
 
-The adapter gives Vercel AI SDK calls the same memory loop used elsewhere in AtomicMemory:
-
--   retrieve relevant memories before a model call
--   render them as a guarded system message
--   ingest the completed turn after the model returns
--   keep the adapter independent of `ai` package version churn
-
-## Primitives
-
-| API | Use when |
-| --- | --- |
-| `retrieve()` | Tool-call or multimodal flows where you inject memory into the original AI SDK message array yourself. |
-| `augmentWithMemory()` | Text-only flows where prepending a system message to `Message[]` is safe. |
-| `ingestTurn()` | Post-call capture. Persists the original messages plus the assistant completion. |
-| `withMemory()` | Text-only convenience wrapper around `augmentWithMemory()` + your model call + `ingestTurn()`. |
-| `fromModelMessage()` / `fromModelMessages()` | AI SDK v5 bridge from `ModelMessage` content parts into AtomicMemory's text-only `Message` shape. |
-
-The adapter intentionally does **not** import from `ai`. It accepts AtomicMemory SDK `Message` objects (`role` + string `content`) and delegates the model call to your code.
-
-## Install
-
-Install the adapter from npm:
+### 1. Install the adapter
 
 ```bash
 npm install @atomicmemory/vercel-ai @atomicmemory/atomicmemory-sdk
 ```
 
-## Configure memory
+### 2. Configure memory
 
 ```ts
 import { MemoryClient } from '@atomicmemory/atomicmemory-sdk';
 
 const memory = new MemoryClient({
-  providers: {
-    atomicmemory: {},
-  },
+  providers: { atomicmemory: {} },
   defaultProvider: 'atomicmemory',
 });
 
 await memory.initialize();
-```
 
-The adapter resolves the AtomicMemory service, credentials, and base user identity automatically. The current session name is used as that default identity.
-
-Use one stable `scope` for both retrieval and ingest:
-
-```ts
 const scope = {
   namespace: projectId,
 };
 ```
 
-## Text-only flow
-
-Use `withMemory()` when your messages are plain string-content messages:
+### 3. Wrap a model call
 
 ```ts
 import { streamText } from 'ai';
@@ -77,17 +46,26 @@ const result = await withMemory({
 });
 ```
 
-## Tool-call or multimodal flow
+## Features
 
-Do not feed flattened memory messages back into Vercel AI SDK once tool or multimodal parts are present. Flatten only for memory search / ingest, then inject the retrieved system message into your original `ModelMessage[]`.
+-   **Pre-call recall.** Search AtomicMemory before `generateText`, `streamText`, or your own AI SDK runner.
+-   **Guarded context injection.** Retrieved memories are added as context, not treated as application instructions.
+-   **Post-call ingest.** Completed turns are stored with `mode: "messages"` so AtomicMemory can add, update, delete, or no-op extracted facts.
+-   **Version isolation.** The adapter accepts AtomicMemory SDK message shapes and does not import from `ai`.
+
+## Modes of operation
+
+### Text-only convenience mode
+
+Use `withMemory()` when messages are plain string-content messages and prepending a guarded system message is safe.
+
+### Split retrieval and ingest
+
+Use split primitives for tool-call or multimodal flows so your original AI SDK message parts stay intact:
 
 ```ts
 import { generateText, type ModelMessage } from 'ai';
-import {
-  fromModelMessages,
-  retrieve,
-  ingestTurn,
-} from '@atomicmemory/vercel-ai';
+import { fromModelMessages, ingestTurn, retrieve } from '@atomicmemory/vercel-ai';
 
 const modelMessages: ModelMessage[] = [/* your real conversation */];
 const flat = fromModelMessages(modelMessages);
@@ -112,22 +90,29 @@ await ingestTurn(memory, {
 });
 ```
 
+## Adapter primitives
+
+| API | Maps to | Purpose |
+| --- | --- | --- |
+| `retrieve()` | `MemoryClient.search` | Search memory and return an injectable system message. |
+| `augmentWithMemory()` | `MemoryClient.search` | Prepend guarded memory context for text-only message arrays. |
+| `ingestTurn()` | `MemoryClient.ingest` | Store completed turns with `mode: "messages"`. |
+| `withMemory()` | search + ingest | Convenience wrapper around recall, model call, and ingest. |
+| `fromModelMessage()` / `fromModelMessages()` | message conversion | Flatten AI SDK v5 content parts for memory search or ingest. |
+
 ## Ingest policy
 
-`ingestTurn()` uses SDK `mode: "messages"` so AtomicMemory's AUDN mutation can add, update, delete, or no-op extracted facts instead of accumulating duplicates.
+System messages are excluded by default because they usually contain app instructions, policies, or retrieved context. Opt in only when system content is user-authored and should be remembered.
 
-System messages are excluded by default because they usually contain application instructions, policies, or retrieved context. If your system messages are user-authored content worth remembering, opt in explicitly:
+## Troubleshooting
 
-```ts
-await ingestTurn(memory, {
-  messages,
-  completion: text,
-  scope,
-  includeRoles: ['system', 'user', 'assistant', 'tool'],
-});
-```
+| Symptom | Fix |
+| --- | --- |
+| Scoped search misses a new fact | Confirm retrieval and ingest use the same `scope`. |
+| Exact identifiers are hard to find | Run `atomicmemory-core` with hybrid search enabled for factual smoke tests. |
+| Tool or multimodal messages break | Use `retrieve()` instead of `augmentWithMemory()` so original message parts stay intact. |
 
-## Backend search note
+### Backend tuning
 
 For factual smoke tests with unique strings, names, or numeric identifiers, run `atomicmemory-core` with keyword/hybrid retrieval enabled:
 
@@ -143,7 +128,7 @@ If core runs in Docker, recreate the app container after editing `atomicmemory-c
 docker compose up -d --force-recreate app
 ```
 
-Verify:
+Verify the backend reports hybrid search:
 
 ```bash
 curl -s http://localhost:3050/v1/memories/health
@@ -151,9 +136,11 @@ curl -s http://localhost:3050/v1/memories/health
 
 The response should include `"hybrid_search_enabled": true`.
 
-Namespace behavior
+Use the same SDK `scope` for `retrieve()` and `ingestTurn()`. If a smoke test writes successfully but scoped search misses the new fact, inspect the stored memory's `namespace`; older backend/SDK combinations may derive it from `source_site` during extracted `messages` ingest.
 
-Use the same SDK `scope` for `retrieve()` and `ingestTurn()`. Current `atomicmemory-core` can still derive the stored `namespace` from `source_site` during extracted `messages` ingest unless the backend/SDK version explicitly forwards and persists the caller's namespace on ingest. If a smoke test writes successfully but scoped search misses the new fact, inspect the stored memory's `namespace` and verify the search `namespace_scope` matches it.
+## Development
+
+For source builds, adapter development, and local testing, see the [integration contributor notes](/integrations/overview#contributing).
 
 ## See also
 

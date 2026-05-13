@@ -2,45 +2,23 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Published package
+Give OpenAI Agents SDK applications persistent memory backed by AtomicMemory. The adapter searches long-term memory before `run()`, injects retrieved context into model-visible input, and ingests the completed turn after the run finishes.
 
-`@atomicmemory/openai-agents` is published to npm. Install it in the app that already depends on `@atomicmemory/atomicmemory-sdk`.
+## Quick start
 
-The adapter wires AtomicMemory into the [OpenAI Agents SDK for TypeScript](https://openai.github.io/openai-agents-js/) without replacing the SDK's own session layer:
-
--   retrieve relevant long-term memories before `run()`
--   inject retrieved memories as a guarded `system()` input item
--   ingest the completed turn after `run()`
--   expose optional `memory_search` and `memory_ingest` function tools through the SDK's `tool()` helper
-
-The OpenAI Agents SDK separates local run context from model-visible context. Local `context` is available to tools and hooks, but the model only sees conversation input. That is why this adapter injects retrieved memories into the run input instead of only storing them in `context`.
-
-## Primitives
-
-| API | Use when |
-| --- | --- |
-| `augmentInputWithMemory()` | You want to search memory before `run()` and pass the augmented `AgentInputItem[]` yourself. |
-| `ingestAgentTurn()` | You want explicit post-run capture after `run()`, including streamed runs after `completed`. |
-| `runWithMemory()` | You want a convenience wrapper around pre-run retrieval, your `run()` call, and post-run ingest. |
-| `createMemoryTools()` | You want the agent to call `memory_search` or `memory_ingest` as function tools during a run. |
-
-## Install
-
-Install the adapter from npm:
+### 1. Install the adapter
 
 ```bash
 npm install @atomicmemory/openai-agents @atomicmemory/atomicmemory-sdk
 ```
 
-## Configure memory
+### 2. Configure memory
 
 ```ts
 import { MemoryClient } from '@atomicmemory/atomicmemory-sdk';
 
 const memory = new MemoryClient({
-  providers: {
-    atomicmemory: {},
-  },
+  providers: { atomicmemory: {} },
   defaultProvider: 'atomicmemory',
 });
 
@@ -51,9 +29,7 @@ const scope = {
 };
 ```
 
-The adapter resolves the AtomicMemory service, credentials, and base user identity automatically. The current session name is used as that default identity. Use the same `scope` for retrieval, tools, and ingest when you want namespace- or agent-level partitioning on top of that default.
-
-## Convenience flow
+### 3. Wrap a run
 
 ```ts
 import { Agent, run } from '@openai/agents';
@@ -70,22 +46,28 @@ const { result, retrieved } = await runWithMemory({
   input: 'What did we decide about billing retries?',
   run: (input) => run(agent, input),
 });
-
-console.log(result.finalOutput, retrieved.length);
 ```
 
-`runWithMemory()` passes `AgentInputItem[]` to your supplied runner. It returns the original run result plus retrieved-memory and ingest telemetry.
+## Features
 
-## Split retrieval and ingest
+-   **Pre-run recall.** Search AtomicMemory before calling `run()`.
+-   **Guarded input injection.** Retrieved memories are added to model-visible input because SDK local `context` is not shown to the model.
+-   **Post-run ingest.** Completed runs are stored with `mode: "messages"` for extracted memory updates.
+-   **Optional function tools.** Agents can call `memory_search` and `memory_ingest` during a run.
 
-Use the split primitives when your app already controls streaming, sessions, guardrails, or run retries.
+## Modes of operation
+
+### Convenience mode
+
+Use `runWithMemory()` when you want one wrapper around recall, `run()`, and ingest.
+
+### Split retrieval and ingest
+
+Use split primitives when your app already controls streaming, sessions, guardrails, or retries:
 
 ```ts
 import { run } from '@openai/agents';
-import {
-  augmentInputWithMemory,
-  ingestAgentTurn,
-} from '@atomicmemory/openai-agents';
+import { augmentInputWithMemory, ingestAgentTurn } from '@atomicmemory/openai-agents';
 
 const { input, retrieved } = await augmentInputWithMemory(memory, {
   scope,
@@ -103,25 +85,9 @@ await ingestAgentTurn(memory, {
 });
 ```
 
-For streamed runs, wait for the SDK result to settle and pass text explicitly if `finalOutput` is not the exact content you want to store:
+### Function tools
 
-```ts
-const stream = await run(agent, input, { stream: true });
-await stream.completed;
-
-await ingestAgentTurn(memory, {
-  scope,
-  input,
-  output: String(stream.finalOutput ?? ''),
-});
-```
-
-## Function tools
-
-`createMemoryTools()` returns two OpenAI Agents SDK function tools:
-
--   `memory_search` - semantic retrieval with the configured AtomicMemory scope
--   `memory_ingest` - stores durable preferences, decisions, conventions, or facts
+Use function tools when the agent should decide when memory matters:
 
 ```ts
 import { Agent } from '@openai/agents';
@@ -138,22 +104,30 @@ const agent = new Agent({
 });
 ```
 
-Use tools for agent-decided memory access. Use `augmentInputWithMemory()` or `runWithMemory()` when every run should get deterministic memory retrieval before the first model call.
+## Adapter primitives
+
+| API | Maps to | Purpose |
+| --- | --- | --- |
+| `augmentInputWithMemory()` | `MemoryClient.search` | Search memory before `run()` and return augmented `AgentInputItem[]`. |
+| `ingestAgentTurn()` | `MemoryClient.ingest` | Store completed runs, including streamed runs after completion. |
+| `runWithMemory()` | search + ingest | Convenience wrapper around recall, `run()`, and ingest. |
+| `createMemoryTools()` | `tool()` helper | Expose `memory_search` and `memory_ingest` as function tools. |
 
 ## Ingest policy
 
-`ingestAgentTurn()` uses SDK `mode: "messages"` so AtomicMemory's AUDN mutation can add, update, delete, or no-op extracted facts instead of accumulating duplicates.
+System inputs are excluded by default because they usually contain app instructions, policies, or retrieved context. Opt in only when system content is user-authored and should be remembered.
 
-System messages are excluded by default because they usually contain app instructions, policies, or retrieved context. If your system inputs are user-authored content worth remembering, opt in explicitly:
+## Troubleshooting
 
-```ts
-await ingestAgentTurn(memory, {
-  input,
-  result,
-  scope,
-  includeRoles: ['system', 'user', 'assistant', 'tool'],
-});
-```
+| Symptom | Fix |
+| --- | --- |
+| Retrieved memory is not visible to the model | Confirm you pass the augmented input to `run()`, not only local `context`. |
+| Streamed output is missing from memory | Wait for the stream to complete before calling `ingestAgentTurn()`. |
+| Unexpected memory sharing | Use a narrower `scope.namespace`, `scope.agent`, or `scope.thread`. |
+
+## Development
+
+For source builds, adapter development, and local testing, see the [integration contributor notes](/integrations/overview#contributing).
 
 ## See also
 

@@ -2,17 +2,26 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
+AtomicMemory support for LangChain JS is planned. The adapter will expose durable semantic memory through LangChain-native memory and tool surfaces.
+
 Planned
 
-This adapter is on the roadmap. The shape below is the intended API, not a shipped package.
+This adapter is on the roadmap. The API below is the intended shape, not a shipped package.
 
-## Intended shape
+## What you get
 
-`@atomicmemory/langchain` will expose two surfaces:
+-   **Chat memory surface.** A planned `AtomicMemoryChatMemory` for chains that expect LangChain memory.
+-   **Agent tools.** Planned `memory_search` and `memory_ingest` tools for agent executors.
+-   **Backend-agnostic SDK path.** The adapter will use the AtomicMemory SDK provider registry.
 
-### As a BaseChatMemory
+## Planned API
 
-Drop AtomicMemory in anywhere a LangChain chat memory is expected:
+| API | Purpose |
+| --- | --- |
+| `AtomicMemoryChatMemory` | Drop-in chat memory for chains that expect LangChain memory. |
+| `createAtomicMemoryTools()` | Create `memory_search` and `memory_ingest` tools for agent executors. |
+
+## Intended usage
 
 ```ts
 import { ConversationChain } from 'langchain/chains';
@@ -25,10 +34,6 @@ const memory = new AtomicMemoryChatMemory({
 
 const chain = new ConversationChain({ llm, memory });
 ```
-
-### As tools
-
-Expose `memory_search` / `memory_ingest` as LangChain `Tool`s for agent executors that prefer explicit tool calls over implicit memory injection:
 
 ```ts
 import { createAtomicMemoryTools } from '@atomicmemory/langchain';
