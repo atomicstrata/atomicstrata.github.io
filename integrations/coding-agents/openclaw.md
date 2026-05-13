@@ -8,7 +8,7 @@ AtomicMemory integrates with OpenClaw as a plugin and skill bundle backed by the
 
 ### Local
 
-Use this when you want the self-managed OpenClaw path and need the current clone-from-source workflow.
+Use this when you want the self-managed OpenClaw path with the published plugin install flow.
 
 See [OpenClaw Local](/integrations/coding-agents/openclaw/local).
 

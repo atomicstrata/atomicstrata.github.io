@@ -8,7 +8,7 @@ AtomicMemory integrates with Claude Code through the shared MCP server, a memory
 
 ### Local
 
-Use this when you want the self-managed Claude Code path and need the current clone-from-source workflow.
+Use this when you want the self-managed Claude Code path with the published plugin and MCP package flow.
 
 See [Claude Code Local](/integrations/coding-agents/claude-code/local).
 

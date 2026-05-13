@@ -10,8 +10,6 @@ The provider is backed by `atomicmemory-python`, keeping Hermes-specific code fo
 
 ### Local
 
-Use this when you want the self-managed Hermes path and need the current clone-from-source workflow.
-
 See [Hermes Local](/integrations/coding-agents/hermes/local).
 
 ### Cloud

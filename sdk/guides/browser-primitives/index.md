@@ -21,9 +21,9 @@ This is the right path when:
 import {
   StorageManager,
   IndexedDBStorageAdapter,
-} from '@atomicmemory/atomicmemory-sdk/storage';
-import { EmbeddingGenerator } from '@atomicmemory/atomicmemory-sdk/embedding';
-import { SemanticSearch } from '@atomicmemory/atomicmemory-sdk/search';
+} from '@atomicmemory/sdk/storage';
+import { EmbeddingGenerator } from '@atomicmemory/sdk/embedding';
+import { SemanticSearch } from '@atomicmemory/sdk/search';
 
 // 1. Storage
 const adapter = new IndexedDBStorageAdapter();
@@ -73,7 +73,7 @@ for (const hit of results.slice(0, 3)) {
 }
 ```
 
-The exact `SemanticSearch` API differs slightly by version, import the types from `@atomicmemory/atomicmemory-sdk/search` and read the shape. The pattern is always: vectorize the query, score it against stored vectors, rank.
+The exact `SemanticSearch` API differs slightly by version, import the types from `@atomicmemory/sdk/search` and read the shape. The pattern is always: vectorize the query, score it against stored vectors, rank.
 
 ## When to graduate to MemoryClient
 

@@ -11,7 +11,7 @@ Two scenarios come up in practice: runtime swap (flip providers without restarti
 `MemoryClient` is initialized with a `providers` map and an optional `defaultProvider`; swapping means destroying the current client and constructing a new one. There is no live reconfigure path, by design, providers hold HTTP clients, caches, and init state, and a clean reconstruction is easier to reason about than partial rewiring.
 
 ```typescript
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk';
+import { MemoryClient } from '@atomicmemory/sdk';
 
 async function withProvider(defaultProvider: 'atomicmemory' | 'mem0') {
   const memory = new MemoryClient({

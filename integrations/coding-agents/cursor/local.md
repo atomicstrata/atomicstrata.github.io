@@ -4,7 +4,7 @@
 
 Planned
 
-A packaged Cursor integration is still on the roadmap. The shared AtomicMemory MCP server works with Cursor's MCP support today, but install is source-only and manual.
+A packaged Cursor integration is still on the roadmap. The shared AtomicMemory MCP server works with Cursor's MCP support today; use the published package once it is available, or the source-only flow until then.
 
 ## Intended Shape
 
@@ -17,39 +17,23 @@ The packaged integration is expected to include a one-click MCP registration flo
 
 ## Prepare the MCP Server
 
-Clone `atomicmemory-sdk` and `atomicmemory-integrations` side by side, then build the SDK before the MCP server:
+Use the published MCP server directly. No local build is required:
 
 ```bash
-git clone https://github.com/atomicstrata/atomicmemory-sdk.git
-git clone https://github.com/atomicstrata/atomicmemory-integrations.git
-
-cd atomicmemory-sdk
-pnpm install
-pnpm build
-
-cd ../atomicmemory-integrations
-pnpm install
-pnpm --filter @atomicmemory/mcp-server build
-```
-
-The built server entrypoint is:
-
-```text
-atomicmemory-integrations/packages/mcp-server/dist/bin.js
+npx -y @atomicmemory/mcp-server --help
 ```
 
 ## Manual MCP Setup
 
-Register the MCP server in Cursor's MCP settings. Because `@atomicmemory/mcp-server` is not published to npm yet, point Cursor at the local built binary:
+Register the MCP server in Cursor's MCP settings using the published npm package:
 
 ```json
 {
   "mcpServers": {
     "atomicmemory": {
-      "command": "bash",
-      "args": ["-c", "exec node \"$ATOMICMEMORY_MCP_SERVER_BIN\""],
+      "command": "npx",
+      "args": ["-y", "@atomicmemory/mcp-server"],
       "env": {
-        "ATOMICMEMORY_MCP_SERVER_BIN": "/absolute/path/to/atomicmemory-integrations/packages/mcp-server/dist/bin.js",
         "ATOMICMEMORY_PROVIDER": "atomicmemory",
         "ATOMICMEMORY_API_URL": "https://memory.yourco.com",
         "ATOMICMEMORY_API_KEY": "am_live_...",
@@ -62,7 +46,7 @@ Register the MCP server in Cursor's MCP settings. Because `@atomicmemory/mcp-ser
 }
 ```
 
-`ATOMICMEMORY_MCP_SERVER_BIN`, `ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, and at least one `ATOMICMEMORY_SCOPE_*` value are required by the MCP server. Set `ATOMICMEMORY_API_KEY` when your provider requires auth. Add narrower `ATOMICMEMORY_SCOPE_*` values when you need agent, namespace, or thread partitioning.
+`ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, and at least one `ATOMICMEMORY_SCOPE_*` value are required by the MCP server. Set `ATOMICMEMORY_API_KEY` when your provider requires auth. Add narrower `ATOMICMEMORY_SCOPE_*` values when you need agent, namespace, or thread partitioning.
 
 ## Available MCP Tools
 
@@ -93,11 +77,11 @@ The [Codex Local skill](/integrations/coding-agents/codex/local#memory-protocol-
 
 ## Troubleshooting
 
--   **`npx @atomicmemory/mcp-server` does not work** - the MCP server is source-only for now. Build it locally and set `ATOMICMEMORY_MCP_SERVER_BIN`.
+-   **`npx -y @atomicmemory/mcp-server` fails** - confirm the package version is published and that your environment can reach npm.
 
 -   **Unexpected memory sharing** - set `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or another optional `ATOMICMEMORY_SCOPE_*` value if you need narrower isolation than the default session-based identity.
 
--   **No memory tools in Cursor** - restart Cursor after changing MCP settings and verify the path in `ATOMICMEMORY_MCP_SERVER_BIN` is absolute.
+-   **No memory tools in Cursor** - restart Cursor after changing MCP settings and verify the AtomicMemory env vars are present in the MCP entry.
 
 ## See Also
 

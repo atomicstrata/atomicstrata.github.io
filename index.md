@@ -39,4 +39,4 @@ The fastest path is the [Quickstart](/quickstart): clone the core repo, set an A
 
 Core is HTTP-first, so any language works today. The [TypeScript SDK](/sdk/overview) gives TypeScript and JavaScript consumers typed request and response shapes, richer ergonomics, scope-aware helpers, and a pluggable provider model that decouples your app from any particular memory engine, but nothing about core requires it.
 
-AtomicMemory is [Apache-2.0 licensed](https://github.com/atomicmemory/atomicmemory-core/blob/main/LICENSE). Self-host it, fork it, run it behind your own gateway, the platform is yours.
+AtomicMemory is [Apache-2.0 licensed](https://github.com/atomicstrata/atomicmemory-core/blob/main/LICENSE). Self-host it, fork it, run it behind your own gateway, the platform is yours.

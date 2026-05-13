@@ -2,9 +2,9 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Source-only
+Published package
 
-`@atomicmemory/openai-agents` lives in the integrations repo under `adapters/openai-agents-sdk`. It is not published to npm yet; install it from a local clone or workspace package until a registry release is cut.
+`@atomicmemory/openai-agents` is published to npm. Install it in the app that already depends on `@atomicmemory/atomicmemory-sdk`.
 
 The adapter wires AtomicMemory into the [OpenAI Agents SDK for TypeScript](https://openai.github.io/openai-agents-js/) without replacing the SDK's own session layer:
 
@@ -26,14 +26,11 @@ The OpenAI Agents SDK separates local run context from model-visible context. Lo
 
 ## Install
 
-From the integrations repo:
+Install the adapter from npm:
 
 ```bash
-pnpm install
-pnpm --filter @atomicmemory/openai-agents build
+npm install @atomicmemory/openai-agents @atomicmemory/atomicmemory-sdk
 ```
-
-Then depend on the local package from your workspace, or use your package manager's `file:` / workspace linking support. The current source package depends on the local `@atomicmemory/atomicmemory-sdk` checkout, so publish order matters: publish or link the SDK first, then the adapter.
 
 ## Configure memory
 

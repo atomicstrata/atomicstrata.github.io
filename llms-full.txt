@@ -47,7 +47,7 @@ The fastest path is the [Quickstart](/quickstart): clone the core repo, set an A
 
 Core is HTTP-first, so any language works today. The [TypeScript SDK](/sdk/overview) gives TypeScript and JavaScript consumers typed request and response shapes, richer ergonomics, scope-aware helpers, and a pluggable provider model that decouples your app from any particular memory engine, but nothing about core requires it.
 
-AtomicMemory is [Apache-2.0 licensed](https://github.com/atomicmemory/atomicmemory-core/blob/main/LICENSE). Self-host it, fork it, run it behind your own gateway, the platform is yours.
+AtomicMemory is [Apache-2.0 licensed](https://github.com/atomicstrata/atomicmemory-core/blob/main/LICENSE). Self-host it, fork it, run it behind your own gateway, the platform is yours.
 
 ---
 
@@ -1566,40 +1566,9 @@ The CLI uses the same backend-agnostic SDK provider model as the rest of AtomicM
 
 ## Install
 
-Source-only
-
-`@atomicmemory/cli` currently depends on the local `@atomicmemory/atomicmemory-sdk` checkout. Build and link it from [`atomicmemory-integrations`](https://github.com/atomicstrata/atomicmemory-integrations) until the SDK and CLI are published.
-
-Clone `atomicmemory-sdk` and `atomicmemory-integrations` side-by-side, then build the SDK before the CLI:
-
 ```bash
-git clone https://github.com/atomicstrata/atomicmemory-sdk.git
-git clone https://github.com/atomicstrata/atomicmemory-integrations.git
-
-cd atomicmemory-sdk
-pnpm install
-pnpm build
-
-cd ../atomicmemory-integrations
-pnpm install
-pnpm --filter @atomicmemory/cli build
-cd packages/cli
-pnpm link --global
-```
-
-If pnpm has no global bin directory yet:
-
-```bash
-pnpm setup
-source ~/.zshrc
-cd /path/to/atomicmemory-integrations/packages/cli
-pnpm link --global
-```
-
-You can also run the built binary without global linking:
-
-```bash
-node /path/to/atomicmemory-integrations/packages/cli/dist/bin.js
+npm install -g @atomicmemory/cli
+atomicmemory
 ```
 
 ## Configure
@@ -1866,7 +1835,7 @@ AtomicMemory integrates with Claude Code through the shared MCP server, a memory
 
 ### Local
 
-Use this when you want the self-managed Claude Code path and need the current clone-from-source workflow.
+Use this when you want the self-managed Claude Code path with the published plugin and MCP package flow.
 
 See [Claude Code Local](/integrations/coding-agents/claude-code/local).
 
@@ -1904,201 +1873,227 @@ Source: https://docs.atomicmemory.ai/integrations/coding-agents/claude-code/loca
 
 > Agent index: [llms.txt](/llms.txt)
 
-Give Claude Code persistent, cross-session memory backed by AtomicMemory. The plugin installs one MCP server exposing `memory_search`, `memory_ingest`, `memory_package`, and `memory_list`, a `SKILL.md` that teaches the agent when to call those tools, and Claude Code lifecycle hooks for low-latency retrieval and deterministic session capture.
+Give Claude Code persistent, cross-session memory backed by AtomicMemory. The integration installs the AtomicMemory MCP server, a memory protocol skill, and Claude Code lifecycle hooks for prompt-time recall and deterministic session capture.
 
-Source-only
+## Quick start
 
-`@atomicmemory/mcp-server` and the Claude Code plugin are not published to npm or to the Claude plugin marketplace yet. Install from a local clone of [`atomicmemory-integrations`](https://github.com/atomicstrata/atomicmemory-integrations).
-
-## What you get
-
--   **Durable memory across sessions.** Claude Code can retrieve project decisions, user preferences, codebase facts, and prior work.
--   **Prompt-time retrieval.** `UserPromptSubmit` searches memory before the model turn and injects matches as untrusted reference context.
--   **Deterministic lifecycle capture.** `PostCompact`, `Stop`, and `TaskCompleted` store compact records without asking the model to reconstruct everything.
--   **Scope-aware retrieval.** `user` / `agent` / `namespace` / `thread` scopes are threaded through MCP calls. Hook writes keep content clean and carry attribution through `sourceSite` / `sourceUrl` until core supports first-class hook metadata.
--   **Backend-agnostic.** Point the plugin at self-hosted AtomicMemory core or another provider registered in the SDK's `MemoryProvider` registry.
-
-## Install
-
-Clone `atomicmemory-sdk` and `atomicmemory-integrations` side-by-side, then build each in order:
+### 1. Install the plugin
 
 ```bash
-git clone https://github.com/atomicstrata/atomicmemory-sdk.git
-git clone https://github.com/atomicstrata/atomicmemory-integrations.git
-
-cd atomicmemory-sdk
-pnpm install
-pnpm build
-
-cd ../atomicmemory-integrations
-pnpm install
-pnpm --filter @atomicmemory/mcp-server build
+claude plugin marketplace add atomicstrata/atomicmemory
+claude plugin install atomicmemory
 ```
 
-Install `jq` and `curl` for the shell hooks, then export config before launching Claude Code:
+### 2. Choose a memory extraction provider
+
+For personal local use, use Claude Code's own authenticated session:
 
 ```bash
-export ATOMICMEMORY_MCP_SERVER_BIN="$HOME/path/to/atomicmemory-integrations/packages/mcp-server/dist/bin.js"
-export ATOMICMEMORY_PROVIDER="atomicmemory"
+export ATOMICMEMORY_LLM_PROVIDER=claude-code
+```
+
+This requires Claude Code to be installed and logged in locally. It does not require a separate Anthropic API key, but it consumes the user's Claude Code / Claude subscription limits and is not intended for hosted or team deployments.
+
+For production or team use, use a normal API-backed provider instead:
+
+```bash
+export ANTHROPIC_API_KEY="sk-ant-..."
+# or
+export OPENAI_API_KEY="sk-..."
+```
+
+### 3. Start Claude Code
+
+```bash
+claude
+```
+
+The plugin starts and manages the local AtomicMemory runtime automatically. It captures completed work, recalls relevant memory before prompts, and exposes memory tools to Claude Code.
+
+### 4. Verify memory tools
+
+Ask Claude Code to list its MCP tools. You should see:
+
+-   `memory_search`
+-   `memory_ingest`
+-   `memory_package`
+-   `memory_list`
+
+For a tools-only setup, register the published MCP server directly:
+
+```json
+{
+  "mcpServers": {
+    "atomicmemory": {
+      "command": "npx",
+      "args": ["-y", "@atomicmemory/mcp-server"]
+    }
+  }
+}
+```
+
+## Features
+
+-   **Cross-session recall.** Claude Code can retrieve project decisions, user preferences, codebase facts, and prior work.
+-   **Prompt-time retrieval.** `UserPromptSubmit` searches memory before the model turn and injects matching memories as untrusted reference context.
+-   **Deterministic capture.** `PostCompact`, `Stop`, and `TaskCompleted` store compact session records without asking the model to reconstruct everything.
+-   **Auto-managed local runtime.** For local use, the plugin starts and manages the AtomicMemory runtime instead of requiring a separate core quickstart.
+-   **Memory protocol skill.** The installed skill teaches Claude when to search, when to ingest, and when to create handoff snapshots.
+-   **Scoped memory.** `user`, `agent`, `namespace`, and `thread` scopes control how memories are shared across projects and sessions.
+-   **Backend-agnostic SDK path.** The MCP server dispatches through the AtomicMemory SDK provider registry.
+
+## Modes of operation
+
+### Local auto-managed mode
+
+Use local auto-managed mode for personal Claude Code memory. The plugin starts AtomicMemory locally, binds Claude Code hooks to it, and can use `ATOMICMEMORY_LLM_PROVIDER=claude-code` for extraction without a separate API key.
+
+| Capability | Included |
+| --- | --- |
+| MCP tools | Yes |
+| Memory protocol skill | Yes |
+| Prompt-time retrieval hooks | Yes |
+| Session capture hooks | Yes |
+| Local runtime management | Yes |
+
+### External AtomicMemory mode
+
+Hosted AtomicMemory coming soon
+
+Hosted AtomicMemory for Claude Code is planned but not yet available. For now, use this mode with your own self-hosted AtomicMemory deployment.
+
+Use external mode when a team or production deployment runs AtomicMemory for you. Configure the service URL and token, and let the hosted service own LLM credentials, storage, backups, and policy.
+
+```bash
 export ATOMICMEMORY_API_URL="https://memory.yourco.com"
 export ATOMICMEMORY_API_KEY="am_live_..."
-export ATOMICMEMORY_SCOPE_USER="pip"
-export ATOMICMEMORY_CAPTURE_LEVEL="balanced" # minimal|balanced|full
-
-# Optional:
-export ATOMICMEMORY_SCOPE_AGENT="claude-code"
-export ATOMICMEMORY_SCOPE_NAMESPACE="<repo-or-project>"
-export ATOMICMEMORY_SCOPE_THREAD="<thread-id>"
 ```
 
-Even in the source-backed flow, provider, URL, credentials, and scope come from the shell or Claude Code environment.
+### MCP-only mode
 
-Register and install from the local repo:
+Use MCP-only mode when you want explicit memory tools without lifecycle hooks or agent skill instructions. This is the smallest integration surface and is useful for locked-down environments that manage host prompts separately.
+
+| Capability | Included |
+| --- | --- |
+| MCP tools | Yes |
+| Memory protocol skill | No |
+| Prompt-time retrieval hooks | No |
+| Session capture hooks | No |
+
+### CLI-generated hooks
+
+The plugin ships hooks by default. If you maintain your own Claude Code config, the AtomicMemory CLI can generate equivalent hook snippets:
 
 ```bash
-claude plugin marketplace add ./
-claude plugin install claude-code@atomicmemory
+atomicmemory hooks install --host claude-code --runtime node
 ```
 
-## Update and Version
-
-Claude Code plugin updates are version-gated. After changing hooks, skills, `hooks.json`, plugin manifests, or marketplace metadata, bump plugin versions from `atomicmemory-integrations` before `claude plugin update claude-code@atomicmemory` will refresh the installed cache.
-
-```bash
-pnpm bump:plugin-versions patch
-```
-
-For local testing:
-
-```bash
-pnpm --filter @atomicmemory/mcp-server build
-claude plugin marketplace list
-claude plugin update claude-code@atomicmemory
-```
-
-If the marketplace points at an old clone, replace it from the current checkout:
-
-```bash
-claude plugin marketplace remove atomicmemory
-claude plugin marketplace add ./ --scope user
-claude plugin install claude-code@atomicmemory
-```
-
-Fully restart Claude Code after updating. Existing sessions can keep old hook registrations in memory even when the installed cache on disk is fresh.
+Node is the default hook runtime because it shares the TypeScript SDK adapter and CLI packaging. Python hook generation is available for Python-first environments that provide a compatible hook runner.
 
 ## Configuration
 
-Required:
+The plugin ships with local defaults. Configure only what you want to change.
+
+Default behavior:
+
+| Setting | Default |
+| --- | --- |
+| Runtime | Auto-managed local AtomicMemory |
+| Service URL | Local plugin-managed runtime |
+| User scope | Claude Code user/session context, then local fallback |
+| Agent scope | `claude-code` |
+| Capture level | `balanced` |
+| Memory extraction provider | Auto-detect API key providers, or explicit `claude-code` |
+
+Common overrides:
+
+```bash
+export ATOMICMEMORY_LLM_PROVIDER=claude-code
+export ATOMICMEMORY_SCOPE_NAMESPACE="repo-or-project"
+export ATOMICMEMORY_CAPTURE_LEVEL=balanced
+```
+
+Advanced values:
 
 | Env var | Used by | Purpose |
 | --- | --- | --- |
-| `ATOMICMEMORY_MCP_SERVER_BIN` | MCP manifest | Absolute path to `packages/mcp-server/dist/bin.js` |
-| `ATOMICMEMORY_PROVIDER` | MCP + hooks | Provider name; Claude lifecycle hooks require `atomicmemory` |
-| `ATOMICMEMORY_API_URL` | MCP + hooks | AtomicMemory service URL |
-| `ATOMICMEMORY_API_KEY` | MCP + hooks | API key when your provider requires auth |
-| `ATOMICMEMORY_SCOPE_USER` | MCP + hooks | Required user scope |
-| `ATOMICMEMORY_CAPTURE_LEVEL` | hooks | Lifecycle write volume: `minimal`, `balanced`, or `full` |
+| `ATOMICMEMORY_LLM_PROVIDER` | local runtime | Extraction provider. Use `claude-code` for personal local use without a separate API key. |
+| `ANTHROPIC_API_KEY` | local runtime | Anthropic provider key for production or team usage. |
+| `OPENAI_API_KEY` | local runtime | OpenAI provider key. |
+| `ATOMICMEMORY_API_URL` | MCP + hooks | External AtomicMemory service URL. When omitted, the plugin uses local auto-managed mode. |
+| `ATOMICMEMORY_API_KEY` | MCP + hooks | API key for an external AtomicMemory service. |
+| `ATOMICMEMORY_SCOPE_USER` | MCP + hooks | User identity override. |
+| `ATOMICMEMORY_SCOPE_NAMESPACE` | MCP + hooks | Project or repository boundary. |
+| `ATOMICMEMORY_SCOPE_AGENT` | MCP + hooks | Agent identity. Defaults to `claude-code`. |
+| `ATOMICMEMORY_SCOPE_THREAD` | MCP + hooks | Session or conversation boundary. |
+| `ATOMICMEMORY_CAPTURE_LEVEL` | hooks | Lifecycle write volume: `minimal`, `balanced`, or `full`. Defaults to `balanced`. |
+| `ATOMICMEMORY_PROMPT_SEARCH_ENABLED=false` | hooks | Disable prompt-time retrieval. |
+| `ATOMICMEMORY_PROMPT_SEARCH_MIN_CHARS=20` | hooks | Skip very short prompt searches. |
+| `ATOMICMEMORY_PROMPT_SEARCH_LIMIT=5` | hooks | Prompt-search result count. |
+| `ATOMICMEMORY_STOP_MIN_ASSISTANT_CHARS=200` | hooks | Minimum assistant text size for `Stop` capture. |
+| `ATOMICMEMORY_TASK_MIN_TOOL_CALLS=5` | hooks | `TaskCompleted` threshold under `minimal` capture. |
+| `ATOMICMEMORY_SEMANTIC_PROMPTS_ENABLED=false` | hooks | Disable extra `Stop` prompts for model-mediated learnings. |
 
-Optional:
+Invalid or missing required config fails loudly. Hooks do not run in degraded mode.
 
-| Env var | Purpose |
-| --- | --- |
-| `ATOMICMEMORY_SCOPE_NAMESPACE` | Project/repo boundary |
-| `ATOMICMEMORY_SCOPE_AGENT` | Agent identity |
-| `ATOMICMEMORY_SCOPE_THREAD` | Session/thread boundary |
-| `ATOMICMEMORY_PROMPT_SEARCH_ENABLED=false` | Disable prompt-time retrieval |
-| `ATOMICMEMORY_PROMPT_SEARCH_MIN_CHARS=20` | Skip very short prompt searches; must be a positive integer if set |
-| `ATOMICMEMORY_PROMPT_SEARCH_LIMIT=5` | Prompt-search result count; must be a positive integer if set |
-| `ATOMICMEMORY_STOP_MIN_ASSISTANT_CHARS=200` | Minimum assistant text size for `Stop` capture; must be a positive integer if set. The default is tuned for Claude Code's typical multi-paragraph responses; lower it if your workflow produces shorter stop turns that should still be captured. |
-| `ATOMICMEMORY_TASK_MIN_TOOL_CALLS=5` | `TaskCompleted` threshold under `minimal` capture; must be a positive integer if set |
-| `ATOMICMEMORY_SEMANTIC_PROMPTS_ENABLED=false` | Disable extra `Stop` prompts for model-mediated learnings; must be `true` or `false` if set |
-
-If required config is missing, helper tools are unavailable, or numeric/boolean env vars are invalid, hooks surface the error instead of running in a degraded mode.
-
-Use `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or `ATOMICMEMORY_SCOPE_THREAD` only when you want narrower partitions.
-
-## MCP tools exposed
+## MCP tools
 
 | Tool | Maps to | Purpose |
 | --- | --- | --- |
-| `memory_search` | `MemoryClient.search` | Semantic retrieval with scope filters |
-| `memory_ingest` | `MemoryClient.ingest` | Durable write. `mode: "text"` and `mode: "messages"` run extraction; `mode: "verbatim"` stores one deterministic record for summaries and handoffs |
-| `memory_package` | `MemoryClient.package` | Token-budgeted context package for a query |
-| `memory_list` | `MemoryClient.list` | Recent-memory listing for the configured scope, with optional `sourceSite` filtering on AtomicMemory providers |
+| `memory_search` | `MemoryClient.search` | Semantic retrieval with scope filters. |
+| `memory_ingest` | `MemoryClient.ingest` | Durable write. `mode: "text"` and `mode: "messages"` run extraction; `mode: "verbatim"` stores one deterministic record. |
+| `memory_package` | `MemoryClient.package` | Token-budgeted context package for a query. |
+| `memory_list` | `MemoryClient.list` | Recent-memory listing for the configured scope. |
 
-For lifecycle dedupe, pass a stable `metadata.dedupe_key` when using `mode: "verbatim"`. AtomicMemory verbatim records store only the provided content in the searchable `content` field; provenance is carried by `sourceSite` / `sourceUrl` until core exposes first-class hook-write metadata and server-side dedupe.
+Use `mode: "text"` for extracted durable facts and `mode: "verbatim"` for exact handoffs, compact summaries, and lifecycle records.
 
 ## Lifecycle hooks
 
 | Hook | What it does |
 | --- | --- |
-| `SessionStart` | Injects bootstrap guidance telling Claude to call `memory_search` early. Separate prompts for `startup`, `resume`, and `compact`. |
-| `UserPromptSubmit` | Searches `/v1/memories/search/fast` directly and injects matching memories as untrusted additional context. |
-| `PreCompact` | No-op by design. It never blocks compaction; `PostCompact` handles deterministic summary capture. |
-| `PostCompact` | Stores Claude Code's generated `compact_summary` as a deterministic lifecycle record. This is the primary compaction-capture path. |
-| `Stop` | On meaningful turns, stores a normalized deterministic record with outcome, changed files, and validation. Tool counts, session IDs, cwd, and transcript paths are intentionally kept out of searchable content until core exposes first-class hook metadata. Optionally prompts Claude for decisions, preferences, and anti-patterns. |
-| `StopFailure` | Debug telemetry only; no memory write. |
-| `SessionEnd` | Cleans local dedupe / last-write markers. |
-| `TaskCompleted` | Stores a compact task record using the documented `task_subject` field. |
-| `PreToolUse` (`Write` / `Edit`) | Blocks writes to `MEMORY.md`, `.atomicmemory`, and Claude memory-file paths so agents use `memory_ingest` instead. |
+| `SessionStart` | Injects bootstrap guidance telling Claude to call `memory_search` early. |
+| `UserPromptSubmit` | Searches memory before the model turn and injects matches as reference context. |
+| `PreCompact` | No-op by design; compaction is never blocked. |
+| `PostCompact` | Stores Claude Code's generated compact summary as a deterministic record. |
+| `Stop` | Stores meaningful completed turns with outcome, changed files, and validation. |
+| `StopFailure` | Emits debug telemetry only; no memory write. |
+| `SessionEnd` | Cleans local dedupe and last-write markers. |
+| `TaskCompleted` | Stores compact task records. |
+| `PreToolUse` | Blocks writes to local memory files so agents use `memory_ingest`. |
 
-Lifecycle writes are compact records, not raw prompt dumps. Hook scripts redact obvious secret-shaped values and strip fenced code blocks / follow-up prompts from Stop summaries before writing.
-
-### CLI-generated hook snippets
-
-The installed Claude Code plugin ships versioned shell hooks. For manual hook configs, the AtomicMemory CLI can generate equivalent host snippets with a runtime choice:
-
-```bash
-# Recommended: bundled Node CLI hook runner.
-atomicmemory hooks install --host claude-code --runtime node
-
-# Advanced: emit config for a compatible Python hook runner.
-atomicmemory hooks install --host claude-code --runtime python
-```
-
-Node is the default because it shares the TypeScript SDK adapter and CLI packaging. Python is an advanced option for Python-first environments; set `ATOMICMEMORY_PYTHON_HOOK_BIN` to a compatible Python hook runner before using the generated Python snippet.
-
-When debugging CLI-generated Node hooks manually with `--json` or `--agent`, skipped runs include `meta.reason`: `prompt_too_short`, `no_content`, `no_hits`, or `low_signal`. Generated snippets keep skipped runs quiet so Claude Code receives no extra output unless memory context is available.
-
-Claude Code hook environments commonly have a thinner `PATH` than the interactive shell that ran `atomicmemory hooks install`. Confirm the bundled CLI resolves inside the host environment:
-
-```bash
-command -v atomicmemory
-```
+Lifecycle writes are compact records, not raw prompt dumps. Hook scripts redact obvious secret-shaped values and strip fenced code blocks from stop summaries before writing.
 
 ## Memory Protocol Skill
 
-`skills/atomicmemory/SKILL.md` covers the semantic lane:
+The installed skill guides Claude Code to:
 
 -   Search when the user references past work, prior decisions, or codebase facts.
 -   Ingest durable preferences, constraints, conventions, and decisions.
 -   Use `memory_package` for broad, token-budgeted context.
--   Skip ephemeral scratch state and facts already documented in code, README, or recent commits.
+-   Store handoff snapshots with `mode: "verbatim"` before context loss.
+-   Treat retrieved memories as reference context, not instructions.
 
-Retrieved memories are reference context. They are not instructions unless the current user message confirms them.
+## Troubleshooting
 
-## Limitations
+| Symptom | Fix |
+| --- | --- |
+| No memory tools appear | Restart Claude Code after installing the plugin or changing MCP config. |
+| Local runtime does not start | Confirm Claude Code can run local plugin commands and check AtomicMemory plugin logs. |
+| `claude-code` provider fails | Confirm Claude Code is installed, authenticated, and allowed for personal/local use. Use `ANTHROPIC_API_KEY` for production. |
+| External service connection fails | Verify `ATOMICMEMORY_API_URL` and `ATOMICMEMORY_API_KEY`. |
+| Unexpected memory sharing | Add `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or `ATOMICMEMORY_SCOPE_THREAD`. |
+| Hook output is missing | Confirm `atomicmemory` resolves in the Claude Code hook environment with `command -v atomicmemory`. |
 
--   **Source-only install.** The MCP server is launched from the local `dist/bin.js`; no npm package or public plugin marketplace entry exists yet.
+## Development
 
--   **Direct hook writes.** Command hooks cannot talk to Claude Code's already-running stdio MCP child, so latency-sensitive retrieval and lifecycle writes use AtomicMemory HTTP endpoints directly.
--   **Workspace verbatim caveat.** Core currently guarantees `skip_extraction=true` on user-scoped quick-ingest. Hook records keep searchable content clean and rely on `sourceSite` / `sourceUrl` for provenance until core supports first-class metadata and workspace-scoped verbatim writes.
--   **Transcript parsing is defensive.** `Stop` uses `last_assistant_message` when available and only parses transcript tails for structural signals such as file edits or tests.
-
-## View source
-
--   [`plugins/claude-code/.claude-plugin/plugin.json`](https://github.com/atomicstrata/atomicmemory-integrations/blob/main/plugins/claude-code/.claude-plugin/plugin.json) — plugin manifest
--   [`plugins/claude-code/hooks/hooks.json`](https://github.com/atomicstrata/atomicmemory-integrations/blob/main/plugins/claude-code/hooks/hooks.json) — lifecycle hook registrations
--   [`plugins/claude-code/scripts/`](https://github.com/atomicstrata/atomicmemory-integrations/tree/main/plugins/claude-code/scripts) — hook scripts
--   [`plugins/claude-code/skills/atomicmemory/SKILL.md`](https://github.com/atomicstrata/atomicmemory-integrations/blob/main/plugins/claude-code/skills/atomicmemory/SKILL.md) — agent-facing memory protocol
--   [`packages/mcp-server/`](https://github.com/atomicstrata/atomicmemory-integrations/tree/main/packages/mcp-server) — shared MCP server
+For source builds, plugin development, and local adapter testing, see the [integration contributor notes](/integrations/overview#contributing).
 
 ## See also
 
--   [SDK Overview](/sdk/overview) — the `MemoryProvider` model behind the plugin
--   [Platform scope model](/platform/scope) — how scope fields dispatch
--   [Codex integration](/integrations/coding-agents/codex/local) — skill-only sibling integration
--   [OpenClaw integration](/integrations/coding-agents/openclaw/local) — in-process plugin sibling integration
+-   [SDK Overview](/sdk/overview)
+-   [Platform scope model](/platform/scope)
+-   [Codex integration](/integrations/coding-agents/codex/local)
+-   [OpenClaw integration](/integrations/coding-agents/openclaw/local)
 
 ---
 
@@ -2116,7 +2111,7 @@ AtomicMemory integrates with Codex through the shared MCP server and a memory pr
 
 ### Local
 
-Use this when you want the self-managed Codex path and need the current clone-from-source workflow.
+Use this when you want the self-managed Codex path with the published MCP package and vendored plugin assets.
 
 See [Codex Local](/integrations/coding-agents/codex/local).
 
@@ -2156,9 +2151,9 @@ Source: https://docs.atomicmemory.ai/integrations/coding-agents/codex/local
 
 Add persistent memory to [OpenAI Codex](https://openai.com/index/codex/) with the AtomicMemory plugin. The plugin wires Codex to the shared AtomicMemory MCP server and ships a memory protocol skill that tells the agent when to search prior context, store durable learnings, and write deterministic session snapshots.
 
-Source-only
+Published
 
-`@atomicmemory/mcp-server` and the Codex plugin are not published to npm or to a public plugin marketplace yet. Install from a local clone and point Codex at the built MCP server binary.
+When the Codex package flow is published, the plugin can consume the published MCP server through vendored marketplace assets or through a direct MCP-only setup. Until then, use the source-only flow.
 
 ## Overview
 
@@ -2180,28 +2175,12 @@ Codex is MCP-and-skill first. Optional lifecycle hooks can be generated by the A
 
 ## Install
 
-Clone `atomicmemory-sdk` and `atomicmemory-integrations` side by side, then build the SDK before the MCP server. The MCP package currently resolves the SDK from the sibling source checkout.
+Export the provider and any optional scope overrides in the shell or Codex environment:
 
 ```bash
-git clone https://github.com/atomicstrata/atomicmemory-sdk.git
-git clone https://github.com/atomicstrata/atomicmemory-integrations.git
-
-cd atomicmemory-sdk
-pnpm install
-pnpm build
-
-cd ../atomicmemory-integrations
-pnpm install
-pnpm --filter @atomicmemory/mcp-server build
-```
-
-Then export the MCP server binary path, provider, and any optional scope overrides in the shell or Codex environment:
-
-```bash
-export ATOMICMEMORY_MCP_SERVER_BIN="$HOME/path/to/atomicmemory-integrations/packages/mcp-server/dist/bin.js"
+export ATOMICMEMORY_PROVIDER="atomicmemory"
 export ATOMICMEMORY_API_URL="https://memory.yourco.com"
 export ATOMICMEMORY_API_KEY="am_live_..."
-export ATOMICMEMORY_PROVIDER="atomicmemory"
 export ATOMICMEMORY_SCOPE_USER="pip"
 
 # Optional narrower scopes:
@@ -2210,7 +2189,7 @@ export ATOMICMEMORY_SCOPE_NAMESPACE="repo-or-project"
 export ATOMICMEMORY_SCOPE_THREAD="session-id"
 ```
 
-In the source-backed flow, `ATOMICMEMORY_MCP_SERVER_BIN` points Codex at the built local MCP server. Provider, URL, credentials, and scope still come from the shell or Codex environment.
+The MCP server reads provider, service, credential, and scope values from the Codex environment. At least one `ATOMICMEMORY_SCOPE_*` value is required for scoped memory operations.
 
 ## Plugin Setup
 
@@ -2239,10 +2218,9 @@ The plugin's `.codex-mcp.json` forwards environment variables by name instead of
 {
   "mcpServers": {
     "atomicmemory": {
-      "command": "bash",
-      "args": ["-c", "exec node \"$ATOMICMEMORY_MCP_SERVER_BIN\""],
+      "command": "npx",
+      "args": ["-y", "@atomicmemory/mcp-server"],
       "env_vars": [
-        "ATOMICMEMORY_MCP_SERVER_BIN",
         "ATOMICMEMORY_PROVIDER",
         "ATOMICMEMORY_API_URL",
         "ATOMICMEMORY_API_KEY",
@@ -2258,7 +2236,7 @@ The plugin's `.codex-mcp.json` forwards environment variables by name instead of
 
 ## Update and Version
 
-The Codex plugin is installed from source, so rebuilding the repo does not automatically update the copy loaded by Codex. After changing the plugin manifest, MCP config, skill, or marketplace metadata, bump plugin versions from `atomicmemory-integrations`:
+If you vendor the plugin assets, changing the plugin manifest, MCP config, skill, or marketplace metadata still requires a version bump before Codex refreshes the installed cache:
 
 ```bash
 pnpm bump:plugin-versions patch
@@ -2349,7 +2327,7 @@ You: Add WebSocket support for real-time notification delivery.
 
 ## Troubleshooting
 
--   **Connection failed** - verify `ATOMICMEMORY_MCP_SERVER_BIN`, `ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY` when your provider requires auth, and at least one `ATOMICMEMORY_SCOPE_*` value are visible to Codex.
+-   **Connection failed** - verify `ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY` when your provider requires auth, and at least one `ATOMICMEMORY_SCOPE_*` value are visible to Codex.
 
 -   **No tools appearing** - restart the Codex session after installing the plugin or changing MCP config.
 -   **Plugin not found** - confirm `.agents/plugins/marketplace.json` points at the correct `plugins/codex` directory.
@@ -2385,7 +2363,7 @@ AtomicMemory integrates with Cursor through the shared MCP server and a rules fi
 
 ### Local
 
-Use this when you want the self-managed Cursor path and need the current clone-from-source workflow.
+Use this when you want the self-managed Cursor path with the published MCP package and manual Cursor setup.
 
 See [Cursor Local](/integrations/coding-agents/cursor/local).
 
@@ -2425,7 +2403,7 @@ Source: https://docs.atomicmemory.ai/integrations/coding-agents/cursor/local
 
 Planned
 
-A packaged Cursor integration is still on the roadmap. The shared AtomicMemory MCP server works with Cursor's MCP support today, but install is source-only and manual.
+A packaged Cursor integration is still on the roadmap. The shared AtomicMemory MCP server works with Cursor's MCP support today; use the published package once it is available, or the source-only flow until then.
 
 ## Intended Shape
 
@@ -2438,39 +2416,23 @@ The packaged integration is expected to include a one-click MCP registration flo
 
 ## Prepare the MCP Server
 
-Clone `atomicmemory-sdk` and `atomicmemory-integrations` side by side, then build the SDK before the MCP server:
+Use the published MCP server directly. No local build is required:
 
 ```bash
-git clone https://github.com/atomicstrata/atomicmemory-sdk.git
-git clone https://github.com/atomicstrata/atomicmemory-integrations.git
-
-cd atomicmemory-sdk
-pnpm install
-pnpm build
-
-cd ../atomicmemory-integrations
-pnpm install
-pnpm --filter @atomicmemory/mcp-server build
-```
-
-The built server entrypoint is:
-
-```text
-atomicmemory-integrations/packages/mcp-server/dist/bin.js
+npx -y @atomicmemory/mcp-server --help
 ```
 
 ## Manual MCP Setup
 
-Register the MCP server in Cursor's MCP settings. Because `@atomicmemory/mcp-server` is not published to npm yet, point Cursor at the local built binary:
+Register the MCP server in Cursor's MCP settings using the published npm package:
 
 ```json
 {
   "mcpServers": {
     "atomicmemory": {
-      "command": "bash",
-      "args": ["-c", "exec node \"$ATOMICMEMORY_MCP_SERVER_BIN\""],
+      "command": "npx",
+      "args": ["-y", "@atomicmemory/mcp-server"],
       "env": {
-        "ATOMICMEMORY_MCP_SERVER_BIN": "/absolute/path/to/atomicmemory-integrations/packages/mcp-server/dist/bin.js",
         "ATOMICMEMORY_PROVIDER": "atomicmemory",
         "ATOMICMEMORY_API_URL": "https://memory.yourco.com",
         "ATOMICMEMORY_API_KEY": "am_live_...",
@@ -2483,7 +2445,7 @@ Register the MCP server in Cursor's MCP settings. Because `@atomicmemory/mcp-ser
 }
 ```
 
-`ATOMICMEMORY_MCP_SERVER_BIN`, `ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, and at least one `ATOMICMEMORY_SCOPE_*` value are required by the MCP server. Set `ATOMICMEMORY_API_KEY` when your provider requires auth. Add narrower `ATOMICMEMORY_SCOPE_*` values when you need agent, namespace, or thread partitioning.
+`ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, and at least one `ATOMICMEMORY_SCOPE_*` value are required by the MCP server. Set `ATOMICMEMORY_API_KEY` when your provider requires auth. Add narrower `ATOMICMEMORY_SCOPE_*` values when you need agent, namespace, or thread partitioning.
 
 ## Available MCP Tools
 
@@ -2514,11 +2476,11 @@ The [Codex Local skill](/integrations/coding-agents/codex/local#memory-protocol-
 
 ## Troubleshooting
 
--   **`npx @atomicmemory/mcp-server` does not work** - the MCP server is source-only for now. Build it locally and set `ATOMICMEMORY_MCP_SERVER_BIN`.
+-   **`npx -y @atomicmemory/mcp-server` fails** - confirm the package version is published and that your environment can reach npm.
 
 -   **Unexpected memory sharing** - set `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or another optional `ATOMICMEMORY_SCOPE_*` value if you need narrower isolation than the default session-based identity.
 
--   **No memory tools in Cursor** - restart Cursor after changing MCP settings and verify the path in `ATOMICMEMORY_MCP_SERVER_BIN` is absolute.
+-   **No memory tools in Cursor** - restart Cursor after changing MCP settings and verify the AtomicMemory env vars are present in the MCP entry.
 
 ## See Also
 
@@ -2543,8 +2505,6 @@ The provider is backed by `atomicmemory-python`, keeping Hermes-specific code fo
 ## Deployment targets
 
 ### Local
-
-Use this when you want the self-managed Hermes path and need the current clone-from-source workflow.
 
 See [Hermes Local](/integrations/coding-agents/hermes/local).
 
@@ -2596,34 +2556,6 @@ By default, Hermes uses **shared** recall: it can retrieve memories written by o
 Hermes owns lifecycle and tool invocation. The Python SDK owns provider selection, request shapes, and backend behavior.
 
 ## Install
-
-Source-only
-
-The Hermes provider currently lives under [`plugins/hermes`](https://github.com/atomicstrata/atomicmemory-integrations/tree/main/plugins/hermes) and imports `atomicmemory-python` from a local checkout. Install from source until the Python SDK and provider package are published.
-
-Prerequisites:
-
--   Hermes Agent installed with `HERMES_HOME` set.
--   A local `atomicmemory-python` checkout.
--   A local `atomicmemory-integrations` checkout.
--   A running AtomicMemory core URL exported as `ATOMICMEMORY_API_URL`.
-
-Clone `atomicmemory-python` and `atomicmemory-integrations` side-by-side, then symlink the provider into Hermes' memory-provider directory:
-
-```bash
-git clone https://github.com/atomicstrata/atomicmemory-python.git
-git clone https://github.com/atomicstrata/atomicmemory-integrations.git
-
-cd atomicmemory-integrations
-mkdir -p "$HERMES_HOME/plugins/memory"
-ln -s "$(pwd)/plugins/hermes" "$HERMES_HOME/plugins/memory/atomicmemory"
-```
-
-If your Python SDK checkout is somewhere else:
-
-```bash
-export ATOMICMEMORY_PYTHON_SDK_PATH="/path/to/atomicmemory-python"
-```
 
 Export the core URL before launching Hermes:
 
@@ -2768,7 +2700,7 @@ AtomicMemory integrates with OpenClaw as a plugin and skill bundle backed by the
 
 ### Local
 
-Use this when you want the self-managed OpenClaw path and need the current clone-from-source workflow.
+Use this when you want the self-managed OpenClaw path with the published plugin install flow.
 
 See [OpenClaw Local](/integrations/coding-agents/openclaw/local).
 
@@ -2808,9 +2740,9 @@ Source: https://docs.atomicmemory.ai/integrations/coding-agents/openclaw/local
 
 Ship AtomicMemory to OpenClaw as a plugin and skill bundle. OpenClaw agents get durable semantic memory across chat apps such as WhatsApp, Telegram, Slack, and iMessage, backed by the same SDK and MCP server used by the other AtomicMemory integrations.
 
-Source-only
+Published
 
-`@atomicmemory/mcp-server` and the OpenClaw plugin are not published to npm or to ClawHub yet. Install from a local clone of `atomicmemory-integrations`.
+When the OpenClaw package flow is published, install the plugin from ClawHub. Until then, use the source-only flow.
 
 ## What You Get
 
@@ -2834,54 +2766,21 @@ plugins/openclaw/
 
 ## Install
 
-Clone and build from source:
+Install the published OpenClaw plugin:
 
 ```bash
-git clone https://github.com/atomicstrata/atomicmemory-sdk.git
-git clone https://github.com/atomicstrata/atomicmemory-integrations.git
-
-cd atomicmemory-sdk
-pnpm install
-pnpm build
-
-cd ../atomicmemory-integrations
-pnpm install
-pnpm --filter @atomicmemory/mcp-server build
-pnpm --filter @atomicmemory/openclaw-plugin build
+claw plugin install atomicmemory/openclaw
 ```
 
-Then install the local OpenClaw plugin directory:
-
-```bash
-cd plugins/openclaw
-claw plugin install .
-```
+Or browse to [ClawHub](https://clawhub.ai/) and install the AtomicMemory plugin there.
 
 ## Update and Version
 
-The OpenClaw plugin is installed from source. After changing the plugin manifest, package metadata, skill manifest, skill instructions, or provider registration, bump plugin versions from `atomicmemory-integrations`:
+After publishing plugin or skill changes, refresh the installed plugin and restart the OpenClaw host if it keeps plugin modules loaded:
 
 ```bash
-pnpm bump:plugin-versions patch
+claw plugin update atomicmemory/openclaw
 ```
-
-For OpenClaw, the helper keeps these versions aligned:
-
--   `plugins/openclaw/openclaw.plugin.json` at `/version`
--   `plugins/openclaw/package.json` at `/version`
--   `plugins/openclaw/skills/atomicmemory/skill.yaml` at `/version`
-
-Then rebuild and reinstall:
-
-```bash
-pnpm --filter @atomicmemory/mcp-server build
-pnpm --filter @atomicmemory/openclaw-plugin build
-
-cd plugins/openclaw
-claw plugin install .
-```
-
-Restart the OpenClaw host if it keeps plugin modules loaded.
 
 ## Configure
 
@@ -3309,7 +3208,7 @@ AtomicMemory integrates with the OpenAI Agents SDK through an adapter that augme
 
 ### Local
 
-Use this when you want the self-managed OpenAI Agents SDK path and need the current clone-from-source workflow.
+Use this when you want the self-managed OpenAI Agents SDK path with the published adapter package.
 
 See [OpenAI Agents SDK Local](/integrations/frameworks/openai-agents/local).
 
@@ -3347,9 +3246,9 @@ Source: https://docs.atomicmemory.ai/integrations/frameworks/openai-agents/local
 
 > Agent index: [llms.txt](/llms.txt)
 
-Source-only
+Published package
 
-`@atomicmemory/openai-agents` lives in the integrations repo under `adapters/openai-agents-sdk`. It is not published to npm yet; install it from a local clone or workspace package until a registry release is cut.
+`@atomicmemory/openai-agents` is published to npm. Install it in the app that already depends on `@atomicmemory/atomicmemory-sdk`.
 
 The adapter wires AtomicMemory into the [OpenAI Agents SDK for TypeScript](https://openai.github.io/openai-agents-js/) without replacing the SDK's own session layer:
 
@@ -3371,14 +3270,11 @@ The OpenAI Agents SDK separates local run context from model-visible context. Lo
 
 ## Install
 
-From the integrations repo:
+Install the adapter from npm:
 
 ```bash
-pnpm install
-pnpm --filter @atomicmemory/openai-agents build
+npm install @atomicmemory/openai-agents @atomicmemory/atomicmemory-sdk
 ```
-
-Then depend on the local package from your workspace, or use your package manager's `file:` / workspace linking support. The current source package depends on the local `@atomicmemory/atomicmemory-sdk` checkout, so publish order matters: publish or link the SDK first, then the adapter.
 
 ## Configure memory
 
@@ -3526,7 +3422,7 @@ AtomicMemory integrates with Vercel AI SDK through an adapter that handles retri
 
 ### Local
 
-Use this when you want the self-managed Vercel AI SDK path and need the current clone-from-source workflow.
+Use this when you want the self-managed Vercel AI SDK path with the published adapter package.
 
 See [Vercel AI SDK Local](/integrations/frameworks/vercel-ai-sdk/local).
 
@@ -3564,9 +3460,9 @@ Source: https://docs.atomicmemory.ai/integrations/frameworks/vercel-ai-sdk/local
 
 > Agent index: [llms.txt](/llms.txt)
 
-Source-only
+Published package
 
-`@atomicmemory/vercel-ai` lives in the integrations repo under `adapters/vercel-ai-sdk`. It is not published to npm yet; install it from a local clone or workspace package until a registry release is cut.
+`@atomicmemory/vercel-ai` is published to npm. Install it in the app that already depends on `@atomicmemory/atomicmemory-sdk`.
 
 The adapter gives Vercel AI SDK calls the same memory loop used elsewhere in AtomicMemory:
 
@@ -3589,14 +3485,11 @@ The adapter intentionally does **not** import from `ai`. It accepts AtomicMemory
 
 ## Install
 
-From the integrations repo:
+Install the adapter from npm:
 
 ```bash
-pnpm install
-pnpm --filter @atomicmemory/vercel-ai build
+npm install @atomicmemory/vercel-ai @atomicmemory/atomicmemory-sdk
 ```
-
-Then depend on the local package from your workspace, or use your package manager's `file:` / workspace linking support. The current source package depends on the local `@atomicmemory/atomicmemory-sdk` checkout, so publish order matters: publish or link the SDK first, then the adapter.
 
 ## Configure memory
 
@@ -3757,7 +3650,7 @@ Each coding-agent integration is now split into two tracks:
 -   **Local** — the self-managed workflow.
 -   **Cloud** — a separate page reserved for the hosted model and rollout details.
 
-The Local pages currently render the development path: clone the repos, build locally, and install from source.
+The Local pages currently render the production-ready self-managed path: published plugins or packages against your own AtomicMemory deployment.
 
 | Integration | Overview | Local | Cloud |
 | --- | --- | --- | --- |
@@ -3808,7 +3701,7 @@ This page walks through the five domains, shows where each lives in the real sou
 
 ## The five domains
 
-The `MemoryService` class is a **thin facade**. It holds no business logic, every public method delegates to one of five domain modules. Here is the whole shape of the facade (see [`src/services/memory-service.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/memory-service.ts)):
+The `MemoryService` class is a **thin facade**. It holds no business logic, every public method delegates to one of five domain modules. Here is the whole shape of the facade (see [`src/services/memory-service.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/memory-service.ts)):
 
 atomicmemory-core/src/services/memory-service.ts
 
@@ -3840,7 +3733,7 @@ Every method is a one-liner. The class exists only to resolve the right domain m
 
 ### 1. Ingest domain
 
-**File:** [`src/services/memory-ingest.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/memory-ingest.ts) **Entry points:** `performIngest`, `performQuickIngest`, `performStoreVerbatim`, `performWorkspaceIngest`
+**File:** [`src/services/memory-ingest.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/memory-ingest.ts) **Entry points:** `performIngest`, `performQuickIngest`, `performStoreVerbatim`, `performWorkspaceIngest`
 
 Ingest turns raw conversation text into canonical, deduplicated, trust-scored memory rows. It owns:
 
@@ -3876,7 +3769,7 @@ Why is this shaped this way? Because *ingest strategy* is the thing users most w
 
 ### 2. Search domain
 
-**File:** [`src/services/memory-search.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/memory-search.ts) **Entry points:** `performSearch`, `performFastSearch`, `performWorkspaceSearch`
+**File:** [`src/services/memory-search.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/memory-search.ts) **Entry points:** `performSearch`, `performFastSearch`, `performWorkspaceSearch`
 
 Search is pure orchestration. The file's own header comment is explicit about this: it "delegates formatting to retrieval-format, dedup to composite-dedup, side effects to retrieval-side-effects, lesson recording to lesson-service, and the main retrieval to search-pipeline." Every one of those is a separately replaceable module.
 
@@ -3907,7 +3800,7 @@ Notice what is *not* here: no direct SQL, no embedding calls, no ranker implemen
 
 ### 3. CRUD domain
 
-**File:** [`src/services/memory-crud.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/memory-crud.ts) **Entry points:** `listMemories`, `getMemory`, `expandMemories`, `deleteMemory`, `resetBySource`, plus workspace-scoped variants
+**File:** [`src/services/memory-crud.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/memory-crud.ts) **Entry points:** `listMemories`, `getMemory`, `expandMemories`, `deleteMemory`, `resetBySource`, plus workspace-scoped variants
 
 CRUD covers the operational surface, everything that is neither ingest nor similarity search. List, get, expand (staged-to-full content), soft delete, source-scoped reset, audit trail, mutation summary, lesson management. Each is a one- or two-line function that reads or writes through the store interfaces on `deps.stores`.
 
@@ -3936,7 +3829,7 @@ The reason this is its own domain (not a grab-bag inside ingest or search) is th
 
 ### 4. Lifecycle domain
 
-**File:** [`src/services/memory-lifecycle.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/memory-lifecycle.ts) **Entry points:** `evaluateDecayCandidates`, `checkMemoryCap`, plus `consolidate` / `executeConsolidation` via CRUD
+**File:** [`src/services/memory-lifecycle.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/memory-lifecycle.ts) **Entry points:** `evaluateDecayCandidates`, `checkMemoryCap`, plus `consolidate` / `executeConsolidation` via CRUD
 
 Lifecycle is the "what should happen to memory over time" domain. Decay (Ebbinghaus forgetting curve), memory-count caps, consolidation cluster identification, deferred AUDN reconciliation. The module header is explicit about the design principle:
 
@@ -3966,7 +3859,7 @@ It takes config and a memory row, returns a number. No database, no side effects
 
 ### 5. Trust domain
 
-**Files:** [`src/services/trust-scoring.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/trust-scoring.ts) + [`src/services/write-security.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/write-security.ts) **Entry points:** `computeTrustScore`, `assessWriteSecurity`, `applyTrustPenalty`
+**Files:** [`src/services/trust-scoring.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/trust-scoring.ts) + [`src/services/write-security.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/write-security.ts) **Entry points:** `computeTrustScore`, `assessWriteSecurity`, `applyTrustPenalty`
 
 Trust is enforced at two points, **write time** (before a memory is stored) and **read time** (when ranking candidates). At write time, `assessWriteSecurity` is the single gate every ingest path must pass through. It composes sanitization with trust scoring so the standard and hive ingest flows physically cannot diverge on what counts as unsafe content:
 
@@ -4080,7 +3973,7 @@ Each seam is a plain function. No global state, no hidden DI container, no frame
 
 ## Seam 1: createCoreRuntime
 
-**File:** [`src/app/runtime-container.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/app/runtime-container.ts)
+**File:** [`src/app/runtime-container.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/app/runtime-container.ts)
 
 `createCoreRuntime` is the composition root. It takes an explicit dependency bundle, the Postgres pool plus an optional composition-time config for isolated harnesses, and returns a fully wired `CoreRuntime` containing config, repos, stores, and services:
 
@@ -4162,7 +4055,7 @@ Three things are important about this shape:
 
 ## Seam 2: createApp
 
-**File:** [`src/app/create-app.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/app/create-app.ts)
+**File:** [`src/app/create-app.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/app/create-app.ts)
 
 `createApp` is a pure HTTP concern. It takes a composed runtime and returns an Express app, with CORS, body parsing, and routers wired on. It constructs no repos, pools, or services of its own:
 
@@ -4200,7 +4093,7 @@ The two seams compose, but they don't *require* each other. That is the whole po
 
 ## Seam 3: bindEphemeral
 
-**File:** [`src/app/bind-ephemeral.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/app/bind-ephemeral.ts)
+**File:** [`src/app/bind-ephemeral.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/app/bind-ephemeral.ts)
 
 `bindEphemeral` is the canonical test/harness adapter. It binds an Express app to an OS-assigned ephemeral port and returns the base URL plus a close handle:
 
@@ -4232,7 +4125,7 @@ The file header calls this out directly: *"This is the stable seam for any in-re
 
 The three-seam design is not a stylistic choice. It is enforced by a contract test that runs in CI on every build.
 
-`research-consumption-seams.test.ts` ([source](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/app/__tests__/research-consumption-seams.test.ts)) boots **one** runtime, wires **one** app, binds it ephemerally, and then proves that writes through one seam are visible through the other:
+`research-consumption-seams.test.ts` ([source](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/app/__tests__/research-consumption-seams.test.ts)) boots **one** runtime, wires **one** app, binds it ephemerally, and then proves that writes through one seam are visible through the other:
 
 atomicmemory-core/src/app/\_\_tests\_\_/research-consumption-seams.test.ts
 
@@ -4329,13 +4222,13 @@ Source: https://docs.atomicmemory.ai/platform/consuming-core
 | **In-process** | `createCoreRuntime({ pool })` | TypeScript/Node code that wants no HTTP overhead |
 | **Docker/E2E** | `docker-compose.smoke-isolated.yml` + `scripts/docker-smoke-test.sh` | Release validation, extension E2E, containerized CI |
 
-All three are designed to converge on the same composition root (`createCoreRuntime`). A parity test, [`research-consumption-seams.test.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/app/__tests__/research-consumption-seams.test.ts), guards the main ingest/search path across modes.
+All three are designed to converge on the same composition root (`createCoreRuntime`). A parity test, [`research-consumption-seams.test.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/app/__tests__/research-consumption-seams.test.ts), guards the main ingest/search path across modes.
 
 ## HTTP
 
 Boot core as a server (`npm start`) and issue JSON requests. Snake\_case on the wire.
 
-This is the most portable integration path. If you are writing TypeScript and do not need direct HTTP control, use [`@atomicmemory/atomicmemory-sdk`](/sdk/overview) on top of this API instead of hand-rolling request wrappers.
+This is the most portable integration path. If you are writing TypeScript and do not need direct HTTP control, use [`@atomicmemory/sdk`](/sdk/overview) on top of this API instead of hand-rolling request wrappers.
 
 ```ts
 const res = await fetch('http://localhost:3050/v1/memories/ingest', {
@@ -4401,12 +4294,12 @@ Import the composition root and call services directly. This is useful for Node 
 Before using this mode, make sure:
 
 -   The Postgres database is reachable and has the core schema applied.
--   Required env vars are set before importing `@atomicmemory/atomicmemory-core`, or an explicit `RuntimeConfig` is passed to `createCoreRuntime`.
+-   Required env vars are set before importing `@atomicmemory/core`, or an explicit `RuntimeConfig` is passed to `createCoreRuntime`.
 -   Your process owns runtime lifecycle concerns such as pool shutdown and test isolation.
 
 ```ts
 import pg from 'pg';
-import { config, createCoreRuntime } from '@atomicmemory/atomicmemory-core';
+import { config, createCoreRuntime } from '@atomicmemory/core';
 
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 const runtime = createCoreRuntime({ pool });
@@ -4462,14 +4355,14 @@ Use this mode for extension E2E, release validation, or any harness that needs t
 ## Stability boundary
 
 -   **Stable:** the root package export. Types and functions re-exported from `src/index.ts` are the supported consumption surface.
--   **Unstable:** deep-path imports (`@atomicmemory/atomicmemory-core/services/*`, `@atomicmemory/atomicmemory-core/db/*`). These exist in `package.json` today for migration convenience and will be narrowed. Consumers should prefer the root export and open an issue if something they need is missing.
+-   **Unstable:** deep-path imports (`@atomicmemory/core/services/*`, `@atomicmemory/core/db/*`). These exist in `package.json` today for migration convenience and will be narrowed. Consumers should prefer the root export and open an issue if something they need is missing.
 
 ### Deep-path init requirement
 
 Two service modules hold config as module-local state and require an explicit init before their hot-path APIs work:
 
--   `@atomicmemory/atomicmemory-core/services/embedding`, `embedText` / `embedTexts` throw unless `initEmbedding(config)` has been called.
--   `@atomicmemory/atomicmemory-core/services/llm`, the `llm` / `createLLMProvider` APIs throw unless `initLlm(config)` has been called.
+-   `@atomicmemory/core/services/embedding`, `embedText` / `embedTexts` throw unless `initEmbedding(config)` has been called.
+-   `@atomicmemory/core/services/llm`, the `llm` / `createLLMProvider` APIs throw unless `initLlm(config)` has been called.
 
 **Consumers going through `createCoreRuntime({ pool })` are auto-initialized**, the composition root calls both inits internally. If you deep-import these modules directly (unstable path), you must call the init yourself:
 
@@ -4478,7 +4371,7 @@ import {
   initEmbedding,
   initLlm,
   config, // or your own EmbeddingConfig / LLMConfig object
-} from '@atomicmemory/atomicmemory-core';
+} from '@atomicmemory/core';
 
 initEmbedding(config);
 initLlm(config);
@@ -4843,7 +4736,7 @@ Both provider families are tiny. That's deliberate: the less surface the interfa
 
 ### EmbeddingProvider
 
-From [`atomicmemory-core/src/services/embedding.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/embedding.ts):
+From [`atomicmemory-core/src/services/embedding.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/embedding.ts):
 
 ```ts
 export type EmbeddingTask = 'query' | 'document';
@@ -4858,7 +4751,7 @@ Two methods. One for single embeddings, one for batch. The `task` argument lets 
 
 ### LLMProvider
 
-From [`atomicmemory-core/src/services/llm.ts:60-74`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/llm.ts#L60-L74):
+From [`atomicmemory-core/src/services/llm.ts:60-74`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/llm.ts#L60-L74):
 
 ```ts
 export interface ChatMessage {
@@ -4894,7 +4787,7 @@ One method. Chat messages in, completion text out. JSON mode, seed, and temperat
 | `transformers` | Local WASM via `@huggingface/transformers` + ONNX Runtime |
 | `voyage` | Voyage AI embeddings with compatible document/query model pairs |
 
-Declared in [`config.ts:14`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/config.ts#L14):
+Declared in [`config.ts:14`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/config.ts#L14):
 
 ```ts
 export type EmbeddingProviderName =
@@ -4912,7 +4805,7 @@ export type EmbeddingProviderName =
 | `ollama` | Ollama native `/api/chat` endpoint |
 | `openai-compatible` | Any OpenAI-schema endpoint (LM Studio, vLLM, …) |
 
-Declared in [`config.ts:15`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/config.ts#L15):
+Declared in [`config.ts:15`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/config.ts#L15):
 
 ```ts
 export type LLMProviderName =
@@ -4927,7 +4820,7 @@ Note the subtype relationship: the LLM provider union builds on the embedding pr
 
 This is the crux of the provider-agnostic boundary. The entire codebase above `embedding.ts` never matches on provider name. The `switch` happens once, inside the factory, and is erased the moment the provider is returned.
 
-From [`embedding.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/embedding.ts):
+From [`embedding.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/embedding.ts):
 
 ```ts
 function createEmbeddingProvider(): EmbeddingProvider {
@@ -4970,7 +4863,7 @@ function createEmbeddingProvider(): EmbeddingProvider {
 }
 ```
 
-And the LLM factory, from [`llm.ts:259-289`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/llm.ts#L259-L289):
+And the LLM factory, from [`llm.ts:259-289`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/llm.ts#L259-L289):
 
 ```ts
 export function createLLMProvider(): LLMProvider {
@@ -5079,7 +4972,7 @@ Being agnostic doesn't mean being naïve. Real embedding models have real quirks
 
 ### Instruction prefixes
 
-Some embedding models (mxbai, nomic) need task-specific prefixes on query text but not document text. The provider-agnostic `embedText` function handles that before dispatch. From [`embedding.ts:292-308`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/embedding.ts#L292-L308):
+Some embedding models (mxbai, nomic) need task-specific prefixes on query text but not document text. The provider-agnostic `embedText` function handles that before dispatch. From [`embedding.ts:292-308`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/embedding.ts#L292-L308):
 
 ```ts
 function getInstructionPrefix(model: string, task: EmbeddingTask): string {
@@ -5099,7 +4992,7 @@ Callers pass `'query'` or `'document'` as a semantic tag. The prefix (if any) is
 
 ### ONNX Runtime serialization (WASM provider)
 
-The local WASM provider has a known concurrency issue, ONNX Runtime's mutex corrupts under concurrent async calls. Rather than leak a "don't call concurrently" caveat into every consumer, the adapter serializes internally. From [`embedding.ts:168-218`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/embedding.ts#L168-L218):
+The local WASM provider has a known concurrency issue, ONNX Runtime's mutex corrupts under concurrent async calls. Rather than leak a "don't call concurrently" caveat into every consumer, the adapter serializes internally. From [`embedding.ts:168-218`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/embedding.ts#L168-L218):
 
 ```ts
 class TransformersEmbedding implements EmbeddingProvider {
@@ -5139,7 +5032,7 @@ The rule: **every provider-specific workaround lives inside the adapter.** The `
 
 Every provider adapter, OpenAI, Anthropic, Ollama, Google, Groq, calls `writeCostEvent()` with the same shape after each request. That gives you one cost log across heterogeneous backends, keyed by provider, model, and stage. You can swap models and still see apples-to-apples cost data in a single stream.
 
-See the `recordOpenAICost` helper in [`llm.ts:147-164`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/llm.ts#L147-L164) for the OpenAI-compatible path; every other adapter writes the same event shape inline.
+See the `recordOpenAICost` helper in [`llm.ts:147-164`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/llm.ts#L147-L164) for the OpenAI-compatible path; every other adapter writes the same event shape inline.
 
 ---
 
@@ -5159,7 +5052,7 @@ There are no base classes to extend, no lifecycle hooks to implement, no plugin 
 
 Provider and model selection is **composition-time** by design. Server deployments normally bind that config from env at startup. In-process harnesses can instead pass a full `RuntimeConfig` to `createCoreRuntime({ pool, config })` when they need an isolated benchmark run with a different embedding stack.
 
-The modules hold their config as module-local state, bound by the composition root. From [`embedding.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/embedding.ts):
+The modules hold their config as module-local state, bound by the composition root. From [`embedding.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/embedding.ts):
 
 ```ts
 export function initEmbedding(config: EmbeddingConfig): void {
@@ -5431,7 +5324,7 @@ That is the point of the platform layer: the engine's business logic depends on 
 
 The composition root hands every service a single `CoreStores` bundle. That bundle is the only "god object" in the system, and services destructure it down to the store they care about.
 
-From [`atomicmemory-core/src/db/stores.ts:204-219`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/db/stores.ts#L204-L219):
+From [`atomicmemory-core/src/db/stores.ts:204-219`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/db/stores.ts#L204-L219):
 
 ```ts
 export interface CoreStores {
@@ -5463,7 +5356,7 @@ Two things to notice:
 
 `MemoryStore` is the canonical write+read surface for individual memories. It includes per-user CRUD, bulk operations, statistics, and parallel `…InWorkspace` variants for the workspace/agent isolation model.
 
-From [`stores.ts:60-90`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/db/stores.ts#L60-L90):
+From [`stores.ts:60-90`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/db/stores.ts#L60-L90):
 
 ```ts
 export interface MemoryStore {
@@ -5500,7 +5393,7 @@ export interface MemoryStore {
 
 `SearchStore` is the retrieval surface. Vector search, hybrid search, keyword search, atomic-fact search, near-duplicate detection, temporal neighbors, and the id-hydration path all live here.
 
-From [`stores.ts:105-117`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/db/stores.ts#L105-L117):
+From [`stores.ts:105-117`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/db/stores.ts#L105-L117):
 
 ```ts
 export interface SearchStore {
@@ -5545,7 +5438,7 @@ Notice that `SearchStore` and `MemoryStore` are **separate interfaces** even tho
 
 Three of the stores, `ClaimStore`, `EntityStore`, `LessonStore`, aren't hand-written interfaces. They're **type-level projections** of the underlying repository class, narrowed to exactly the methods domain consumers call.
 
-From [`stores.ts:147-165`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/db/stores.ts#L147-L165):
+From [`stores.ts:147-165`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/db/stores.ts#L147-L165):
 
 ```ts
 export type ClaimStore = Pick<import('./repository-claims.js').ClaimRepository,
@@ -5569,7 +5462,7 @@ export type ClaimStore = Pick<import('./repository-claims.js').ClaimRepository,
 >;
 ```
 
-And [`stores.ts:171-184`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/db/stores.ts#L171-L184):
+And [`stores.ts:171-184`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/db/stores.ts#L171-L184):
 
 ```ts
 export type EntityStore = Pick<import('./repository-entities.js').EntityRepository,
@@ -5606,7 +5499,7 @@ This is the pattern we want across the whole platform layer: **domain consumers 
 
 Stores are plain interfaces. The shipped `Pg*` implementations in `src/db/pg-*-store.ts` delegate to split repository modules, but they're not the only shape that works.
 
-From [`atomicmemory-core/src/db/pg-memory-store.ts:33-56`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/db/pg-memory-store.ts#L33-L56):
+From [`atomicmemory-core/src/db/pg-memory-store.ts:33-56`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/db/pg-memory-store.ts#L33-L56):
 
 ```ts
 export class PgMemoryStore implements MemoryStore {
@@ -5628,7 +5521,7 @@ export class PgMemoryStore implements MemoryStore {
 }
 ```
 
-`PgSearchStore` follows the same shape, the constructor takes a pool, and each method forwards to a pure function in the read/links modules. See [`pg-search-store.ts:23-65`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/db/pg-search-store.ts#L23-L65).
+`PgSearchStore` follows the same shape, the constructor takes a pool, and each method forwards to a pure function in the read/links modules. See [`pg-search-store.ts:23-65`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/db/pg-search-store.ts#L23-L65).
 
 Because the store is an interface, **you can implement it any way you want**:
 
@@ -5645,7 +5538,7 @@ The services above don't change.
 
 All of the above comes together in `createCoreRuntime`. The runtime container is the one place that knows which concrete implementations we're using.
 
-From [`atomicmemory-core/src/app/runtime-container.ts:194-211`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/app/runtime-container.ts#L194-L211):
+From [`atomicmemory-core/src/app/runtime-container.ts:194-211`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/app/runtime-container.ts#L194-L211):
 
 ```ts
 const memory = new MemoryRepository(pool);
@@ -5701,32 +5594,47 @@ Source: https://docs.atomicmemory.ai/quickstart
 
 > Agent index: [llms.txt](/llms.txt)
 
-Docker up, first ingest, first search, in under 2 minutes.
+Install core, start a local memory service, and run your first ingest and search.
 
 ## Prerequisites
 
--   **Docker** (Docker Desktop or Docker Engine with `docker compose`)
+-   **Node.js 22+**
+-   **Docker** if you want the packaged Postgres/pgvector development stack
 -   **An LLM / embedding provider**, either:
     -   An **OpenAI API key** (default path, zero extra setup), or
     -   A local **Ollama** install if you prefer to run everything on your machine, see [providers](/platform/providers) for the env vars to swap in
 
-That is all. The Docker stack brings its own Postgres with pgvector.
+That is all. The local stack brings its own Postgres with pgvector.
 
-## Step 1, Clone and start
+## Step 1, Install
 
-Clone the core repo, copy the sample env file, drop in your API key, and bring the stack up.
+Install the CLI and core package:
 
 ```bash
-git clone https://github.com/atomicmemory/atomicmemory-core.git
-cd atomicmemory-core
-cp .env.example .env
-# edit .env, set OPENAI_API_KEY
-docker compose up -d --build
+npm install -g @atomicmemory/cli
+npm install @atomicmemory/core
 ```
 
-The `-d` runs detached; `--build` compiles the image on first run. Migrations execute automatically on container start, so the database is ready when the server binds to port `3050`.
+## Step 2, Start core
 
-## Step 2, Verify health
+Create a local profile, set your provider key, and start the packaged service:
+
+```bash
+atomicmemory init \
+  --profile local \
+  --provider atomicmemory \
+  --api-url http://127.0.0.1:3050 \
+  --trust-surface local \
+  --user "$USER" \
+  --namespace quickstart
+
+export OPENAI_API_KEY="sk-..."
+npx @atomicmemory/core start --profile local
+```
+
+The local service binds to port `3050`. In development mode it can start the packaged Postgres/pgvector stack for you; in production, point it at managed Postgres and explicit provider credentials.
+
+## Step 3, Verify health
 
 Hit the memory subsystem health endpoint to confirm the server is live and see the active runtime config.
 
@@ -5736,7 +5644,7 @@ curl http://localhost:3050/v1/memories/health
 
 You should get back a JSON object with `"status": "ok"` and a `config` snapshot showing the selected embedding and LLM providers.
 
-## Step 3, First ingest
+## Step 4, First ingest
 
 Send a conversation and let AtomicMemory extract structured facts, embed them, and run AUDN to decide what to store.
 
@@ -5748,7 +5656,7 @@ curl -X POST http://localhost:3050/v1/memories/ingest \
 
 The response reports `facts_extracted`, `memories_stored`, `stored_memory_ids`, and `updated_memory_ids`, that is AUDN telling you what survived dedup and contradiction checks.
 
-## Step 4, First search
+## Step 5, First search
 
 Query the memories you just created. AtomicMemory runs semantic retrieval, applies the active retrieval profile, and packages the result. Hybrid retrieval (vector + BM25/FTS with RRF fusion) is available through the `quality` profile or per-request config overrides, but the default `balanced` profile keeps it off.
 
@@ -5774,9 +5682,21 @@ The response carries three things worth noting:
 
 If you're building in TypeScript or JavaScript, the [SDK Quickstart](/sdk/quickstart) shows the same ingest-and-search round trip above, typed, with the SDK's policy layer (capture / injection gates) in front of the same core endpoints. The SDK is not required, everything above is just HTTP, but it handles the ergonomics, the scope helpers, and the backend-agnostic routing if you want to target more than one memory engine from the same code.
 
+## Contributor setup
+
+If you are changing core itself, clone the repo and run the source stack:
+
+```bash
+git clone https://github.com/atomicstrata/atomicmemory-core.git
+cd atomicmemory-core
+cp .env.example .env
+# edit .env, set OPENAI_API_KEY
+docker compose up -d --build
+```
+
 ## Running in production
 
-The Docker Compose stack above is the same shape you would deploy to a server or a managed container platform. For hardened production guidance, managed Postgres, secret handling, CORS, and the `CORE_RUNTIME_CONFIG_MUTATION_ENABLED` gate, follow the deployment section of the [core repo README](https://github.com/atomicmemory/atomicmemory-core#deployment).
+The local stack above is the development shape. For production, run `@atomicmemory/core` with managed Postgres, explicit provider credentials, hardened CORS, and the `CORE_RUNTIME_CONFIG_MUTATION_ENABLED` gate disabled unless an operator intentionally enables runtime config writes.
 
 ---
 
@@ -5813,7 +5733,7 @@ import {
   AtomicMemoryError,
   NetworkError,
   UnsupportedOperationError,
-} from '@atomicmemory/atomicmemory-sdk';
+} from '@atomicmemory/sdk';
 
 try {
   await memory.package(request);
@@ -6057,7 +5977,7 @@ Three fields matter in practice:
 The public way to get at an extension is `provider.getExtension<T>(name)`:
 
 ```typescript
-import type { Packager } from '@atomicmemory/atomicmemory-sdk';
+import type { Packager } from '@atomicmemory/sdk';
 
 const packager = provider.getExtension<Packager>('package');
 if (packager) {
@@ -6121,7 +6041,7 @@ Text goes in, vectors come out, vectors get compared, ranked results come back. 
 You can override the model:
 
 ```typescript
-import { EmbeddingGenerator } from '@atomicmemory/atomicmemory-sdk/embedding';
+import { EmbeddingGenerator } from '@atomicmemory/sdk/embedding';
 
 const generator = new EmbeddingGenerator({
   model: 'Xenova/all-MiniLM-L6-v2',
@@ -6314,7 +6234,7 @@ The SDK exports two adapters out of the box:
 import {
   StorageManager,
   IndexedDBStorageAdapter,
-} from '@atomicmemory/atomicmemory-sdk/storage';
+} from '@atomicmemory/sdk/storage';
 
 const adapter = new IndexedDBStorageAdapter();
 await adapter.initialize({ dbName: 'my-app-storage' });
@@ -6335,7 +6255,7 @@ The SDK does **not** ship a `ChromeStorageAdapter`. Extension authors who want t
 The full interface is eight methods. Here's the minimum to implement:
 
 ```typescript
-import type { StorageAdapter } from '@atomicmemory/atomicmemory-sdk/storage';
+import type { StorageAdapter } from '@atomicmemory/sdk/storage';
 
 export class ChromeStorageAdapter implements StorageAdapter {
   async initialize() {}
@@ -6400,7 +6320,7 @@ Source: https://docs.atomicmemory.ai/sdk/guides/atomicmemory-backend
 ## Wire it up
 
 ```typescript
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk';
+import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
   providers: {
@@ -6496,7 +6416,7 @@ The SDK ships a slim entry point for applications that run in the browser agains
 ## The ./browser subpath
 
 ```typescript
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk/browser';
+import { MemoryClient } from '@atomicmemory/sdk/browser';
 ```
 
 The `./browser` entry exports `MemoryClient`, the `MemoryProvider` interface and base class, both shipped provider adapters, and the core types. It intentionally omits `storage`, `embedding`, `search`, and `utils`, three bundles that pull in IndexedDB helpers, the transformers WASM runtime, and their dependencies. If your app talks to a remote backend and has no need for on-device persistence or local embeddings, this is the smaller import.
@@ -6553,9 +6473,9 @@ This is the right path when:
 import {
   StorageManager,
   IndexedDBStorageAdapter,
-} from '@atomicmemory/atomicmemory-sdk/storage';
-import { EmbeddingGenerator } from '@atomicmemory/atomicmemory-sdk/embedding';
-import { SemanticSearch } from '@atomicmemory/atomicmemory-sdk/search';
+} from '@atomicmemory/sdk/storage';
+import { EmbeddingGenerator } from '@atomicmemory/sdk/embedding';
+import { SemanticSearch } from '@atomicmemory/sdk/search';
 
 // 1. Storage
 const adapter = new IndexedDBStorageAdapter();
@@ -6605,7 +6525,7 @@ for (const hit of results.slice(0, 3)) {
 }
 ```
 
-The exact `SemanticSearch` API differs slightly by version, import the types from `@atomicmemory/atomicmemory-sdk/search` and read the shape. The pattern is always: vectorize the query, score it against stored vectors, rank.
+The exact `SemanticSearch` API differs slightly by version, import the types from `@atomicmemory/sdk/search` and read the shape. The pattern is always: vectorize the query, score it against stored vectors, rank.
 
 ## When to graduate to MemoryClient
 
@@ -6662,7 +6582,7 @@ import {
   type ListResultPage,
   type MemoryRef,
   type Memory,
-} from '@atomicmemory/atomicmemory-sdk';
+} from '@atomicmemory/sdk';
 
 export class MyProvider extends BaseMemoryProvider {
   readonly name = 'my-provider';
@@ -6739,7 +6659,7 @@ Two rules:
 If you want to support context packaging:
 
 ```typescript
-import type { Packager, PackageRequest, ContextPackage } from '@atomicmemory/atomicmemory-sdk';
+import type { Packager, PackageRequest, ContextPackage } from '@atomicmemory/sdk';
 
 export class MyProvider extends BaseMemoryProvider implements Packager {
   // ... core methods, capabilities ...
@@ -6775,12 +6695,12 @@ Source: https://docs.atomicmemory.ai/sdk/guides/mem0-backend
 
 `Mem0Provider` is the SDK's HTTP client for [Mem0](https://mem0.ai). It demonstrates the backend-agnostic design in practice: the same client, the same methods, a different engine behind the interface.
 
-> **Support status.** Verify the current support stance with the project before building on this path. Mem0 compatibility is exercised in tests and works for the core operations, but `Mem0Provider`'s position in the roadmap is an open question. Prefer `atomicmemory-core` when you need a first-class path.
+> **Support status.** Mem0 compatibility is available for core operations. Prefer `atomicmemory-core` when you need AtomicMemory-specific capabilities such as packaging, temporal search, versioning, audit trails, lessons, and runtime config.
 
 ## Wire it up
 
 ```typescript
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk';
+import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
   providers: {
@@ -6854,7 +6774,7 @@ This guide covers the two things that differ from the browser path: storage sele
 import {
   StorageManager,
   MemoryStorageAdapter,
-} from '@atomicmemory/atomicmemory-sdk/storage';
+} from '@atomicmemory/sdk/storage';
 
 const adapter = new MemoryStorageAdapter();
 await adapter.initialize();
@@ -6879,7 +6799,7 @@ The recommended shape on a server is:
 
 ```typescript
 import express from 'express';
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk';
+import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
   providers: { atomicmemory: { apiUrl: process.env.CORE_URL! } },
@@ -6938,7 +6858,7 @@ Two scenarios come up in practice: runtime swap (flip providers without restarti
 `MemoryClient` is initialized with a `providers` map and an optional `defaultProvider`; swapping means destroying the current client and constructing a new one. There is no live reconfigure path, by design, providers hold HTTP clients, caches, and init state, and a clean reconstruction is easier to reason about than partial rewiring.
 
 ```typescript
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk';
+import { MemoryClient } from '@atomicmemory/sdk';
 
 async function withProvider(defaultProvider: 'atomicmemory' | 'mem0') {
   const memory = new MemoryClient({
@@ -7028,7 +6948,7 @@ Source: https://docs.atomicmemory.ai/sdk/overview
 
 A TypeScript client for memory, pluggable across backends.
 
-`@atomicmemory/atomicmemory-sdk` is a platform utility, not a framework. It gives application code a single, typed API for ingest, search, and context assembly, and it stays agnostic to which memory engine sits behind it. The same client can talk to a self-hosted `atomicmemory-core`, a Mem0 service, or a custom backend you wire yourself.
+`@atomicmemory/sdk` is a platform utility, not a framework. It gives application code a single, typed API for ingest, search, and context assembly, and it stays agnostic to which memory engine sits behind it. The same client can talk to a self-hosted `atomicmemory-core`, a Mem0 service, or a custom backend you wire yourself.
 
 ## Three-point value prop
 
@@ -7039,7 +6959,7 @@ A TypeScript client for memory, pluggable across backends.
 ## MemoryClient, the canonical public API
 
 ```ts
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk';
+import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
   providers: { atomicmemory: { apiUrl: 'http://localhost:3050' } },
@@ -7069,7 +6989,7 @@ The first three topologies route through `MemoryClient`. The fourth composes the
 For browser applications that talk to a backend-hosted core through `MemoryClient` and don't need on-device storage or embeddings, import from the `./browser` subpath, a slim bundle that omits `storage`, `embedding`, `search`, and `utils`:
 
 ```ts
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk/browser';
+import { MemoryClient } from '@atomicmemory/sdk/browser';
 ```
 
 ## Where to go from here
@@ -7092,13 +7012,13 @@ Install, initialize, and make your first ingest and search, with `MemoryClient` 
 
 ## Prerequisites
 
--   **Node.js ≥ 20** (the SDK is ESM + CJS; the core container runs on `node:22-slim`)
+-   **Node.js 22+** (FOC/Filecoin storage paths require Node 24+)
 -   **A running `atomicmemory-core`**, follow the [Core Quickstart](/quickstart) if you have not yet brought one up; we assume `http://localhost:3050` below
 
 ## Step 1, Install
 
 ```bash
-npm install @atomicmemory/atomicmemory-sdk
+npm install @atomicmemory/sdk
 ```
 
 Also works with `pnpm add` / `yarn add`.
@@ -7108,7 +7028,7 @@ Also works with `pnpm add` / `yarn add`.
 `MemoryClient` needs one thing: a `providers` map telling it which memory backend(s) to use and how to reach them.
 
 ```typescript
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk';
+import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
   providers: {

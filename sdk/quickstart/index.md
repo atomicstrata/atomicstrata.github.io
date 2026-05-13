@@ -6,13 +6,13 @@ Install, initialize, and make your first ingest and search, with `MemoryClient` 
 
 ## Prerequisites
 
--   **Node.js ≥ 20** (the SDK is ESM + CJS; the core container runs on `node:22-slim`)
+-   **Node.js 22+** (FOC/Filecoin storage paths require Node 24+)
 -   **A running `atomicmemory-core`**, follow the [Core Quickstart](/quickstart) if you have not yet brought one up; we assume `http://localhost:3050` below
 
 ## Step 1, Install
 
 ```bash
-npm install @atomicmemory/atomicmemory-sdk
+npm install @atomicmemory/sdk
 ```
 
 Also works with `pnpm add` / `yarn add`.
@@ -22,7 +22,7 @@ Also works with `pnpm add` / `yarn add`.
 `MemoryClient` needs one thing: a `providers` map telling it which memory backend(s) to use and how to reach them.
 
 ```typescript
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk';
+import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
   providers: {

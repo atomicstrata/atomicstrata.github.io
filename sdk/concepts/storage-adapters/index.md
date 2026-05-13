@@ -27,7 +27,7 @@ The SDK exports two adapters out of the box:
 import {
   StorageManager,
   IndexedDBStorageAdapter,
-} from '@atomicmemory/atomicmemory-sdk/storage';
+} from '@atomicmemory/sdk/storage';
 
 const adapter = new IndexedDBStorageAdapter();
 await adapter.initialize({ dbName: 'my-app-storage' });
@@ -48,7 +48,7 @@ The SDK does **not** ship a `ChromeStorageAdapter`. Extension authors who want t
 The full interface is eight methods. Here's the minimum to implement:
 
 ```typescript
-import type { StorageAdapter } from '@atomicmemory/atomicmemory-sdk/storage';
+import type { StorageAdapter } from '@atomicmemory/sdk/storage';
 
 export class ChromeStorageAdapter implements StorageAdapter {
   async initialize() {}

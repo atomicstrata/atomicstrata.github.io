@@ -8,7 +8,7 @@ This page walks through the five domains, shows where each lives in the real sou
 
 ## The five domains
 
-The `MemoryService` class is a **thin facade**. It holds no business logic, every public method delegates to one of five domain modules. Here is the whole shape of the facade (see [`src/services/memory-service.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/memory-service.ts)):
+The `MemoryService` class is a **thin facade**. It holds no business logic, every public method delegates to one of five domain modules. Here is the whole shape of the facade (see [`src/services/memory-service.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/memory-service.ts)):
 
 atomicmemory-core/src/services/memory-service.ts
 
@@ -40,7 +40,7 @@ Every method is a one-liner. The class exists only to resolve the right domain m
 
 ### 1. Ingest domain
 
-**File:** [`src/services/memory-ingest.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/memory-ingest.ts) **Entry points:** `performIngest`, `performQuickIngest`, `performStoreVerbatim`, `performWorkspaceIngest`
+**File:** [`src/services/memory-ingest.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/memory-ingest.ts) **Entry points:** `performIngest`, `performQuickIngest`, `performStoreVerbatim`, `performWorkspaceIngest`
 
 Ingest turns raw conversation text into canonical, deduplicated, trust-scored memory rows. It owns:
 
@@ -76,7 +76,7 @@ Why is this shaped this way? Because *ingest strategy* is the thing users most w
 
 ### 2. Search domain
 
-**File:** [`src/services/memory-search.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/memory-search.ts) **Entry points:** `performSearch`, `performFastSearch`, `performWorkspaceSearch`
+**File:** [`src/services/memory-search.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/memory-search.ts) **Entry points:** `performSearch`, `performFastSearch`, `performWorkspaceSearch`
 
 Search is pure orchestration. The file's own header comment is explicit about this: it "delegates formatting to retrieval-format, dedup to composite-dedup, side effects to retrieval-side-effects, lesson recording to lesson-service, and the main retrieval to search-pipeline." Every one of those is a separately replaceable module.
 
@@ -107,7 +107,7 @@ Notice what is *not* here: no direct SQL, no embedding calls, no ranker implemen
 
 ### 3. CRUD domain
 
-**File:** [`src/services/memory-crud.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/memory-crud.ts) **Entry points:** `listMemories`, `getMemory`, `expandMemories`, `deleteMemory`, `resetBySource`, plus workspace-scoped variants
+**File:** [`src/services/memory-crud.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/memory-crud.ts) **Entry points:** `listMemories`, `getMemory`, `expandMemories`, `deleteMemory`, `resetBySource`, plus workspace-scoped variants
 
 CRUD covers the operational surface, everything that is neither ingest nor similarity search. List, get, expand (staged-to-full content), soft delete, source-scoped reset, audit trail, mutation summary, lesson management. Each is a one- or two-line function that reads or writes through the store interfaces on `deps.stores`.
 
@@ -136,7 +136,7 @@ The reason this is its own domain (not a grab-bag inside ingest or search) is th
 
 ### 4. Lifecycle domain
 
-**File:** [`src/services/memory-lifecycle.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/memory-lifecycle.ts) **Entry points:** `evaluateDecayCandidates`, `checkMemoryCap`, plus `consolidate` / `executeConsolidation` via CRUD
+**File:** [`src/services/memory-lifecycle.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/memory-lifecycle.ts) **Entry points:** `evaluateDecayCandidates`, `checkMemoryCap`, plus `consolidate` / `executeConsolidation` via CRUD
 
 Lifecycle is the "what should happen to memory over time" domain. Decay (Ebbinghaus forgetting curve), memory-count caps, consolidation cluster identification, deferred AUDN reconciliation. The module header is explicit about the design principle:
 
@@ -166,7 +166,7 @@ It takes config and a memory row, returns a number. No database, no side effects
 
 ### 5. Trust domain
 
-**Files:** [`src/services/trust-scoring.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/trust-scoring.ts) + [`src/services/write-security.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/write-security.ts) **Entry points:** `computeTrustScore`, `assessWriteSecurity`, `applyTrustPenalty`
+**Files:** [`src/services/trust-scoring.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/trust-scoring.ts) + [`src/services/write-security.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/write-security.ts) **Entry points:** `computeTrustScore`, `assessWriteSecurity`, `applyTrustPenalty`
 
 Trust is enforced at two points, **write time** (before a memory is stored) and **read time** (when ranking candidates). At write time, `assessWriteSecurity` is the single gate every ingest path must pass through. It composes sanitization with trust scoring so the standard and hive ingest flows physically cannot diverge on what counts as unsafe content:
 

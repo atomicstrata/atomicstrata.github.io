@@ -17,34 +17,6 @@ Hermes owns lifecycle and tool invocation. The Python SDK owns provider selectio
 
 ## Install
 
-Source-only
-
-The Hermes provider currently lives under [`plugins/hermes`](https://github.com/atomicstrata/atomicmemory-integrations/tree/main/plugins/hermes) and imports `atomicmemory-python` from a local checkout. Install from source until the Python SDK and provider package are published.
-
-Prerequisites:
-
--   Hermes Agent installed with `HERMES_HOME` set.
--   A local `atomicmemory-python` checkout.
--   A local `atomicmemory-integrations` checkout.
--   A running AtomicMemory core URL exported as `ATOMICMEMORY_API_URL`.
-
-Clone `atomicmemory-python` and `atomicmemory-integrations` side-by-side, then symlink the provider into Hermes' memory-provider directory:
-
-```bash
-git clone https://github.com/atomicstrata/atomicmemory-python.git
-git clone https://github.com/atomicstrata/atomicmemory-integrations.git
-
-cd atomicmemory-integrations
-mkdir -p "$HERMES_HOME/plugins/memory"
-ln -s "$(pwd)/plugins/hermes" "$HERMES_HOME/plugins/memory/atomicmemory"
-```
-
-If your Python SDK checkout is somewhere else:
-
-```bash
-export ATOMICMEMORY_PYTHON_SDK_PATH="/path/to/atomicmemory-python"
-```
-
 Export the core URL before launching Hermes:
 
 ```bash

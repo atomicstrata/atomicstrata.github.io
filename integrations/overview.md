@@ -23,7 +23,7 @@ Each coding-agent integration is now split into two tracks:
 -   **Local** — the self-managed workflow.
 -   **Cloud** — a separate page reserved for the hosted model and rollout details.
 
-The Local pages currently render the development path: clone the repos, build locally, and install from source.
+The Local pages currently render the production-ready self-managed path: published plugins or packages against your own AtomicMemory deployment.
 
 | Integration | Overview | Local | Cloud |
 | --- | --- | --- | --- |

@@ -20,7 +20,7 @@ import {
   type ListResultPage,
   type MemoryRef,
   type Memory,
-} from '@atomicmemory/atomicmemory-sdk';
+} from '@atomicmemory/sdk';
 
 export class MyProvider extends BaseMemoryProvider {
   readonly name = 'my-provider';
@@ -97,7 +97,7 @@ Two rules:
 If you want to support context packaging:
 
 ```typescript
-import type { Packager, PackageRequest, ContextPackage } from '@atomicmemory/atomicmemory-sdk';
+import type { Packager, PackageRequest, ContextPackage } from '@atomicmemory/sdk';
 
 export class MyProvider extends BaseMemoryProvider implements Packager {
   // ... core methods, capabilities ...

@@ -8,7 +8,7 @@ AtomicMemory integrates with Cursor through the shared MCP server and a rules fi
 
 ### Local
 
-Use this when you want the self-managed Cursor path and need the current clone-from-source workflow.
+Use this when you want the self-managed Cursor path with the published MCP package and manual Cursor setup.
 
 See [Cursor Local](/integrations/coding-agents/cursor/local).
 

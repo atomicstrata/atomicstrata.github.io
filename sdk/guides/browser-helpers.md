@@ -7,7 +7,7 @@ The SDK ships a slim entry point for applications that run in the browser agains
 ## The ./browser subpath
 
 ```typescript
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk/browser';
+import { MemoryClient } from '@atomicmemory/sdk/browser';
 ```
 
 The `./browser` entry exports `MemoryClient`, the `MemoryProvider` interface and base class, both shipped provider adapters, and the core types. It intentionally omits `storage`, `embedding`, `search`, and `utils`, three bundles that pull in IndexedDB helpers, the transformers WASM runtime, and their dependencies. If your app talks to a remote backend and has no need for on-device persistence or local embeddings, this is the smaller import.

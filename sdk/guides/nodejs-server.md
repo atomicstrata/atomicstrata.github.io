@@ -14,7 +14,7 @@ This guide covers the two things that differ from the browser path: storage sele
 import {
   StorageManager,
   MemoryStorageAdapter,
-} from '@atomicmemory/atomicmemory-sdk/storage';
+} from '@atomicmemory/sdk/storage';
 
 const adapter = new MemoryStorageAdapter();
 await adapter.initialize();
@@ -39,7 +39,7 @@ The recommended shape on a server is:
 
 ```typescript
 import express from 'express';
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk';
+import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
   providers: { atomicmemory: { apiUrl: process.env.CORE_URL! } },

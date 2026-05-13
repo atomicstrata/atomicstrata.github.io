@@ -10,7 +10,7 @@ That is the point of the platform layer: the engine's business logic depends on 
 
 The composition root hands every service a single `CoreStores` bundle. That bundle is the only "god object" in the system, and services destructure it down to the store they care about.
 
-From [`atomicmemory-core/src/db/stores.ts:204-219`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/db/stores.ts#L204-L219):
+From [`atomicmemory-core/src/db/stores.ts:204-219`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/db/stores.ts#L204-L219):
 
 ```ts
 export interface CoreStores {
@@ -42,7 +42,7 @@ Two things to notice:
 
 `MemoryStore` is the canonical write+read surface for individual memories. It includes per-user CRUD, bulk operations, statistics, and parallel `…InWorkspace` variants for the workspace/agent isolation model.
 
-From [`stores.ts:60-90`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/db/stores.ts#L60-L90):
+From [`stores.ts:60-90`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/db/stores.ts#L60-L90):
 
 ```ts
 export interface MemoryStore {
@@ -79,7 +79,7 @@ export interface MemoryStore {
 
 `SearchStore` is the retrieval surface. Vector search, hybrid search, keyword search, atomic-fact search, near-duplicate detection, temporal neighbors, and the id-hydration path all live here.
 
-From [`stores.ts:105-117`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/db/stores.ts#L105-L117):
+From [`stores.ts:105-117`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/db/stores.ts#L105-L117):
 
 ```ts
 export interface SearchStore {
@@ -124,7 +124,7 @@ Notice that `SearchStore` and `MemoryStore` are **separate interfaces** even tho
 
 Three of the stores, `ClaimStore`, `EntityStore`, `LessonStore`, aren't hand-written interfaces. They're **type-level projections** of the underlying repository class, narrowed to exactly the methods domain consumers call.
 
-From [`stores.ts:147-165`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/db/stores.ts#L147-L165):
+From [`stores.ts:147-165`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/db/stores.ts#L147-L165):
 
 ```ts
 export type ClaimStore = Pick<import('./repository-claims.js').ClaimRepository,
@@ -148,7 +148,7 @@ export type ClaimStore = Pick<import('./repository-claims.js').ClaimRepository,
 >;
 ```
 
-And [`stores.ts:171-184`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/db/stores.ts#L171-L184):
+And [`stores.ts:171-184`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/db/stores.ts#L171-L184):
 
 ```ts
 export type EntityStore = Pick<import('./repository-entities.js').EntityRepository,
@@ -185,7 +185,7 @@ This is the pattern we want across the whole platform layer: **domain consumers 
 
 Stores are plain interfaces. The shipped `Pg*` implementations in `src/db/pg-*-store.ts` delegate to split repository modules, but they're not the only shape that works.
 
-From [`atomicmemory-core/src/db/pg-memory-store.ts:33-56`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/db/pg-memory-store.ts#L33-L56):
+From [`atomicmemory-core/src/db/pg-memory-store.ts:33-56`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/db/pg-memory-store.ts#L33-L56):
 
 ```ts
 export class PgMemoryStore implements MemoryStore {
@@ -207,7 +207,7 @@ export class PgMemoryStore implements MemoryStore {
 }
 ```
 
-`PgSearchStore` follows the same shape, the constructor takes a pool, and each method forwards to a pure function in the read/links modules. See [`pg-search-store.ts:23-65`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/db/pg-search-store.ts#L23-L65).
+`PgSearchStore` follows the same shape, the constructor takes a pool, and each method forwards to a pure function in the read/links modules. See [`pg-search-store.ts:23-65`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/db/pg-search-store.ts#L23-L65).
 
 Because the store is an interface, **you can implement it any way you want**:
 
@@ -224,7 +224,7 @@ The services above don't change.
 
 All of the above comes together in `createCoreRuntime`. The runtime container is the one place that knows which concrete implementations we're using.
 
-From [`atomicmemory-core/src/app/runtime-container.ts:194-211`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/app/runtime-container.ts#L194-L211):
+From [`atomicmemory-core/src/app/runtime-container.ts:194-211`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/app/runtime-container.ts#L194-L211):
 
 ```ts
 const memory = new MemoryRepository(pool);

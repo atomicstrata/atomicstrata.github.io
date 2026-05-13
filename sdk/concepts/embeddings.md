@@ -17,7 +17,7 @@ Text goes in, vectors come out, vectors get compared, ranked results come back. 
 You can override the model:
 
 ```typescript
-import { EmbeddingGenerator } from '@atomicmemory/atomicmemory-sdk/embedding';
+import { EmbeddingGenerator } from '@atomicmemory/sdk/embedding';
 
 const generator = new EmbeddingGenerator({
   model: 'Xenova/all-MiniLM-L6-v2',

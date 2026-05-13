@@ -7,7 +7,7 @@
 ## Wire it up
 
 ```typescript
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk';
+import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
   providers: {

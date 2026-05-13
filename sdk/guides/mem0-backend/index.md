@@ -4,12 +4,12 @@
 
 `Mem0Provider` is the SDK's HTTP client for [Mem0](https://mem0.ai). It demonstrates the backend-agnostic design in practice: the same client, the same methods, a different engine behind the interface.
 
-> **Support status.** Verify the current support stance with the project before building on this path. Mem0 compatibility is exercised in tests and works for the core operations, but `Mem0Provider`'s position in the roadmap is an open question. Prefer `atomicmemory-core` when you need a first-class path.
+> **Support status.** Mem0 compatibility is available for core operations. Prefer `atomicmemory-core` when you need AtomicMemory-specific capabilities such as packaging, temporal search, versioning, audit trails, lessons, and runtime config.
 
 ## Wire it up
 
 ```typescript
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk';
+import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
   providers: {

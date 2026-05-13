@@ -2,198 +2,224 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Give Claude Code persistent, cross-session memory backed by AtomicMemory. The plugin installs one MCP server exposing `memory_search`, `memory_ingest`, `memory_package`, and `memory_list`, a `SKILL.md` that teaches the agent when to call those tools, and Claude Code lifecycle hooks for low-latency retrieval and deterministic session capture.
+Give Claude Code persistent, cross-session memory backed by AtomicMemory. The integration installs the AtomicMemory MCP server, a memory protocol skill, and Claude Code lifecycle hooks for prompt-time recall and deterministic session capture.
 
-Source-only
+## Quick start
 
-`@atomicmemory/mcp-server` and the Claude Code plugin are not published to npm or to the Claude plugin marketplace yet. Install from a local clone of [`atomicmemory-integrations`](https://github.com/atomicstrata/atomicmemory-integrations).
-
-## What you get
-
--   **Durable memory across sessions.** Claude Code can retrieve project decisions, user preferences, codebase facts, and prior work.
--   **Prompt-time retrieval.** `UserPromptSubmit` searches memory before the model turn and injects matches as untrusted reference context.
--   **Deterministic lifecycle capture.** `PostCompact`, `Stop`, and `TaskCompleted` store compact records without asking the model to reconstruct everything.
--   **Scope-aware retrieval.** `user` / `agent` / `namespace` / `thread` scopes are threaded through MCP calls. Hook writes keep content clean and carry attribution through `sourceSite` / `sourceUrl` until core supports first-class hook metadata.
--   **Backend-agnostic.** Point the plugin at self-hosted AtomicMemory core or another provider registered in the SDK's `MemoryProvider` registry.
-
-## Install
-
-Clone `atomicmemory-sdk` and `atomicmemory-integrations` side-by-side, then build each in order:
+### 1. Install the plugin
 
 ```bash
-git clone https://github.com/atomicstrata/atomicmemory-sdk.git
-git clone https://github.com/atomicstrata/atomicmemory-integrations.git
-
-cd atomicmemory-sdk
-pnpm install
-pnpm build
-
-cd ../atomicmemory-integrations
-pnpm install
-pnpm --filter @atomicmemory/mcp-server build
+claude plugin marketplace add atomicstrata/atomicmemory
+claude plugin install atomicmemory
 ```
 
-Install `jq` and `curl` for the shell hooks, then export config before launching Claude Code:
+### 2. Choose a memory extraction provider
+
+For personal local use, use Claude Code's own authenticated session:
 
 ```bash
-export ATOMICMEMORY_MCP_SERVER_BIN="$HOME/path/to/atomicmemory-integrations/packages/mcp-server/dist/bin.js"
-export ATOMICMEMORY_PROVIDER="atomicmemory"
+export ATOMICMEMORY_LLM_PROVIDER=claude-code
+```
+
+This requires Claude Code to be installed and logged in locally. It does not require a separate Anthropic API key, but it consumes the user's Claude Code / Claude subscription limits and is not intended for hosted or team deployments.
+
+For production or team use, use a normal API-backed provider instead:
+
+```bash
+export ANTHROPIC_API_KEY="sk-ant-..."
+# or
+export OPENAI_API_KEY="sk-..."
+```
+
+### 3. Start Claude Code
+
+```bash
+claude
+```
+
+The plugin starts and manages the local AtomicMemory runtime automatically. It captures completed work, recalls relevant memory before prompts, and exposes memory tools to Claude Code.
+
+### 4. Verify memory tools
+
+Ask Claude Code to list its MCP tools. You should see:
+
+-   `memory_search`
+-   `memory_ingest`
+-   `memory_package`
+-   `memory_list`
+
+For a tools-only setup, register the published MCP server directly:
+
+```json
+{
+  "mcpServers": {
+    "atomicmemory": {
+      "command": "npx",
+      "args": ["-y", "@atomicmemory/mcp-server"]
+    }
+  }
+}
+```
+
+## Features
+
+-   **Cross-session recall.** Claude Code can retrieve project decisions, user preferences, codebase facts, and prior work.
+-   **Prompt-time retrieval.** `UserPromptSubmit` searches memory before the model turn and injects matching memories as untrusted reference context.
+-   **Deterministic capture.** `PostCompact`, `Stop`, and `TaskCompleted` store compact session records without asking the model to reconstruct everything.
+-   **Auto-managed local runtime.** For local use, the plugin starts and manages the AtomicMemory runtime instead of requiring a separate core quickstart.
+-   **Memory protocol skill.** The installed skill teaches Claude when to search, when to ingest, and when to create handoff snapshots.
+-   **Scoped memory.** `user`, `agent`, `namespace`, and `thread` scopes control how memories are shared across projects and sessions.
+-   **Backend-agnostic SDK path.** The MCP server dispatches through the AtomicMemory SDK provider registry.
+
+## Modes of operation
+
+### Local auto-managed mode
+
+Use local auto-managed mode for personal Claude Code memory. The plugin starts AtomicMemory locally, binds Claude Code hooks to it, and can use `ATOMICMEMORY_LLM_PROVIDER=claude-code` for extraction without a separate API key.
+
+| Capability | Included |
+| --- | --- |
+| MCP tools | Yes |
+| Memory protocol skill | Yes |
+| Prompt-time retrieval hooks | Yes |
+| Session capture hooks | Yes |
+| Local runtime management | Yes |
+
+### External AtomicMemory mode
+
+Hosted AtomicMemory coming soon
+
+Hosted AtomicMemory for Claude Code is planned but not yet available. For now, use this mode with your own self-hosted AtomicMemory deployment.
+
+Use external mode when a team or production deployment runs AtomicMemory for you. Configure the service URL and token, and let the hosted service own LLM credentials, storage, backups, and policy.
+
+```bash
 export ATOMICMEMORY_API_URL="https://memory.yourco.com"
 export ATOMICMEMORY_API_KEY="am_live_..."
-export ATOMICMEMORY_SCOPE_USER="pip"
-export ATOMICMEMORY_CAPTURE_LEVEL="balanced" # minimal|balanced|full
-
-# Optional:
-export ATOMICMEMORY_SCOPE_AGENT="claude-code"
-export ATOMICMEMORY_SCOPE_NAMESPACE="<repo-or-project>"
-export ATOMICMEMORY_SCOPE_THREAD="<thread-id>"
 ```
 
-Even in the source-backed flow, provider, URL, credentials, and scope come from the shell or Claude Code environment.
+### MCP-only mode
 
-Register and install from the local repo:
+Use MCP-only mode when you want explicit memory tools without lifecycle hooks or agent skill instructions. This is the smallest integration surface and is useful for locked-down environments that manage host prompts separately.
+
+| Capability | Included |
+| --- | --- |
+| MCP tools | Yes |
+| Memory protocol skill | No |
+| Prompt-time retrieval hooks | No |
+| Session capture hooks | No |
+
+### CLI-generated hooks
+
+The plugin ships hooks by default. If you maintain your own Claude Code config, the AtomicMemory CLI can generate equivalent hook snippets:
 
 ```bash
-claude plugin marketplace add ./
-claude plugin install claude-code@atomicmemory
+atomicmemory hooks install --host claude-code --runtime node
 ```
 
-## Update and Version
-
-Claude Code plugin updates are version-gated. After changing hooks, skills, `hooks.json`, plugin manifests, or marketplace metadata, bump plugin versions from `atomicmemory-integrations` before `claude plugin update claude-code@atomicmemory` will refresh the installed cache.
-
-```bash
-pnpm bump:plugin-versions patch
-```
-
-For local testing:
-
-```bash
-pnpm --filter @atomicmemory/mcp-server build
-claude plugin marketplace list
-claude plugin update claude-code@atomicmemory
-```
-
-If the marketplace points at an old clone, replace it from the current checkout:
-
-```bash
-claude plugin marketplace remove atomicmemory
-claude plugin marketplace add ./ --scope user
-claude plugin install claude-code@atomicmemory
-```
-
-Fully restart Claude Code after updating. Existing sessions can keep old hook registrations in memory even when the installed cache on disk is fresh.
+Node is the default hook runtime because it shares the TypeScript SDK adapter and CLI packaging. Python hook generation is available for Python-first environments that provide a compatible hook runner.
 
 ## Configuration
 
-Required:
+The plugin ships with local defaults. Configure only what you want to change.
+
+Default behavior:
+
+| Setting | Default |
+| --- | --- |
+| Runtime | Auto-managed local AtomicMemory |
+| Service URL | Local plugin-managed runtime |
+| User scope | Claude Code user/session context, then local fallback |
+| Agent scope | `claude-code` |
+| Capture level | `balanced` |
+| Memory extraction provider | Auto-detect API key providers, or explicit `claude-code` |
+
+Common overrides:
+
+```bash
+export ATOMICMEMORY_LLM_PROVIDER=claude-code
+export ATOMICMEMORY_SCOPE_NAMESPACE="repo-or-project"
+export ATOMICMEMORY_CAPTURE_LEVEL=balanced
+```
+
+Advanced values:
 
 | Env var | Used by | Purpose |
 | --- | --- | --- |
-| `ATOMICMEMORY_MCP_SERVER_BIN` | MCP manifest | Absolute path to `packages/mcp-server/dist/bin.js` |
-| `ATOMICMEMORY_PROVIDER` | MCP + hooks | Provider name; Claude lifecycle hooks require `atomicmemory` |
-| `ATOMICMEMORY_API_URL` | MCP + hooks | AtomicMemory service URL |
-| `ATOMICMEMORY_API_KEY` | MCP + hooks | API key when your provider requires auth |
-| `ATOMICMEMORY_SCOPE_USER` | MCP + hooks | Required user scope |
-| `ATOMICMEMORY_CAPTURE_LEVEL` | hooks | Lifecycle write volume: `minimal`, `balanced`, or `full` |
+| `ATOMICMEMORY_LLM_PROVIDER` | local runtime | Extraction provider. Use `claude-code` for personal local use without a separate API key. |
+| `ANTHROPIC_API_KEY` | local runtime | Anthropic provider key for production or team usage. |
+| `OPENAI_API_KEY` | local runtime | OpenAI provider key. |
+| `ATOMICMEMORY_API_URL` | MCP + hooks | External AtomicMemory service URL. When omitted, the plugin uses local auto-managed mode. |
+| `ATOMICMEMORY_API_KEY` | MCP + hooks | API key for an external AtomicMemory service. |
+| `ATOMICMEMORY_SCOPE_USER` | MCP + hooks | User identity override. |
+| `ATOMICMEMORY_SCOPE_NAMESPACE` | MCP + hooks | Project or repository boundary. |
+| `ATOMICMEMORY_SCOPE_AGENT` | MCP + hooks | Agent identity. Defaults to `claude-code`. |
+| `ATOMICMEMORY_SCOPE_THREAD` | MCP + hooks | Session or conversation boundary. |
+| `ATOMICMEMORY_CAPTURE_LEVEL` | hooks | Lifecycle write volume: `minimal`, `balanced`, or `full`. Defaults to `balanced`. |
+| `ATOMICMEMORY_PROMPT_SEARCH_ENABLED=false` | hooks | Disable prompt-time retrieval. |
+| `ATOMICMEMORY_PROMPT_SEARCH_MIN_CHARS=20` | hooks | Skip very short prompt searches. |
+| `ATOMICMEMORY_PROMPT_SEARCH_LIMIT=5` | hooks | Prompt-search result count. |
+| `ATOMICMEMORY_STOP_MIN_ASSISTANT_CHARS=200` | hooks | Minimum assistant text size for `Stop` capture. |
+| `ATOMICMEMORY_TASK_MIN_TOOL_CALLS=5` | hooks | `TaskCompleted` threshold under `minimal` capture. |
+| `ATOMICMEMORY_SEMANTIC_PROMPTS_ENABLED=false` | hooks | Disable extra `Stop` prompts for model-mediated learnings. |
 
-Optional:
+Invalid or missing required config fails loudly. Hooks do not run in degraded mode.
 
-| Env var | Purpose |
-| --- | --- |
-| `ATOMICMEMORY_SCOPE_NAMESPACE` | Project/repo boundary |
-| `ATOMICMEMORY_SCOPE_AGENT` | Agent identity |
-| `ATOMICMEMORY_SCOPE_THREAD` | Session/thread boundary |
-| `ATOMICMEMORY_PROMPT_SEARCH_ENABLED=false` | Disable prompt-time retrieval |
-| `ATOMICMEMORY_PROMPT_SEARCH_MIN_CHARS=20` | Skip very short prompt searches; must be a positive integer if set |
-| `ATOMICMEMORY_PROMPT_SEARCH_LIMIT=5` | Prompt-search result count; must be a positive integer if set |
-| `ATOMICMEMORY_STOP_MIN_ASSISTANT_CHARS=200` | Minimum assistant text size for `Stop` capture; must be a positive integer if set. The default is tuned for Claude Code's typical multi-paragraph responses; lower it if your workflow produces shorter stop turns that should still be captured. |
-| `ATOMICMEMORY_TASK_MIN_TOOL_CALLS=5` | `TaskCompleted` threshold under `minimal` capture; must be a positive integer if set |
-| `ATOMICMEMORY_SEMANTIC_PROMPTS_ENABLED=false` | Disable extra `Stop` prompts for model-mediated learnings; must be `true` or `false` if set |
-
-If required config is missing, helper tools are unavailable, or numeric/boolean env vars are invalid, hooks surface the error instead of running in a degraded mode.
-
-Use `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or `ATOMICMEMORY_SCOPE_THREAD` only when you want narrower partitions.
-
-## MCP tools exposed
+## MCP tools
 
 | Tool | Maps to | Purpose |
 | --- | --- | --- |
-| `memory_search` | `MemoryClient.search` | Semantic retrieval with scope filters |
-| `memory_ingest` | `MemoryClient.ingest` | Durable write. `mode: "text"` and `mode: "messages"` run extraction; `mode: "verbatim"` stores one deterministic record for summaries and handoffs |
-| `memory_package` | `MemoryClient.package` | Token-budgeted context package for a query |
-| `memory_list` | `MemoryClient.list` | Recent-memory listing for the configured scope, with optional `sourceSite` filtering on AtomicMemory providers |
+| `memory_search` | `MemoryClient.search` | Semantic retrieval with scope filters. |
+| `memory_ingest` | `MemoryClient.ingest` | Durable write. `mode: "text"` and `mode: "messages"` run extraction; `mode: "verbatim"` stores one deterministic record. |
+| `memory_package` | `MemoryClient.package` | Token-budgeted context package for a query. |
+| `memory_list` | `MemoryClient.list` | Recent-memory listing for the configured scope. |
 
-For lifecycle dedupe, pass a stable `metadata.dedupe_key` when using `mode: "verbatim"`. AtomicMemory verbatim records store only the provided content in the searchable `content` field; provenance is carried by `sourceSite` / `sourceUrl` until core exposes first-class hook-write metadata and server-side dedupe.
+Use `mode: "text"` for extracted durable facts and `mode: "verbatim"` for exact handoffs, compact summaries, and lifecycle records.
 
 ## Lifecycle hooks
 
 | Hook | What it does |
 | --- | --- |
-| `SessionStart` | Injects bootstrap guidance telling Claude to call `memory_search` early. Separate prompts for `startup`, `resume`, and `compact`. |
-| `UserPromptSubmit` | Searches `/v1/memories/search/fast` directly and injects matching memories as untrusted additional context. |
-| `PreCompact` | No-op by design. It never blocks compaction; `PostCompact` handles deterministic summary capture. |
-| `PostCompact` | Stores Claude Code's generated `compact_summary` as a deterministic lifecycle record. This is the primary compaction-capture path. |
-| `Stop` | On meaningful turns, stores a normalized deterministic record with outcome, changed files, and validation. Tool counts, session IDs, cwd, and transcript paths are intentionally kept out of searchable content until core exposes first-class hook metadata. Optionally prompts Claude for decisions, preferences, and anti-patterns. |
-| `StopFailure` | Debug telemetry only; no memory write. |
-| `SessionEnd` | Cleans local dedupe / last-write markers. |
-| `TaskCompleted` | Stores a compact task record using the documented `task_subject` field. |
-| `PreToolUse` (`Write` / `Edit`) | Blocks writes to `MEMORY.md`, `.atomicmemory`, and Claude memory-file paths so agents use `memory_ingest` instead. |
+| `SessionStart` | Injects bootstrap guidance telling Claude to call `memory_search` early. |
+| `UserPromptSubmit` | Searches memory before the model turn and injects matches as reference context. |
+| `PreCompact` | No-op by design; compaction is never blocked. |
+| `PostCompact` | Stores Claude Code's generated compact summary as a deterministic record. |
+| `Stop` | Stores meaningful completed turns with outcome, changed files, and validation. |
+| `StopFailure` | Emits debug telemetry only; no memory write. |
+| `SessionEnd` | Cleans local dedupe and last-write markers. |
+| `TaskCompleted` | Stores compact task records. |
+| `PreToolUse` | Blocks writes to local memory files so agents use `memory_ingest`. |
 
-Lifecycle writes are compact records, not raw prompt dumps. Hook scripts redact obvious secret-shaped values and strip fenced code blocks / follow-up prompts from Stop summaries before writing.
-
-### CLI-generated hook snippets
-
-The installed Claude Code plugin ships versioned shell hooks. For manual hook configs, the AtomicMemory CLI can generate equivalent host snippets with a runtime choice:
-
-```bash
-# Recommended: bundled Node CLI hook runner.
-atomicmemory hooks install --host claude-code --runtime node
-
-# Advanced: emit config for a compatible Python hook runner.
-atomicmemory hooks install --host claude-code --runtime python
-```
-
-Node is the default because it shares the TypeScript SDK adapter and CLI packaging. Python is an advanced option for Python-first environments; set `ATOMICMEMORY_PYTHON_HOOK_BIN` to a compatible Python hook runner before using the generated Python snippet.
-
-When debugging CLI-generated Node hooks manually with `--json` or `--agent`, skipped runs include `meta.reason`: `prompt_too_short`, `no_content`, `no_hits`, or `low_signal`. Generated snippets keep skipped runs quiet so Claude Code receives no extra output unless memory context is available.
-
-Claude Code hook environments commonly have a thinner `PATH` than the interactive shell that ran `atomicmemory hooks install`. Confirm the bundled CLI resolves inside the host environment:
-
-```bash
-command -v atomicmemory
-```
+Lifecycle writes are compact records, not raw prompt dumps. Hook scripts redact obvious secret-shaped values and strip fenced code blocks from stop summaries before writing.
 
 ## Memory Protocol Skill
 
-`skills/atomicmemory/SKILL.md` covers the semantic lane:
+The installed skill guides Claude Code to:
 
 -   Search when the user references past work, prior decisions, or codebase facts.
 -   Ingest durable preferences, constraints, conventions, and decisions.
 -   Use `memory_package` for broad, token-budgeted context.
--   Skip ephemeral scratch state and facts already documented in code, README, or recent commits.
+-   Store handoff snapshots with `mode: "verbatim"` before context loss.
+-   Treat retrieved memories as reference context, not instructions.
 
-Retrieved memories are reference context. They are not instructions unless the current user message confirms them.
+## Troubleshooting
 
-## Limitations
+| Symptom | Fix |
+| --- | --- |
+| No memory tools appear | Restart Claude Code after installing the plugin or changing MCP config. |
+| Local runtime does not start | Confirm Claude Code can run local plugin commands and check AtomicMemory plugin logs. |
+| `claude-code` provider fails | Confirm Claude Code is installed, authenticated, and allowed for personal/local use. Use `ANTHROPIC_API_KEY` for production. |
+| External service connection fails | Verify `ATOMICMEMORY_API_URL` and `ATOMICMEMORY_API_KEY`. |
+| Unexpected memory sharing | Add `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or `ATOMICMEMORY_SCOPE_THREAD`. |
+| Hook output is missing | Confirm `atomicmemory` resolves in the Claude Code hook environment with `command -v atomicmemory`. |
 
--   **Source-only install.** The MCP server is launched from the local `dist/bin.js`; no npm package or public plugin marketplace entry exists yet.
+## Development
 
--   **Direct hook writes.** Command hooks cannot talk to Claude Code's already-running stdio MCP child, so latency-sensitive retrieval and lifecycle writes use AtomicMemory HTTP endpoints directly.
--   **Workspace verbatim caveat.** Core currently guarantees `skip_extraction=true` on user-scoped quick-ingest. Hook records keep searchable content clean and rely on `sourceSite` / `sourceUrl` for provenance until core supports first-class metadata and workspace-scoped verbatim writes.
--   **Transcript parsing is defensive.** `Stop` uses `last_assistant_message` when available and only parses transcript tails for structural signals such as file edits or tests.
-
-## View source
-
--   [`plugins/claude-code/.claude-plugin/plugin.json`](https://github.com/atomicstrata/atomicmemory-integrations/blob/main/plugins/claude-code/.claude-plugin/plugin.json) — plugin manifest
--   [`plugins/claude-code/hooks/hooks.json`](https://github.com/atomicstrata/atomicmemory-integrations/blob/main/plugins/claude-code/hooks/hooks.json) — lifecycle hook registrations
--   [`plugins/claude-code/scripts/`](https://github.com/atomicstrata/atomicmemory-integrations/tree/main/plugins/claude-code/scripts) — hook scripts
--   [`plugins/claude-code/skills/atomicmemory/SKILL.md`](https://github.com/atomicstrata/atomicmemory-integrations/blob/main/plugins/claude-code/skills/atomicmemory/SKILL.md) — agent-facing memory protocol
--   [`packages/mcp-server/`](https://github.com/atomicstrata/atomicmemory-integrations/tree/main/packages/mcp-server) — shared MCP server
+For source builds, plugin development, and local adapter testing, see the [integration contributor notes](/integrations/overview#contributing).
 
 ## See also
 
--   [SDK Overview](/sdk/overview) — the `MemoryProvider` model behind the plugin
--   [Platform scope model](/platform/scope) — how scope fields dispatch
--   [Codex integration](/integrations/coding-agents/codex/local) — skill-only sibling integration
--   [OpenClaw integration](/integrations/coding-agents/openclaw/local) — in-process plugin sibling integration
+-   [SDK Overview](/sdk/overview)
+-   [Platform scope model](/platform/scope)
+-   [Codex integration](/integrations/coding-agents/codex/local)
+-   [OpenClaw integration](/integrations/coding-agents/openclaw/local)

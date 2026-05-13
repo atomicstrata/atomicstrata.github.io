@@ -12,7 +12,7 @@ Both provider families are tiny. That's deliberate: the less surface the interfa
 
 ### EmbeddingProvider
 
-From [`atomicmemory-core/src/services/embedding.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/embedding.ts):
+From [`atomicmemory-core/src/services/embedding.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/embedding.ts):
 
 ```ts
 export type EmbeddingTask = 'query' | 'document';
@@ -27,7 +27,7 @@ Two methods. One for single embeddings, one for batch. The `task` argument lets 
 
 ### LLMProvider
 
-From [`atomicmemory-core/src/services/llm.ts:60-74`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/llm.ts#L60-L74):
+From [`atomicmemory-core/src/services/llm.ts:60-74`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/llm.ts#L60-L74):
 
 ```ts
 export interface ChatMessage {
@@ -63,7 +63,7 @@ One method. Chat messages in, completion text out. JSON mode, seed, and temperat
 | `transformers` | Local WASM via `@huggingface/transformers` + ONNX Runtime |
 | `voyage` | Voyage AI embeddings with compatible document/query model pairs |
 
-Declared in [`config.ts:14`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/config.ts#L14):
+Declared in [`config.ts:14`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/config.ts#L14):
 
 ```ts
 export type EmbeddingProviderName =
@@ -81,7 +81,7 @@ export type EmbeddingProviderName =
 | `ollama` | Ollama native `/api/chat` endpoint |
 | `openai-compatible` | Any OpenAI-schema endpoint (LM Studio, vLLM, …) |
 
-Declared in [`config.ts:15`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/config.ts#L15):
+Declared in [`config.ts:15`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/config.ts#L15):
 
 ```ts
 export type LLMProviderName =
@@ -96,7 +96,7 @@ Note the subtype relationship: the LLM provider union builds on the embedding pr
 
 This is the crux of the provider-agnostic boundary. The entire codebase above `embedding.ts` never matches on provider name. The `switch` happens once, inside the factory, and is erased the moment the provider is returned.
 
-From [`embedding.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/embedding.ts):
+From [`embedding.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/embedding.ts):
 
 ```ts
 function createEmbeddingProvider(): EmbeddingProvider {
@@ -139,7 +139,7 @@ function createEmbeddingProvider(): EmbeddingProvider {
 }
 ```
 
-And the LLM factory, from [`llm.ts:259-289`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/llm.ts#L259-L289):
+And the LLM factory, from [`llm.ts:259-289`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/llm.ts#L259-L289):
 
 ```ts
 export function createLLMProvider(): LLMProvider {
@@ -248,7 +248,7 @@ Being agnostic doesn't mean being naïve. Real embedding models have real quirks
 
 ### Instruction prefixes
 
-Some embedding models (mxbai, nomic) need task-specific prefixes on query text but not document text. The provider-agnostic `embedText` function handles that before dispatch. From [`embedding.ts:292-308`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/embedding.ts#L292-L308):
+Some embedding models (mxbai, nomic) need task-specific prefixes on query text but not document text. The provider-agnostic `embedText` function handles that before dispatch. From [`embedding.ts:292-308`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/embedding.ts#L292-L308):
 
 ```ts
 function getInstructionPrefix(model: string, task: EmbeddingTask): string {
@@ -268,7 +268,7 @@ Callers pass `'query'` or `'document'` as a semantic tag. The prefix (if any) is
 
 ### ONNX Runtime serialization (WASM provider)
 
-The local WASM provider has a known concurrency issue, ONNX Runtime's mutex corrupts under concurrent async calls. Rather than leak a "don't call concurrently" caveat into every consumer, the adapter serializes internally. From [`embedding.ts:168-218`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/embedding.ts#L168-L218):
+The local WASM provider has a known concurrency issue, ONNX Runtime's mutex corrupts under concurrent async calls. Rather than leak a "don't call concurrently" caveat into every consumer, the adapter serializes internally. From [`embedding.ts:168-218`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/embedding.ts#L168-L218):
 
 ```ts
 class TransformersEmbedding implements EmbeddingProvider {
@@ -308,7 +308,7 @@ The rule: **every provider-specific workaround lives inside the adapter.** The `
 
 Every provider adapter, OpenAI, Anthropic, Ollama, Google, Groq, calls `writeCostEvent()` with the same shape after each request. That gives you one cost log across heterogeneous backends, keyed by provider, model, and stage. You can swap models and still see apples-to-apples cost data in a single stream.
 
-See the `recordOpenAICost` helper in [`llm.ts:147-164`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/llm.ts#L147-L164) for the OpenAI-compatible path; every other adapter writes the same event shape inline.
+See the `recordOpenAICost` helper in [`llm.ts:147-164`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/llm.ts#L147-L164) for the OpenAI-compatible path; every other adapter writes the same event shape inline.
 
 ---
 
@@ -328,7 +328,7 @@ There are no base classes to extend, no lifecycle hooks to implement, no plugin 
 
 Provider and model selection is **composition-time** by design. Server deployments normally bind that config from env at startup. In-process harnesses can instead pass a full `RuntimeConfig` to `createCoreRuntime({ pool, config })` when they need an isolated benchmark run with a different embedding stack.
 
-The modules hold their config as module-local state, bound by the composition root. From [`embedding.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/services/embedding.ts):
+The modules hold their config as module-local state, bound by the composition root. From [`embedding.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/embedding.ts):
 
 ```ts
 export function initEmbedding(config: EmbeddingConfig): void {

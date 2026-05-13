@@ -5,7 +5,7 @@
 ## Get started
 
 - [Introduction](https://docs.atomicmemory.ai/index.md): AtomicMemory is an open-source memory engine for AI applications, semantic retrieval, AUDN mutation (Add / Update / Delete / No-op), and contradiction-safe claim versioning, delivered as an HTTP service you can run with one docker compose up.
-- [Quickstart](https://docs.atomicmemory.ai/quickstart.md): Docker up, first ingest, first search, in under 2 minutes.
+- [Quickstart](https://docs.atomicmemory.ai/quickstart.md): Install core, start a local memory service, and run your first ingest and
 
 ## Platform
 

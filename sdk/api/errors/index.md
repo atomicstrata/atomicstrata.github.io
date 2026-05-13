@@ -27,7 +27,7 @@ import {
   AtomicMemoryError,
   NetworkError,
   UnsupportedOperationError,
-} from '@atomicmemory/atomicmemory-sdk';
+} from '@atomicmemory/sdk';
 
 try {
   await memory.package(request);

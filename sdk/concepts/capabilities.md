@@ -29,7 +29,7 @@ Three fields matter in practice:
 The public way to get at an extension is `provider.getExtension<T>(name)`:
 
 ```typescript
-import type { Packager } from '@atomicmemory/atomicmemory-sdk';
+import type { Packager } from '@atomicmemory/sdk';
 
 const packager = provider.getExtension<Packager>('package');
 if (packager) {

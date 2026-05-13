@@ -4,9 +4,9 @@
 
 Ship AtomicMemory to OpenClaw as a plugin and skill bundle. OpenClaw agents get durable semantic memory across chat apps such as WhatsApp, Telegram, Slack, and iMessage, backed by the same SDK and MCP server used by the other AtomicMemory integrations.
 
-Source-only
+Published
 
-`@atomicmemory/mcp-server` and the OpenClaw plugin are not published to npm or to ClawHub yet. Install from a local clone of `atomicmemory-integrations`.
+When the OpenClaw package flow is published, install the plugin from ClawHub. Until then, use the source-only flow.
 
 ## What You Get
 
@@ -30,54 +30,21 @@ plugins/openclaw/
 
 ## Install
 
-Clone and build from source:
+Install the published OpenClaw plugin:
 
 ```bash
-git clone https://github.com/atomicstrata/atomicmemory-sdk.git
-git clone https://github.com/atomicstrata/atomicmemory-integrations.git
-
-cd atomicmemory-sdk
-pnpm install
-pnpm build
-
-cd ../atomicmemory-integrations
-pnpm install
-pnpm --filter @atomicmemory/mcp-server build
-pnpm --filter @atomicmemory/openclaw-plugin build
+claw plugin install atomicmemory/openclaw
 ```
 
-Then install the local OpenClaw plugin directory:
-
-```bash
-cd plugins/openclaw
-claw plugin install .
-```
+Or browse to [ClawHub](https://clawhub.ai/) and install the AtomicMemory plugin there.
 
 ## Update and Version
 
-The OpenClaw plugin is installed from source. After changing the plugin manifest, package metadata, skill manifest, skill instructions, or provider registration, bump plugin versions from `atomicmemory-integrations`:
+After publishing plugin or skill changes, refresh the installed plugin and restart the OpenClaw host if it keeps plugin modules loaded:
 
 ```bash
-pnpm bump:plugin-versions patch
+claw plugin update atomicmemory/openclaw
 ```
-
-For OpenClaw, the helper keeps these versions aligned:
-
--   `plugins/openclaw/openclaw.plugin.json` at `/version`
--   `plugins/openclaw/package.json` at `/version`
--   `plugins/openclaw/skills/atomicmemory/skill.yaml` at `/version`
-
-Then rebuild and reinstall:
-
-```bash
-pnpm --filter @atomicmemory/mcp-server build
-pnpm --filter @atomicmemory/openclaw-plugin build
-
-cd plugins/openclaw
-claw plugin install .
-```
-
-Restart the OpenClaw host if it keeps plugin modules loaded.
 
 ## Configure
 

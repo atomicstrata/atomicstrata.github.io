@@ -16,40 +16,9 @@ The CLI uses the same backend-agnostic SDK provider model as the rest of AtomicM
 
 ## Install
 
-Source-only
-
-`@atomicmemory/cli` currently depends on the local `@atomicmemory/atomicmemory-sdk` checkout. Build and link it from [`atomicmemory-integrations`](https://github.com/atomicstrata/atomicmemory-integrations) until the SDK and CLI are published.
-
-Clone `atomicmemory-sdk` and `atomicmemory-integrations` side-by-side, then build the SDK before the CLI:
-
 ```bash
-git clone https://github.com/atomicstrata/atomicmemory-sdk.git
-git clone https://github.com/atomicstrata/atomicmemory-integrations.git
-
-cd atomicmemory-sdk
-pnpm install
-pnpm build
-
-cd ../atomicmemory-integrations
-pnpm install
-pnpm --filter @atomicmemory/cli build
-cd packages/cli
-pnpm link --global
-```
-
-If pnpm has no global bin directory yet:
-
-```bash
-pnpm setup
-source ~/.zshrc
-cd /path/to/atomicmemory-integrations/packages/cli
-pnpm link --global
-```
-
-You can also run the built binary without global linking:
-
-```bash
-node /path/to/atomicmemory-integrations/packages/cli/dist/bin.js
+npm install -g @atomicmemory/cli
+atomicmemory
 ```
 
 ## Configure

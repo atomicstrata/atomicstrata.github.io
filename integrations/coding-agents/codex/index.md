@@ -8,7 +8,7 @@ AtomicMemory integrates with Codex through the shared MCP server and a memory pr
 
 ### Local
 
-Use this when you want the self-managed Codex path and need the current clone-from-source workflow.
+Use this when you want the self-managed Codex path with the published MCP package and vendored plugin assets.
 
 See [Codex Local](/integrations/coding-agents/codex/local).
 

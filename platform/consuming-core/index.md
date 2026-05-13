@@ -18,13 +18,13 @@
 | **In-process** | `createCoreRuntime({ pool })` | TypeScript/Node code that wants no HTTP overhead |
 | **Docker/E2E** | `docker-compose.smoke-isolated.yml` + `scripts/docker-smoke-test.sh` | Release validation, extension E2E, containerized CI |
 
-All three are designed to converge on the same composition root (`createCoreRuntime`). A parity test, [`research-consumption-seams.test.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/app/__tests__/research-consumption-seams.test.ts), guards the main ingest/search path across modes.
+All three are designed to converge on the same composition root (`createCoreRuntime`). A parity test, [`research-consumption-seams.test.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/app/__tests__/research-consumption-seams.test.ts), guards the main ingest/search path across modes.
 
 ## HTTP
 
 Boot core as a server (`npm start`) and issue JSON requests. Snake\_case on the wire.
 
-This is the most portable integration path. If you are writing TypeScript and do not need direct HTTP control, use [`@atomicmemory/atomicmemory-sdk`](/sdk/overview) on top of this API instead of hand-rolling request wrappers.
+This is the most portable integration path. If you are writing TypeScript and do not need direct HTTP control, use [`@atomicmemory/sdk`](/sdk/overview) on top of this API instead of hand-rolling request wrappers.
 
 ```ts
 const res = await fetch('http://localhost:3050/v1/memories/ingest', {
@@ -90,12 +90,12 @@ Import the composition root and call services directly. This is useful for Node 
 Before using this mode, make sure:
 
 -   The Postgres database is reachable and has the core schema applied.
--   Required env vars are set before importing `@atomicmemory/atomicmemory-core`, or an explicit `RuntimeConfig` is passed to `createCoreRuntime`.
+-   Required env vars are set before importing `@atomicmemory/core`, or an explicit `RuntimeConfig` is passed to `createCoreRuntime`.
 -   Your process owns runtime lifecycle concerns such as pool shutdown and test isolation.
 
 ```ts
 import pg from 'pg';
-import { config, createCoreRuntime } from '@atomicmemory/atomicmemory-core';
+import { config, createCoreRuntime } from '@atomicmemory/core';
 
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 const runtime = createCoreRuntime({ pool });
@@ -151,14 +151,14 @@ Use this mode for extension E2E, release validation, or any harness that needs t
 ## Stability boundary
 
 -   **Stable:** the root package export. Types and functions re-exported from `src/index.ts` are the supported consumption surface.
--   **Unstable:** deep-path imports (`@atomicmemory/atomicmemory-core/services/*`, `@atomicmemory/atomicmemory-core/db/*`). These exist in `package.json` today for migration convenience and will be narrowed. Consumers should prefer the root export and open an issue if something they need is missing.
+-   **Unstable:** deep-path imports (`@atomicmemory/core/services/*`, `@atomicmemory/core/db/*`). These exist in `package.json` today for migration convenience and will be narrowed. Consumers should prefer the root export and open an issue if something they need is missing.
 
 ### Deep-path init requirement
 
 Two service modules hold config as module-local state and require an explicit init before their hot-path APIs work:
 
--   `@atomicmemory/atomicmemory-core/services/embedding`, `embedText` / `embedTexts` throw unless `initEmbedding(config)` has been called.
--   `@atomicmemory/atomicmemory-core/services/llm`, the `llm` / `createLLMProvider` APIs throw unless `initLlm(config)` has been called.
+-   `@atomicmemory/core/services/embedding`, `embedText` / `embedTexts` throw unless `initEmbedding(config)` has been called.
+-   `@atomicmemory/core/services/llm`, the `llm` / `createLLMProvider` APIs throw unless `initLlm(config)` has been called.
 
 **Consumers going through `createCoreRuntime({ pool })` are auto-initialized**, the composition root calls both inits internally. If you deep-import these modules directly (unstable path), you must call the init yourself:
 
@@ -167,7 +167,7 @@ import {
   initEmbedding,
   initLlm,
   config, // or your own EmbeddingConfig / LLMConfig object
-} from '@atomicmemory/atomicmemory-core';
+} from '@atomicmemory/core';
 
 initEmbedding(config);
 initLlm(config);

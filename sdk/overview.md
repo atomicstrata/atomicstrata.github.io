@@ -4,7 +4,7 @@
 
 A TypeScript client for memory, pluggable across backends.
 
-`@atomicmemory/atomicmemory-sdk` is a platform utility, not a framework. It gives application code a single, typed API for ingest, search, and context assembly, and it stays agnostic to which memory engine sits behind it. The same client can talk to a self-hosted `atomicmemory-core`, a Mem0 service, or a custom backend you wire yourself.
+`@atomicmemory/sdk` is a platform utility, not a framework. It gives application code a single, typed API for ingest, search, and context assembly, and it stays agnostic to which memory engine sits behind it. The same client can talk to a self-hosted `atomicmemory-core`, a Mem0 service, or a custom backend you wire yourself.
 
 ## Three-point value prop
 
@@ -15,7 +15,7 @@ A TypeScript client for memory, pluggable across backends.
 ## MemoryClient, the canonical public API
 
 ```ts
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk';
+import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
   providers: { atomicmemory: { apiUrl: 'http://localhost:3050' } },
@@ -45,7 +45,7 @@ The first three topologies route through `MemoryClient`. The fourth composes the
 For browser applications that talk to a backend-hosted core through `MemoryClient` and don't need on-device storage or embeddings, import from the `./browser` subpath, a slim bundle that omits `storage`, `embedding`, `search`, and `utils`:
 
 ```ts
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk/browser';
+import { MemoryClient } from '@atomicmemory/sdk/browser';
 ```
 
 ## Where to go from here

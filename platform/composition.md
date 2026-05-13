@@ -27,7 +27,7 @@ Each seam is a plain function. No global state, no hidden DI container, no frame
 
 ## Seam 1: createCoreRuntime
 
-**File:** [`src/app/runtime-container.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/app/runtime-container.ts)
+**File:** [`src/app/runtime-container.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/app/runtime-container.ts)
 
 `createCoreRuntime` is the composition root. It takes an explicit dependency bundle, the Postgres pool plus an optional composition-time config for isolated harnesses, and returns a fully wired `CoreRuntime` containing config, repos, stores, and services:
 
@@ -109,7 +109,7 @@ Three things are important about this shape:
 
 ## Seam 2: createApp
 
-**File:** [`src/app/create-app.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/app/create-app.ts)
+**File:** [`src/app/create-app.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/app/create-app.ts)
 
 `createApp` is a pure HTTP concern. It takes a composed runtime and returns an Express app, with CORS, body parsing, and routers wired on. It constructs no repos, pools, or services of its own:
 
@@ -147,7 +147,7 @@ The two seams compose, but they don't *require* each other. That is the whole po
 
 ## Seam 3: bindEphemeral
 
-**File:** [`src/app/bind-ephemeral.ts`](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/app/bind-ephemeral.ts)
+**File:** [`src/app/bind-ephemeral.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/app/bind-ephemeral.ts)
 
 `bindEphemeral` is the canonical test/harness adapter. It binds an Express app to an OS-assigned ephemeral port and returns the base URL plus a close handle:
 
@@ -179,7 +179,7 @@ The file header calls this out directly: *"This is the stable seam for any in-re
 
 The three-seam design is not a stylistic choice. It is enforced by a contract test that runs in CI on every build.
 
-`research-consumption-seams.test.ts` ([source](https://github.com/atomicmemory/atomicmemory-core/blob/main/src/app/__tests__/research-consumption-seams.test.ts)) boots **one** runtime, wires **one** app, binds it ephemerally, and then proves that writes through one seam are visible through the other:
+`research-consumption-seams.test.ts` ([source](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/app/__tests__/research-consumption-seams.test.ts)) boots **one** runtime, wires **one** app, binds it ephemerally, and then proves that writes through one seam are visible through the other:
 
 atomicmemory-core/src/app/\_\_tests\_\_/research-consumption-seams.test.ts
 

@@ -8,7 +8,7 @@ AtomicMemory integrates with the OpenAI Agents SDK through an adapter that augme
 
 ### Local
 
-Use this when you want the self-managed OpenAI Agents SDK path and need the current clone-from-source workflow.
+Use this when you want the self-managed OpenAI Agents SDK path with the published adapter package.
 
 See [OpenAI Agents SDK Local](/integrations/frameworks/openai-agents/local).
 
