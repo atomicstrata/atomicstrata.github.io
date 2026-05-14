@@ -2,76 +2,88 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Install core, start a local memory service, and run your first ingest and search.
+Start a local memory service from the published Docker image, then run your first ingest and search.
 
 ## Prerequisites
 
--   **Node.js 22+**
--   **Docker** if you want the packaged Postgres/pgvector development stack
--   **Provider credentials or local provider config** for embeddings and memory extraction:
-    -   **OpenAI** is the shortest one-key quickstart because it can serve both embeddings and extraction.
-    -   **Anthropic**, **Google Gemini**, **Groq**, **Voyage**, and OpenAI-compatible services are supported for the provider roles they implement.
-    -   **Ollama**, **transformers**, and **Claude Code local auth** cover local/personal workflows. See [providers](/platform/providers) for the exact env vars.
+-   **Docker**
+-   **An OpenAI API key** for the shortest one-key quickstart. OpenAI serves both embeddings and extraction in the default image configuration.
 
-That is all. The local stack brings its own Postgres with pgvector.
+That is all. The image brings its own Postgres with pgvector and stores data in the mounted directory you provide.
 
-## Step 1, Install
+## Step 1, Start core
 
-Install the CLI and core package:
+Run the published image:
+
+```bash
+export OPENAI_API_KEY="sk-..."
+
+docker run --rm -it --pull always \
+  -p 127.0.0.1:3050:3050 \
+  -e OPENAI_API_KEY=$OPENAI_API_KEY \
+  -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
+  ghcr.io/atomicstrata/atomicmemory-core:latest
+```
+
+The container binds core to `127.0.0.1:3050`. The volume mount persists the embedded Postgres database on your host at `$HOME/.atomicstrata/atomicmemory-docker`, so `--rm` removes only the container, not your local memory data.
+
+For local Docker runs, core defaults `DATABASE_URL` to embedded Postgres and sets a local development API key:
+
+```text
+Authorization: Bearer local-dev-key
+```
+
+## Optional, Configure The CLI
+
+Install the CLI if you want terminal commands on top of the running service:
 
 ```bash
 npm install -g @atomicmemory/cli
-npm install @atomicmemory/core
-```
 
-## Step 2, Start core
-
-Create a local profile, set your provider key, and start the packaged service:
-
-```bash
+printf '%s\n' 'local-dev-key' | \
 atomicmemory init \
   --profile local \
   --provider atomicmemory \
   --api-url http://127.0.0.1:3050 \
   --trust-surface local \
   --user "$USER" \
-  --namespace quickstart
-
-export OPENAI_API_KEY="sk-..."
-npx @atomicmemory/core start --profile local
+  --namespace quickstart \
+  --api-key-stdin \
+  --save-api-key
 ```
 
-The local service binds to port `3050`. In development mode it can start the packaged Postgres/pgvector stack for you; in production, point it at managed Postgres and explicit provider credentials.
-
-## Step 3, Verify health
+## Step 2, Verify health
 
 Hit the memory subsystem health endpoint to confirm the server is live and see the active runtime config.
 
 ```bash
-curl http://localhost:3050/v1/memories/health
+curl -H 'Authorization: Bearer local-dev-key' \
+  http://localhost:3050/v1/memories/health
 ```
 
 You should get back a JSON object with `"status": "ok"` and a `config` snapshot showing the selected embedding and LLM providers.
 
-## Step 4, First ingest
+## Step 3, First ingest
 
 Send a conversation and let AtomicMemory extract structured facts, embed them, and run AUDN to decide what to store.
 
 ```bash
 curl -X POST http://localhost:3050/v1/memories/ingest \
   -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer local-dev-key' \
   -d '{"user_id":"alice","conversation":"user: I ship Go backends and TypeScript frontends.","source_site":"quickstart"}'
 ```
 
 The response reports `facts_extracted`, `memories_stored`, `stored_memory_ids`, and `updated_memory_ids`, that is AUDN telling you what survived dedup and contradiction checks.
 
-## Step 5, First search
+## Step 4, First search
 
 Query the memories you just created. AtomicMemory runs semantic retrieval, applies the active retrieval profile, and packages the result. Hybrid retrieval (vector + BM25/FTS with RRF fusion) is available through the `quality` profile or per-request config overrides, but the default `balanced` profile keeps it off.
 
 ```bash
 curl -X POST http://localhost:3050/v1/memories/search \
   -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer local-dev-key' \
   -d '{"user_id":"alice","query":"what stack does alice use?"}'
 ```
 
@@ -94,7 +106,7 @@ If you're building in TypeScript or JavaScript, the [SDK Quickstart](/sdk/quicks
 
 ## Contributor setup
 
-If you are changing core itself, clone the repo and run the source stack:
+If you are changing core itself, clone the repo and run the source stack instead of the published image:
 
 ```bash
 git clone https://github.com/atomicstrata/atomicmemory-core.git
@@ -106,4 +118,4 @@ docker compose up -d --build
 
 ## Running in production
 
-The local stack above is the development shape. For production, run `@atomicmemory/core` with managed Postgres, explicit provider credentials, hardened CORS, and the `CORE_RUNTIME_CONFIG_MUTATION_ENABLED` gate disabled unless an operator intentionally enables runtime config writes.
+The local image defaults are intentionally optimized for one-command evaluation. For production, run the same image with managed Postgres via `DATABASE_URL`, explicit `CORE_API_KEY` and `STORAGE_KEY_HMAC_SECRET` secrets, hardened CORS, and the `CORE_RUNTIME_CONFIG_MUTATION_ENABLED` gate disabled unless an operator intentionally enables runtime config writes.

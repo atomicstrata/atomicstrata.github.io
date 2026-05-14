@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory is an open-source memory engine for AI applications, semantic retrieval, AUDN mutation (Add / Update / Delete / No-op), and contradiction-safe claim versioning, delivered as an HTTP service you can run with one `docker compose up`. It is pluggable at every seam: swap the embedding provider, the LLM, the artifact-storage backend, or the scope model without forking. The engine ships as a standardized platform layer, not a framework, not a SaaS, so your agents, assistants, and products can compose the memory stack they need.
+AtomicMemory is an open-source memory engine for AI applications, semantic retrieval, AUDN mutation (Add / Update / Delete / No-op), and contradiction-safe claim versioning, delivered as an HTTP service you can run from a published Docker image. It is pluggable at every seam: swap the embedding provider, the LLM, the artifact-storage backend, or the scope model without forking. The engine ships as a standardized platform layer, not a framework, not a SaaS, so your agents, assistants, and products can compose the memory stack they need.
 
 ## Why AtomicMemory
 
@@ -35,7 +35,7 @@ The pitch is not "we do more." It is: the seams are explicit, the contracts are 
 
 ## Try it in 2 minutes
 
-The fastest path is the [Quickstart](/quickstart): clone the core repo, set an API key, `docker compose up`, and run your first ingest and search with two curl commands.
+The fastest path is the [Quickstart](/quickstart): set an API key, run `ghcr.io/atomicstrata/atomicmemory-core:latest`, and run your first ingest and search with two curl commands.
 
 Core is HTTP-first, so any language works today. The [TypeScript SDK](/sdk/overview) gives TypeScript and JavaScript consumers typed request and response shapes, richer ergonomics, scope-aware helpers, and a pluggable provider model that decouples your app from any particular memory engine. The Python SDK serves Python-native integrations such as Hermes. Nothing about core requires either SDK.
 

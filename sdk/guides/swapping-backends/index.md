@@ -16,7 +16,10 @@ import { MemoryClient } from '@atomicmemory/sdk';
 async function withProvider(defaultProvider: 'atomicmemory' | 'mem0') {
   const memory = new MemoryClient({
     providers: {
-      atomicmemory: { apiUrl: 'http://localhost:3050' },
+      atomicmemory: {
+        apiUrl: 'http://localhost:3050',
+        apiKey: 'local-dev-key',
+      },
       mem0: { apiUrl: 'http://localhost:8000' },
     },
     defaultProvider,

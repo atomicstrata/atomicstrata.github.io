@@ -9,13 +9,13 @@ Give OpenAI Agents SDK applications persistent memory backed by AtomicMemory. Th
 ### 1. Install the adapter
 
 ```bash
-npm install @atomicmemory/openai-agents @atomicmemory/atomicmemory-sdk
+npm install @atomicmemory/openai-agents @atomicmemory/sdk
 ```
 
 ### 2. Configure memory
 
 ```ts
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk';
+import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
   providers: { atomicmemory: {} },

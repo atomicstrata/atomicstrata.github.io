@@ -17,7 +17,10 @@ const client = new AtomicMemoryClient({
   userId: 'demo-user',
   memory: {
     providers: {
-      atomicmemory: { apiUrl: 'http://localhost:3050' },
+      atomicmemory: {
+        apiUrl: 'http://localhost:3050',
+        apiKey: process.env.ATOMICMEMORY_API_KEY!,
+      },
     },
   },
 });

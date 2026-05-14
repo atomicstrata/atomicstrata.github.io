@@ -23,16 +23,19 @@ atomicmemory
 
 ## Configure
 
-Create a named local profile:
+Create a named local profile for the Docker quickstart:
 
 ```bash
+printf '%s\n' 'local-dev-key' | \
 atomicmemory init \
   --profile local \
   --provider atomicmemory \
   --api-url http://127.0.0.1:3050 \
   --trust-surface local \
   --user "$USER" \
-  --namespace my-project
+  --namespace my-project \
+  --api-key-stdin \
+  --save-api-key
 ```
 
 `--trust-surface` is required when the CLI is asked to trust a provider URL without an existing saved profile. It is not a secret; it describes the operator boundary around the URL.
@@ -48,6 +51,7 @@ For environment-only configuration:
 ```bash
 export ATOMICMEMORY_PROVIDER="atomicmemory"
 export ATOMICMEMORY_API_URL="http://127.0.0.1:3050"
+export ATOMICMEMORY_API_KEY="local-dev-key"
 export ATOMICMEMORY_TRUST_SURFACE="local"
 export ATOMICMEMORY_SCOPE_USER="$USER"
 export ATOMICMEMORY_SCOPE_NAMESPACE="my-project"

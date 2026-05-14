@@ -16,7 +16,7 @@
 | --- | --- | --- |
 | **HTTP** | `POST /v1/memories/ingest`, `POST /v1/memories/search`, etc. | Black-box integration, language-agnostic clients, extension/SDK |
 | **In-process** | `createCoreRuntime({ pool })` | TypeScript/Node code that wants no HTTP overhead |
-| **Docker/E2E** | `docker-compose.smoke-isolated.yml` + `scripts/docker-smoke-test.sh` | Release validation, extension E2E, containerized CI |
+| **Docker** | `ghcr.io/atomicstrata/atomicmemory-core:latest` | Local evaluation, self-hosted service boundary, release validation |
 
 All three are designed to converge on the same composition root (`createCoreRuntime`). A parity test, [`research-consumption-seams.test.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/app/__tests__/research-consumption-seams.test.ts), guards the main ingest/search path across modes.
 
@@ -29,7 +29,10 @@ This is the most portable integration path. If you are writing TypeScript and do
 ```ts
 const res = await fetch('http://localhost:3050/v1/memories/ingest', {
   method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer local-dev-key',
+  },
   body: JSON.stringify({
     user_id: 'alice',
     conversation: 'user: I ship Go on the backend.',
@@ -47,7 +50,10 @@ const {
 ```ts
 const res = await fetch('http://localhost:3050/v1/memories/search', {
   method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer local-dev-key',
+  },
   body: JSON.stringify({ user_id: 'alice', query: 'what stack?' }),
 });
 const { count, injection_text, memories } = await res.json();
@@ -64,7 +70,10 @@ All four memory routes (`/search`, `/search/fast`, `/ingest`, `/ingest/quick`) a
 ```ts
 const res = await fetch('http://localhost:3050/v1/memories/search', {
   method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer local-dev-key',
+  },
   body: JSON.stringify({
     user_id: 'alice',
     query: 'what stack?',
@@ -136,9 +145,34 @@ Stable imports from the root export:
 
 **Config caveat.** `createCoreRuntime({ pool, config })` is intended for isolated single-runtime harnesses such as benchmark runs. Embedding and LLM modules still hold module-local provider state, so do not keep two concurrently-active runtimes with different embedding/LLM configs in one Node process. Use a fresh process or fresh isolated runtime lifecycle per provider/model configuration.
 
-## Docker / E2E
+## Docker
 
-The canonical compose file for isolated end-to-end runs is `docker-compose.smoke-isolated.yml`. Driven by `scripts/docker-smoke-test.sh`.
+The published image is the fastest way to consume core as a standalone service:
+
+```bash
+export OPENAI_API_KEY="sk-..."
+
+docker run --rm -it --pull always \
+  -p 127.0.0.1:3050:3050 \
+  -e OPENAI_API_KEY=$OPENAI_API_KEY \
+  -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
+  ghcr.io/atomicstrata/atomicmemory-core:latest
+```
+
+By default, the image runs embedded Postgres/pgvector inside the container and stores the database at `/var/lib/atomicmemory/postgres`. Mount that path to keep local state across container restarts and image upgrades.
+
+Local Docker mode also defaults:
+
+-   `DATABASE_URL=embedded`
+-   `CORE_API_KEY=local-dev-key`
+-   `RAW_STORAGE_DEPLOYMENT_ENV=local`
+-   `EMBEDDING_DIMENSIONS=1536`
+
+For production, keep the image but set `DATABASE_URL` to managed Postgres and provide explicit `CORE_API_KEY` and `STORAGE_KEY_HMAC_SECRET` secrets. The image fails fast if production mode is selected without those secrets.
+
+### Source-tree E2E
+
+Contributors can still validate the source checkout with `docker-compose.smoke-isolated.yml` and `scripts/docker-smoke-test.sh`.
 
 Key env overrides:
 
@@ -146,7 +180,7 @@ Key env overrides:
 -   `POSTGRES_PORT` (default `5444`), host port for the pgvector container
 -   `EMBEDDING_PROVIDER` / `EMBEDDING_MODEL` / `EMBEDDING_DIMENSIONS`, already wired to `transformers` / `Xenova/all-MiniLM-L6-v2` / `384` for offline runs
 
-Use this mode for extension E2E, release validation, or any harness that needs to treat core exactly as it ships.
+Use the source-tree E2E stack for extension E2E, release validation, or any harness that needs to test a local checkout before it is published.
 
 ## Stability boundary
 

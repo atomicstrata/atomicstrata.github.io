@@ -5,7 +5,7 @@ description: Documentation site for AtomicMemory, a pluggable, self-hosted memor
 
 # AtomicMemory Docs
 
-Persistent semantic memory engine. HTTP-first, TypeScript SDK, Apache-2.0 licensed. The docs cover: HTTP API (30 endpoints), the TypeScript SDK (`@atomicmemory/atomicmemory-sdk`, provider model, scopes, embeddings, storage adapters), and integrations.
+Persistent semantic memory engine. HTTP-first, TypeScript SDK, Apache-2.0 licensed. The docs cover: HTTP API (30 endpoints), the TypeScript SDK (`@atomicmemory/sdk`, provider model, scopes, embeddings, storage adapters), and integrations.
 
 ## When to read these docs
 

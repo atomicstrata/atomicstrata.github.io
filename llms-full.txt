@@ -1,16 +1,16 @@
 # AtomicMemory, full corpus
 
-> Generated snapshot of every page on https://docs.atomicmemory.ai/, in stable URL order. Use llms.txt for the index.
+> Generated snapshot of every page on https://docs.atomicstrata.ai/, in stable URL order. Use llms.txt for the index.
 
 ## Introduction
 
-Source: https://docs.atomicmemory.ai/
+Source: https://docs.atomicstrata.ai/
 
 # Introduction
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory is an open-source memory engine for AI applications, semantic retrieval, AUDN mutation (Add / Update / Delete / No-op), and contradiction-safe claim versioning, delivered as an HTTP service you can run with one `docker compose up`. It is pluggable at every seam: swap the embedding provider, the LLM, the artifact-storage backend, or the scope model without forking. The engine ships as a standardized platform layer, not a framework, not a SaaS, so your agents, assistants, and products can compose the memory stack they need.
+AtomicMemory is an open-source memory engine for AI applications, semantic retrieval, AUDN mutation (Add / Update / Delete / No-op), and contradiction-safe claim versioning, delivered as an HTTP service you can run from a published Docker image. It is pluggable at every seam: swap the embedding provider, the LLM, the artifact-storage backend, or the scope model without forking. The engine ships as a standardized platform layer, not a framework, not a SaaS, so your agents, assistants, and products can compose the memory stack they need.
 
 ## Why AtomicMemory
 
@@ -43,7 +43,7 @@ The pitch is not "we do more." It is: the seams are explicit, the contracts are 
 
 ## Try it in 2 minutes
 
-The fastest path is the [Quickstart](/quickstart): clone the core repo, set an API key, `docker compose up`, and run your first ingest and search with two curl commands.
+The fastest path is the [Quickstart](/quickstart): set an API key, run `ghcr.io/atomicstrata/atomicmemory-core:latest`, and run your first ingest and search with two curl commands.
 
 Core is HTTP-first, so any language works today. The [TypeScript SDK](/sdk/overview) gives TypeScript and JavaScript consumers typed request and response shapes, richer ergonomics, scope-aware helpers, and a pluggable provider model that decouples your app from any particular memory engine. The Python SDK serves Python-native integrations such as Hermes. Nothing about core requires either SDK.
 
@@ -53,7 +53,7 @@ AtomicMemory is [Apache-2.0 licensed](https://github.com/atomicstrata/atomicmemo
 
 ## AtomicMemory HTTP API
 
-Source: https://docs.atomicmemory.ai/api-reference/http/atomicmemory-http-api
+Source: https://docs.atomicstrata.ai/api-reference/http/atomicmemory-http-api
 
 # AtomicMemory HTTP API
 
@@ -71,7 +71,7 @@ License: [MIT](https://opensource.org/licenses/MIT)
 
 ## Auto-resolve all expired conflicts for a user.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/auto-resolve-agent-conflicts
+Source: https://docs.atomicstrata.ai/api-reference/http/auto-resolve-agent-conflicts
 
 # Auto-resolve all expired conflicts for a user.
 
@@ -114,7 +114,7 @@ Auto-resolve all expired conflicts for a user.
 
 ## Memory-cap status for a user's store.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/check-memory-cap
+Source: https://docs.atomicstrata.ai/api-reference/http/check-memory-cap
 
 # Memory-cap status for a user's store.
 
@@ -144,7 +144,7 @@ Memory-cap status for a user's store.
 
 ## Compute consolidation candidates; optionally execute (execute=true).
 
-Source: https://docs.atomicmemory.ai/api-reference/http/consolidate-memories
+Source: https://docs.atomicstrata.ai/api-reference/http/consolidate-memories
 
 # Compute consolidation candidates; optionally execute (execute=true).
 
@@ -189,7 +189,7 @@ Compute consolidation candidates; optionally execute (execute=true).
 
 ## Conventions
 
-Source: https://docs.atomicmemory.ai/api-reference/http/conventions
+Source: https://docs.atomicstrata.ai/api-reference/http/conventions
 
 # Conventions
 
@@ -252,7 +252,7 @@ Preflight `OPTIONS` requests are handled automatically.
 
 ## Deactivate a lesson by id.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/deactivate-lesson
+Source: https://docs.atomicstrata.ai/api-reference/http/deactivate-lesson
 
 # Deactivate a lesson by id.
 
@@ -288,7 +288,7 @@ for background.
 
 ## Delete a single memory by UUID.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/delete-memory
+Source: https://docs.atomicstrata.ai/api-reference/http/delete-memory
 
 # Delete a single memory by UUID.
 
@@ -322,7 +322,7 @@ Delete a single memory by UUID.
 
 ## Evaluate decay candidates. dry_run=false archives them.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/evaluate-decay
+Source: https://docs.atomicstrata.ai/api-reference/http/evaluate-decay
 
 # Evaluate decay candidates. dry_run=false archives them.
 
@@ -367,7 +367,7 @@ Evaluate decay candidates. dry_run=false archives them.
 
 ## Expand a list of memory IDs into full objects.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/expand-memories
+Source: https://docs.atomicstrata.ai/api-reference/http/expand-memories
 
 # Expand a list of memory IDs into full objects.
 
@@ -435,7 +435,7 @@ Expand a list of memory IDs into full objects.
 
 ## Look up the trust level for a (user, agent) pair.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/get-agent-trust
+Source: https://docs.atomicstrata.ai/api-reference/http/get-agent-trust
 
 # Look up the trust level for a (user, agent) pair.
 
@@ -466,7 +466,7 @@ Look up the trust level for a (user, agent) pair.
 
 ## Aggregate mutation statistics for a user's memory store.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/get-audit-summary
+Source: https://docs.atomicstrata.ai/api-reference/http/get-audit-summary
 
 # Aggregate mutation statistics for a user's memory store.
 
@@ -496,7 +496,7 @@ Aggregate mutation statistics for a user's memory store.
 
 ## Lesson statistics for a user.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/get-lesson-stats
+Source: https://docs.atomicstrata.ai/api-reference/http/get-lesson-stats
 
 # Lesson statistics for a user.
 
@@ -534,7 +534,7 @@ for the full rows.
 
 ## Fetch a single memory by UUID.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/get-memory
+Source: https://docs.atomicstrata.ai/api-reference/http/get-memory
 
 # Fetch a single memory by UUID.
 
@@ -568,7 +568,7 @@ Fetch a single memory by UUID.
 
 ## Per-memory version history.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/get-memory-audit-trail
+Source: https://docs.atomicstrata.ai/api-reference/http/get-memory-audit-trail
 
 # Per-memory version history.
 
@@ -599,7 +599,7 @@ Per-memory version history.
 
 ## Subsystem liveness + current runtime config snapshot.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/get-memory-health
+Source: https://docs.atomicstrata.ai/api-reference/http/get-memory-health
 
 # Subsystem liveness + current runtime config snapshot.
 
@@ -621,7 +621,7 @@ Subsystem liveness + current runtime config snapshot.
 
 ## Recent mutations for a user, limit-bounded.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/get-recent-audit
+Source: https://docs.atomicstrata.ai/api-reference/http/get-recent-audit
 
 # Recent mutations for a user, limit-bounded.
 
@@ -652,7 +652,7 @@ Recent mutations for a user, limit-bounded.
 
 ## Get deferred-mutation reconciliation status.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/get-reconcile-status
+Source: https://docs.atomicstrata.ai/api-reference/http/get-reconcile-status
 
 # Get deferred-mutation reconciliation status.
 
@@ -682,7 +682,7 @@ Get deferred-mutation reconciliation status.
 
 ## Aggregate memory statistics for a user.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/get-stats
+Source: https://docs.atomicstrata.ai/api-reference/http/get-stats
 
 # Aggregate memory statistics for a user.
 
@@ -712,7 +712,7 @@ Aggregate memory statistics for a user.
 
 ## Ingest a conversation transcript with full extraction.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/ingest-memory
+Source: https://docs.atomicstrata.ai/api-reference/http/ingest-memory
 
 # Ingest a conversation transcript with full extraction.
 
@@ -810,7 +810,7 @@ Ingest a conversation transcript with full extraction.
 
 ## Quick ingest (storeVerbatim when skip_extraction=true).
 
-Source: https://docs.atomicmemory.ai/api-reference/http/ingest-memory-quick
+Source: https://docs.atomicstrata.ai/api-reference/http/ingest-memory-quick
 
 # Quick ingest (storeVerbatim when skip_extraction=true).
 
@@ -908,7 +908,7 @@ Quick ingest (storeVerbatim when skip_extraction=true).
 
 ## List open agent conflicts for a user.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/list-agent-conflicts
+Source: https://docs.atomicstrata.ai/api-reference/http/list-agent-conflicts
 
 # List open agent conflicts for a user.
 
@@ -938,7 +938,7 @@ List open agent conflicts for a user.
 
 ## List active lessons for a user.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/list-lessons
+Source: https://docs.atomicstrata.ai/api-reference/http/list-lessons
 
 # List active lessons for a user.
 
@@ -975,7 +975,7 @@ the response as sensitive.
 
 ## List memories for a user (or workspace).
 
-Source: https://docs.atomicmemory.ai/api-reference/http/list-memories
+Source: https://docs.atomicstrata.ai/api-reference/http/list-memories
 
 # List memories for a user (or workspace).
 
@@ -1011,7 +1011,7 @@ List memories for a user (or workspace).
 
 ## Reconcile deferred mutations for a user (or all users when user_id is absent).
 
-Source: https://docs.atomicmemory.ai/api-reference/http/reconcile-deferred
+Source: https://docs.atomicstrata.ai/api-reference/http/reconcile-deferred
 
 # Reconcile deferred mutations for a user (or all users when user_id is absent).
 
@@ -1048,7 +1048,7 @@ Reconcile deferred mutations for a user (or all users when user_id is absent).
 
 ## Report a new lesson.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/report-lesson
+Source: https://docs.atomicstrata.ai/api-reference/http/report-lesson
 
 # Report a new lesson.
 
@@ -1110,7 +1110,7 @@ background.
 
 ## Delete all memories for a given user + source_site.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/reset-by-source
+Source: https://docs.atomicstrata.ai/api-reference/http/reset-by-source
 
 # Delete all memories for a given user + source_site.
 
@@ -1158,7 +1158,7 @@ Delete all memories for a given user + source_site.
 
 ## Resolve a specific conflict with one of the three enum variants.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/resolve-agent-conflict
+Source: https://docs.atomicstrata.ai/api-reference/http/resolve-agent-conflict
 
 # Resolve a specific conflict with one of the three enum variants.
 
@@ -1210,7 +1210,7 @@ Resolve a specific conflict with one of the three enum variants.
 
 ## Full semantic search with optional temporal / retrieval-mode / token-budget controls.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/search-memories
+Source: https://docs.atomicstrata.ai/api-reference/http/search-memories
 
 # Full semantic search with optional temporal / retrieval-mode / token-budget controls.
 
@@ -1344,7 +1344,7 @@ Full semantic search with optional temporal / retrieval-mode / token-budget cont
 
 ## Latency-optimized search (skips LLM repair loop). ~88% lower latency than /search.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/search-memories-fast
+Source: https://docs.atomicstrata.ai/api-reference/http/search-memories-fast
 
 # Latency-optimized search (skips LLM repair loop). ~88% lower latency than /search.
 
@@ -1478,7 +1478,7 @@ Latency-optimized search (skips LLM repair loop). ~88% lower latency than /searc
 
 ## Set the calling user's trust level for a given agent.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/set-agent-trust
+Source: https://docs.atomicstrata.ai/api-reference/http/set-agent-trust
 
 # Set the calling user's trust level for a given agent.
 
@@ -1537,7 +1537,7 @@ Set the calling user's trust level for a given agent.
 
 ## Mutate runtime config (dev/test only). 410 when disabled.
 
-Source: https://docs.atomicmemory.ai/api-reference/http/update-config
+Source: https://docs.atomicstrata.ai/api-reference/http/update-config
 
 # Mutate runtime config (dev/test only). 410 when disabled.
 
@@ -1573,7 +1573,7 @@ Set CORE_RUNTIME_CONFIG_MUTATION_ENABLED=true to enable. Startup-only fields (em
 
 ## AtomicMemory CLI
 
-Source: https://docs.atomicmemory.ai/cli
+Source: https://docs.atomicstrata.ai/cli
 
 # AtomicMemory CLI
 
@@ -1600,16 +1600,19 @@ atomicmemory
 
 ## Configure
 
-Create a named local profile:
+Create a named local profile for the Docker quickstart:
 
 ```bash
+printf '%s\n' 'local-dev-key' | \
 atomicmemory init \
   --profile local \
   --provider atomicmemory \
   --api-url http://127.0.0.1:3050 \
   --trust-surface local \
   --user "$USER" \
-  --namespace my-project
+  --namespace my-project \
+  --api-key-stdin \
+  --save-api-key
 ```
 
 `--trust-surface` is required when the CLI is asked to trust a provider URL without an existing saved profile. It is not a secret; it describes the operator boundary around the URL.
@@ -1625,6 +1628,7 @@ For environment-only configuration:
 ```bash
 export ATOMICMEMORY_PROVIDER="atomicmemory"
 export ATOMICMEMORY_API_URL="http://127.0.0.1:3050"
+export ATOMICMEMORY_API_KEY="local-dev-key"
 export ATOMICMEMORY_TRUST_SURFACE="local"
 export ATOMICMEMORY_SCOPE_USER="$USER"
 export ATOMICMEMORY_SCOPE_NAMESPACE="my-project"
@@ -1850,7 +1854,7 @@ Optional harness environment variables:
 
 ## Claude Code
 
-Source: https://docs.atomicmemory.ai/integrations/coding-agents/claude-code
+Source: https://docs.atomicstrata.ai/integrations/coding-agents/claude-code
 
 # Claude Code
 
@@ -1878,7 +1882,7 @@ See [Claude Code Cloud](/integrations/coding-agents/claude-code/cloud).
 
 ## Claude Code Cloud
 
-Source: https://docs.atomicmemory.ai/integrations/coding-agents/claude-code/cloud
+Source: https://docs.atomicstrata.ai/integrations/coding-agents/claude-code/cloud
 
 # Claude Code Cloud
 
@@ -1894,7 +1898,7 @@ For the current local workflow, see [Claude Code Local](/integrations/coding-age
 
 ## Claude Code Local
 
-Source: https://docs.atomicmemory.ai/integrations/coding-agents/claude-code/local
+Source: https://docs.atomicstrata.ai/integrations/coding-agents/claude-code/local
 
 # Claude Code Local
 
@@ -2126,7 +2130,7 @@ For source builds, plugin development, and local adapter testing, see the [integ
 
 ## Codex
 
-Source: https://docs.atomicmemory.ai/integrations/coding-agents/codex
+Source: https://docs.atomicstrata.ai/integrations/coding-agents/codex
 
 # Codex
 
@@ -2154,7 +2158,7 @@ See [Codex Cloud](/integrations/coding-agents/codex/cloud).
 
 ## Codex Cloud
 
-Source: https://docs.atomicmemory.ai/integrations/coding-agents/codex/cloud
+Source: https://docs.atomicstrata.ai/integrations/coding-agents/codex/cloud
 
 # Codex Cloud
 
@@ -2170,7 +2174,7 @@ For the current local workflow, see [Codex Local](/integrations/coding-agents/co
 
 ## Codex Local
 
-Source: https://docs.atomicmemory.ai/integrations/coding-agents/codex/local
+Source: https://docs.atomicstrata.ai/integrations/coding-agents/codex/local
 
 # Codex Local
 
@@ -2330,7 +2334,7 @@ For source builds, plugin development, and local adapter testing, see the [integ
 
 ## Cursor
 
-Source: https://docs.atomicmemory.ai/integrations/coding-agents/cursor
+Source: https://docs.atomicstrata.ai/integrations/coding-agents/cursor
 
 # Cursor
 
@@ -2356,7 +2360,7 @@ See [Cursor Cloud](/integrations/coding-agents/cursor/cloud).
 
 ## Cursor Cloud
 
-Source: https://docs.atomicmemory.ai/integrations/coding-agents/cursor/cloud
+Source: https://docs.atomicstrata.ai/integrations/coding-agents/cursor/cloud
 
 # Cursor Cloud
 
@@ -2372,7 +2376,7 @@ For the current local workflow, see [Cursor Local](/integrations/coding-agents/c
 
 ## Cursor Local
 
-Source: https://docs.atomicmemory.ai/integrations/coding-agents/cursor/local
+Source: https://docs.atomicstrata.ai/integrations/coding-agents/cursor/local
 
 # Cursor Local
 
@@ -2531,7 +2535,7 @@ For source builds, plugin development, and local adapter testing, see the [integ
 
 ## Hermes Agent
 
-Source: https://docs.atomicmemory.ai/integrations/coding-agents/hermes
+Source: https://docs.atomicstrata.ai/integrations/coding-agents/hermes
 
 # Hermes Agent
 
@@ -2559,7 +2563,7 @@ See [Hermes Cloud](/integrations/coding-agents/hermes/cloud).
 
 ## Hermes Cloud
 
-Source: https://docs.atomicmemory.ai/integrations/coding-agents/hermes/cloud
+Source: https://docs.atomicstrata.ai/integrations/coding-agents/hermes/cloud
 
 # Hermes Cloud
 
@@ -2575,7 +2579,7 @@ For the current self-managed workflow, see [Hermes Local](/integrations/coding-a
 
 ## Hermes Local
 
-Source: https://docs.atomicmemory.ai/integrations/coding-agents/hermes/local
+Source: https://docs.atomicstrata.ai/integrations/coding-agents/hermes/local
 
 # Hermes Local
 
@@ -2709,7 +2713,7 @@ For source builds, plugin development, and local adapter testing, see the [integ
 
 ## OpenClaw
 
-Source: https://docs.atomicmemory.ai/integrations/coding-agents/openclaw
+Source: https://docs.atomicstrata.ai/integrations/coding-agents/openclaw
 
 # OpenClaw
 
@@ -2737,7 +2741,7 @@ See [OpenClaw Cloud](/integrations/coding-agents/openclaw/cloud).
 
 ## OpenClaw Cloud
 
-Source: https://docs.atomicmemory.ai/integrations/coding-agents/openclaw/cloud
+Source: https://docs.atomicstrata.ai/integrations/coding-agents/openclaw/cloud
 
 # OpenClaw Cloud
 
@@ -2753,7 +2757,7 @@ For the current local workflow, see [OpenClaw Local](/integrations/coding-agents
 
 ## OpenClaw Local
 
-Source: https://docs.atomicmemory.ai/integrations/coding-agents/openclaw/local
+Source: https://docs.atomicstrata.ai/integrations/coding-agents/openclaw/local
 
 # OpenClaw Local
 
@@ -2873,7 +2877,7 @@ For source builds, plugin development, and local adapter testing, see the [integ
 
 ## LangChain (JS)
 
-Source: https://docs.atomicmemory.ai/integrations/frameworks/langchain-js
+Source: https://docs.atomicstrata.ai/integrations/frameworks/langchain-js
 
 # LangChain (JS)
 
@@ -2901,7 +2905,7 @@ See [LangChain (JS) Cloud](/integrations/frameworks/langchain-js/cloud).
 
 ## LangChain (JS) Cloud
 
-Source: https://docs.atomicmemory.ai/integrations/frameworks/langchain-js/cloud
+Source: https://docs.atomicstrata.ai/integrations/frameworks/langchain-js/cloud
 
 # LangChain (JS) Cloud
 
@@ -2917,7 +2921,7 @@ For the current local workflow, see [LangChain (JS) Local](/integrations/framewo
 
 ## LangChain (JS) Local
 
-Source: https://docs.atomicmemory.ai/integrations/frameworks/langchain-js/local
+Source: https://docs.atomicstrata.ai/integrations/frameworks/langchain-js/local
 
 # LangChain (JS) Local
 
@@ -2972,7 +2976,7 @@ const executor = await initializeAgentExecutorWithOptions([...tools], llm);
 
 ## LangGraph (JS)
 
-Source: https://docs.atomicmemory.ai/integrations/frameworks/langgraph-js
+Source: https://docs.atomicstrata.ai/integrations/frameworks/langgraph-js
 
 # LangGraph (JS)
 
@@ -3000,7 +3004,7 @@ See [LangGraph (JS) Cloud](/integrations/frameworks/langgraph-js/cloud).
 
 ## LangGraph (JS) Cloud
 
-Source: https://docs.atomicmemory.ai/integrations/frameworks/langgraph-js/cloud
+Source: https://docs.atomicstrata.ai/integrations/frameworks/langgraph-js/cloud
 
 # LangGraph (JS) Cloud
 
@@ -3016,7 +3020,7 @@ For the current local workflow, see [LangGraph (JS) Local](/integrations/framewo
 
 ## LangGraph (JS) Local
 
-Source: https://docs.atomicmemory.ai/integrations/frameworks/langgraph-js/local
+Source: https://docs.atomicstrata.ai/integrations/frameworks/langgraph-js/local
 
 # LangGraph (JS) Local
 
@@ -3069,7 +3073,7 @@ Nodes can call `store.search(query)` and `store.put(fact)` directly, or use the 
 
 ## Mastra
 
-Source: https://docs.atomicmemory.ai/integrations/frameworks/mastra
+Source: https://docs.atomicstrata.ai/integrations/frameworks/mastra
 
 # Mastra
 
@@ -3097,7 +3101,7 @@ See [Mastra Cloud](/integrations/frameworks/mastra/cloud).
 
 ## Mastra Cloud
 
-Source: https://docs.atomicmemory.ai/integrations/frameworks/mastra/cloud
+Source: https://docs.atomicstrata.ai/integrations/frameworks/mastra/cloud
 
 # Mastra Cloud
 
@@ -3113,7 +3117,7 @@ For the current local workflow, see [Mastra Local](/integrations/frameworks/mast
 
 ## Mastra Local
 
-Source: https://docs.atomicmemory.ai/integrations/frameworks/mastra/local
+Source: https://docs.atomicstrata.ai/integrations/frameworks/mastra/local
 
 # Mastra Local
 
@@ -3165,7 +3169,7 @@ const agent = new Agent({
 
 ## OpenAI Agents SDK
 
-Source: https://docs.atomicmemory.ai/integrations/frameworks/openai-agents
+Source: https://docs.atomicstrata.ai/integrations/frameworks/openai-agents
 
 # OpenAI Agents SDK
 
@@ -3193,7 +3197,7 @@ See [OpenAI Agents SDK Cloud](/integrations/frameworks/openai-agents/cloud).
 
 ## OpenAI Agents SDK Cloud
 
-Source: https://docs.atomicmemory.ai/integrations/frameworks/openai-agents/cloud
+Source: https://docs.atomicstrata.ai/integrations/frameworks/openai-agents/cloud
 
 # OpenAI Agents SDK Cloud
 
@@ -3209,7 +3213,7 @@ For the current local workflow, see [OpenAI Agents SDK Local](/integrations/fram
 
 ## OpenAI Agents SDK Local
 
-Source: https://docs.atomicmemory.ai/integrations/frameworks/openai-agents/local
+Source: https://docs.atomicstrata.ai/integrations/frameworks/openai-agents/local
 
 # OpenAI Agents SDK Local
 
@@ -3222,13 +3226,13 @@ Give OpenAI Agents SDK applications persistent memory backed by AtomicMemory. Th
 ### 1. Install the adapter
 
 ```bash
-npm install @atomicmemory/openai-agents @atomicmemory/atomicmemory-sdk
+npm install @atomicmemory/openai-agents @atomicmemory/sdk
 ```
 
 ### 2. Configure memory
 
 ```ts
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk';
+import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
   providers: { atomicmemory: {} },
@@ -3353,7 +3357,7 @@ For source builds, adapter development, and local testing, see the [integration 
 
 ## Vercel AI SDK
 
-Source: https://docs.atomicmemory.ai/integrations/frameworks/vercel-ai-sdk
+Source: https://docs.atomicstrata.ai/integrations/frameworks/vercel-ai-sdk
 
 # Vercel AI SDK
 
@@ -3381,7 +3385,7 @@ See [Vercel AI SDK Cloud](/integrations/frameworks/vercel-ai-sdk/cloud).
 
 ## Vercel AI SDK Cloud
 
-Source: https://docs.atomicmemory.ai/integrations/frameworks/vercel-ai-sdk/cloud
+Source: https://docs.atomicstrata.ai/integrations/frameworks/vercel-ai-sdk/cloud
 
 # Vercel AI SDK Cloud
 
@@ -3397,7 +3401,7 @@ For the current local workflow, see [Vercel AI SDK Local](/integrations/framewor
 
 ## Vercel AI SDK Local
 
-Source: https://docs.atomicmemory.ai/integrations/frameworks/vercel-ai-sdk/local
+Source: https://docs.atomicstrata.ai/integrations/frameworks/vercel-ai-sdk/local
 
 # Vercel AI SDK Local
 
@@ -3410,13 +3414,13 @@ Give Vercel AI SDK applications persistent memory backed by AtomicMemory. The ad
 ### 1. Install the adapter
 
 ```bash
-npm install @atomicmemory/vercel-ai @atomicmemory/atomicmemory-sdk
+npm install @atomicmemory/vercel-ai @atomicmemory/sdk
 ```
 
 ### 2. Configure memory
 
 ```ts
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk';
+import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
   providers: { atomicmemory: {} },
@@ -3523,16 +3527,22 @@ HYBRID_SEARCH_ENABLED=true
 RETRIEVAL_PROFILE=quality
 ```
 
-If core runs in Docker, recreate the app container after editing `atomicmemory-core/.env`:
+If core runs from the published Docker image, restart it with the retrieval override:
 
 ```bash
-docker compose up -d --force-recreate app
+docker run --rm -it --pull always \
+  -p 127.0.0.1:3050:3050 \
+  -e OPENAI_API_KEY=$OPENAI_API_KEY \
+  -e RETRIEVAL_PROFILE=quality \
+  -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
+  ghcr.io/atomicstrata/atomicmemory-core:latest
 ```
 
 Verify the backend reports hybrid search:
 
 ```bash
-curl -s http://localhost:3050/v1/memories/health
+curl -s -H 'Authorization: Bearer local-dev-key' \
+  http://localhost:3050/v1/memories/health
 ```
 
 The response should include `"hybrid_search_enabled": true`.
@@ -3553,7 +3563,7 @@ For source builds, adapter development, and local testing, see the [integration 
 
 ## Integrations
 
-Source: https://docs.atomicmemory.ai/integrations/overview
+Source: https://docs.atomicstrata.ai/integrations/overview
 
 # Integrations
 
@@ -3608,7 +3618,7 @@ Source lives at [`atomicstrata/atomicmemory-integrations`](https://github.com/at
 
 ## Architecture
 
-Source: https://docs.atomicmemory.ai/platform/architecture
+Source: https://docs.atomicstrata.ai/platform/architecture
 
 # Architecture
 
@@ -3861,7 +3871,7 @@ The common theme: AtomicMemory treats memory as a **pluggable platform layer**, 
 
 ## Artifact Storage
 
-Source: https://docs.atomicmemory.ai/platform/artifact-storage
+Source: https://docs.atomicstrata.ai/platform/artifact-storage
 
 # Artifact Storage
 
@@ -3976,7 +3986,7 @@ Do not confuse artifact storage providers with [embedding / LLM providers](/plat
 
 ## Composition
 
-Source: https://docs.atomicmemory.ai/platform/composition
+Source: https://docs.atomicstrata.ai/platform/composition
 
 # Composition
 
@@ -4234,7 +4244,7 @@ That is what "standardized platform layer, pluggable at every seam" actually mea
 
 ## Consuming core
 
-Source: https://docs.atomicmemory.ai/platform/consuming-core
+Source: https://docs.atomicstrata.ai/platform/consuming-core
 
 # Consuming atomicmemory-core
 
@@ -4254,7 +4264,7 @@ Source: https://docs.atomicmemory.ai/platform/consuming-core
 | --- | --- | --- |
 | **HTTP** | `POST /v1/memories/ingest`, `POST /v1/memories/search`, etc. | Black-box integration, language-agnostic clients, extension/SDK |
 | **In-process** | `createCoreRuntime({ pool })` | TypeScript/Node code that wants no HTTP overhead |
-| **Docker/E2E** | `docker-compose.smoke-isolated.yml` + `scripts/docker-smoke-test.sh` | Release validation, extension E2E, containerized CI |
+| **Docker** | `ghcr.io/atomicstrata/atomicmemory-core:latest` | Local evaluation, self-hosted service boundary, release validation |
 
 All three are designed to converge on the same composition root (`createCoreRuntime`). A parity test, [`research-consumption-seams.test.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/app/__tests__/research-consumption-seams.test.ts), guards the main ingest/search path across modes.
 
@@ -4267,7 +4277,10 @@ This is the most portable integration path. If you are writing TypeScript and do
 ```ts
 const res = await fetch('http://localhost:3050/v1/memories/ingest', {
   method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer local-dev-key',
+  },
   body: JSON.stringify({
     user_id: 'alice',
     conversation: 'user: I ship Go on the backend.',
@@ -4285,7 +4298,10 @@ const {
 ```ts
 const res = await fetch('http://localhost:3050/v1/memories/search', {
   method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer local-dev-key',
+  },
   body: JSON.stringify({ user_id: 'alice', query: 'what stack?' }),
 });
 const { count, injection_text, memories } = await res.json();
@@ -4302,7 +4318,10 @@ All four memory routes (`/search`, `/search/fast`, `/ingest`, `/ingest/quick`) a
 ```ts
 const res = await fetch('http://localhost:3050/v1/memories/search', {
   method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer local-dev-key',
+  },
   body: JSON.stringify({
     user_id: 'alice',
     query: 'what stack?',
@@ -4374,9 +4393,34 @@ Stable imports from the root export:
 
 **Config caveat.** `createCoreRuntime({ pool, config })` is intended for isolated single-runtime harnesses such as benchmark runs. Embedding and LLM modules still hold module-local provider state, so do not keep two concurrently-active runtimes with different embedding/LLM configs in one Node process. Use a fresh process or fresh isolated runtime lifecycle per provider/model configuration.
 
-## Docker / E2E
+## Docker
 
-The canonical compose file for isolated end-to-end runs is `docker-compose.smoke-isolated.yml`. Driven by `scripts/docker-smoke-test.sh`.
+The published image is the fastest way to consume core as a standalone service:
+
+```bash
+export OPENAI_API_KEY="sk-..."
+
+docker run --rm -it --pull always \
+  -p 127.0.0.1:3050:3050 \
+  -e OPENAI_API_KEY=$OPENAI_API_KEY \
+  -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
+  ghcr.io/atomicstrata/atomicmemory-core:latest
+```
+
+By default, the image runs embedded Postgres/pgvector inside the container and stores the database at `/var/lib/atomicmemory/postgres`. Mount that path to keep local state across container restarts and image upgrades.
+
+Local Docker mode also defaults:
+
+-   `DATABASE_URL=embedded`
+-   `CORE_API_KEY=local-dev-key`
+-   `RAW_STORAGE_DEPLOYMENT_ENV=local`
+-   `EMBEDDING_DIMENSIONS=1536`
+
+For production, keep the image but set `DATABASE_URL` to managed Postgres and provide explicit `CORE_API_KEY` and `STORAGE_KEY_HMAC_SECRET` secrets. The image fails fast if production mode is selected without those secrets.
+
+### Source-tree E2E
+
+Contributors can still validate the source checkout with `docker-compose.smoke-isolated.yml` and `scripts/docker-smoke-test.sh`.
 
 Key env overrides:
 
@@ -4384,7 +4428,7 @@ Key env overrides:
 -   `POSTGRES_PORT` (default `5444`), host port for the pgvector container
 -   `EMBEDDING_PROVIDER` / `EMBEDDING_MODEL` / `EMBEDDING_DIMENSIONS`, already wired to `transformers` / `Xenova/all-MiniLM-L6-v2` / `384` for offline runs
 
-Use this mode for extension E2E, release validation, or any harness that needs to treat core exactly as it ships.
+Use the source-tree E2E stack for extension E2E, release validation, or any harness that needs to test a local checkout before it is published.
 
 ## Stability boundary
 
@@ -4441,7 +4485,7 @@ Routes read the flag from a memoized startup snapshot through `configRouteAdapte
 
 ## Lessons
 
-Source: https://docs.atomicmemory.ai/platform/lessons
+Source: https://docs.atomicstrata.ai/platform/lessons
 
 # Lessons
 
@@ -4614,7 +4658,7 @@ await client.memory.lessons.delete(lessonId, userId);
 
 ## Observability
 
-Source: https://docs.atomicmemory.ai/platform/observability
+Source: https://docs.atomicstrata.ai/platform/observability
 
 # Observability
 
@@ -4927,7 +4971,7 @@ If you need to answer "what happened on this one request?", use the response's `
 
 ## Providers
 
-Source: https://docs.atomicmemory.ai/platform/providers
+Source: https://docs.atomicstrata.ai/platform/providers
 
 # Providers
 
@@ -5291,7 +5335,7 @@ Different layer, different contract.
 
 ## Scope
 
-Source: https://docs.atomicmemory.ai/platform/scope
+Source: https://docs.atomicstrata.ai/platform/scope
 
 # Scope
 
@@ -5523,7 +5567,7 @@ The upshot is that scope is compose-at-the-edges. You don't configure "workspace
 
 ## Stores
 
-Source: https://docs.atomicmemory.ai/platform/stores
+Source: https://docs.atomicstrata.ai/platform/stores
 
 # Stores
 
@@ -5802,82 +5846,94 @@ That's what we mean by "pluggable at every seam".
 
 ## Quickstart
 
-Source: https://docs.atomicmemory.ai/quickstart
+Source: https://docs.atomicstrata.ai/quickstart
 
 # Quickstart
 
 > Agent index: [llms.txt](/llms.txt)
 
-Install core, start a local memory service, and run your first ingest and search.
+Start a local memory service from the published Docker image, then run your first ingest and search.
 
 ## Prerequisites
 
--   **Node.js 22+**
--   **Docker** if you want the packaged Postgres/pgvector development stack
--   **Provider credentials or local provider config** for embeddings and memory extraction:
-    -   **OpenAI** is the shortest one-key quickstart because it can serve both embeddings and extraction.
-    -   **Anthropic**, **Google Gemini**, **Groq**, **Voyage**, and OpenAI-compatible services are supported for the provider roles they implement.
-    -   **Ollama**, **transformers**, and **Claude Code local auth** cover local/personal workflows. See [providers](/platform/providers) for the exact env vars.
+-   **Docker**
+-   **An OpenAI API key** for the shortest one-key quickstart. OpenAI serves both embeddings and extraction in the default image configuration.
 
-That is all. The local stack brings its own Postgres with pgvector.
+That is all. The image brings its own Postgres with pgvector and stores data in the mounted directory you provide.
 
-## Step 1, Install
+## Step 1, Start core
 
-Install the CLI and core package:
+Run the published image:
+
+```bash
+export OPENAI_API_KEY="sk-..."
+
+docker run --rm -it --pull always \
+  -p 127.0.0.1:3050:3050 \
+  -e OPENAI_API_KEY=$OPENAI_API_KEY \
+  -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
+  ghcr.io/atomicstrata/atomicmemory-core:latest
+```
+
+The container binds core to `127.0.0.1:3050`. The volume mount persists the embedded Postgres database on your host at `$HOME/.atomicstrata/atomicmemory-docker`, so `--rm` removes only the container, not your local memory data.
+
+For local Docker runs, core defaults `DATABASE_URL` to embedded Postgres and sets a local development API key:
+
+```text
+Authorization: Bearer local-dev-key
+```
+
+## Optional, Configure The CLI
+
+Install the CLI if you want terminal commands on top of the running service:
 
 ```bash
 npm install -g @atomicmemory/cli
-npm install @atomicmemory/core
-```
 
-## Step 2, Start core
-
-Create a local profile, set your provider key, and start the packaged service:
-
-```bash
+printf '%s\n' 'local-dev-key' | \
 atomicmemory init \
   --profile local \
   --provider atomicmemory \
   --api-url http://127.0.0.1:3050 \
   --trust-surface local \
   --user "$USER" \
-  --namespace quickstart
-
-export OPENAI_API_KEY="sk-..."
-npx @atomicmemory/core start --profile local
+  --namespace quickstart \
+  --api-key-stdin \
+  --save-api-key
 ```
 
-The local service binds to port `3050`. In development mode it can start the packaged Postgres/pgvector stack for you; in production, point it at managed Postgres and explicit provider credentials.
-
-## Step 3, Verify health
+## Step 2, Verify health
 
 Hit the memory subsystem health endpoint to confirm the server is live and see the active runtime config.
 
 ```bash
-curl http://localhost:3050/v1/memories/health
+curl -H 'Authorization: Bearer local-dev-key' \
+  http://localhost:3050/v1/memories/health
 ```
 
 You should get back a JSON object with `"status": "ok"` and a `config` snapshot showing the selected embedding and LLM providers.
 
-## Step 4, First ingest
+## Step 3, First ingest
 
 Send a conversation and let AtomicMemory extract structured facts, embed them, and run AUDN to decide what to store.
 
 ```bash
 curl -X POST http://localhost:3050/v1/memories/ingest \
   -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer local-dev-key' \
   -d '{"user_id":"alice","conversation":"user: I ship Go backends and TypeScript frontends.","source_site":"quickstart"}'
 ```
 
 The response reports `facts_extracted`, `memories_stored`, `stored_memory_ids`, and `updated_memory_ids`, that is AUDN telling you what survived dedup and contradiction checks.
 
-## Step 5, First search
+## Step 4, First search
 
 Query the memories you just created. AtomicMemory runs semantic retrieval, applies the active retrieval profile, and packages the result. Hybrid retrieval (vector + BM25/FTS with RRF fusion) is available through the `quality` profile or per-request config overrides, but the default `balanced` profile keeps it off.
 
 ```bash
 curl -X POST http://localhost:3050/v1/memories/search \
   -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer local-dev-key' \
   -d '{"user_id":"alice","query":"what stack does alice use?"}'
 ```
 
@@ -5900,7 +5956,7 @@ If you're building in TypeScript or JavaScript, the [SDK Quickstart](/sdk/quicks
 
 ## Contributor setup
 
-If you are changing core itself, clone the repo and run the source stack:
+If you are changing core itself, clone the repo and run the source stack instead of the published image:
 
 ```bash
 git clone https://github.com/atomicstrata/atomicmemory-core.git
@@ -5912,13 +5968,13 @@ docker compose up -d --build
 
 ## Running in production
 
-The local stack above is the development shape. For production, run `@atomicmemory/core` with managed Postgres, explicit provider credentials, hardened CORS, and the `CORE_RUNTIME_CONFIG_MUTATION_ENABLED` gate disabled unless an operator intentionally enables runtime config writes.
+The local image defaults are intentionally optimized for one-command evaluation. For production, run the same image with managed Postgres via `DATABASE_URL`, explicit `CORE_API_KEY` and `STORAGE_KEY_HMAC_SECRET` secrets, hardened CORS, and the `CORE_RUNTIME_CONFIG_MUTATION_ENABLED` gate disabled unless an operator intentionally enables runtime config writes.
 
 ---
 
 ## Errors
 
-Source: https://docs.atomicmemory.ai/sdk/api/errors
+Source: https://docs.atomicstrata.ai/sdk/api/errors
 
 # Errors
 
@@ -5997,7 +6053,7 @@ Every `AtomicMemoryError` subclass carries a `name` (for logging / telemetry) an
 
 ## MemoryProvider contract
 
-Source: https://docs.atomicmemory.ai/sdk/api/memory-provider
+Source: https://docs.atomicstrata.ai/sdk/api/memory-provider
 
 # MemoryProvider contract
 
@@ -6081,7 +6137,7 @@ See [Writing a custom provider](/sdk/guides/custom-provider) for the end-to-end 
 
 ## Reference overview
 
-Source: https://docs.atomicmemory.ai/sdk/api/overview
+Source: https://docs.atomicstrata.ai/sdk/api/overview
 
 # Reference overview
 
@@ -6120,7 +6176,7 @@ Every concept page that mentions a method or type is meant to link into the gene
 
 ## Architecture
 
-Source: https://docs.atomicmemory.ai/sdk/concepts/architecture
+Source: https://docs.atomicstrata.ai/sdk/concepts/architecture
 
 # Architecture
 
@@ -6160,7 +6216,7 @@ Search follows the same shape. Every operation on `MemoryClient` delegates to `M
 
 ## Capabilities
 
-Source: https://docs.atomicmemory.ai/sdk/concepts/capabilities
+Source: https://docs.atomicstrata.ai/sdk/concepts/capabilities
 
 # Capabilities
 
@@ -6236,7 +6292,7 @@ if (extensions.package) {
 
 ## Embeddings
 
-Source: https://docs.atomicmemory.ai/sdk/concepts/embeddings
+Source: https://docs.atomicstrata.ai/sdk/concepts/embeddings
 
 # Embeddings
 
@@ -6297,7 +6353,7 @@ If you're using `MemoryClient` with `atomicmemory-core` or Mem0, you probably do
 
 ## Memory providers
 
-Source: https://docs.atomicmemory.ai/sdk/concepts/provider-model
+Source: https://docs.atomicstrata.ai/sdk/concepts/provider-model
 
 # Memory providers
 
@@ -6318,7 +6374,10 @@ Providers are instantiated at init time from the `providers` config. The registr
 ```typescript
 new MemoryClient({
   providers: {
-    atomicmemory: { apiUrl: 'http://localhost:3050' },
+    atomicmemory: {
+      apiUrl: 'http://localhost:3050',
+      apiKey: 'local-dev-key',
+    },
     mem0: { apiUrl: 'http://localhost:8000' },
   },
   defaultProvider: 'atomicmemory',
@@ -6355,7 +6414,7 @@ On this page "provider" means a **memory backend**, a concrete implementation of
 
 ## Scopes and identity
 
-Source: https://docs.atomicmemory.ai/sdk/concepts/scopes-and-identity
+Source: https://docs.atomicstrata.ai/sdk/concepts/scopes-and-identity
 
 # Scopes and identity
 
@@ -6419,7 +6478,7 @@ A memory written at `{ user: 'alice', namespace: 'team-acme' }` is not visible t
 
 ## Storage adapters
 
-Source: https://docs.atomicmemory.ai/sdk/concepts/storage-adapters
+Source: https://docs.atomicstrata.ai/sdk/concepts/storage-adapters
 
 # Storage adapters
 
@@ -6527,7 +6586,7 @@ All of this is opt-out, not opt-in. Applications that want stricter failure sema
 
 ## Artifact storage
 
-Source: https://docs.atomicmemory.ai/sdk/guides/artifact-storage
+Source: https://docs.atomicstrata.ai/sdk/guides/artifact-storage
 
 # Artifact Storage
 
@@ -6548,7 +6607,10 @@ const client = new AtomicMemoryClient({
   userId: 'demo-user',
   memory: {
     providers: {
-      atomicmemory: { apiUrl: 'http://localhost:3050' },
+      atomicmemory: {
+        apiUrl: 'http://localhost:3050',
+        apiKey: process.env.ATOMICMEMORY_API_KEY!,
+      },
     },
   },
 });
@@ -6676,7 +6738,7 @@ Branch on capabilities before attempting optional operations, and branch on type
 
 ## Using the atomicmemory backend
 
-Source: https://docs.atomicmemory.ai/sdk/guides/atomicmemory-backend
+Source: https://docs.atomicstrata.ai/sdk/guides/atomicmemory-backend
 
 # Using the atomicmemory backend
 
@@ -6693,7 +6755,7 @@ const memory = new MemoryClient({
   providers: {
     atomicmemory: {
       apiUrl: 'https://core.example.com',
-      apiKey: process.env.CORE_API_KEY,   // optional
+      apiKey: process.env.CORE_API_KEY,   // bearer token for protected core deployments
       timeout: 30000,                      // ms; optional
       apiVersion: 'v1',                    // default 'v1'
     },
@@ -6715,6 +6777,8 @@ console.log(status);
 ```
 
 For a deeper liveness check, hit the core `/v1/memories/health` endpoint directly, it returns the full config snapshot (embedding / LLM provider, thresholds).
+
+The local Docker quickstart uses `local-dev-key` as its default bearer token. Production deployments should set an explicit `CORE_API_KEY` on core and pass the same value as `apiKey` in the SDK config.
 
 ## One ingest, one search
 
@@ -6772,7 +6836,7 @@ Run `memory.capabilities()` at init and cache the result, you'll know exactly wh
 
 ## Browser entry
 
-Source: https://docs.atomicmemory.ai/sdk/guides/browser-helpers
+Source: https://docs.atomicstrata.ai/sdk/guides/browser-helpers
 
 # Browser entry
 
@@ -6815,7 +6879,7 @@ The SDK does **not** ship a `ChromeStorageAdapter`. If you want to back storage 
 
 ## Browser primitives
 
-Source: https://docs.atomicmemory.ai/sdk/guides/browser-primitives
+Source: https://docs.atomicstrata.ai/sdk/guides/browser-primitives
 
 # Browser primitives
 
@@ -6925,7 +6989,7 @@ Both modes are legitimate. Pick the one that matches the constraint.
 
 ## Writing a custom provider
 
-Source: https://docs.atomicmemory.ai/sdk/guides/custom-provider
+Source: https://docs.atomicstrata.ai/sdk/guides/custom-provider
 
 # Writing a custom provider
 
@@ -7054,7 +7118,7 @@ The SDK's own test suite uses fixture providers under `src/memory/__tests__/`. T
 
 ## Using the Mem0 backend
 
-Source: https://docs.atomicmemory.ai/sdk/guides/mem0-backend
+Source: https://docs.atomicstrata.ai/sdk/guides/mem0-backend
 
 # Using the Mem0 backend
 
@@ -7123,7 +7187,7 @@ For greenfield deployments where packaging, temporal queries, and versioning mat
 
 ## Node.js / server-side
 
-Source: https://docs.atomicmemory.ai/sdk/guides/nodejs-server
+Source: https://docs.atomicstrata.ai/sdk/guides/nodejs-server
 
 # Node.js / server-side
 
@@ -7210,7 +7274,7 @@ Validating `req.params.userId` against the authenticated session is a load-beari
 
 ## Swapping backends
 
-Source: https://docs.atomicmemory.ai/sdk/guides/swapping-backends
+Source: https://docs.atomicstrata.ai/sdk/guides/swapping-backends
 
 # Swapping backends
 
@@ -7230,7 +7294,10 @@ import { MemoryClient } from '@atomicmemory/sdk';
 async function withProvider(defaultProvider: 'atomicmemory' | 'mem0') {
   const memory = new MemoryClient({
     providers: {
-      atomicmemory: { apiUrl: 'http://localhost:3050' },
+      atomicmemory: {
+        apiUrl: 'http://localhost:3050',
+        apiKey: 'local-dev-key',
+      },
       mem0: { apiUrl: 'http://localhost:8000' },
     },
     defaultProvider,
@@ -7307,7 +7374,7 @@ If your migration job crashes, resume by finding the last successfully-migrated 
 
 ## SDK Overview
 
-Source: https://docs.atomicmemory.ai/sdk/overview
+Source: https://docs.atomicstrata.ai/sdk/overview
 
 # SDK Overview
 
@@ -7330,7 +7397,12 @@ A TypeScript client for memory and artifact storage, pluggable across backends.
 import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
-  providers: { atomicmemory: { apiUrl: 'http://localhost:3050' } },
+  providers: {
+    atomicmemory: {
+      apiUrl: 'http://localhost:3050',
+      apiKey: 'local-dev-key',
+    },
+  },
 });
 await memory.initialize();
 
@@ -7358,7 +7430,12 @@ const client = new AtomicMemoryClient({
   apiKey: process.env.ATOMICMEMORY_API_KEY!,
   userId: 'u1',
   memory: {
-    providers: { atomicmemory: { apiUrl: 'http://localhost:3050' } },
+    providers: {
+      atomicmemory: {
+        apiUrl: 'http://localhost:3050',
+        apiKey: process.env.ATOMICMEMORY_API_KEY!,
+      },
+    },
   },
 });
 
@@ -7392,7 +7469,7 @@ import { MemoryClient } from '@atomicmemory/sdk/browser';
 
 ## SDK Quickstart
 
-Source: https://docs.atomicmemory.ai/sdk/quickstart
+Source: https://docs.atomicstrata.ai/sdk/quickstart
 
 # SDK Quickstart
 
@@ -7422,7 +7499,10 @@ import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
   providers: {
-    atomicmemory: { apiUrl: 'http://localhost:3050' },
+    atomicmemory: {
+      apiUrl: 'http://localhost:3050',
+      apiKey: 'local-dev-key',
+    },
   },
 });
 
@@ -7436,7 +7516,10 @@ If you configure more than one provider, pass `defaultProvider` to pick which on
 ```typescript
 new MemoryClient({
   providers: {
-    atomicmemory: { apiUrl: 'http://localhost:3050' },
+    atomicmemory: {
+      apiUrl: 'http://localhost:3050',
+      apiKey: 'local-dev-key',
+    },
     mem0: { apiUrl: 'http://localhost:8888', pathPrefix: '' },
   },
   defaultProvider: 'atomicmemory',
@@ -7498,7 +7581,10 @@ const client = new AtomicMemoryClient({
   userId: 'demo-user',
   memory: {
     providers: {
-      atomicmemory: { apiUrl: 'http://localhost:3050' },
+      atomicmemory: {
+        apiUrl: 'http://localhost:3050',
+        apiKey: 'local-dev-key',
+      },
     },
   },
 });

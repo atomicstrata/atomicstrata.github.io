@@ -26,7 +26,10 @@ import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
   providers: {
-    atomicmemory: { apiUrl: 'http://localhost:3050' },
+    atomicmemory: {
+      apiUrl: 'http://localhost:3050',
+      apiKey: 'local-dev-key',
+    },
   },
 });
 
@@ -40,7 +43,10 @@ If you configure more than one provider, pass `defaultProvider` to pick which on
 ```typescript
 new MemoryClient({
   providers: {
-    atomicmemory: { apiUrl: 'http://localhost:3050' },
+    atomicmemory: {
+      apiUrl: 'http://localhost:3050',
+      apiKey: 'local-dev-key',
+    },
     mem0: { apiUrl: 'http://localhost:8888', pathPrefix: '' },
   },
   defaultProvider: 'atomicmemory',
@@ -102,7 +108,10 @@ const client = new AtomicMemoryClient({
   userId: 'demo-user',
   memory: {
     providers: {
-      atomicmemory: { apiUrl: 'http://localhost:3050' },
+      atomicmemory: {
+        apiUrl: 'http://localhost:3050',
+        apiKey: 'local-dev-key',
+      },
     },
   },
 });

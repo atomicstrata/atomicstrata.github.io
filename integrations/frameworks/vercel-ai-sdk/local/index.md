@@ -9,13 +9,13 @@ Give Vercel AI SDK applications persistent memory backed by AtomicMemory. The ad
 ### 1. Install the adapter
 
 ```bash
-npm install @atomicmemory/vercel-ai @atomicmemory/atomicmemory-sdk
+npm install @atomicmemory/vercel-ai @atomicmemory/sdk
 ```
 
 ### 2. Configure memory
 
 ```ts
-import { MemoryClient } from '@atomicmemory/atomicmemory-sdk';
+import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
   providers: { atomicmemory: {} },
@@ -122,16 +122,22 @@ HYBRID_SEARCH_ENABLED=true
 RETRIEVAL_PROFILE=quality
 ```
 
-If core runs in Docker, recreate the app container after editing `atomicmemory-core/.env`:
+If core runs from the published Docker image, restart it with the retrieval override:
 
 ```bash
-docker compose up -d --force-recreate app
+docker run --rm -it --pull always \
+  -p 127.0.0.1:3050:3050 \
+  -e OPENAI_API_KEY=$OPENAI_API_KEY \
+  -e RETRIEVAL_PROFILE=quality \
+  -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
+  ghcr.io/atomicstrata/atomicmemory-core:latest
 ```
 
 Verify the backend reports hybrid search:
 
 ```bash
-curl -s http://localhost:3050/v1/memories/health
+curl -s -H 'Authorization: Bearer local-dev-key' \
+  http://localhost:3050/v1/memories/health
 ```
 
 The response should include `"hybrid_search_enabled": true`.

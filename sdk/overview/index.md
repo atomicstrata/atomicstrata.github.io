@@ -19,7 +19,12 @@ A TypeScript client for memory and artifact storage, pluggable across backends.
 import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
-  providers: { atomicmemory: { apiUrl: 'http://localhost:3050' } },
+  providers: {
+    atomicmemory: {
+      apiUrl: 'http://localhost:3050',
+      apiKey: 'local-dev-key',
+    },
+  },
 });
 await memory.initialize();
 
@@ -47,7 +52,12 @@ const client = new AtomicMemoryClient({
   apiKey: process.env.ATOMICMEMORY_API_KEY!,
   userId: 'u1',
   memory: {
-    providers: { atomicmemory: { apiUrl: 'http://localhost:3050' } },
+    providers: {
+      atomicmemory: {
+        apiUrl: 'http://localhost:3050',
+        apiKey: process.env.ATOMICMEMORY_API_KEY!,
+      },
+    },
   },
 });
 
