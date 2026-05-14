@@ -125,7 +125,9 @@ RETRIEVAL_PROFILE=quality
 If core runs from the published Docker image, restart it with the retrieval override:
 
 ```bash
-docker run --rm -it --pull always \
+docker rm -f atomicmemory-core
+
+docker run -d --pull always \
   --name atomicmemory-core \
   -p 127.0.0.1:3050:3050 \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \

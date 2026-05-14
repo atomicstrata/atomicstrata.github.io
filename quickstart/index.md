@@ -18,7 +18,7 @@ Run the published image:
 ```bash
 export OPENAI_API_KEY="sk-..."
 
-docker run --rm -it --pull always \
+docker run -d --pull always \
   --name atomicmemory-core \
   -p 127.0.0.1:3050:3050 \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
@@ -26,13 +26,36 @@ docker run --rm -it --pull always \
   ghcr.io/atomicstrata/atomicmemory-core:latest
 ```
 
-The container binds core to `127.0.0.1:3050`. The volume mount persists the embedded Postgres database on your host at `$HOME/.atomicstrata/atomicmemory-docker`, so `--rm` removes only the container, not your local memory data.
+The container binds core to `127.0.0.1:3050`. The volume mount persists the embedded Postgres database on your host at `$HOME/.atomicstrata/atomicmemory-docker`, so your local memory data survives container restarts, image upgrades, and container recreation.
 
 For local Docker runs, core defaults `DATABASE_URL` to embedded Postgres and sets a local development API key:
 
 ```text
 Authorization: Bearer local-dev-key
 ```
+
+## Optional, Manage The Container
+
+Watch startup logs:
+
+```bash
+docker logs -f atomicmemory-core
+```
+
+Stop and restart the same container:
+
+```bash
+docker stop atomicmemory-core
+docker start atomicmemory-core
+```
+
+Recreate it after changing environment variables or pulling a newer image:
+
+```bash
+docker rm -f atomicmemory-core
+```
+
+Then run the Step 1 command again. The database stays on disk at `$HOME/.atomicstrata/atomicmemory-docker`.
 
 ## Optional, Configure The CLI
 

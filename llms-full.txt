@@ -1808,12 +1808,10 @@ The generated snippet does not set this override for you.
 Claude Code local extraction can use Claude Code's own authenticated session instead of a separate Anthropic key:
 
 ```bash
-claude auth login
-export LLM_PROVIDER=claude-code
-export EMBEDDING_PROVIDER=transformers
+export ATOMICMEMORY_LLM_PROVIDER=claude-code
 ```
 
-That mode is for personal/local use. It requires Claude Code to be installed and logged in, consumes the user's Claude Code / Claude subscription limits, and is not the recommended path for hosted or team deployments. `LLM_PROVIDER` configures the local AtomicMemory core process; CLI profile variables such as `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and scope still configure how the CLI reaches that core process.
+That mode is for personal/local use. It requires Claude Code to be installed and logged in, consumes the user's Claude Code / Claude subscription limits, and is not the recommended path for hosted or team deployments.
 
 ## Machine output
 
@@ -1978,20 +1976,16 @@ claude plugin install atomicmemory
 For personal local use, use Claude Code's own authenticated session:
 
 ```bash
-claude auth login
-export LLM_PROVIDER=claude-code
-export EMBEDDING_PROVIDER=transformers
+export ATOMICMEMORY_LLM_PROVIDER=claude-code
 ```
 
-This requires Claude Code to be installed and logged in locally. It does not require a separate Anthropic API key, but it consumes the user's Claude Code / Claude subscription limits and is not intended for hosted or team deployments. `LLM_PROVIDER` and `EMBEDDING_PROVIDER` configure the local AtomicMemory core runtime. The Claude Code hooks and MCP server still use the `ATOMICMEMORY_*` variables below for service URL, scope, and capture policy.
+This requires Claude Code to be installed and logged in locally. It does not require a separate Anthropic API key, but it consumes the user's Claude Code / Claude subscription limits and is not intended for hosted or team deployments.
 
 For production or team use, use a normal API-backed provider instead:
 
 ```bash
-export LLM_PROVIDER=anthropic
 export ANTHROPIC_API_KEY="sk-ant-..."
 # or
-export LLM_PROVIDER=openai
 export OPENAI_API_KEY="sk-..."
 ```
 
@@ -2039,7 +2033,7 @@ For a tools-only setup, register the published MCP server directly:
 
 ### Local auto-managed mode
 
-Use local auto-managed mode for personal Claude Code memory. The plugin starts AtomicMemory locally, binds Claude Code hooks to it, and can use `LLM_PROVIDER=claude-code` for extraction without a separate Anthropic API key.
+Use local auto-managed mode for personal Claude Code memory. The plugin starts AtomicMemory locally, binds Claude Code hooks to it, and can use `ATOMICMEMORY_LLM_PROVIDER=claude-code` for extraction without a separate API key.
 
 | Capability | Included |
 | --- | --- |
@@ -2096,13 +2090,12 @@ Default behavior:
 | User scope | Claude Code user/session context, then local fallback |
 | Agent scope | `claude-code` |
 | Capture level | `balanced` |
-| Memory extraction provider | `LLM_PROVIDER=claude-code` for personal local use, or an API-backed provider |
+| Memory extraction provider | Auto-detect API key providers, or explicit `claude-code` |
 
 Common overrides:
 
 ```bash
-export LLM_PROVIDER=claude-code
-export EMBEDDING_PROVIDER=transformers
+export ATOMICMEMORY_LLM_PROVIDER=claude-code
 export ATOMICMEMORY_SCOPE_NAMESPACE="repo-or-project"
 export ATOMICMEMORY_CAPTURE_LEVEL=balanced
 ```
@@ -2111,9 +2104,7 @@ Advanced values:
 
 | Env var | Used by | Purpose |
 | --- | --- | --- |
-| `LLM_PROVIDER` | local runtime | Extraction provider. Use `claude-code` for personal local use without a separate Anthropic API key. |
-| `LLM_MODEL` | local runtime | Optional model override. Omit when using Claude Code's configured default. |
-| `EMBEDDING_PROVIDER` | local runtime | Embedding provider. Use `transformers` or `ollama` to avoid an OpenAI embedding key. |
+| `ATOMICMEMORY_LLM_PROVIDER` | local runtime | Extraction provider. Use `claude-code` for personal local use without a separate API key. |
 | `ANTHROPIC_API_KEY` | local runtime | Anthropic provider key for production or team usage. |
 | `OPENAI_API_KEY` | local runtime | OpenAI provider key. |
 | `ATOMICMEMORY_API_URL` | MCP + hooks | External AtomicMemory service URL. When omitted, the plugin uses local auto-managed mode. |
@@ -3595,7 +3586,9 @@ RETRIEVAL_PROFILE=quality
 If core runs from the published Docker image, restart it with the retrieval override:
 
 ```bash
-docker run --rm -it --pull always \
+docker rm -f atomicmemory-core
+
+docker run -d --pull always \
   --name atomicmemory-core \
   -p 127.0.0.1:3050:3050 \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
@@ -4466,7 +4459,7 @@ The published image is the fastest way to consume core as a standalone service:
 ```bash
 export OPENAI_API_KEY="sk-..."
 
-docker run --rm -it --pull always \
+docker run -d --pull always \
   --name atomicmemory-core \
   -p 127.0.0.1:3050:3050 \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
@@ -4475,6 +4468,8 @@ docker run --rm -it --pull always \
 ```
 
 By default, the image runs embedded Postgres/pgvector inside the container and stores the database at `/var/lib/atomicmemory/postgres`. Mount that path to keep local state across container restarts and image upgrades.
+
+Use `docker logs -f atomicmemory-core` to watch startup, `docker stop atomicmemory-core` to stop it, and `docker start atomicmemory-core` to restart the existing container.
 
 Local Docker mode also defaults:
 
@@ -5044,7 +5039,7 @@ Source: https://docs.atomicstrata.ai/platform/providers
 
 > Agent index: [llms.txt](/llms.txt)
 
-Embeddings and LLM calls in AtomicMemory are **pluggable providers behind single-method interfaces**. You pick OpenAI, Anthropic, Claude Code local auth, Google, Groq, Ollama, a local WASM model, or any OpenAI-compatible endpoint at deploy time via environment variables. Nothing above the provider boundary changes, no code, no imports, no service wiring.
+Embeddings and LLM calls in AtomicMemory are **pluggable providers behind single-method interfaces**. You pick OpenAI, Anthropic, Google, Groq, Ollama, a local WASM model, or any OpenAI-compatible endpoint at deploy time via environment variables. Nothing above the provider boundary changes, no code, no imports, no service wiring.
 
 That is the second pillar of the platform layer: the services that call `embedText()` and `chat()` don't know, and can't know, which provider is serving the call. The selection is made once at composition-root time and erased behind an interface.
 
@@ -5122,13 +5117,12 @@ export type EmbeddingProviderName =
 | `groq` | Groq via OpenAI-compatible endpoint |
 | `ollama` | Ollama native `/api/chat` endpoint |
 | `openai-compatible` | Any OpenAI-schema endpoint (LM Studio, vLLM, …) |
-| `claude-code` | Local Claude Code Agent SDK session for personal development |
 
 Declared in [`config.ts:15`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/config.ts#L15):
 
 ```ts
 export type LLMProviderName =
-  EmbeddingProviderName | 'groq' | 'anthropic' | 'google-genai' | 'claude-code';
+  EmbeddingProviderName | 'groq' | 'anthropic' | 'google-genai';
 ```
 
 Note the subtype relationship: the LLM provider union builds on the embedding provider names, then adds chat-only providers. Embedding-only providers such as `transformers` and `voyage` have no chat backend.
@@ -5280,33 +5274,6 @@ VOYAGE_DOCUMENT_MODEL=voyage-4-large
 VOYAGE_QUERY_MODEL=voyage-4-lite
 VOYAGE_API_KEY=pa-…
 ```
-
-Extraction uses `LLM_PROVIDER` independently from embeddings. The default is OpenAI:
-
-```bash
-LLM_PROVIDER=openai
-LLM_MODEL=gpt-4o-mini
-OPENAI_API_KEY=sk-…
-```
-
-For Anthropic's API:
-
-```bash
-LLM_PROVIDER=anthropic
-LLM_MODEL=claude-3-5-haiku-latest
-ANTHROPIC_API_KEY=sk-ant-…
-```
-
-For personal local Claude Code use, core can call the logged-in `claude` session instead of requiring an Anthropic API key:
-
-```bash
-claude auth login
-LLM_PROVIDER=claude-code
-# Optional; omit to use Claude Code's configured default.
-# LLM_MODEL=sonnet
-```
-
-`claude-code` is only for local developer machines. It consumes the user's Claude Code / Claude subscription limits, requires Claude Code to be installed and authenticated, and should not be used for hosted or team deployments. Pair it with a non-OpenAI embedding provider such as `EMBEDDING_PROVIDER=transformers` or `EMBEDDING_PROVIDER=ollama` if you also want to avoid an OpenAI embedding API key.
 
 The ingest service, the search service, the AUDN decision loop, the repair loop, none of them have a single `if (provider === 'ollama')` branch. That is the provider-agnostic boundary working as designed.
 
@@ -5963,7 +5930,7 @@ Run the published image:
 ```bash
 export OPENAI_API_KEY="sk-..."
 
-docker run --rm -it --pull always \
+docker run -d --pull always \
   --name atomicmemory-core \
   -p 127.0.0.1:3050:3050 \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
@@ -5971,13 +5938,36 @@ docker run --rm -it --pull always \
   ghcr.io/atomicstrata/atomicmemory-core:latest
 ```
 
-The container binds core to `127.0.0.1:3050`. The volume mount persists the embedded Postgres database on your host at `$HOME/.atomicstrata/atomicmemory-docker`, so `--rm` removes only the container, not your local memory data.
+The container binds core to `127.0.0.1:3050`. The volume mount persists the embedded Postgres database on your host at `$HOME/.atomicstrata/atomicmemory-docker`, so your local memory data survives container restarts, image upgrades, and container recreation.
 
 For local Docker runs, core defaults `DATABASE_URL` to embedded Postgres and sets a local development API key:
 
 ```text
 Authorization: Bearer local-dev-key
 ```
+
+## Optional, Manage The Container
+
+Watch startup logs:
+
+```bash
+docker logs -f atomicmemory-core
+```
+
+Stop and restart the same container:
+
+```bash
+docker stop atomicmemory-core
+docker start atomicmemory-core
+```
+
+Recreate it after changing environment variables or pulling a newer image:
+
+```bash
+docker rm -f atomicmemory-core
+```
+
+Then run the Step 1 command again. The database stays on disk at `$HOME/.atomicstrata/atomicmemory-docker`.
 
 ## Optional, Configure The CLI
 

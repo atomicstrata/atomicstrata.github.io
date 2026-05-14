@@ -231,12 +231,10 @@ The generated snippet does not set this override for you.
 Claude Code local extraction can use Claude Code's own authenticated session instead of a separate Anthropic key:
 
 ```bash
-claude auth login
-export LLM_PROVIDER=claude-code
-export EMBEDDING_PROVIDER=transformers
+export ATOMICMEMORY_LLM_PROVIDER=claude-code
 ```
 
-That mode is for personal/local use. It requires Claude Code to be installed and logged in, consumes the user's Claude Code / Claude subscription limits, and is not the recommended path for hosted or team deployments. `LLM_PROVIDER` configures the local AtomicMemory core process; CLI profile variables such as `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and scope still configure how the CLI reaches that core process.
+That mode is for personal/local use. It requires Claude Code to be installed and logged in, consumes the user's Claude Code / Claude subscription limits, and is not the recommended path for hosted or team deployments.
 
 ## Machine output
 

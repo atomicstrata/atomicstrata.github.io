@@ -152,7 +152,7 @@ The published image is the fastest way to consume core as a standalone service:
 ```bash
 export OPENAI_API_KEY="sk-..."
 
-docker run --rm -it --pull always \
+docker run -d --pull always \
   --name atomicmemory-core \
   -p 127.0.0.1:3050:3050 \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
@@ -161,6 +161,8 @@ docker run --rm -it --pull always \
 ```
 
 By default, the image runs embedded Postgres/pgvector inside the container and stores the database at `/var/lib/atomicmemory/postgres`. Mount that path to keep local state across container restarts and image upgrades.
+
+Use `docker logs -f atomicmemory-core` to watch startup, `docker stop atomicmemory-core` to stop it, and `docker start atomicmemory-core` to restart the existing container.
 
 Local Docker mode also defaults:
 
