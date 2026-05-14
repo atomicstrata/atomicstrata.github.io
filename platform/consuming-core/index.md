@@ -153,6 +153,7 @@ The published image is the fastest way to consume core as a standalone service:
 export OPENAI_API_KEY="sk-..."
 
 docker run --rm -it --pull always \
+  --name atomicmemory-core \
   -p 127.0.0.1:3050:3050 \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
   -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \

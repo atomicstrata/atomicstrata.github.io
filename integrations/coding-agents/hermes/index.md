@@ -4,7 +4,7 @@
 
 AtomicMemory integrates with Hermes as a native Python memory provider. Unlike the MCP-backed coding-agent plugins, Hermes exposes lifecycle hooks directly to memory providers, so the AtomicMemory integration can participate in prefetch, turn sync, and session shutdown without routing through an MCP stdio process.
 
-The provider is backed by `atomicmemory-python`, keeping Hermes-specific code focused on registration, lifecycle hooks, and tool schemas while memory semantics stay in the SDK.
+The provider is backed by the published `atomicmemory` Python SDK, keeping Hermes-specific code focused on registration, lifecycle hooks, and tool schemas while memory semantics stay in the SDK.
 
 ## Deployment targets
 

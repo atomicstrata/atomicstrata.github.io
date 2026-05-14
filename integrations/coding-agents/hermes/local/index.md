@@ -8,7 +8,7 @@ Give Hermes Agent persistent, cross-session memory backed by AtomicMemory. Unlik
 
 ### 1. Install the provider
 
-Install the AtomicMemory memory provider through your Hermes plugin workflow.
+Install the `@atomicmemory/hermes-plugin` package through your Hermes plugin workflow. The provider installs the published `atomicmemory` Python SDK as its runtime memory client.
 
 ### 2. Configure the backend
 
@@ -108,7 +108,7 @@ Secrets stay in the environment, not in the Hermes config file.
 | Symptom | Fix |
 | --- | --- |
 | Provider does not appear | Confirm the provider is installed under Hermes' memory-provider directory. |
-| Provider unavailable | Confirm `ATOMICMEMORY_API_URL` and provider package installation. |
+| Provider unavailable | Confirm `ATOMICMEMORY_API_URL` and that Hermes installed the provider package dependencies. |
 | Siloed recall fails | Use `ATOMICMEMORY_PROVIDER=atomicmemory` or switch to `shared`. |
 | Calls pause after repeated backend failures | Hermes opens a circuit breaker after five SDK failures and resumes after roughly two minutes. Check the AtomicMemory service before retrying. |
 
