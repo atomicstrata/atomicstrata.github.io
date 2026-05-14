@@ -8,9 +8,10 @@ Install core, start a local memory service, and run your first ingest and search
 
 -   **Node.js 22+**
 -   **Docker** if you want the packaged Postgres/pgvector development stack
--   **An LLM / embedding provider**, either:
-    -   An **OpenAI API key** (default path, zero extra setup), or
-    -   A local **Ollama** install if you prefer to run everything on your machine, see [providers](/platform/providers) for the env vars to swap in
+-   **Provider credentials or local provider config** for embeddings and memory extraction:
+    -   **OpenAI** is the shortest one-key quickstart because it can serve both embeddings and extraction.
+    -   **Anthropic**, **Google Gemini**, **Groq**, **Voyage**, and OpenAI-compatible services are supported for the provider roles they implement.
+    -   **Ollama**, **transformers**, and **Claude Code local auth** cover local/personal workflows. See [providers](/platform/providers) for the exact env vars.
 
 That is all. The local stack brings its own Postgres with pgvector.
 
@@ -83,6 +84,7 @@ The response carries three things worth noting:
 ## What next
 
 -   **Swap to a local embedding model**, run entirely offline with `transformers` (WASM) or `ollama`. See [providers](/platform/providers).
+-   **Register or upload artifacts**, pointer artifacts work by default; managed storage providers such as S3 or Filecoin are optional. See [artifact storage](/platform/artifact-storage).
 -   **Workspace-scoped memory**, separate personal memory from team memory with first-class scope dispatch. See [scope](/platform/scope).
 -   **Full API reference**, every endpoint, request, and response shape. Start with [ingest](/api-reference/http/ingest-memory).
 

@@ -10,8 +10,10 @@
 ## Platform
 
 - [Architecture](https://docs.atomicmemory.ai/platform/architecture.md): AtomicMemory is a standardized platform layer for AI memory, not a monolithic service.
+- [Artifact Storage](https://docs.atomicmemory.ai/platform/artifact-storage.md): Artifact storage is the optional raw-byte layer behind documents and storage
 - [Composition](https://docs.atomicmemory.ai/platform/composition.md): AtomicMemory has an explicit composition root, a single function, createCoreRuntime, that owns every piece of wiring between config, the Postgres pool, repositories, stores, and services.
 - [Consuming core](https://docs.atomicmemory.ai/platform/consuming-core.md): atomicmemory-core can be used as a network service, embedded in a Node process, or booted as a containerized release target.
+- [Lessons](https://docs.atomicmemory.ai/platform/lessons.md): A lesson is a recorded failure pattern that AtomicMemory has seen for a
 - [Observability](https://docs.atomicmemory.ai/platform/observability.md): Every AtomicMemory retrieval emits a structured, stable observability
 - [Providers](https://docs.atomicmemory.ai/platform/providers.md): Embeddings and LLM calls in AtomicMemory are pluggable providers behind
 - [Scope](https://docs.atomicmemory.ai/platform/scope.md): MemoryScope is AtomicMemory's canonical read-path contract: a single tagged
@@ -27,7 +29,8 @@
 - [Embeddings](https://docs.atomicmemory.ai/sdk/concepts/embeddings.md): The SDK ships local embedding generation through @huggingface/transformers.
 - [Memory providers](https://docs.atomicmemory.ai/sdk/concepts/provider-model.md): The provider model is what makes MemoryClient backend-agnostic.
 - [Scopes and identity](https://docs.atomicmemory.ai/sdk/concepts/scopes-and-identity.md): Every SDK operation carries a scope, the partition the memory lives in.
-- [Storage adapters](https://docs.atomicmemory.ai/sdk/concepts/storage-adapters.md): The SDK's storage subsystem is a thin, resilient abstraction over key-value storage.
+- [Storage adapters](https://docs.atomicmemory.ai/sdk/concepts/storage-adapters.md): This page describes the SDK's client-side key/value storage adapters.
+- [Artifact storage](https://docs.atomicmemory.ai/sdk/guides/artifact-storage.md): The SDKs expose core's artifact-storage API for applications that need to
 - [Using the atomicmemory backend](https://docs.atomicmemory.ai/sdk/guides/atomicmemory-backend.md): AtomicMemoryProvider is the SDK's HTTP client for atomicmemory-core.
 - [Browser entry](https://docs.atomicmemory.ai/sdk/guides/browser-helpers.md): The SDK ships a slim entry point for applications that run in the browser against a backend-hosted memory engine.
 - [Browser primitives](https://docs.atomicmemory.ai/sdk/guides/browser-primitives.md): This guide bypasses MemoryClient.
@@ -35,7 +38,7 @@
 - [Using the Mem0 backend](https://docs.atomicmemory.ai/sdk/guides/mem0-backend.md): Mem0Provider is the SDK's HTTP client for Mem0.
 - [Node.js / server-side](https://docs.atomicmemory.ai/sdk/guides/nodejs-server.md): Using the SDK server-side is supported, the package is ESM + CJS, has no browser-only code on its critical path, and the subpath storage primitives run anywhere Node does.
 - [Swapping backends](https://docs.atomicmemory.ai/sdk/guides/swapping-backends.md): The SDK's provider architecture makes the capability of swapping backends real; this guide covers the operational story.
-- [SDK Overview](https://docs.atomicmemory.ai/sdk/overview.md): A TypeScript client for memory, pluggable across backends.
+- [SDK Overview](https://docs.atomicmemory.ai/sdk/overview.md): A TypeScript client for memory and artifact storage, pluggable across backends.
 - [SDK Quickstart](https://docs.atomicmemory.ai/sdk/quickstart.md): Install, initialize, and make your first ingest and search, with MemoryClient wired to a running atomicmemory-core.
 
 ## Integrations
@@ -46,9 +49,9 @@
 - [Codex](https://docs.atomicmemory.ai/integrations/coding-agents/codex.md): AtomicMemory integrates with Codex through the shared MCP server and a memory protocol skill that handles retrieval, durable writes, and handoff snapshots.
 - [Codex Cloud](https://docs.atomicmemory.ai/integrations/coding-agents/codex/cloud.md): Cloud deployment details for Codex are coming soon.
 - [Codex Local](https://docs.atomicmemory.ai/integrations/coding-agents/codex/local.md): Give Codex persistent, cross-session memory backed by AtomicMemory.
-- [Cursor](https://docs.atomicmemory.ai/integrations/coding-agents/cursor.md): AtomicMemory integrates with Cursor through the shared MCP server and a rules file that teaches the agent when to retrieve and store durable memory.
-- [Cursor Cloud](https://docs.atomicmemory.ai/integrations/coding-agents/cursor/cloud.md): Cloud deployment details for Cursor are coming soon.
-- [Cursor Local](https://docs.atomicmemory.ai/integrations/coding-agents/cursor/local.md): Give Cursor persistent memory backed by AtomicMemory.
+- [Cursor](https://docs.atomicmemory.ai/integrations/coding-agents/cursor.md): AtomicMemory supports Cursor today through a local MCP integration and Cursor
+- [Cursor Cloud](https://docs.atomicmemory.ai/integrations/coding-agents/cursor/cloud.md): Cursor Cloud deployment details are coming soon.
+- [Cursor Local](https://docs.atomicmemory.ai/integrations/coding-agents/cursor/local.md): Cursor support is available today as a manual local integration using the
 - [Hermes Agent](https://docs.atomicmemory.ai/integrations/coding-agents/hermes.md): AtomicMemory integrates with Hermes as a native Python memory provider.
 - [Hermes Cloud](https://docs.atomicmemory.ai/integrations/coding-agents/hermes/cloud.md): Cloud deployment details for Hermes are coming soon.
 - [Hermes Local](https://docs.atomicmemory.ai/integrations/coding-agents/hermes/local.md): Give Hermes Agent persistent, cross-session memory backed by AtomicMemory.
@@ -79,13 +82,13 @@
 - [Memory-cap status for a user's store.](https://docs.atomicmemory.ai/api-reference/http/check-memory-cap.md): Memory-cap status for a user's store.
 - [Compute consolidation candidates; optionally execute (execute=true).](https://docs.atomicmemory.ai/api-reference/http/consolidate-memories.md): Compute consolidation candidates; optionally execute (execute=true).
 - [Conventions](https://docs.atomicmemory.ai/api-reference/http/conventions.md): General conventions that apply across every /v1/memories/ and /v1/agents/ route.
-- [Deactivate a lesson by id.](https://docs.atomicmemory.ai/api-reference/http/deactivate-lesson.md): Deactivate a lesson by id.
+- [Deactivate a lesson by id.](https://docs.atomicmemory.ai/api-reference/http/deactivate-lesson.md): Mark a lesson inactive (`active = false`).
 - [Delete a single memory by UUID.](https://docs.atomicmemory.ai/api-reference/http/delete-memory.md): Delete a single memory by UUID.
 - [Evaluate decay candidates. dry_run=false archives them.](https://docs.atomicmemory.ai/api-reference/http/evaluate-decay.md): Evaluate decay candidates.
 - [Expand a list of memory IDs into full objects.](https://docs.atomicmemory.ai/api-reference/http/expand-memories.md): Expand a list of memory IDs into full objects.
 - [Look up the trust level for a (user, agent) pair.](https://docs.atomicmemory.ai/api-reference/http/get-agent-trust.md): Look up the trust level for a (user, agent) pair.
 - [Aggregate mutation statistics for a user's memory store.](https://docs.atomicmemory.ai/api-reference/http/get-audit-summary.md): Aggregate mutation statistics for a user's memory store.
-- [Lesson statistics for a user.](https://docs.atomicmemory.ai/api-reference/http/get-lesson-stats.md): Lesson statistics for a user.
+- [Lesson statistics for a user.](https://docs.atomicmemory.ai/api-reference/http/get-lesson-stats.md): Return the count of currently active lessons for a user, broken
 - [Fetch a single memory by UUID.](https://docs.atomicmemory.ai/api-reference/http/get-memory.md): Fetch a single memory by UUID.
 - [Per-memory version history.](https://docs.atomicmemory.ai/api-reference/http/get-memory-audit-trail.md): Per-memory version history.
 - [Subsystem liveness + current runtime config snapshot.](https://docs.atomicmemory.ai/api-reference/http/get-memory-health.md): Subsystem liveness + current runtime config snapshot.
@@ -95,10 +98,10 @@
 - [Ingest a conversation transcript with full extraction.](https://docs.atomicmemory.ai/api-reference/http/ingest-memory.md): Ingest a conversation transcript with full extraction.
 - [Quick ingest (storeVerbatim when skip_extraction=true).](https://docs.atomicmemory.ai/api-reference/http/ingest-memory-quick.md): Quick ingest (storeVerbatim when skip_extraction=true).
 - [List open agent conflicts for a user.](https://docs.atomicmemory.ai/api-reference/http/list-agent-conflicts.md): List open agent conflicts for a user.
-- [List active lessons for a user.](https://docs.atomicmemory.ai/api-reference/http/list-lessons.md): List active lessons for a user.
+- [List active lessons for a user.](https://docs.atomicmemory.ai/api-reference/http/list-lessons.md): List every active 'lesson' for a user, newest first.
 - [List memories for a user (or workspace).](https://docs.atomicmemory.ai/api-reference/http/list-memories.md): List memories for a user (or workspace).
 - [Reconcile deferred mutations for a user (or all users when user_id is absent).](https://docs.atomicmemory.ai/api-reference/http/reconcile-deferred.md): Reconcile deferred mutations for a user (or all users when user_id is absent).
-- [Report a new lesson.](https://docs.atomicmemory.ai/api-reference/http/report-lesson.md): Report a new lesson.
+- [Report a new lesson.](https://docs.atomicmemory.ai/api-reference/http/report-lesson.md): Record a `user_reported` lesson on behalf of the caller.
 - [Delete all memories for a given user + source_site.](https://docs.atomicmemory.ai/api-reference/http/reset-by-source.md): Delete all memories for a given user + source_site.
 - [Resolve a specific conflict with one of the three enum variants.](https://docs.atomicmemory.ai/api-reference/http/resolve-agent-conflict.md): Resolve a specific conflict with one of the three enum variants.
 - [Full semantic search with optional temporal / retrieval-mode / token-budget controls.](https://docs.atomicmemory.ai/api-reference/http/search-memories.md): Full semantic search with optional temporal / retrieval-mode / token-budget controls.

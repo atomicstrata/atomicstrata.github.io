@@ -89,6 +89,33 @@ for (const { memory: record, score } of page.results) {
 
 Similarly, `search` takes a single `SearchRequest`. Injection-gating ("should this result ever be shown on this site?") is also an application-layer concern.
 
+## Optional, Register An Artifact
+
+If your app also needs to reference files or raw bytes, use `AtomicMemoryClient.storage`. Pointer artifacts work against the default pointer-only core configuration; managed uploads require the server to opt into `RAW_STORAGE_MODE=managed_blob`.
+
+```typescript
+import { AtomicMemoryClient } from '@atomicmemory/sdk';
+
+const client = new AtomicMemoryClient({
+  apiUrl: 'http://localhost:3050',
+  apiKey: process.env.ATOMICMEMORY_API_KEY!,
+  userId: 'demo-user',
+  memory: {
+    providers: {
+      atomicmemory: { apiUrl: 'http://localhost:3050' },
+    },
+  },
+});
+
+const artifact = await client.storage.put({
+  mode: 'pointer',
+  uri: 'https://example.com/manual.pdf',
+  contentType: 'application/pdf',
+});
+```
+
+See [Artifact storage](/sdk/guides/artifact-storage) for managed uploads, Filecoin caveats, verification, and Python examples.
+
 ## This is the whole round trip
 
 `initialize` → `ingest` → `search`. Every other method (`get`, `delete`, `list`, `package`, `capabilities`, `getExtension`, `getProviderStatus`) is reachable on the same `memory` object. Backend-specific admin, lifecycle reset, audit trails, lesson lists, agent trust, is reachable via the `atomicmemory` namespace handle:
@@ -106,5 +133,6 @@ For the full surface, see the [API Reference overview](/sdk/api/overview).
 ## What next
 
 -   Understand the pluggable-backend story in [Provider model](/sdk/concepts/provider-model).
+-   Register or upload files with [Artifact storage](/sdk/guides/artifact-storage).
 -   Swap `atomicmemory` for a different backend in [Using the Mem0 backend](/sdk/guides/mem0-backend) or [Writing a custom provider](/sdk/guides/custom-provider).
 -   Build memory features without a backend at all using [Browser primitives](/sdk/guides/browser-primitives).

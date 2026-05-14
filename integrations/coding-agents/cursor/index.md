@@ -2,20 +2,18 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory integrates with Cursor through the shared MCP server and a rules file that teaches the agent when to retrieve and store durable memory.
+AtomicMemory supports Cursor today through a local MCP integration and Cursor rules.
 
-## Deployment targets
+## Available today: Local
 
-### Local
-
-Use this when you want the self-managed Cursor path with the published MCP package and manual Cursor setup.
+Use Cursor Local when you want the self-managed Cursor path with the shared AtomicMemory MCP server and a Cursor project rule.
 
 See [Cursor Local](/integrations/coding-agents/cursor/local).
 
-### Cloud
+## Planned: Cloud
 
 Coming Soon
 
-Cloud deployment details for Cursor are not documented yet. This page will describe the hosted configuration, authentication, and rollout model once those details are finalized.
+Cursor Cloud deployment details are not documented yet. This page will describe the hosted configuration, authentication, and rollout model once those details are finalized.
 
 See [Cursor Cloud](/integrations/coding-agents/cursor/cloud).

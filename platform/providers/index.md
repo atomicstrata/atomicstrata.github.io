@@ -343,9 +343,15 @@ That's deliberate. Hot-swapping embedding providers inside an already-running ru
 
 ## Naming
 
-This page is about **embedding and LLM providers** inside the engine, OpenAI, Ollama, Anthropic, etc. The SDK has a separate concept called **memory providers** ([`MemoryProvider`](/sdk/concepts/provider-model)), the interface a memory backend implements so the SDK can route through it. Different layer, different concept.
+This page is about **embedding and LLM providers** inside the engine, OpenAI, Ollama, Anthropic, etc. Two other provider concepts live at different layers:
+
+-   **Memory providers** ([`MemoryProvider`](/sdk/concepts/provider-model)), the SDK interface a memory backend implements so the SDK can route through it.
+-   **Artifact storage providers** ([artifact storage](/platform/artifact-storage)), the optional core backends (`local_fs`, `s3`, `filecoin`) that store raw artifact bytes when a deployment opts into managed storage.
+
+Different layer, different contract.
 
 ## Related
 
 -   [Stores](/platform/stores), the other half of the platform layer: pluggable storage behind narrow interfaces.
+-   [Artifact Storage](/platform/artifact-storage), optional raw-byte storage for documents and artifacts.
 -   [Composition](/platform/composition), how providers, stores, and services are wired together at startup.

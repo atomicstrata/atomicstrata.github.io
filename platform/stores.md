@@ -268,4 +268,5 @@ That's what we mean by "pluggable at every seam".
 ## Related
 
 -   [Providers](/platform/providers), the pluggable embedding + LLM layer that sits alongside stores.
+-   [Artifact Storage](/platform/artifact-storage), the optional raw-byte layer for documents and storage artifacts. Stores persist memory-domain rows; artifact storage providers manage external or uploaded bytes.
 -   [Composition](/platform/composition), how the runtime container wires stores, providers, services, and routes.

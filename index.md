@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory is an open-source memory engine for AI applications, semantic retrieval, AUDN mutation (Add / Update / Delete / No-op), and contradiction-safe claim versioning, delivered as an HTTP service you can run with one `docker compose up`. It is pluggable at every seam: swap the embedding provider, the LLM, the storage backend, or the scope model without forking. The engine ships as a standardized platform layer, not a framework, not a SaaS, so your agents, assistants, and products can compose the memory stack they need.
+AtomicMemory is an open-source memory engine for AI applications, semantic retrieval, AUDN mutation (Add / Update / Delete / No-op), and contradiction-safe claim versioning, delivered as an HTTP service you can run with one `docker compose up`. It is pluggable at every seam: swap the embedding provider, the LLM, the artifact-storage backend, or the scope model without forking. The engine ships as a standardized platform layer, not a framework, not a SaaS, so your agents, assistants, and products can compose the memory stack they need.
 
 ## Why AtomicMemory
 
@@ -27,7 +27,7 @@ The pitch is not "we do more." It is: the seams are explicit, the contracts are 
 ## Platform at a glance
 
 -   **Pluggable storage**, five domain-facing store interfaces so ingest, search, CRUD, lifecycle, and trust each see only the contract they need ([stores](/platform/stores))
--   **Pluggable providers**, embeddings via openai, openai-compatible, ollama, transformers (local WASM), or voyage; LLM via openai, openai-compatible, ollama, anthropic, google, or groq ([providers](/platform/providers))
+-   **Pluggable providers**, embeddings via openai, openai-compatible, ollama, transformers (local WASM), or voyage; LLM via openai, openai-compatible, ollama, anthropic, google, or groq ([providers](/platform/providers)); optional artifact storage via pointer mode, local filesystem, S3, or Filecoin ([artifact storage](/platform/artifact-storage))
 -   **Explicit composition**, a single composition root wires the runtime container; no hidden singletons, no global state ([composition](/platform/composition))
 -   **First-class scope**, user, workspace, and agent scopes dispatched at the request boundary, not bolted on after ([scope](/platform/scope))
 -   **Observability as contract**, every search response carries a stable trace schema so dashboards and evals never break on a refactor ([observability](/platform/observability))
@@ -37,6 +37,6 @@ The pitch is not "we do more." It is: the seams are explicit, the contracts are 
 
 The fastest path is the [Quickstart](/quickstart): clone the core repo, set an API key, `docker compose up`, and run your first ingest and search with two curl commands.
 
-Core is HTTP-first, so any language works today. The [TypeScript SDK](/sdk/overview) gives TypeScript and JavaScript consumers typed request and response shapes, richer ergonomics, scope-aware helpers, and a pluggable provider model that decouples your app from any particular memory engine, but nothing about core requires it.
+Core is HTTP-first, so any language works today. The [TypeScript SDK](/sdk/overview) gives TypeScript and JavaScript consumers typed request and response shapes, richer ergonomics, scope-aware helpers, and a pluggable provider model that decouples your app from any particular memory engine. The Python SDK serves Python-native integrations such as Hermes. Nothing about core requires either SDK.
 
 AtomicMemory is [Apache-2.0 licensed](https://github.com/atomicstrata/atomicmemory-core/blob/main/LICENSE). Self-host it, fork it, run it behind your own gateway, the platform is yours.

@@ -2,7 +2,9 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-The SDK's storage subsystem is a thin, resilient abstraction over key-value storage. It lives behind the `/storage` subpath export and is intended for applications that need persistent client-side state, for example, to pair with the `/embedding` and `/search` primitives in a no-backend topology.
+This page describes the SDK's client-side key/value storage adapters. It is not the artifact-storage API used for raw documents, S3, or Filecoin. For that server-backed artifact workflow, see [Artifact storage](/sdk/guides/artifact-storage).
+
+The SDK's client-side storage subsystem is a thin, resilient abstraction over key-value storage. It is intended for applications that need persistent client-side state, for example, to pair with the `/embedding` and `/search` primitives in a no-backend topology.
 
 Storage is a separate concern from the memory **backend**. The backend holds your memories; storage holds local data, caches, application state, queued writes, bundled knowledge bases. `MemoryClient` does not use `StorageManager` internally.
 
