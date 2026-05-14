@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Embeddings and LLM calls in AtomicMemory are **pluggable providers behind single-method interfaces**. You pick OpenAI, Anthropic, Google, Groq, Ollama, a local WASM model, or any OpenAI-compatible endpoint at deploy time via environment variables. Nothing above the provider boundary changes, no code, no imports, no service wiring.
+Embeddings and LLM calls in AtomicMemory are **pluggable providers behind single-method interfaces**. You pick OpenAI, Anthropic, Claude Code local auth, Google, Groq, Ollama, a local WASM model, or any OpenAI-compatible endpoint at deploy time via environment variables. Nothing above the provider boundary changes, no code, no imports, no service wiring.
 
 That is the second pillar of the platform layer: the services that call `embedText()` and `chat()` don't know, and can't know, which provider is serving the call. The selection is made once at composition-root time and erased behind an interface.
 
@@ -80,12 +80,13 @@ export type EmbeddingProviderName =
 | `groq` | Groq via OpenAI-compatible endpoint |
 | `ollama` | Ollama native `/api/chat` endpoint |
 | `openai-compatible` | Any OpenAI-schema endpoint (LM Studio, vLLM, …) |
+| `claude-code` | Local Claude Code Agent SDK session for personal development |
 
 Declared in [`config.ts:15`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/config.ts#L15):
 
 ```ts
 export type LLMProviderName =
-  EmbeddingProviderName | 'groq' | 'anthropic' | 'google-genai';
+  EmbeddingProviderName | 'groq' | 'anthropic' | 'google-genai' | 'claude-code';
 ```
 
 Note the subtype relationship: the LLM provider union builds on the embedding provider names, then adds chat-only providers. Embedding-only providers such as `transformers` and `voyage` have no chat backend.
@@ -237,6 +238,33 @@ VOYAGE_DOCUMENT_MODEL=voyage-4-large
 VOYAGE_QUERY_MODEL=voyage-4-lite
 VOYAGE_API_KEY=pa-…
 ```
+
+Extraction uses `LLM_PROVIDER` independently from embeddings. The default is OpenAI:
+
+```bash
+LLM_PROVIDER=openai
+LLM_MODEL=gpt-4o-mini
+OPENAI_API_KEY=sk-…
+```
+
+For Anthropic's API:
+
+```bash
+LLM_PROVIDER=anthropic
+LLM_MODEL=claude-3-5-haiku-latest
+ANTHROPIC_API_KEY=sk-ant-…
+```
+
+For personal local Claude Code use, core can call the logged-in `claude` session instead of requiring an Anthropic API key:
+
+```bash
+claude auth login
+LLM_PROVIDER=claude-code
+# Optional; omit to use Claude Code's configured default.
+# LLM_MODEL=sonnet
+```
+
+`claude-code` is only for local developer machines. It consumes the user's Claude Code / Claude subscription limits, requires Claude Code to be installed and authenticated, and should not be used for hosted or team deployments. Pair it with a non-OpenAI embedding provider such as `EMBEDDING_PROVIDER=transformers` or `EMBEDDING_PROVIDER=ollama` if you also want to avoid an OpenAI embedding API key.
 
 The ingest service, the search service, the AUDN decision loop, the repair loop, none of them have a single `if (provider === 'ollama')` branch. That is the provider-agnostic boundary working as designed.
 

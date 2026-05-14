@@ -9,7 +9,17 @@ Give OpenClaw persistent, cross-channel memory backed by AtomicMemory. The plugi
 ### 1. Install the plugin
 
 ```bash
-claw plugin install atomicmemory/openclaw
+openclaw plugins install @atomicmemory/openclaw-plugin
+```
+
+For local plugin development, install from a checkout instead:
+
+```bash
+git clone https://github.com/atomicstrata/atomicmemory-integrations.git
+cd atomicmemory-integrations
+pnpm install
+pnpm --filter @atomicmemory/openclaw-plugin build
+openclaw plugins install -l ./plugins/openclaw
 ```
 
 ### 2. Configure scope
@@ -19,18 +29,25 @@ OpenClaw passes plugin config from `openclaw.plugin.json` into the provider:
 ```json
 {
   "provider": "atomicmemory",
+  "apiUrl": "https://memory.yourco.com",
+  "apiKey": "am_live_...",
   "scope": {
+    "user": "pip",
     "agent": "openclaw",
     "namespace": "personal-assistant"
   }
 }
 ```
 
-OpenClaw resolves the AtomicMemory service, credentials, and base user identity. Optional `agent`, `namespace`, and `thread` fields narrow memory when needed.
+`scope.user` is the stable channel-agnostic user identity. Optional `agent`, `namespace`, and `thread` fields narrow memory when needed.
 
 ### 3. Restart OpenClaw
 
-Restart the OpenClaw host after installing or updating the plugin if it keeps plugin modules loaded.
+Restart the OpenClaw gateway after installing or updating the plugin:
+
+```bash
+openclaw gateway restart
+```
 
 ## Features
 
@@ -61,6 +78,9 @@ OpenClaw memory capture is prompt/tool driven. Agents search before answering wh
 | Field | Purpose |
 | --- | --- |
 | `provider` | AtomicMemory SDK provider name. |
+| `apiUrl` | AtomicMemory service URL. |
+| `apiKey` | Optional bearer credential for the AtomicMemory service. |
+| `scope.user` | Stable user identity shared across OpenClaw channels. |
 | `scope.agent` | Agent identity. |
 | `scope.namespace` | Project, assistant, or deployment boundary. |
 | `scope.thread` | Optional conversation boundary. |
@@ -100,7 +120,7 @@ permissions:
 | --- | --- |
 | Plugin changes do not appear | Restart the OpenClaw host after updating the plugin. |
 | Memory crosses unwanted channels | Add `scope.namespace`, `scope.agent`, or `scope.thread`. |
-| Provider connection fails | Verify the host-level AtomicMemory service and credential configuration. |
+| Provider connection fails | Verify `apiUrl`, `apiKey` if required, and `scope.user` in the OpenClaw plugin config. |
 
 ## Development
 

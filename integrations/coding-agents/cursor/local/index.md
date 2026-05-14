@@ -8,7 +8,7 @@ Cursor support is available today as a manual local integration using the Atomic
 
 ### 1. Register the MCP server
 
-Add AtomicMemory to Cursor's MCP settings:
+Add AtomicMemory to Cursor's MCP settings. Use `.cursor/mcp.json` for a single project, or `~/.cursor/mcp.json` for all Cursor projects:
 
 ```json
 {
@@ -67,6 +67,13 @@ alwaysApply: true
 ### 4. Restart Cursor
 
 Restart Cursor after changing MCP settings, environment variables, or project rules.
+
+You can also verify the CLI sees the same MCP server:
+
+```bash
+cursor-agent mcp list
+cursor-agent mcp list-tools atomicmemory
+```
 
 ## Features
 

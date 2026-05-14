@@ -1808,10 +1808,12 @@ The generated snippet does not set this override for you.
 Claude Code local extraction can use Claude Code's own authenticated session instead of a separate Anthropic key:
 
 ```bash
-export ATOMICMEMORY_LLM_PROVIDER=claude-code
+claude auth login
+export LLM_PROVIDER=claude-code
+export EMBEDDING_PROVIDER=transformers
 ```
 
-That mode is for personal/local use. It requires Claude Code to be installed and logged in, consumes the user's Claude Code / Claude subscription limits, and is not the recommended path for hosted or team deployments.
+That mode is for personal/local use. It requires Claude Code to be installed and logged in, consumes the user's Claude Code / Claude subscription limits, and is not the recommended path for hosted or team deployments. `LLM_PROVIDER` configures the local AtomicMemory core process; CLI profile variables such as `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and scope still configure how the CLI reaches that core process.
 
 ## Machine output
 
@@ -1967,8 +1969,8 @@ Give Claude Code persistent, cross-session memory backed by AtomicMemory. The in
 ### 1. Install the plugin
 
 ```bash
-claude plugin marketplace add atomicstrata/atomicmemory
-claude plugin install atomicmemory
+claude plugin marketplace add atomicstrata/atomicmemory-integrations
+claude plugin install claude-code@atomicmemory
 ```
 
 ### 2. Choose a memory extraction provider
@@ -1976,16 +1978,20 @@ claude plugin install atomicmemory
 For personal local use, use Claude Code's own authenticated session:
 
 ```bash
-export ATOMICMEMORY_LLM_PROVIDER=claude-code
+claude auth login
+export LLM_PROVIDER=claude-code
+export EMBEDDING_PROVIDER=transformers
 ```
 
-This requires Claude Code to be installed and logged in locally. It does not require a separate Anthropic API key, but it consumes the user's Claude Code / Claude subscription limits and is not intended for hosted or team deployments.
+This requires Claude Code to be installed and logged in locally. It does not require a separate Anthropic API key, but it consumes the user's Claude Code / Claude subscription limits and is not intended for hosted or team deployments. `LLM_PROVIDER` and `EMBEDDING_PROVIDER` configure the local AtomicMemory core runtime. The Claude Code hooks and MCP server still use the `ATOMICMEMORY_*` variables below for service URL, scope, and capture policy.
 
 For production or team use, use a normal API-backed provider instead:
 
 ```bash
+export LLM_PROVIDER=anthropic
 export ANTHROPIC_API_KEY="sk-ant-..."
 # or
+export LLM_PROVIDER=openai
 export OPENAI_API_KEY="sk-..."
 ```
 
@@ -2033,7 +2039,7 @@ For a tools-only setup, register the published MCP server directly:
 
 ### Local auto-managed mode
 
-Use local auto-managed mode for personal Claude Code memory. The plugin starts AtomicMemory locally, binds Claude Code hooks to it, and can use `ATOMICMEMORY_LLM_PROVIDER=claude-code` for extraction without a separate API key.
+Use local auto-managed mode for personal Claude Code memory. The plugin starts AtomicMemory locally, binds Claude Code hooks to it, and can use `LLM_PROVIDER=claude-code` for extraction without a separate Anthropic API key.
 
 | Capability | Included |
 | --- | --- |
@@ -2090,12 +2096,13 @@ Default behavior:
 | User scope | Claude Code user/session context, then local fallback |
 | Agent scope | `claude-code` |
 | Capture level | `balanced` |
-| Memory extraction provider | Auto-detect API key providers, or explicit `claude-code` |
+| Memory extraction provider | `LLM_PROVIDER=claude-code` for personal local use, or an API-backed provider |
 
 Common overrides:
 
 ```bash
-export ATOMICMEMORY_LLM_PROVIDER=claude-code
+export LLM_PROVIDER=claude-code
+export EMBEDDING_PROVIDER=transformers
 export ATOMICMEMORY_SCOPE_NAMESPACE="repo-or-project"
 export ATOMICMEMORY_CAPTURE_LEVEL=balanced
 ```
@@ -2104,7 +2111,9 @@ Advanced values:
 
 | Env var | Used by | Purpose |
 | --- | --- | --- |
-| `ATOMICMEMORY_LLM_PROVIDER` | local runtime | Extraction provider. Use `claude-code` for personal local use without a separate API key. |
+| `LLM_PROVIDER` | local runtime | Extraction provider. Use `claude-code` for personal local use without a separate Anthropic API key. |
+| `LLM_MODEL` | local runtime | Optional model override. Omit when using Claude Code's configured default. |
+| `EMBEDDING_PROVIDER` | local runtime | Embedding provider. Use `transformers` or `ollama` to avoid an OpenAI embedding key. |
 | `ANTHROPIC_API_KEY` | local runtime | Anthropic provider key for production or team usage. |
 | `OPENAI_API_KEY` | local runtime | OpenAI provider key. |
 | `ATOMICMEMORY_API_URL` | MCP + hooks | External AtomicMemory service URL. When omitted, the plugin uses local auto-managed mode. |
@@ -2236,7 +2245,7 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/codex/local
 
 > Agent index: [llms.txt](/llms.txt)
 
-Give Codex persistent, cross-session memory backed by AtomicMemory. The integration installs the AtomicMemory MCP server and a memory protocol skill so Codex can recall prior work, store durable decisions, and create handoff snapshots.
+Give Codex persistent, cross-session memory backed by AtomicMemory. The public setup registers the AtomicMemory MCP server so Codex can recall prior work, store durable decisions, and create handoff snapshots. Teams that install the source-distributed Codex plugin can also add the AtomicMemory memory protocol skill.
 
 ## Quick start
 
@@ -2259,26 +2268,21 @@ export ATOMICMEMORY_SCOPE_THREAD="thread-id"
 
 ### 2. Register the MCP server
 
-Add AtomicMemory to Codex MCP configuration:
+Add AtomicMemory with the Codex MCP CLI:
 
-```json
-{
-  "mcpServers": {
-    "atomicmemory": {
-      "command": "npx",
-      "args": ["-y", "@atomicmemory/mcp-server"],
-      "env_vars": [
-        "ATOMICMEMORY_PROVIDER",
-        "ATOMICMEMORY_API_URL",
-        "ATOMICMEMORY_API_KEY",
-        "ATOMICMEMORY_SCOPE_USER",
-        "ATOMICMEMORY_SCOPE_AGENT",
-        "ATOMICMEMORY_SCOPE_NAMESPACE",
-        "ATOMICMEMORY_SCOPE_THREAD"
-      ]
-    }
-  }
-}
+```bash
+codex mcp add atomicmemory \
+  --env ATOMICMEMORY_PROVIDER="$ATOMICMEMORY_PROVIDER" \
+  --env ATOMICMEMORY_API_URL="$ATOMICMEMORY_API_URL" \
+  --env ATOMICMEMORY_API_KEY="$ATOMICMEMORY_API_KEY" \
+  --env ATOMICMEMORY_SCOPE_USER="$ATOMICMEMORY_SCOPE_USER" \
+  -- npx -y @atomicmemory/mcp-server
+```
+
+If you use optional scope variables, add them with additional `--env` arguments or set them in the shell environment Codex inherits.
+
+```bash
+codex mcp list
 ```
 
 ### 3. Verify memory tools
@@ -2293,7 +2297,7 @@ Ask Codex to list MCP tools. You should see:
 ## Features
 
 -   **Cross-session recall.** Codex can retrieve project decisions, user preferences, codebase facts, and prior work.
--   **Memory protocol skill.** The installed skill teaches Codex when to search, when to ingest, and when to create handoff snapshots.
+-   **Optional memory protocol skill.** The source-distributed plugin teaches Codex when to search, when to ingest, and when to create handoff snapshots.
 -   **Scoped memory.** `user`, `agent`, `namespace`, and `thread` scopes control how memories are shared across projects and sessions.
 -   **Backend-agnostic SDK path.** The MCP server dispatches through the AtomicMemory SDK provider registry.
 
@@ -2301,7 +2305,7 @@ Ask Codex to list MCP tools. You should see:
 
 ### Plugin mode
 
-Use plugin mode when you want Codex to receive both the MCP tools and the memory protocol skill.
+Use plugin mode when you want Codex to receive both the MCP tools and the memory protocol skill. The Codex plugin assets in `atomicmemory-integrations/plugins/codex` are source-distributed today; use the MCP quick start above for public setup, or point a team/repo Codex marketplace at a local clone when you want the skill installed through Codex's plugin system.
 
 | Capability | Included |
 | --- | --- |
@@ -2371,9 +2375,9 @@ The installed skill guides Codex to:
 
 | Symptom | Fix |
 | --- | --- |
-| No memory tools appear | Restart Codex after installing the plugin or changing MCP config. |
+| No memory tools appear | Run `codex mcp list`, restart Codex after changing MCP config, and confirm `npx -y @atomicmemory/mcp-server` works in the same environment. |
 | Connection failed | Verify `ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and `ATOMICMEMORY_SCOPE_USER`. |
-| Plugin not found | Confirm the marketplace entry points at the AtomicMemory Codex plugin. |
+| Plugin not found | Plugin mode is source-distributed today; confirm the marketplace entry points at a local clone of `atomicmemory-integrations/plugins/codex`. |
 | Unexpected memory sharing | Add `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or `ATOMICMEMORY_SCOPE_THREAD`. |
 
 ## Development
@@ -2444,7 +2448,7 @@ Cursor support is available today as a manual local integration using the Atomic
 
 ### 1. Register the MCP server
 
-Add AtomicMemory to Cursor's MCP settings:
+Add AtomicMemory to Cursor's MCP settings. Use `.cursor/mcp.json` for a single project, or `~/.cursor/mcp.json` for all Cursor projects:
 
 ```json
 {
@@ -2503,6 +2507,13 @@ alwaysApply: true
 ### 4. Restart Cursor
 
 Restart Cursor after changing MCP settings, environment variables, or project rules.
+
+You can also verify the CLI sees the same MCP server:
+
+```bash
+cursor-agent mcp list
+cursor-agent mcp list-tools atomicmemory
+```
 
 ## Features
 
@@ -2647,7 +2658,17 @@ Give Hermes Agent persistent, cross-session memory backed by AtomicMemory. Unlik
 
 ### 1. Install the provider
 
-Install the `@atomicmemory/hermes-plugin` package through your Hermes plugin workflow. The provider installs the published `atomicmemory` Python SDK as its runtime memory client.
+Hermes discovers memory providers from `$HERMES_HOME/plugins/memory/<name>`. Install AtomicMemory there from the integrations repository:
+
+```bash
+git clone https://github.com/atomicstrata/atomicmemory-integrations.git
+cd atomicmemory-integrations
+
+mkdir -p "$HERMES_HOME/plugins/memory"
+ln -s "$(pwd)/plugins/hermes" "$HERMES_HOME/plugins/memory/atomicmemory"
+```
+
+The provider's `plugin.yaml` installs the published `atomicmemory` Python SDK as its runtime memory client when Hermes loads the provider.
 
 ### 2. Configure the backend
 
@@ -2826,7 +2847,17 @@ Give OpenClaw persistent, cross-channel memory backed by AtomicMemory. The plugi
 ### 1. Install the plugin
 
 ```bash
-claw plugin install atomicmemory/openclaw
+openclaw plugins install @atomicmemory/openclaw-plugin
+```
+
+For local plugin development, install from a checkout instead:
+
+```bash
+git clone https://github.com/atomicstrata/atomicmemory-integrations.git
+cd atomicmemory-integrations
+pnpm install
+pnpm --filter @atomicmemory/openclaw-plugin build
+openclaw plugins install -l ./plugins/openclaw
 ```
 
 ### 2. Configure scope
@@ -2836,18 +2867,25 @@ OpenClaw passes plugin config from `openclaw.plugin.json` into the provider:
 ```json
 {
   "provider": "atomicmemory",
+  "apiUrl": "https://memory.yourco.com",
+  "apiKey": "am_live_...",
   "scope": {
+    "user": "pip",
     "agent": "openclaw",
     "namespace": "personal-assistant"
   }
 }
 ```
 
-OpenClaw resolves the AtomicMemory service, credentials, and base user identity. Optional `agent`, `namespace`, and `thread` fields narrow memory when needed.
+`scope.user` is the stable channel-agnostic user identity. Optional `agent`, `namespace`, and `thread` fields narrow memory when needed.
 
 ### 3. Restart OpenClaw
 
-Restart the OpenClaw host after installing or updating the plugin if it keeps plugin modules loaded.
+Restart the OpenClaw gateway after installing or updating the plugin:
+
+```bash
+openclaw gateway restart
+```
 
 ## Features
 
@@ -2878,6 +2916,9 @@ OpenClaw memory capture is prompt/tool driven. Agents search before answering wh
 | Field | Purpose |
 | --- | --- |
 | `provider` | AtomicMemory SDK provider name. |
+| `apiUrl` | AtomicMemory service URL. |
+| `apiKey` | Optional bearer credential for the AtomicMemory service. |
+| `scope.user` | Stable user identity shared across OpenClaw channels. |
 | `scope.agent` | Agent identity. |
 | `scope.namespace` | Project, assistant, or deployment boundary. |
 | `scope.thread` | Optional conversation boundary. |
@@ -2917,7 +2958,7 @@ permissions:
 | --- | --- |
 | Plugin changes do not appear | Restart the OpenClaw host after updating the plugin. |
 | Memory crosses unwanted channels | Add `scope.namespace`, `scope.agent`, or `scope.thread`. |
-| Provider connection fails | Verify the host-level AtomicMemory service and credential configuration. |
+| Provider connection fails | Verify `apiUrl`, `apiKey` if required, and `scope.user` in the OpenClaw plugin config. |
 
 ## Development
 
@@ -3636,7 +3677,7 @@ AtomicMemory adds durable memory to coding agents, AI frameworks, and terminal w
 | --- | --- | --- | --- |
 | Claude Code | MCP tools, memory skill, lifecycle hooks, and local runtime management. | Published; cloud planned. | [Overview](/integrations/coding-agents/claude-code) · [Local](/integrations/coding-agents/claude-code/local) |
 | Codex | MCP tools plus a memory protocol skill for task-start recall and handoffs. | Manual; packaged plugin planned. | [Overview](/integrations/coding-agents/codex) · [Local](/integrations/coding-agents/codex/local) |
-| OpenClaw | Plugin and skill bundle for cross-channel agent memory. | Source-only; cloud planned. | [Overview](/integrations/coding-agents/openclaw) · [Local](/integrations/coding-agents/openclaw/local) |
+| OpenClaw | Plugin and skill bundle for cross-channel agent memory. | Published; cloud planned. | [Overview](/integrations/coding-agents/openclaw) · [Local](/integrations/coding-agents/openclaw/local) |
 | Hermes Agent | Native Python memory provider with prefetch, turn sync, and explicit tools. | Source-only; cloud planned. | [Overview](/integrations/coding-agents/hermes) · [Local](/integrations/coding-agents/hermes/local) |
 | Cursor | MCP tools plus Cursor rules for durable memory behavior. | Available manually via MCP + rules; packaged plugin planned. | [Overview](/integrations/coding-agents/cursor) · [Local](/integrations/coding-agents/cursor/local) |
 
@@ -5039,7 +5080,7 @@ Source: https://docs.atomicstrata.ai/platform/providers
 
 > Agent index: [llms.txt](/llms.txt)
 
-Embeddings and LLM calls in AtomicMemory are **pluggable providers behind single-method interfaces**. You pick OpenAI, Anthropic, Google, Groq, Ollama, a local WASM model, or any OpenAI-compatible endpoint at deploy time via environment variables. Nothing above the provider boundary changes, no code, no imports, no service wiring.
+Embeddings and LLM calls in AtomicMemory are **pluggable providers behind single-method interfaces**. You pick OpenAI, Anthropic, Claude Code local auth, Google, Groq, Ollama, a local WASM model, or any OpenAI-compatible endpoint at deploy time via environment variables. Nothing above the provider boundary changes, no code, no imports, no service wiring.
 
 That is the second pillar of the platform layer: the services that call `embedText()` and `chat()` don't know, and can't know, which provider is serving the call. The selection is made once at composition-root time and erased behind an interface.
 
@@ -5117,12 +5158,13 @@ export type EmbeddingProviderName =
 | `groq` | Groq via OpenAI-compatible endpoint |
 | `ollama` | Ollama native `/api/chat` endpoint |
 | `openai-compatible` | Any OpenAI-schema endpoint (LM Studio, vLLM, …) |
+| `claude-code` | Local Claude Code Agent SDK session for personal development |
 
 Declared in [`config.ts:15`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/config.ts#L15):
 
 ```ts
 export type LLMProviderName =
-  EmbeddingProviderName | 'groq' | 'anthropic' | 'google-genai';
+  EmbeddingProviderName | 'groq' | 'anthropic' | 'google-genai' | 'claude-code';
 ```
 
 Note the subtype relationship: the LLM provider union builds on the embedding provider names, then adds chat-only providers. Embedding-only providers such as `transformers` and `voyage` have no chat backend.
@@ -5274,6 +5316,33 @@ VOYAGE_DOCUMENT_MODEL=voyage-4-large
 VOYAGE_QUERY_MODEL=voyage-4-lite
 VOYAGE_API_KEY=pa-…
 ```
+
+Extraction uses `LLM_PROVIDER` independently from embeddings. The default is OpenAI:
+
+```bash
+LLM_PROVIDER=openai
+LLM_MODEL=gpt-4o-mini
+OPENAI_API_KEY=sk-…
+```
+
+For Anthropic's API:
+
+```bash
+LLM_PROVIDER=anthropic
+LLM_MODEL=claude-3-5-haiku-latest
+ANTHROPIC_API_KEY=sk-ant-…
+```
+
+For personal local Claude Code use, core can call the logged-in `claude` session instead of requiring an Anthropic API key:
+
+```bash
+claude auth login
+LLM_PROVIDER=claude-code
+# Optional; omit to use Claude Code's configured default.
+# LLM_MODEL=sonnet
+```
+
+`claude-code` is only for local developer machines. It consumes the user's Claude Code / Claude subscription limits, requires Claude Code to be installed and authenticated, and should not be used for hosted or team deployments. Pair it with a non-OpenAI embedding provider such as `EMBEDDING_PROVIDER=transformers` or `EMBEDDING_PROVIDER=ollama` if you also want to avoid an OpenAI embedding API key.
 
 The ingest service, the search service, the AUDN decision loop, the repair loop, none of them have a single `if (provider === 'ollama')` branch. That is the provider-agnostic boundary working as designed.
 

@@ -8,7 +8,17 @@ Give Hermes Agent persistent, cross-session memory backed by AtomicMemory. Unlik
 
 ### 1. Install the provider
 
-Install the `@atomicmemory/hermes-plugin` package through your Hermes plugin workflow. The provider installs the published `atomicmemory` Python SDK as its runtime memory client.
+Hermes discovers memory providers from `$HERMES_HOME/plugins/memory/<name>`. Install AtomicMemory there from the integrations repository:
+
+```bash
+git clone https://github.com/atomicstrata/atomicmemory-integrations.git
+cd atomicmemory-integrations
+
+mkdir -p "$HERMES_HOME/plugins/memory"
+ln -s "$(pwd)/plugins/hermes" "$HERMES_HOME/plugins/memory/atomicmemory"
+```
+
+The provider's `plugin.yaml` installs the published `atomicmemory` Python SDK as its runtime memory client when Hermes loads the provider.
 
 ### 2. Configure the backend
 
