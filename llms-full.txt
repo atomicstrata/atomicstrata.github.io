@@ -1583,6 +1583,8 @@ Source: https://docs.atomicstrata.ai/cli
 
 The CLI uses the same backend-agnostic SDK provider model as the rest of AtomicMemory. The current CLI surface supports `atomicmemory` and `mem0`. Additional SDK providers require a CLI adapter, spec, and config-schema update before they are selectable from command scripts.
 
+The CLI package does **not** start a memory backend by itself. Direct memory commands need a configured AtomicMemory service, usually a local Docker quickstart or a self-hosted deployment. For Claude Code personal use, prefer the [Claude Code plugin](/integrations/coding-agents/claude-code/local): it installs the MCP server, skill, hooks, and auto-managed local runtime for you.
+
 ## What you get
 
 -   **Interactive terminal dashboard.** Running `atomicmemory` in a real terminal opens an Ink UI with a bottom prompt, scrollable session output, slash menu, and styled diagnostics.
@@ -1593,10 +1595,30 @@ The CLI uses the same backend-agnostic SDK provider model as the rest of AtomicM
 
 ## Install
 
+Requires Node.js 20 or newer.
+
 ```bash
 npm install -g @atomicmemory/cli
 atomicmemory
 ```
+
+Running `atomicmemory` opens the local dashboard. Memory operations will ask for a profile or provider flags until you connect the CLI to an AtomicMemory backend.
+
+To try the published CLI without a global install, use:
+
+```bash
+npx -y @atomicmemory/cli
+```
+
+## Choose a setup path
+
+| Path | Use when | Start here |
+| --- | --- | --- |
+| Claude Code plugin | You want personal Claude Code memory with local runtime management and no separate API key for extraction. | [Claude Code Local](/integrations/coding-agents/claude-code/local) |
+| Direct CLI against local core | You are running `atomicmemory-core` yourself and want terminal memory commands. | [Quickstart](/quickstart), then configure a `local` profile below. |
+| Direct CLI against a self-hosted service | Your team operates AtomicMemory behind its own URL and token. | Configure a `self-hosted` profile below. |
+| Hosted AtomicMemory | You want AtomicMemory to operate the service. | Coming soon. |
+| Mem0 adapter | You want the CLI shape against a Mem0 backend. | Use `--provider mem0`; AtomicMemory-only commands are capability-gated. |
 
 ## Configure
 
@@ -1654,6 +1676,24 @@ Plain `--api-key <value>` is rejected at parse time so secrets do not land in sh
 
 Memory commands require an explicit scope user from flags, environment, or config. The CLI does not invent a user for provider-backed operations.
 
+After `init`, verify the active profile:
+
+```bash
+atomicmemory status
+```
+
+If you skip `init`, `status` and memory commands need equivalent flags or environment variables. A user by itself is not enough; provider-backed commands also need a provider URL and trust surface.
+
+```bash
+atomicmemory status \
+  --provider atomicmemory \
+  --api-url http://127.0.0.1:3050 \
+  --trust-surface local \
+  --user "$USER"
+```
+
+If you are using the Claude Code plugin in local auto-managed mode, you usually do **not** need to run `atomicmemory init`; the plugin owns the local runtime configuration. Use this page when you want direct terminal access, manual hook snippets, or a profile that points at an external service.
+
 ## Interactive mode
 
 Run with no arguments in a TTY:
@@ -1663,6 +1703,12 @@ atomicmemory
 ```
 
 The dashboard keeps the prompt at the bottom and appends command results above it. Slash controls are handled by the dashboard:
+
+On a fresh machine, run `init` before relying on interactive commands such as `status`, `add`, or `search`. If the dashboard says `scope not configured`, either run `init`, set `ATOMICMEMORY_SCOPE_USER` plus the provider environment variables above, or include flags directly in the command you type into the dashboard:
+
+```text
+status --provider atomicmemory --api-url http://127.0.0.1:3050 --trust-surface local --user alice
+```
 
 | Input | Purpose |
 | --- | --- |
@@ -1735,6 +1781,8 @@ atomicmemory search "release policy" \
 
 `atomicmemory hooks install` emits host-specific lifecycle hook config without mutating user config files. Node is the recommended default and is bundled as `atomicmemory hooks run ...`. Python is an advanced option for teams that set `ATOMICMEMORY_PYTHON_HOOK_BIN` to a compatible Python hook runner.
 
+For Claude Code, the plugin already ships hooks and is the recommended local path. Use CLI-generated hooks only when you maintain Claude Code or Codex hook configuration yourself.
+
 ```bash
 atomicmemory hooks install --host codex --runtime node
 atomicmemory hooks install --host codex --runtime python
@@ -1756,6 +1804,14 @@ export ATOMICMEMORY_STOP_MIN_ASSISTANT_CHARS=40
 ```
 
 The generated snippet does not set this override for you.
+
+Claude Code local extraction can use Claude Code's own authenticated session instead of a separate Anthropic key:
+
+```bash
+export ATOMICMEMORY_LLM_PROVIDER=claude-code
+```
+
+That mode is for personal/local use. It requires Claude Code to be installed and logged in, consumes the user's Claude Code / Claude subscription limits, and is not the recommended path for hosted or team deployments.
 
 ## Machine output
 
