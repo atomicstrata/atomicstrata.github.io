@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkatomicmemory_docs=self.webpackChunkatomicmemory_docs||[]).push([["1668"],{86569(e,r,s){s.r(r),s.d(r,{default:()=>m});var c=s(74848);s(96540);var a=s(34164),o=s(34308),t=s(88287),u=s(22831),d=s(12802);function m(e){return(0,c.jsx)(o.e3,{className:(0,a.A)(t.G.wrapper.docsPages),children:(0,c.jsx)(d.A,{children:(0,u.v)(e.route.routes)})})}}}]);

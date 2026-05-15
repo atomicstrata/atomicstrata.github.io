@@ -13,9 +13,7 @@ claude plugin marketplace add atomicstrata/atomicmemory-integrations
 claude plugin install claude-code@atomicmemory
 ```
 
-### 2. Choose a memory extraction provider
-
-For personal local use, use Claude Code's own authenticated session:
+### 2. Use Claude Code for local extraction
 
 ```bash
 claude auth login
@@ -23,17 +21,7 @@ export LLM_PROVIDER=claude-code
 export EMBEDDING_PROVIDER=transformers
 ```
 
-This requires Claude Code to be installed and logged in locally. It does not require a separate Anthropic API key, but it consumes the user's Claude Code / Claude subscription limits and is not intended for hosted or team deployments. `LLM_PROVIDER` and `EMBEDDING_PROVIDER` configure the local AtomicMemory core runtime. The Claude Code hooks and MCP server still use the `ATOMICMEMORY_*` variables below for service URL, scope, and capture policy.
-
-For production or team use, use a normal API-backed provider instead:
-
-```bash
-export LLM_PROVIDER=anthropic
-export ANTHROPIC_API_KEY="sk-ant-..."
-# or
-export LLM_PROVIDER=openai
-export OPENAI_API_KEY="sk-..."
-```
+Uses your Claude Code login; no separate Anthropic API key needed.
 
 ### 3. Start Claude Code
 
@@ -41,7 +29,7 @@ export OPENAI_API_KEY="sk-..."
 claude
 ```
 
-The plugin starts and manages the local AtomicMemory runtime automatically. It captures completed work, recalls relevant memory before prompts, and exposes memory tools to Claude Code.
+The plugin starts the local runtime and exposes memory tools.
 
 ### 4. Verify memory tools
 
@@ -51,19 +39,6 @@ Ask Claude Code to list its MCP tools. You should see:
 -   `memory_ingest`
 -   `memory_package`
 -   `memory_list`
-
-For a tools-only setup, register the published MCP server directly:
-
-```json
-{
-  "mcpServers": {
-    "atomicmemory": {
-      "command": "npx",
-      "args": ["-y", "@atomicmemory/mcp-server"]
-    }
-  }
-}
-```
 
 ## Features
 
@@ -106,6 +81,19 @@ export ATOMICMEMORY_API_KEY="am_live_..."
 
 Use MCP-only mode when you want explicit memory tools without lifecycle hooks or agent skill instructions. This is the smallest integration surface and is useful for locked-down environments that manage host prompts separately.
 
+Register the published MCP server directly:
+
+```json
+{
+  "mcpServers": {
+    "atomicmemory": {
+      "command": "npx",
+      "args": ["-y", "@atomicmemory/mcp-server"]
+    }
+  }
+}
+```
+
 | Capability | Included |
 | --- | --- |
 | MCP tools | Yes |
@@ -147,6 +135,18 @@ export ATOMICMEMORY_SCOPE_NAMESPACE="repo-or-project"
 export ATOMICMEMORY_CAPTURE_LEVEL=balanced
 ```
 
+`LLM_PROVIDER` and `EMBEDDING_PROVIDER` configure the local AtomicMemory core runtime. Claude Code hooks and the MCP server use `ATOMICMEMORY_*` values for service URL, scope, and capture policy. The `claude-code` provider consumes the user's Claude Code / Claude subscription limits and is for personal local use.
+
+When you are running your own shared AtomicMemory runtime instead of using Claude Code's local authenticated session, configure an API-backed extraction provider:
+
+```bash
+export LLM_PROVIDER=anthropic
+export ANTHROPIC_API_KEY="sk-ant-..."
+# or
+export LLM_PROVIDER=openai
+export OPENAI_API_KEY="sk-..."
+```
+
 Advanced values:
 
 | Env var | Used by | Purpose |
@@ -160,7 +160,7 @@ Advanced values:
 | `ATOMICMEMORY_API_KEY` | MCP + hooks | API key for an external AtomicMemory service. |
 | `ATOMICMEMORY_SCOPE_USER` | MCP + hooks | User identity override. |
 | `ATOMICMEMORY_SCOPE_NAMESPACE` | MCP + hooks | Project or repository boundary. |
-| `ATOMICMEMORY_SCOPE_AGENT` | MCP + hooks | Agent identity. Defaults to `claude-code`. |
+| `ATOMICMEMORY_SCOPE_AGENT` | MCP + hooks | Optional agent identity override. |
 | `ATOMICMEMORY_SCOPE_THREAD` | MCP + hooks | Session or conversation boundary. |
 | `ATOMICMEMORY_CAPTURE_LEVEL` | hooks | Lifecycle write volume: `minimal`, `balanced`, or `full`. Defaults to `balanced`. |
 | `ATOMICMEMORY_PROMPT_SEARCH_ENABLED=false` | hooks | Disable prompt-time retrieval. |

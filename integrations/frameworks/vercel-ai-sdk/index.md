@@ -8,14 +8,12 @@ AtomicMemory integrates with Vercel AI SDK through an adapter that handles retri
 
 ### Local
 
-Use this when you want the self-managed Vercel AI SDK path with the published adapter package.
-
 See [Vercel AI SDK Local](/integrations/frameworks/vercel-ai-sdk/local).
 
 ### Cloud
 
 Coming Soon
 
-Cloud deployment details for the Vercel AI SDK adapter are not documented yet. This page will describe the hosted configuration and rollout model once those details are finalized.
+Hosted Vercel AI SDK setup is not documented yet.
 
 See [Vercel AI SDK Cloud](/integrations/frameworks/vercel-ai-sdk/cloud).

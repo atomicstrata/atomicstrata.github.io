@@ -8,24 +8,17 @@ Give Hermes Agent persistent, cross-session memory backed by AtomicMemory. Unlik
 
 ### 1. Install the provider
 
-Hermes discovers memory providers from `$HERMES_HOME/plugins/memory/<name>`. Install AtomicMemory there from the integrations repository:
-
 ```bash
-git clone https://github.com/atomicstrata/atomicmemory-integrations.git
-cd atomicmemory-integrations
-
-mkdir -p "$HERMES_HOME/plugins/memory"
-ln -s "$(pwd)/plugins/hermes" "$HERMES_HOME/plugins/memory/atomicmemory"
+npx -y @atomicmemory/hermes-plugin install
 ```
-
-The provider's `plugin.yaml` installs the published `atomicmemory` Python SDK as its runtime memory client when Hermes loads the provider.
 
 ### 2. Configure the backend
 
 ```bash
-export ATOMICMEMORY_API_URL="https://memory.yourco.com"
-export ATOMICMEMORY_API_KEY="am_live_..." # optional
+export ATOMICMEMORY_API_URL="http://127.0.0.1:3050"
 ```
+
+Start [local AtomicMemory core](/quickstart) first if it is not already running.
 
 ### 3. Select the provider
 
@@ -56,6 +49,13 @@ hermes memory status
 | `siloed` | Only Hermes-ingested memories. |
 
 ## Configuration
+
+Set `ATOMICMEMORY_API_KEY` only when Hermes connects to a protected AtomicMemory service:
+
+```bash
+export ATOMICMEMORY_API_URL="https://memory.yourco.com"
+export ATOMICMEMORY_API_KEY="am_live_..."
+```
 
 Hermes' setup wizard prompts for:
 
@@ -94,6 +94,29 @@ Advanced settings live in `$HERMES_HOME/atomicmemory.json`:
 
 Secrets stay in the environment, not in the Hermes config file.
 
+Set `ATOMICMEMORY_SCOPE_USER` only when the local machine user is not the right memory identity, such as shared machines or cross-machine setups:
+
+```bash
+export ATOMICMEMORY_SCOPE_USER="pip"
+```
+
+For local provider development, install from a checkout instead:
+
+```bash
+git clone https://github.com/atomicstrata/atomicmemory-integrations.git
+cd atomicmemory-integrations
+
+mkdir -p "$HERMES_HOME/plugins/memory"
+ln -s "$(pwd)/plugins/hermes" "$HERMES_HOME/plugins/memory/atomicmemory"
+```
+
+The provider is also prepared for Hermes' Python entry-point plugin path. After the Python package is published, teams that manage Hermes with Python packages can install it into the Hermes virtualenv instead:
+
+```bash
+uv pip install atomicmemory-hermes \
+  --python "$HOME/.hermes/hermes-agent/venv/bin/python"
+```
+
 ## Tools
 
 | Tool | Maps to | Purpose |
@@ -117,7 +140,7 @@ Secrets stay in the environment, not in the Hermes config file.
 
 | Symptom | Fix |
 | --- | --- |
-| Provider does not appear | Confirm the provider is installed under Hermes' memory-provider directory. |
+| Provider does not appear | Confirm the provider is installed under `$HERMES_HOME/plugins/memory/atomicmemory`. |
 | Provider unavailable | Confirm `ATOMICMEMORY_API_URL` and that Hermes installed the provider package dependencies. |
 | Siloed recall fails | Use `ATOMICMEMORY_PROVIDER=atomicmemory` or switch to `shared`. |
 | Calls pause after repeated backend failures | Hermes opens a circuit breaker after five SDK failures and resumes after roughly two minutes. Check the AtomicMemory service before retrying. |

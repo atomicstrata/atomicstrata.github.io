@@ -12,48 +12,19 @@ Give OpenClaw persistent, cross-channel memory backed by AtomicMemory. The plugi
 openclaw plugins install @atomicmemory/openclaw-plugin
 ```
 
-For local plugin development, install from a checkout instead:
-
-```bash
-git clone https://github.com/atomicstrata/atomicmemory-integrations.git
-cd atomicmemory-integrations
-pnpm install
-pnpm --filter @atomicmemory/openclaw-plugin build
-openclaw plugins install -l ./plugins/openclaw
-```
-
-### 2. Configure scope
-
-OpenClaw passes plugin config from `openclaw.plugin.json` into the provider:
-
-```json
-{
-  "provider": "atomicmemory",
-  "apiUrl": "https://memory.yourco.com",
-  "apiKey": "am_live_...",
-  "scope": {
-    "user": "pip",
-    "agent": "openclaw",
-    "namespace": "personal-assistant"
-  }
-}
-```
-
-`scope.user` is the stable channel-agnostic user identity. Optional `agent`, `namespace`, and `thread` fields narrow memory when needed.
-
-### 3. Restart OpenClaw
-
-Restart the OpenClaw gateway after installing or updating the plugin:
+### 2. Restart OpenClaw
 
 ```bash
 openclaw gateway restart
 ```
 
+Requires [local AtomicMemory core](/quickstart) at `http://127.0.0.1:3050`. Uses your local machine user by default.
+
 ## Features
 
 -   **Cross-channel memory.** A fact saved in one chat channel can be recalled later from another channel.
 -   **Permission-aware skill.** The skill declares network and credential permissions without filesystem or shell access.
--   **MCP-backed provider.** OpenClaw registers the shared MCP server as `atomicmemory.memory`.
+-   **Four memory tools.** The plugin exposes `memory_search`, `memory_ingest`, `memory_package`, and `memory_list`, backed by the shared MCP server embedded in-process.
 -   **Backend-agnostic SDK path.** Provider selection uses the AtomicMemory SDK provider registry.
 
 ## Modes of operation
@@ -75,11 +46,40 @@ OpenClaw memory capture is prompt/tool driven. Agents search before answering wh
 
 ## Configuration
 
+For local AtomicMemory core, `apiUrl` is optional and defaults to `http://127.0.0.1:3050`.
+
+OpenClaw passes optional plugin config from `openclaw.plugin.json` into the provider. Set `scope.user` only when the local machine user is not the right channel-agnostic memory identity.
+
+Set `apiUrl` only when OpenClaw should connect to a different AtomicMemory service or to another provider such as Mem0. Set `apiKey` only when that service requires bearer-token authentication:
+
+```json
+{
+  "provider": "atomicmemory",
+  "apiUrl": "https://memory.yourco.com",
+  "apiKey": "am_live_...",
+  "scope": {
+    "user": "pip",
+    "agent": "openclaw",
+    "namespace": "personal-assistant"
+  }
+}
+```
+
+For local plugin development, install from a checkout instead:
+
+```bash
+git clone https://github.com/atomicstrata/atomicmemory-integrations.git
+cd atomicmemory-integrations
+pnpm install
+pnpm --filter @atomicmemory/openclaw-plugin build
+openclaw plugins install -l ./plugins/openclaw
+```
+
 | Field | Purpose |
 | --- | --- |
 | `provider` | AtomicMemory SDK provider name. |
-| `apiUrl` | AtomicMemory service URL. |
-| `apiKey` | Optional bearer credential for the AtomicMemory service. |
+| `apiUrl` | Optional provider base URL. Defaults to local AtomicMemory core for `provider: "atomicmemory"`; required for `provider: "mem0"` or remote services. |
+| `apiKey` | Optional bearer credential for providers or deployments that require HTTP authorization. |
 | `scope.user` | Stable user identity shared across OpenClaw channels. |
 | `scope.agent` | Agent identity. |
 | `scope.namespace` | Project, assistant, or deployment boundary. |
@@ -119,8 +119,9 @@ permissions:
 | Symptom | Fix |
 | --- | --- |
 | Plugin changes do not appear | Restart the OpenClaw host after updating the plugin. |
+| Local core is not running | Start it with the [Core Quickstart](/quickstart), then retry the memory tool call. |
 | Memory crosses unwanted channels | Add `scope.namespace`, `scope.agent`, or `scope.thread`. |
-| Provider connection fails | Verify `apiUrl`, `apiKey` if required, and `scope.user` in the OpenClaw plugin config. |
+| Provider connection fails | Verify `apiUrl` and `apiKey` if the OpenClaw plugin config points at a remote or protected provider. |
 
 ## Development
 

@@ -6,43 +6,18 @@ Give Codex persistent, cross-session memory backed by AtomicMemory. The public s
 
 ## Quick start
 
-### 1. Configure AtomicMemory
-
-```bash
-export ATOMICMEMORY_PROVIDER="atomicmemory"
-export ATOMICMEMORY_API_URL="https://memory.yourco.com"
-export ATOMICMEMORY_API_KEY="am_live_..."
-export ATOMICMEMORY_SCOPE_USER="pip"
-```
-
-Optional scope overrides:
-
-```bash
-export ATOMICMEMORY_SCOPE_AGENT="codex"
-export ATOMICMEMORY_SCOPE_NAMESPACE="repo-or-project"
-export ATOMICMEMORY_SCOPE_THREAD="thread-id"
-```
-
-### 2. Register the MCP server
-
-Add AtomicMemory with the Codex MCP CLI:
+### 1. Register the MCP server
 
 ```bash
 codex mcp add atomicmemory \
-  --env ATOMICMEMORY_PROVIDER="$ATOMICMEMORY_PROVIDER" \
-  --env ATOMICMEMORY_API_URL="$ATOMICMEMORY_API_URL" \
-  --env ATOMICMEMORY_API_KEY="$ATOMICMEMORY_API_KEY" \
-  --env ATOMICMEMORY_SCOPE_USER="$ATOMICMEMORY_SCOPE_USER" \
   -- npx -y @atomicmemory/mcp-server
 ```
 
-If you use optional scope variables, add them with additional `--env` arguments or set them in the shell environment Codex inherits.
+### 2. Verify memory tools
 
 ```bash
 codex mcp list
 ```
-
-### 3. Verify memory tools
 
 Ask Codex to list MCP tools. You should see:
 
@@ -50,6 +25,8 @@ Ask Codex to list MCP tools. You should see:
 -   `memory_ingest`
 -   `memory_package`
 -   `memory_list`
+
+Requires [local AtomicMemory core](/quickstart) at `http://127.0.0.1:3050`. Uses your local machine user by default. See [Configuration](#configuration) for remote services, API keys, and scope overrides.
 
 ## Features
 
@@ -92,20 +69,44 @@ Codex stop responses are often shorter than Claude Code responses. Start with `A
 
 ## Configuration
 
-Required:
+For `provider=atomicmemory`, the MCP server defaults to local AtomicMemory core at `http://127.0.0.1:3050`. You only need provider connection variables when Codex should connect to a different AtomicMemory service or another provider such as Mem0:
 
-| Env var | Used by | Purpose |
-| --- | --- | --- |
-| `ATOMICMEMORY_PROVIDER` | MCP | Provider name, usually `atomicmemory`. |
-| `ATOMICMEMORY_API_URL` | MCP | AtomicMemory service URL. |
-| `ATOMICMEMORY_SCOPE_USER` | MCP | User identity for memory scope. |
+```bash
+export ATOMICMEMORY_PROVIDER="atomicmemory"
+export ATOMICMEMORY_API_URL="https://memory.yourco.com"
+export ATOMICMEMORY_API_KEY="am_live_..."
+```
+
+Pass those values to Codex with additional `--env` arguments:
+
+```bash
+codex mcp add atomicmemory \
+  --env ATOMICMEMORY_PROVIDER="$ATOMICMEMORY_PROVIDER" \
+  --env ATOMICMEMORY_API_URL="$ATOMICMEMORY_API_URL" \
+  --env ATOMICMEMORY_API_KEY="$ATOMICMEMORY_API_KEY" \
+  -- npx -y @atomicmemory/mcp-server
+```
+
+Optional scope overrides:
+
+```bash
+export ATOMICMEMORY_SCOPE_USER="pip"
+export ATOMICMEMORY_SCOPE_AGENT="codex"
+export ATOMICMEMORY_SCOPE_NAMESPACE="repo-or-project"
+export ATOMICMEMORY_SCOPE_THREAD="thread-id"
+```
+
+Add optional scope variables with more `--env` arguments, or set them in the shell environment Codex inherits.
 
 Optional:
 
 | Env var | Purpose |
 | --- | --- |
+| `ATOMICMEMORY_PROVIDER` | Provider name, usually `atomicmemory`. Defaults to `atomicmemory`. |
+| `ATOMICMEMORY_API_URL` | Provider base URL. Defaults to local AtomicMemory core for `provider=atomicmemory`; required for `provider=mem0` or remote services. |
 | `ATOMICMEMORY_API_KEY` | API key when your provider requires auth. |
-| `ATOMICMEMORY_SCOPE_AGENT` | Agent identity. Defaults to `codex` when set by the integration. |
+| `ATOMICMEMORY_SCOPE_USER` | Stable user identity for memory scope. Defaults to the local machine user when omitted. |
+| `ATOMICMEMORY_SCOPE_AGENT` | Optional agent identity override. |
 | `ATOMICMEMORY_SCOPE_NAMESPACE` | Project or repository boundary. |
 | `ATOMICMEMORY_SCOPE_THREAD` | Session or conversation boundary. |
 
@@ -133,7 +134,8 @@ The installed skill guides Codex to:
 | Symptom | Fix |
 | --- | --- |
 | No memory tools appear | Run `codex mcp list`, restart Codex after changing MCP config, and confirm `npx -y @atomicmemory/mcp-server` works in the same environment. |
-| Connection failed | Verify `ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and `ATOMICMEMORY_SCOPE_USER`. |
+| Local core is not running | Start it with the [Core Quickstart](/quickstart), then retry the MCP tool call. |
+| Connection failed | Verify local AtomicMemory core is running at `http://127.0.0.1:3050`, or verify `ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, and `ATOMICMEMORY_API_KEY` for remote/provider-specific setups. |
 | Plugin not found | Plugin mode is source-distributed today; confirm the marketplace entry points at a local clone of `atomicmemory-integrations/plugins/codex`. |
 | Unexpected memory sharing | Add `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or `ATOMICMEMORY_SCOPE_THREAD`. |
 

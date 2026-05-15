@@ -8,14 +8,12 @@ AtomicMemory is planned as a LangGraph integration that complements graph-scoped
 
 ### Local
 
-The current documented path. Use this page for the intended local adapter shape as it exists today.
-
 See [LangGraph (JS) Local](/integrations/frameworks/langgraph-js/local).
 
 ### Cloud
 
 Coming Soon
 
-Cloud deployment details for the LangGraph adapter are not documented yet. This page will be expanded once the hosted model is defined.
+Hosted LangGraph setup is not documented yet.
 
 See [LangGraph (JS) Cloud](/integrations/frameworks/langgraph-js/cloud).

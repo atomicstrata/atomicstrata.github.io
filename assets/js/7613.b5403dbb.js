@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkatomicmemory_docs=globalThis.webpackChunkatomicmemory_docs||[]).push([[7613],{37613(e,c,a){a.d(c,{createPieServices:()=>o.f});var o=a(29515);a(72519)}}]);

@@ -11,7 +11,7 @@ AtomicMemory adds durable memory to coding agents, AI frameworks, and terminal w
 | Claude Code | MCP tools, memory skill, lifecycle hooks, and local runtime management. | Published; cloud planned. | [Overview](/integrations/coding-agents/claude-code) · [Local](/integrations/coding-agents/claude-code/local) |
 | Codex | MCP tools plus a memory protocol skill for task-start recall and handoffs. | Manual; packaged plugin planned. | [Overview](/integrations/coding-agents/codex) · [Local](/integrations/coding-agents/codex/local) |
 | OpenClaw | Plugin and skill bundle for cross-channel agent memory. | Published; cloud planned. | [Overview](/integrations/coding-agents/openclaw) · [Local](/integrations/coding-agents/openclaw/local) |
-| Hermes Agent | Native Python memory provider with prefetch, turn sync, and explicit tools. | Source-only; cloud planned. | [Overview](/integrations/coding-agents/hermes) · [Local](/integrations/coding-agents/hermes/local) |
+| Hermes Agent | Native Python memory provider with prefetch, turn sync, and explicit tools. | Packaged provider; cloud planned. | [Overview](/integrations/coding-agents/hermes) · [Local](/integrations/coding-agents/hermes/local) |
 | Cursor | MCP tools plus Cursor rules for durable memory behavior. | Available manually via MCP + rules; packaged plugin planned. | [Overview](/integrations/coding-agents/cursor) · [Local](/integrations/coding-agents/cursor/local) |
 
 ## Frameworks

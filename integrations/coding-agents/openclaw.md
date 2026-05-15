@@ -8,14 +8,12 @@ AtomicMemory integrates with OpenClaw as a plugin and skill bundle backed by the
 
 ### Local
 
-Use this when you want the self-managed OpenClaw path with the published plugin install flow.
-
 See [OpenClaw Local](/integrations/coding-agents/openclaw/local).
 
 ### Cloud
 
 Coming Soon
 
-Cloud deployment details for OpenClaw are not documented yet. This page will describe the hosted configuration, authentication, and rollout model once those details are finalized.
+Hosted OpenClaw setup is not documented yet.
 
 See [OpenClaw Cloud](/integrations/coding-agents/openclaw/cloud).

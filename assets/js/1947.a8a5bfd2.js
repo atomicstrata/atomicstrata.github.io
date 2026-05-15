@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkatomicmemory_docs=globalThis.webpackChunkatomicmemory_docs||[]).push([[1947],{1947(e,a,c){c.d(a,{createWardleyServices:()=>o.J});var o=c(22295);c(72519)}}]);

@@ -16,6 +16,6 @@ See [Hermes Local](/integrations/coding-agents/hermes/local).
 
 Coming Soon
 
-Cloud deployment details for Hermes are not documented yet. This page will describe hosted configuration and rollout guidance once those details are finalized.
+Hosted Hermes setup is not documented yet.
 
 See [Hermes Cloud](/integrations/coding-agents/hermes/cloud).

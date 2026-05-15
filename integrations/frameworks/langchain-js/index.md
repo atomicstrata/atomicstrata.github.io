@@ -8,14 +8,12 @@ AtomicMemory is planned as a LangChain adapter that can work either as memory in
 
 ### Local
 
-The current documented path. Use this page for the intended local adapter shape as it exists today.
-
 See [LangChain (JS) Local](/integrations/frameworks/langchain-js/local).
 
 ### Cloud
 
 Coming Soon
 
-Cloud deployment details for the LangChain adapter are not documented yet. This page will be expanded once the hosted model is defined.
+Hosted LangChain setup is not documented yet.
 
 See [LangChain (JS) Cloud](/integrations/frameworks/langchain-js/cloud).

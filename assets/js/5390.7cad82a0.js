@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkatomicmemory_docs=globalThis.webpackChunkatomicmemory_docs||[]).push([[5390],{75390(c,e,a){a.d(e,{createArchitectureServices:()=>o.S});var o=a(65530);a(72519)}}]);
