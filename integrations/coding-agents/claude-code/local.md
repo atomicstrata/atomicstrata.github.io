@@ -88,7 +88,11 @@ Register the published MCP server directly:
   "mcpServers": {
     "atomicmemory": {
       "command": "npx",
-      "args": ["-y", "@atomicmemory/mcp-server"]
+      "args": ["-y", "@atomicmemory/mcp-server"],
+      "env": {
+        "ATOMICMEMORY_API_URL": "http://127.0.0.1:3050",
+        "ATOMICMEMORY_API_KEY": "local-dev-key"
+      }
     }
   }
 }

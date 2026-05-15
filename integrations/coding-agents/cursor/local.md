@@ -16,13 +16,17 @@ Add this to `.cursor/mcp.json` or `~/.cursor/mcp.json`:
     "atomicmemory": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@atomicmemory/mcp-server"]
+      "args": ["-y", "@atomicmemory/mcp-server"],
+      "env": {
+        "ATOMICMEMORY_API_URL": "http://127.0.0.1:3050",
+        "ATOMICMEMORY_API_KEY": "local-dev-key"
+      }
     }
   }
 }
 ```
 
-Requires [local AtomicMemory core](/quickstart) at `http://127.0.0.1:3050`. Uses your local machine user by default.
+Requires [local AtomicMemory core](/quickstart) at `http://127.0.0.1:3050`. The local quickstart core uses `local-dev-key` as its bearer key. Uses your local machine user by default.
 
 ### 2. Add a Cursor rule
 
@@ -85,7 +89,7 @@ Use MCP-only mode when you want explicit memory tools without project rules.
 
 ## Configuration
 
-For `provider=atomicmemory`, the MCP server defaults to local AtomicMemory core at `http://127.0.0.1:3050`. If Cursor should use a remote AtomicMemory service or another provider such as Mem0, add those variables to both the shell environment and the `env` object in `mcp.json`:
+For `provider=atomicmemory`, the MCP server defaults to local AtomicMemory core at `http://127.0.0.1:3050`. The Core Quickstart service still requires its development bearer key. If Cursor should use the quickstart core, a remote AtomicMemory service, or another provider such as Mem0, add those variables to both the shell environment and the `env` object in `mcp.json`:
 
 ```json
 {
@@ -112,7 +116,7 @@ Optional:
 | --- | --- |
 | `ATOMICMEMORY_PROVIDER` | Provider name, usually `atomicmemory`. Defaults to `atomicmemory`. |
 | `ATOMICMEMORY_API_URL` | Provider base URL. Defaults to local AtomicMemory core for `provider=atomicmemory`; required for `provider=mem0` or remote services. |
-| `ATOMICMEMORY_API_KEY` | API key when your provider requires auth. |
+| `ATOMICMEMORY_API_KEY` | API key for the Core Quickstart service or any provider that requires auth. |
 | `ATOMICMEMORY_SCOPE_USER` | Stable user identity for memory scope. Defaults to the local machine user when omitted. |
 | `ATOMICMEMORY_SCOPE_AGENT` | Agent identity. |
 | `ATOMICMEMORY_SCOPE_NAMESPACE` | Project or repository boundary. |

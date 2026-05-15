@@ -122,7 +122,7 @@ Async applications can use `AsyncStorageClient` with the same method names.
 
 Filecoin is a core storage provider, not a required SDK dependency. SDK clients see Filecoin through provider-agnostic fields such as `provider`, `status`, `identifiers`, `lifecycle`, `replication`, `verification`, and `retrieval`.
 
-Filecoin/IPFS data should be treated as publicly retrievable by CID unless the server encrypts it before upload. For sensitive Filecoin-backed document bytes, configure core with `RAW_CONTENT_CODEC=aes_gcm`, `RAW_CONTENT_CODEC_KEYS`, and `RAW_CONTENT_CODEC_ACTIVE_KEY_ID`. The default `RAW_CONTENT_CODEC=none` stores plaintext bytes.
+Filecoin/IPFS data should be treated as publicly retrievable by CID unless the server encrypts it before upload. For Filecoin-backed document bytes, staging and production core deployments must set `RAW_CONTENT_CODEC=aes_gcm`, `RAW_CONTENT_CODEC_KEYS`, and `RAW_CONTENT_CODEC_ACTIVE_KEY_ID`. `RAW_CONTENT_CODEC=none` is only accepted for local Filecoin development. The provider itself is configured with `RAW_STORAGE_FILECOIN_*` variables; see [Artifact storage](/platform/artifact-storage#filecoin-environment-variables) for the full environment variable table.
 
 In v1, direct managed Filecoin uploads through managed-mode `client.storage.put` raise `FilecoinDirectStorageNotSupportedError`. Use pointer artifacts or the document raw-upload workflow for Filecoin-backed document bytes until direct Filecoin artifact reconciliation is enabled.
 

@@ -18,7 +18,12 @@ npm install @atomicmemory/vercel-ai @atomicmemory/sdk
 import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
-  providers: { atomicmemory: {} },
+  providers: {
+    atomicmemory: {
+      apiUrl: 'http://127.0.0.1:3050',
+      apiKey: 'local-dev-key',
+    },
+  },
   defaultProvider: 'atomicmemory',
 });
 

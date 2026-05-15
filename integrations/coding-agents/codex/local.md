@@ -9,7 +9,12 @@ Give Codex persistent, cross-session memory backed by AtomicMemory. The public s
 ### 1. Register the MCP server
 
 ```bash
+export ATOMICMEMORY_API_URL="http://127.0.0.1:3050"
+export ATOMICMEMORY_API_KEY="local-dev-key"
+
 codex mcp add atomicmemory \
+  --env ATOMICMEMORY_API_URL="$ATOMICMEMORY_API_URL" \
+  --env ATOMICMEMORY_API_KEY="$ATOMICMEMORY_API_KEY" \
   -- npx -y @atomicmemory/mcp-server
 ```
 
@@ -26,7 +31,7 @@ Ask Codex to list MCP tools. You should see:
 -   `memory_package`
 -   `memory_list`
 
-Requires [local AtomicMemory core](/quickstart) at `http://127.0.0.1:3050`. Uses your local machine user by default. See [Configuration](#configuration) for remote services, API keys, and scope overrides.
+Requires [local AtomicMemory core](/quickstart) at `http://127.0.0.1:3050`. The local quickstart core uses `local-dev-key` as its bearer key. Uses your local machine user by default. See [Configuration](#configuration) for remote services, API keys, and scope overrides.
 
 ## Features
 
@@ -69,7 +74,7 @@ Codex stop responses are often shorter than Claude Code responses. Start with `A
 
 ## Configuration
 
-For `provider=atomicmemory`, the MCP server defaults to local AtomicMemory core at `http://127.0.0.1:3050`. You only need provider connection variables when Codex should connect to a different AtomicMemory service or another provider such as Mem0:
+For `provider=atomicmemory`, the MCP server defaults to local AtomicMemory core at `http://127.0.0.1:3050`. The Core Quickstart service still requires its development bearer key. Use provider connection variables when Codex should connect to the quickstart core, a different AtomicMemory service, or another provider such as Mem0:
 
 ```bash
 export ATOMICMEMORY_PROVIDER="atomicmemory"
@@ -104,7 +109,7 @@ Optional:
 | --- | --- |
 | `ATOMICMEMORY_PROVIDER` | Provider name, usually `atomicmemory`. Defaults to `atomicmemory`. |
 | `ATOMICMEMORY_API_URL` | Provider base URL. Defaults to local AtomicMemory core for `provider=atomicmemory`; required for `provider=mem0` or remote services. |
-| `ATOMICMEMORY_API_KEY` | API key when your provider requires auth. |
+| `ATOMICMEMORY_API_KEY` | API key for the Core Quickstart service or any provider that requires auth. |
 | `ATOMICMEMORY_SCOPE_USER` | Stable user identity for memory scope. Defaults to the local machine user when omitted. |
 | `ATOMICMEMORY_SCOPE_AGENT` | Optional agent identity override. |
 | `ATOMICMEMORY_SCOPE_NAMESPACE` | Project or repository boundary. |

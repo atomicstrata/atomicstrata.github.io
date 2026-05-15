@@ -2046,7 +2046,11 @@ Register the published MCP server directly:
   "mcpServers": {
     "atomicmemory": {
       "command": "npx",
-      "args": ["-y", "@atomicmemory/mcp-server"]
+      "args": ["-y", "@atomicmemory/mcp-server"],
+      "env": {
+        "ATOMICMEMORY_API_URL": "http://127.0.0.1:3050",
+        "ATOMICMEMORY_API_KEY": "local-dev-key"
+      }
     }
   }
 }
@@ -2248,7 +2252,12 @@ Give Codex persistent, cross-session memory backed by AtomicMemory. The public s
 ### 1. Register the MCP server
 
 ```bash
+export ATOMICMEMORY_API_URL="http://127.0.0.1:3050"
+export ATOMICMEMORY_API_KEY="local-dev-key"
+
 codex mcp add atomicmemory \
+  --env ATOMICMEMORY_API_URL="$ATOMICMEMORY_API_URL" \
+  --env ATOMICMEMORY_API_KEY="$ATOMICMEMORY_API_KEY" \
   -- npx -y @atomicmemory/mcp-server
 ```
 
@@ -2265,7 +2274,7 @@ Ask Codex to list MCP tools. You should see:
 -   `memory_package`
 -   `memory_list`
 
-Requires [local AtomicMemory core](/quickstart) at `http://127.0.0.1:3050`. Uses your local machine user by default. See [Configuration](#configuration) for remote services, API keys, and scope overrides.
+Requires [local AtomicMemory core](/quickstart) at `http://127.0.0.1:3050`. The local quickstart core uses `local-dev-key` as its bearer key. Uses your local machine user by default. See [Configuration](#configuration) for remote services, API keys, and scope overrides.
 
 ## Features
 
@@ -2308,7 +2317,7 @@ Codex stop responses are often shorter than Claude Code responses. Start with `A
 
 ## Configuration
 
-For `provider=atomicmemory`, the MCP server defaults to local AtomicMemory core at `http://127.0.0.1:3050`. You only need provider connection variables when Codex should connect to a different AtomicMemory service or another provider such as Mem0:
+For `provider=atomicmemory`, the MCP server defaults to local AtomicMemory core at `http://127.0.0.1:3050`. The Core Quickstart service still requires its development bearer key. Use provider connection variables when Codex should connect to the quickstart core, a different AtomicMemory service, or another provider such as Mem0:
 
 ```bash
 export ATOMICMEMORY_PROVIDER="atomicmemory"
@@ -2343,7 +2352,7 @@ Optional:
 | --- | --- |
 | `ATOMICMEMORY_PROVIDER` | Provider name, usually `atomicmemory`. Defaults to `atomicmemory`. |
 | `ATOMICMEMORY_API_URL` | Provider base URL. Defaults to local AtomicMemory core for `provider=atomicmemory`; required for `provider=mem0` or remote services. |
-| `ATOMICMEMORY_API_KEY` | API key when your provider requires auth. |
+| `ATOMICMEMORY_API_KEY` | API key for the Core Quickstart service or any provider that requires auth. |
 | `ATOMICMEMORY_SCOPE_USER` | Stable user identity for memory scope. Defaults to the local machine user when omitted. |
 | `ATOMICMEMORY_SCOPE_AGENT` | Optional agent identity override. |
 | `ATOMICMEMORY_SCOPE_NAMESPACE` | Project or repository boundary. |
@@ -2452,13 +2461,17 @@ Add this to `.cursor/mcp.json` or `~/.cursor/mcp.json`:
     "atomicmemory": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@atomicmemory/mcp-server"]
+      "args": ["-y", "@atomicmemory/mcp-server"],
+      "env": {
+        "ATOMICMEMORY_API_URL": "http://127.0.0.1:3050",
+        "ATOMICMEMORY_API_KEY": "local-dev-key"
+      }
     }
   }
 }
 ```
 
-Requires [local AtomicMemory core](/quickstart) at `http://127.0.0.1:3050`. Uses your local machine user by default.
+Requires [local AtomicMemory core](/quickstart) at `http://127.0.0.1:3050`. The local quickstart core uses `local-dev-key` as its bearer key. Uses your local machine user by default.
 
 ### 2. Add a Cursor rule
 
@@ -2521,7 +2534,7 @@ Use MCP-only mode when you want explicit memory tools without project rules.
 
 ## Configuration
 
-For `provider=atomicmemory`, the MCP server defaults to local AtomicMemory core at `http://127.0.0.1:3050`. If Cursor should use a remote AtomicMemory service or another provider such as Mem0, add those variables to both the shell environment and the `env` object in `mcp.json`:
+For `provider=atomicmemory`, the MCP server defaults to local AtomicMemory core at `http://127.0.0.1:3050`. The Core Quickstart service still requires its development bearer key. If Cursor should use the quickstart core, a remote AtomicMemory service, or another provider such as Mem0, add those variables to both the shell environment and the `env` object in `mcp.json`:
 
 ```json
 {
@@ -2548,7 +2561,7 @@ Optional:
 | --- | --- |
 | `ATOMICMEMORY_PROVIDER` | Provider name, usually `atomicmemory`. Defaults to `atomicmemory`. |
 | `ATOMICMEMORY_API_URL` | Provider base URL. Defaults to local AtomicMemory core for `provider=atomicmemory`; required for `provider=mem0` or remote services. |
-| `ATOMICMEMORY_API_KEY` | API key when your provider requires auth. |
+| `ATOMICMEMORY_API_KEY` | API key for the Core Quickstart service or any provider that requires auth. |
 | `ATOMICMEMORY_SCOPE_USER` | Stable user identity for memory scope. Defaults to the local machine user when omitted. |
 | `ATOMICMEMORY_SCOPE_AGENT` | Agent identity. |
 | `ATOMICMEMORY_SCOPE_NAMESPACE` | Project or repository boundary. |
@@ -2659,6 +2672,7 @@ npx -y @atomicmemory/hermes-plugin install
 
 ```bash
 export ATOMICMEMORY_API_URL="http://127.0.0.1:3050"
+export ATOMICMEMORY_API_KEY="local-dev-key"
 ```
 
 Start [local AtomicMemory core](/quickstart) first if it is not already running.
@@ -2693,7 +2707,7 @@ hermes memory status
 
 ## Configuration
 
-Set `ATOMICMEMORY_API_KEY` only when Hermes connects to a protected AtomicMemory service:
+The Core Quickstart's local Docker service requires the development bearer key shown above. For a remote AtomicMemory service, use that service's issued key:
 
 ```bash
 export ATOMICMEMORY_API_URL="https://memory.yourco.com"
@@ -2712,12 +2726,12 @@ Required environment:
 | Env var | Purpose |
 | --- | --- |
 | `ATOMICMEMORY_API_URL` | AtomicMemory core URL. |
+| `ATOMICMEMORY_API_KEY` | Bearer credential for the Core Quickstart service or any protected AtomicMemory service. |
 
 Optional environment:
 
 | Env var | Purpose |
 | --- | --- |
-| `ATOMICMEMORY_API_KEY` | Bearer credential for AtomicMemory core. |
 | `ATOMICMEMORY_PROVIDER` | SDK provider name. Defaults to `atomicmemory`. |
 | `ATOMICMEMORY_SCOPE_USER` | Hermes user identity. Defaults to `$USER`. |
 | `ATOMICMEMORY_MEMORY_SCOPE` | `shared` or `siloed`. Defaults to `shared`. |
@@ -2784,7 +2798,7 @@ uv pip install atomicmemory-hermes \
 | Symptom | Fix |
 | --- | --- |
 | Provider does not appear | Confirm the provider is installed under `$HERMES_HOME/plugins/memory/atomicmemory`. |
-| Provider unavailable | Confirm `ATOMICMEMORY_API_URL` and that Hermes installed the provider package dependencies. |
+| Provider unavailable | Confirm `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and that Hermes installed the provider package dependencies. |
 | Siloed recall fails | Use `ATOMICMEMORY_PROVIDER=atomicmemory` or switch to `shared`. |
 | Calls pause after repeated backend failures | Hermes opens a circuit breaker after five SDK failures and resumes after roughly two minutes. Check the AtomicMemory service before retrying. |
 
@@ -2870,7 +2884,7 @@ openclaw plugins install @atomicmemory/openclaw-plugin
 openclaw gateway restart
 ```
 
-Requires [local AtomicMemory core](/quickstart) at `http://127.0.0.1:3050`. Uses your local machine user by default.
+Requires [local AtomicMemory core](/quickstart) at `http://127.0.0.1:3050`. The local quickstart core uses `local-dev-key` as its bearer key. Uses your local machine user by default.
 
 ## Features
 
@@ -2898,7 +2912,15 @@ OpenClaw memory capture is prompt/tool driven. Agents search before answering wh
 
 ## Configuration
 
-For local AtomicMemory core, `apiUrl` is optional and defaults to `http://127.0.0.1:3050`.
+For local AtomicMemory core, `apiUrl` is optional and defaults to `http://127.0.0.1:3050`, but the Core Quickstart service requires the development bearer key:
+
+```json
+{
+  "provider": "atomicmemory",
+  "apiUrl": "http://127.0.0.1:3050",
+  "apiKey": "local-dev-key"
+}
+```
 
 OpenClaw passes optional plugin config from `openclaw.plugin.json` into the provider. Set `scope.user` only when the local machine user is not the right channel-agnostic memory identity.
 
@@ -2931,7 +2953,7 @@ openclaw plugins install -l ./plugins/openclaw
 | --- | --- |
 | `provider` | AtomicMemory SDK provider name. |
 | `apiUrl` | Optional provider base URL. Defaults to local AtomicMemory core for `provider: "atomicmemory"`; required for `provider: "mem0"` or remote services. |
-| `apiKey` | Optional bearer credential for providers or deployments that require HTTP authorization. |
+| `apiKey` | Bearer credential for the Core Quickstart service or any provider that requires HTTP authorization. |
 | `scope.user` | Stable user identity shared across OpenClaw channels. |
 | `scope.agent` | Agent identity. |
 | `scope.namespace` | Project, assistant, or deployment boundary. |
@@ -2973,7 +2995,7 @@ permissions:
 | Plugin changes do not appear | Restart the OpenClaw host after updating the plugin. |
 | Local core is not running | Start it with the [Core Quickstart](/quickstart), then retry the memory tool call. |
 | Memory crosses unwanted channels | Add `scope.namespace`, `scope.agent`, or `scope.thread`. |
-| Provider connection fails | Verify `apiUrl` and `apiKey` if the OpenClaw plugin config points at a remote or protected provider. |
+| Provider connection fails | Verify `apiUrl` and `apiKey` if the OpenClaw plugin config points at the Core Quickstart service, a remote service, or any protected provider. |
 
 ## Development
 
@@ -3339,7 +3361,12 @@ npm install @atomicmemory/openai-agents @atomicmemory/sdk
 import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
-  providers: { atomicmemory: {} },
+  providers: {
+    atomicmemory: {
+      apiUrl: 'http://127.0.0.1:3050',
+      apiKey: 'local-dev-key',
+    },
+  },
   defaultProvider: 'atomicmemory',
 });
 
@@ -3525,7 +3552,12 @@ npm install @atomicmemory/vercel-ai @atomicmemory/sdk
 import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
-  providers: { atomicmemory: {} },
+  providers: {
+    atomicmemory: {
+      apiUrl: 'http://127.0.0.1:3050',
+      apiKey: 'local-dev-key',
+    },
+  },
   defaultProvider: 'atomicmemory',
 });
 
@@ -4045,7 +4077,7 @@ The direct storage API supports managed upload for location-addressed providers.
 
 Filecoin is optional and only participates when managed storage is enabled with `RAW_STORAGE_PROVIDER=filecoin`.
 
-Filecoin data should be treated as publicly retrievable by CID unless it is encrypted before upload. AtomicMemory supports an optional raw-content codec for managed document uploads:
+Filecoin data should be treated as publicly retrievable by CID unless it is encrypted before upload. For Filecoin managed document uploads, AtomicMemory requires the raw-content codec in staging and production:
 
 ```bash
 RAW_CONTENT_CODEC=aes_gcm
@@ -4053,7 +4085,28 @@ RAW_CONTENT_CODEC_KEYS=v1:<base64url-32-byte-key>
 RAW_CONTENT_CODEC_ACTIVE_KEY_ID=v1
 ```
 
-With `RAW_CONTENT_CODEC=aes_gcm`, core encrypts raw document bytes before the storage provider receives them. With the default `RAW_CONTENT_CODEC=none`, the provider receives plaintext bytes. Do not use plaintext Filecoin storage for sensitive data.
+With `RAW_CONTENT_CODEC=aes_gcm`, core encrypts raw document bytes before the storage provider receives them. `RAW_CONTENT_CODEC=none` is allowed with `RAW_STORAGE_PROVIDER=filecoin` only when `RAW_STORAGE_DEPLOYMENT_ENV=local`; use it only for local development with non-sensitive data.
+
+### Filecoin Environment Variables
+
+Use the current `RAW_STORAGE_FILECOIN_*` names for new deployments:
+
+| Variable | Required | Description |
+| --- | --- | --- |
+| `RAW_STORAGE_MODE` | Yes | Set to `managed_blob` to let core store raw document bytes. |
+| `RAW_STORAGE_PROVIDER` | Yes | Set to `filecoin`. The old `foc` provider value is not accepted. |
+| `RAW_STORAGE_PREFIX` | Yes | Storage namespace prefix. Must be relative and must not contain `..`. |
+| `RAW_STORAGE_DEPLOYMENT_ENV` | Yes | `local`, `staging`, or `production`. Filecoin plaintext is allowed only in `local`. |
+| `RAW_CONTENT_CODEC` | Yes for staging/production | Set to `aes_gcm` for Filecoin in staging and production. |
+| `RAW_CONTENT_CODEC_KEYS` | Yes with AES-GCM | Comma-separated `keyId:base64url-32-byte-key` entries. |
+| `RAW_CONTENT_CODEC_ACTIVE_KEY_ID` | Yes with AES-GCM | Key id used for new encrypted writes. |
+| `RAW_STORAGE_FILECOIN_DRIVER` | Yes | `synapse` or `filecoin_pin`. Use `synapse` unless testing the CAR-first driver. |
+| `RAW_STORAGE_FILECOIN_NETWORK` | Yes | `calibration` or `mainnet`. Live tests should use `calibration`. |
+| `RAW_STORAGE_FILECOIN_PRIVATE_KEY` | Yes | `0x`\-prefixed 32-byte private key. Never commit this value. |
+| `RAW_STORAGE_FILECOIN_SOURCE` | Yes | Non-empty source label for provider-side metadata. |
+| `RAW_STORAGE_FILECOIN_WITH_CDN` | Yes | Strict boolean: `true` or `false`. |
+
+Local live-test env files may still carry legacy `RAW_STORAGE_FOC_*` aliases for older scripts. Keep those aliases aligned with `RAW_STORAGE_FILECOIN_*`, but do not rely on them for current core startup.
 
 Filecoin differs from local disk and S3 in three important ways:
 
@@ -4063,11 +4116,22 @@ Filecoin differs from local disk and S3 in three important ways:
 
 Core projects Filecoin metadata through a public allowlist before returning it to clients. Internal sidecars, provider hints, proofs, credentials, and recovery details stay server-side.
 
+### Live Encryption Smoke
+
+Core includes an opt-in live integration test for encrypted Filecoin document uploads. It runs the document upload pipeline against calibration Filecoin, confirms the provider stores ciphertext, and decodes the retrieved bytes with the AES-GCM codec.
+
+```bash
+FILECOIN_LIVE_DOCUMENT_UPLOAD_TESTS=1 \
+  dotenv -e .env.test -e .env.foc.local -- npx vitest run \
+  "src/services/__tests__/document-upload-filecoin-live.test.ts" \
+  --reporter=verbose --testTimeout=900000
+```
+
 ## Security And Privacy
 
 Artifact storage has stricter boundaries than ordinary memory rows:
 
--   Filecoin/IPFS storage is content-addressed and publicly retrievable by CID; enable `RAW_CONTENT_CODEC=aes_gcm` before using Filecoin for sensitive raw bytes
+-   Filecoin/IPFS storage is content-addressed and publicly retrievable by CID; staging and production Filecoin deployments must use `RAW_CONTENT_CODEC=aes_gcm`
 -   storage keys are derived from a PII-safe HMAC prefix rather than raw user IDs
 -   pointer URIs are allowlisted by scheme
 -   provider metadata is redacted before reaching public responses
@@ -6872,7 +6936,7 @@ Async applications can use `AsyncStorageClient` with the same method names.
 
 Filecoin is a core storage provider, not a required SDK dependency. SDK clients see Filecoin through provider-agnostic fields such as `provider`, `status`, `identifiers`, `lifecycle`, `replication`, `verification`, and `retrieval`.
 
-Filecoin/IPFS data should be treated as publicly retrievable by CID unless the server encrypts it before upload. For sensitive Filecoin-backed document bytes, configure core with `RAW_CONTENT_CODEC=aes_gcm`, `RAW_CONTENT_CODEC_KEYS`, and `RAW_CONTENT_CODEC_ACTIVE_KEY_ID`. The default `RAW_CONTENT_CODEC=none` stores plaintext bytes.
+Filecoin/IPFS data should be treated as publicly retrievable by CID unless the server encrypts it before upload. For Filecoin-backed document bytes, staging and production core deployments must set `RAW_CONTENT_CODEC=aes_gcm`, `RAW_CONTENT_CODEC_KEYS`, and `RAW_CONTENT_CODEC_ACTIVE_KEY_ID`. `RAW_CONTENT_CODEC=none` is only accepted for local Filecoin development. The provider itself is configured with `RAW_STORAGE_FILECOIN_*` variables; see [Artifact storage](/platform/artifact-storage#filecoin-environment-variables) for the full environment variable table.
 
 In v1, direct managed Filecoin uploads through managed-mode `client.storage.put` raise `FilecoinDirectStorageNotSupportedError`. Use pointer artifacts or the document raw-upload workflow for Filecoin-backed document bytes until direct Filecoin artifact reconciliation is enabled.
 

@@ -16,6 +16,7 @@ npx -y @atomicmemory/hermes-plugin install
 
 ```bash
 export ATOMICMEMORY_API_URL="http://127.0.0.1:3050"
+export ATOMICMEMORY_API_KEY="local-dev-key"
 ```
 
 Start [local AtomicMemory core](/quickstart) first if it is not already running.
@@ -50,7 +51,7 @@ hermes memory status
 
 ## Configuration
 
-Set `ATOMICMEMORY_API_KEY` only when Hermes connects to a protected AtomicMemory service:
+The Core Quickstart's local Docker service requires the development bearer key shown above. For a remote AtomicMemory service, use that service's issued key:
 
 ```bash
 export ATOMICMEMORY_API_URL="https://memory.yourco.com"
@@ -69,12 +70,12 @@ Required environment:
 | Env var | Purpose |
 | --- | --- |
 | `ATOMICMEMORY_API_URL` | AtomicMemory core URL. |
+| `ATOMICMEMORY_API_KEY` | Bearer credential for the Core Quickstart service or any protected AtomicMemory service. |
 
 Optional environment:
 
 | Env var | Purpose |
 | --- | --- |
-| `ATOMICMEMORY_API_KEY` | Bearer credential for AtomicMemory core. |
 | `ATOMICMEMORY_PROVIDER` | SDK provider name. Defaults to `atomicmemory`. |
 | `ATOMICMEMORY_SCOPE_USER` | Hermes user identity. Defaults to `$USER`. |
 | `ATOMICMEMORY_MEMORY_SCOPE` | `shared` or `siloed`. Defaults to `shared`. |
@@ -141,7 +142,7 @@ uv pip install atomicmemory-hermes \
 | Symptom | Fix |
 | --- | --- |
 | Provider does not appear | Confirm the provider is installed under `$HERMES_HOME/plugins/memory/atomicmemory`. |
-| Provider unavailable | Confirm `ATOMICMEMORY_API_URL` and that Hermes installed the provider package dependencies. |
+| Provider unavailable | Confirm `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and that Hermes installed the provider package dependencies. |
 | Siloed recall fails | Use `ATOMICMEMORY_PROVIDER=atomicmemory` or switch to `shared`. |
 | Calls pause after repeated backend failures | Hermes opens a circuit breaker after five SDK failures and resumes after roughly two minutes. Check the AtomicMemory service before retrying. |
 
