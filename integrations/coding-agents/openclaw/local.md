@@ -58,20 +58,7 @@ For local AtomicMemory core, `apiUrl` is optional and defaults to `http://127.0.
 
 OpenClaw passes optional plugin config from `openclaw.plugin.json` into the provider. Set `scope.user` only when the local machine user is not the right channel-agnostic memory identity.
 
-Set `apiUrl` only when OpenClaw should connect to a different AtomicMemory service or to another provider such as Mem0. Set `apiKey` only when that service requires bearer-token authentication:
-
-```json
-{
-  "provider": "atomicmemory",
-  "apiUrl": "https://memory.yourco.com",
-  "apiKey": "am_live_...",
-  "scope": {
-    "user": "pip",
-    "agent": "openclaw",
-    "namespace": "personal-assistant"
-  }
-}
-```
+The shipped skill manifest allows only the local AtomicMemory core origins listed below. Do not point this plugin at a remote service unless your OpenClaw administrator also updates and revalidates the plugin skill permissions.
 
 For local plugin development, install from a checkout instead:
 
@@ -86,8 +73,8 @@ openclaw plugins install -l ./plugins/openclaw
 | Field | Purpose |
 | --- | --- |
 | `provider` | AtomicMemory SDK provider name. |
-| `apiUrl` | Optional provider base URL. Defaults to local AtomicMemory core for `provider: "atomicmemory"`; required for `provider: "mem0"` or remote services. |
-| `apiKey` | Bearer credential for the Core Quickstart service or any provider that requires HTTP authorization. |
+| `apiUrl` | Optional provider base URL. Defaults to local AtomicMemory core for `provider: "atomicmemory"`. The shipped skill manifest allows `http://127.0.0.1:3050` and `http://localhost:3050`. |
+| `apiKey` | Bearer credential for the Core Quickstart service or any allowed local service that requires HTTP authorization. |
 | `scope.user` | Stable user identity shared across OpenClaw channels. |
 | `scope.agent` | Agent identity. |
 | `scope.namespace` | Project, assistant, or deployment boundary. |
@@ -116,7 +103,8 @@ The skill manifest declares only network and credential access:
 ```yaml
 permissions:
   network:
-    - https://*.atomicmem.ai
+    - http://127.0.0.1:3050
+    - http://localhost:3050
   credentials: []
   filesystem: []
   shell: []
@@ -129,7 +117,7 @@ permissions:
 | Plugin changes do not appear | Restart the OpenClaw host after updating the plugin. |
 | Local core is not running | Start it with the [Core Quickstart](/quickstart), then retry the memory tool call. |
 | Memory crosses unwanted channels | Add `scope.namespace`, `scope.agent`, or `scope.thread`. |
-| Provider connection fails | Verify `apiUrl` and `apiKey` if the OpenClaw plugin config points at the Core Quickstart service, a remote service, or any protected provider. |
+| Provider connection fails | Verify local core is running at an allowed origin and confirm `apiUrl` and `apiKey` match the Core Quickstart service. |
 
 ## Development
 

@@ -107,8 +107,8 @@ For local provider development, install from a checkout instead:
 git clone https://github.com/atomicstrata/atomicmemory.git
 cd atomicmemory
 
-mkdir -p "$HERMES_HOME/plugins/memory"
-ln -s "$(pwd)/plugins/hermes" "$HERMES_HOME/plugins/memory/atomicmemory"
+mkdir -p "$HERMES_HOME/plugins"
+ln -s "$(pwd)/plugins/hermes" "$HERMES_HOME/plugins/atomicmemory"
 ```
 
 The provider is also prepared for Hermes' Python entry-point plugin path. After the Python package is published, teams that manage Hermes with Python packages can install it into the Hermes virtualenv instead:
@@ -141,7 +141,7 @@ uv pip install atomicmemory-hermes \
 
 | Symptom | Fix |
 | --- | --- |
-| Provider does not appear | Confirm the provider is installed under `$HERMES_HOME/plugins/memory/atomicmemory`. |
+| Provider does not appear | Confirm the provider is installed under `$HERMES_HOME/plugins/atomicmemory`. |
 | Provider unavailable | Confirm `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and that Hermes installed the provider package dependencies. |
 | Siloed recall fails | Use `ATOMICMEMORY_PROVIDER=atomicmemory` or switch to `shared`. |
 | Calls pause after repeated backend failures | Hermes opens a circuit breaker after five SDK failures and resumes after roughly two minutes. Check the AtomicMemory service before retrying. |
