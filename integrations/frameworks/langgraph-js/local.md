@@ -2,43 +2,42 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory support for LangGraph JS is planned. The adapter will provide durable semantic memory next to LangGraph's run-scoped checkpointers.
-
-Planned
-
-This adapter is on the roadmap. The API below is the intended shape, not a shipped package.
+AtomicMemory support for LangGraph JS provides durable semantic memory next to LangGraph's run-scoped checkpointers.
 
 ## What you get
 
--   **Durable graph memory.** A planned store-like memory layer that survives across graph runs.
--   **Helper nodes.** Planned `recall` and `remember` nodes for retrieval and ingest inside a graph.
--   **Backend-agnostic SDK path.** The adapter will use the AtomicMemory SDK provider registry.
+-   **Retrieve node.** `createMemoryRetrieveNode()` searches memory before the model step.
+-   **Ingest node.** `createMemoryIngestNode()` persists the completed turn after the model step.
+-   **Backend-agnostic SDK path.** The adapter uses the AtomicMemory SDK provider registry through your `MemoryClient`.
 
-## Planned API
+## Install
 
-| API | Purpose |
-| --- | --- |
-| `AtomicMemoryStore` | Store-like access to durable memories across graph runs. |
-| `recall` / `remember` helper nodes | Graph nodes for retrieval and ingest inside a state graph. |
-
-## Intended usage
-
-```ts
-import { StateGraph } from '@langchain/langgraph';
-import { AtomicMemoryStore } from '@atomicmemory/langgraph';
-
-const store = new AtomicMemoryStore({
-  client: memoryClient,
-  scope: { user: userId },
-});
-
-const graph = new StateGraph(State)
-  .addNode('recall', recallNode)
-  .addNode('respond', respondNode)
-  .compile({ store });
+```bash
+npm install @atomicmemory/langgraph @atomicmemory/sdk @langchain/langgraph@^0.4.0
 ```
 
-Nodes can call `store.search(query)` and `store.put(fact)` directly, or use the planned helper nodes.
+## Usage
+
+```ts
+import {
+  createMemoryIngestNode,
+  createMemoryRetrieveNode,
+} from '@atomicmemory/langgraph';
+
+const recall = createMemoryRetrieveNode(memoryClient, {
+  scope: { user: userId },
+  getQuery: (state) => state.messages.at(-1)?.content ?? '',
+  applyContext: (_state, context) => ({ memoryContext: context }),
+});
+
+const remember = createMemoryIngestNode(memoryClient, {
+  scope: { user: userId },
+  getMessages: (state) => state.messages,
+  getCompletion: (state) => state.finalAnswer,
+});
+```
+
+The factories emit plain async state-node functions, so they can be registered with your graph without adding runtime framework ownership to AtomicMemory.
 
 ## See also
 

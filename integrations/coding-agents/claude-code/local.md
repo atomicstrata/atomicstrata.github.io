@@ -13,7 +13,18 @@ claude plugin marketplace add atomicstrata/atomicmemory-integrations
 claude plugin install claude-code@atomicmemory
 ```
 
-### 2. Use Claude Code for local extraction
+The `atomicmemory-integrations` marketplace source is temporary for Claude Code plugin discovery. Source and development now live in the [`plugins/claude-code`](https://github.com/atomicstrata/atomicmemory/tree/main/plugins/claude-code) monorepo package.
+
+### 2. Start AtomicMemory core
+
+Start [local AtomicMemory core](/quickstart) first, or set `ATOMICMEMORY_API_URL` and `ATOMICMEMORY_API_KEY` to an existing AtomicMemory service:
+
+```bash
+export ATOMICMEMORY_API_URL="http://127.0.0.1:3050"
+export ATOMICMEMORY_API_KEY="local-dev-key"
+```
+
+### 3. Use Claude Code for local extraction
 
 ```bash
 claude auth login
@@ -21,17 +32,17 @@ export LLM_PROVIDER=claude-code
 export EMBEDDING_PROVIDER=transformers
 ```
 
-Uses your Claude Code login; no separate Anthropic API key needed.
+Set `LLM_PROVIDER=claude-code` and `EMBEDDING_PROVIDER=transformers` in the environment that starts the AtomicMemory core process. That lets core use your Claude Code login for extraction; it does not make the plugin start core for you.
 
-### 3. Start Claude Code
+### 4. Start Claude Code
 
 ```bash
 claude
 ```
 
-The plugin starts the local runtime and exposes memory tools.
+The plugin connects to the configured AtomicMemory service and exposes memory tools.
 
-### 4. Verify memory tools
+### 5. Verify memory tools
 
 Ask Claude Code to list its MCP tools. You should see:
 
@@ -45,16 +56,16 @@ Ask Claude Code to list its MCP tools. You should see:
 -   **Cross-session recall.** Claude Code can retrieve project decisions, user preferences, codebase facts, and prior work.
 -   **Prompt-time retrieval.** `UserPromptSubmit` searches memory before the model turn and injects matching memories as untrusted reference context.
 -   **Deterministic capture.** `PostCompact`, `Stop`, and `TaskCompleted` store compact session records without asking the model to reconstruct everything.
--   **Auto-managed local runtime.** For local use, the plugin starts and manages the AtomicMemory runtime instead of requiring a separate core quickstart.
+-   **Local or external core.** For local use, start AtomicMemory core with the quickstart first. For team deployments, point `ATOMICMEMORY_API_URL` and `ATOMICMEMORY_API_KEY` at the service your team manages.
 -   **Memory protocol skill.** The installed skill teaches Claude when to search, when to ingest, and when to create handoff snapshots.
 -   **Scoped memory.** `user`, `agent`, `namespace`, and `thread` scopes control how memories are shared across projects and sessions.
 -   **Backend-agnostic SDK path.** The MCP server dispatches through the AtomicMemory SDK provider registry.
 
 ## Modes of operation
 
-### Local auto-managed mode
+### Local core mode
 
-Use local auto-managed mode for personal Claude Code memory. The plugin starts AtomicMemory locally, binds Claude Code hooks to it, and can use `LLM_PROVIDER=claude-code` for extraction without a separate Anthropic API key.
+Use local core mode for personal Claude Code memory. Start AtomicMemory core with the [quickstart](/quickstart), then install the plugin so Claude Code can call the MCP server and lifecycle hooks. The core process can use `LLM_PROVIDER=claude-code` for extraction without a separate Anthropic API key.
 
 | Capability | Included |
 | --- | --- |
@@ -62,7 +73,7 @@ Use local auto-managed mode for personal Claude Code memory. The plugin starts A
 | Memory protocol skill | Yes |
 | Prompt-time retrieval hooks | Yes |
 | Session capture hooks | Yes |
-| Local runtime management | Yes |
+| Local runtime management | No; start core separately |
 
 ### External AtomicMemory mode
 
@@ -123,12 +134,12 @@ Default behavior:
 
 | Setting | Default |
 | --- | --- |
-| Runtime | Auto-managed local AtomicMemory |
-| Service URL | Local plugin-managed runtime |
+| Runtime | User-managed AtomicMemory core |
+| Service URL | `http://127.0.0.1:3050` unless `ATOMICMEMORY_API_URL` is set |
 | User scope | Claude Code user/session context, then local fallback |
 | Agent scope | `claude-code` |
 | Capture level | `balanced` |
-| Memory extraction provider | `LLM_PROVIDER=claude-code` for personal local use, or an API-backed provider |
+| Memory extraction provider | Configured on the AtomicMemory core process |
 
 Common overrides:
 
@@ -139,7 +150,7 @@ export ATOMICMEMORY_SCOPE_NAMESPACE="repo-or-project"
 export ATOMICMEMORY_CAPTURE_LEVEL=balanced
 ```
 
-`LLM_PROVIDER` and `EMBEDDING_PROVIDER` configure the local AtomicMemory core runtime. Claude Code hooks and the MCP server use `ATOMICMEMORY_*` values for service URL, scope, and capture policy. The `claude-code` provider consumes the user's Claude Code / Claude subscription limits and is for personal local use.
+`LLM_PROVIDER` and `EMBEDDING_PROVIDER` configure the AtomicMemory core process. Claude Code hooks and the MCP server use `ATOMICMEMORY_*` values for service URL, scope, and capture policy. The `claude-code` provider consumes the user's Claude Code / Claude subscription limits and is for personal local use.
 
 When you are running your own shared AtomicMemory runtime instead of using Claude Code's local authenticated session, configure an API-backed extraction provider:
 
@@ -155,12 +166,12 @@ Advanced values:
 
 | Env var | Used by | Purpose |
 | --- | --- | --- |
-| `LLM_PROVIDER` | local runtime | Extraction provider. Use `claude-code` for personal local use without a separate Anthropic API key. |
-| `LLM_MODEL` | local runtime | Optional model override. Omit when using Claude Code's configured default. |
-| `EMBEDDING_PROVIDER` | local runtime | Embedding provider. Use `transformers` or `ollama` to avoid an OpenAI embedding key. |
-| `ANTHROPIC_API_KEY` | local runtime | Anthropic provider key for production or team usage. |
-| `OPENAI_API_KEY` | local runtime | OpenAI provider key. |
-| `ATOMICMEMORY_API_URL` | MCP + hooks | External AtomicMemory service URL. When omitted, the plugin uses local auto-managed mode. |
+| `LLM_PROVIDER` | core process | Extraction provider. Use `claude-code` for personal local use without a separate Anthropic API key. |
+| `LLM_MODEL` | core process | Optional model override. Omit when using Claude Code's configured default. |
+| `EMBEDDING_PROVIDER` | core process | Embedding provider. Use `transformers` or `ollama` to avoid an OpenAI embedding key. |
+| `ANTHROPIC_API_KEY` | core process | Anthropic provider key for production or team usage. |
+| `OPENAI_API_KEY` | core process | OpenAI provider key. |
+| `ATOMICMEMORY_API_URL` | MCP + hooks | AtomicMemory service URL. Defaults to local core at `http://127.0.0.1:3050` when omitted. |
 | `ATOMICMEMORY_API_KEY` | MCP + hooks | API key for an external AtomicMemory service. |
 | `ATOMICMEMORY_SCOPE_USER` | MCP + hooks | User identity override. |
 | `ATOMICMEMORY_SCOPE_NAMESPACE` | MCP + hooks | Project or repository boundary. |

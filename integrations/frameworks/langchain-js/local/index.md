@@ -2,45 +2,46 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory support for LangChain JS is planned. The adapter will expose durable semantic memory through LangChain-native memory and tool surfaces.
-
-Planned
-
-This adapter is on the roadmap. The API below is the intended shape, not a shipped package.
+AtomicMemory support for LangChain JS exposes durable semantic memory through helper functions and LangChain-native tools.
 
 ## What you get
 
--   **Chat memory surface.** A planned `AtomicMemoryChatMemory` for chains that expect LangChain memory.
--   **Agent tools.** Planned `memory_search` and `memory_ingest` tools for agent executors.
--   **Backend-agnostic SDK path.** The adapter will use the AtomicMemory SDK provider registry.
+-   **Agent tools.** `memory_search` and `memory_ingest` tools built with `@langchain/core/tools`.
+-   **Helper functions.** `searchMemory()` and `ingestTurn()` for custom chains, callbacks, and LCEL steps.
+-   **Backend-agnostic SDK path.** The adapter uses the AtomicMemory SDK provider registry through your `MemoryClient`.
 
-## Planned API
+## Install
 
-| API | Purpose |
-| --- | --- |
-| `AtomicMemoryChatMemory` | Drop-in chat memory for chains that expect LangChain memory. |
-| `createAtomicMemoryTools()` | Create `memory_search` and `memory_ingest` tools for agent executors. |
+```bash
+npm install @atomicmemory/langchain @atomicmemory/sdk @langchain/core@^0.3.80 zod
+```
 
-## Intended usage
+## Usage
 
 ```ts
-import { ConversationChain } from 'langchain/chains';
-import { AtomicMemoryChatMemory } from '@atomicmemory/langchain';
+import { createMemoryTools } from '@atomicmemory/langchain';
 
-const memory = new AtomicMemoryChatMemory({
-  client: memoryClient,
-  scope: { user: userId },
+const { searchTool, ingestTool } = createMemoryTools(memoryClient, {
+  scope: { user: userId, namespace: 'support' },
+});
+```
+
+```ts
+import { ingestTurn, searchMemory } from '@atomicmemory/langchain';
+
+const recalled = await searchMemory(memoryClient, {
+  query: userMessage,
+  scope: { user: userId, namespace: 'support' },
 });
 
-const chain = new ConversationChain({ llm, memory });
+await ingestTurn(memoryClient, {
+  messages,
+  completion,
+  scope: { user: userId, namespace: 'support' },
+});
 ```
 
-```ts
-import { createAtomicMemoryTools } from '@atomicmemory/langchain';
-
-const tools = createAtomicMemoryTools(memoryClient, { scope });
-const executor = await initializeAgentExecutorWithOptions([...tools], llm);
-```
+Scope is fixed when the tools are created, so the model cannot rebind tools to another user.
 
 ## See also
 

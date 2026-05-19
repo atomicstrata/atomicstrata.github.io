@@ -6,7 +6,7 @@ Mirrors OpenAPI operation `ingestMemory` from the vendored `atomicmemory-core` s
 
 **POST** `/v1/memories/ingest`
 
-Ingest a conversation transcript with full extraction.
+Full-extraction ingest. The `metadata` field on the body schema is **rejected with 400** on this route — caller metadata is only supported on `POST /v1/memories/ingest/quick` with `skip_extraction=true` and no workspace context.
 
 ## Request Body (application/json)
 
@@ -35,12 +35,22 @@ Ingest a conversation transcript with full extraction.
           }
         ]
       },
-      "description": "Optional per-request overlay on RuntimeConfig. Keys correspond to RuntimeConfig field names; values must be primitives (boolean / number / string / null). Unknown keys are accepted but surfaced via the X-Atomicmem-Unknown-Override-Keys response header and a server-side warning log, they do not cause a 400. Scope: just this request, no server mutation.",
+      "description": "Optional per-request overlay on RuntimeConfig. Keys correspond to RuntimeConfig field names; values must be primitives (boolean / number / string / null). Unknown keys are accepted but surfaced via the X-Atomicmem-Unknown-Override-Keys response header and a server-side warning log — they do not cause a 400. Scope: just this request — no server mutation.",
       "type": "object"
     },
     "conversation": {
       "description": "Required. conversation.",
       "minLength": 1,
+      "type": "string"
+    },
+    "metadata": {
+      "additionalProperties": {},
+      "description": "Caller-supplied metadata, persisted alongside the memory. Honored ONLY on /v1/memories/ingest/quick with skip_extraction=true and no workspace context — rejected with 400 on every other branch. Reserved keys (RESERVED_METADATA_KEYS in repository-types) are rejected. Max 32 KB UTF-8 serialized.",
+      "type": "object"
+    },
+    "session_id": {
+      "description": "Optional thread/session identifier used to scope ingest, search, and list symmetrically.",
+      "maxLength": 256,
       "type": "string"
     },
     "skip_extraction": {
@@ -89,3 +99,5 @@ Ingest a conversation transcript with full extraction.
 | 200 | Ingest result with extracted facts. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |

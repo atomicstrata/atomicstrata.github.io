@@ -6,14 +6,7 @@ Mirrors OpenAPI operation `reportLesson` from the vendored `atomicmemory-core` s
 
 **POST** `/v1/memories/lessons/report`
 
-Record a `user_reported` lesson on behalf of the caller. Used when
-a user clicks "this memory is wrong / harmful" or an operator
-sweep finds bad content the automatic detectors missed. The
-recorded pattern is embedded and consulted by future retrievals
-for the same user; `severity: 'critical'` causes subsequent
-matching queries to be refused outright, lower severities annotate
-the response with a warning. See [Lessons](/platform/lessons) for
-background.
+Report a new lesson.
 
 ## Request Body (application/json)
 
@@ -53,3 +46,5 @@ background.
 | 200 | Lesson id. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |

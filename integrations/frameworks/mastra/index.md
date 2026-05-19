@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory is planned as a Mastra adapter that maps Mastra memory hooks onto AtomicMemory retrieval and ingest primitives.
+AtomicMemory provides Mastra tools that map agent memory search and ingest onto AtomicMemory retrieval and ingest primitives.
 
 ## Deployment targets
 

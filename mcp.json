@@ -2,15 +2,15 @@
   "schemaVersion": "2025-03-26",
   "name": "atomicmemory",
   "description": "AtomicMemory MCP server, exposes memory_search, memory_ingest, and memory_package over MCP. Currently local-install (stdio) only; a hosted HTTP endpoint is on the roadmap.",
-  "documentation": "https://docs.atomicmemory.ai/integrations/coding-agents/claude-code",
+  "documentation": "https://docs.atomicstrata.ai/integrations/coding-agents/claude-code",
   "transport": {
     "type": "stdio",
     "install": {
       "method": "local-build",
-      "repository": "https://github.com/atomicmemory/atomicmemory-integrations",
+      "repository": "https://github.com/atomicstrata/atomicmemory/tree/main/packages/mcp-server",
       "package": "@atomicmemory/mcp-server",
       "binary": "packages/mcp-server/dist/bin.js",
-      "instructions": "https://docs.atomicmemory.ai/integrations/coding-agents/claude-code"
+      "instructions": "https://docs.atomicstrata.ai/integrations/coding-agents/claude-code"
     }
   },
   "tools": [
@@ -39,6 +39,6 @@
   },
   "status": "local-install-only",
   "hostedEndpoint": null,
-  "homepage": "https://docs.atomicmemory.ai",
+  "homepage": "https://docs.atomicstrata.ai",
   "license": "Apache-2.0"
 }

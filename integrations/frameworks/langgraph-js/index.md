@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory is planned as a LangGraph integration that complements graph-scoped checkpointers with durable memory across runs.
+AtomicMemory provides LangGraph node factories that add durable retrieval and ingest beside graph-scoped checkpointers.
 
 ## Deployment targets
 

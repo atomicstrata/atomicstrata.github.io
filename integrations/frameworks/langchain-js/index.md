@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory is planned as a LangChain adapter that can work either as memory infrastructure or as explicit agent tools.
+AtomicMemory provides LangChain JS helpers and agent tools around an injected AtomicMemory SDK client.
 
 ## Deployment targets
 

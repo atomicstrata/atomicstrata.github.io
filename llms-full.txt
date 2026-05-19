@@ -65,7 +65,7 @@ Version: `1.0.0`
 
 Semantic memory engine for AI applications. Request/response bodies are JSON; fields on the wire use snake_case.
 
-License: [MIT](https://opensource.org/licenses/MIT)
+License: [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
 ---
 
@@ -109,6 +109,8 @@ Auto-resolve all expired conflicts for a user.
 | 200 | Count of resolved conflicts. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -139,6 +141,8 @@ Memory-cap status for a user's store.
 | 200 | Cap status. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -184,6 +188,8 @@ Compute consolidation candidates; optionally execute (execute=true).
 | 200 | Consolidation result. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -262,12 +268,7 @@ Mirrors OpenAPI operation `deactivateLesson` from the vendored `atomicmemory-cor
 
 **DELETE** `/v1/memories/lessons/{id}`
 
-Mark a lesson inactive (`active = false`). Active is the only
-state that affects retrieval, so a deactivated lesson is ignored
-by future search-time checks but preserved in the database for
-audit. Use this to reverse a false positive or retire a lesson
-whose source has been investigated. See [Lessons](/platform/lessons)
-for background.
+Deactivate a lesson by id.
 
 ## Parameters
 
@@ -283,6 +284,84 @@ for background.
 | 200 | Success. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
+
+---
+
+## Delete one allowed disposable test scope.
+
+Source: https://docs.atomicstrata.ai/api-reference/http/delete-admin-scope
+
+# Delete one allowed disposable test scope.
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `deleteAdminScope` from the vendored `atomicmemory-core` spec.
+
+**DELETE** `/v1/admin/scope`
+
+Mounted only when CORE_ADMIN_API_KEY and CORE_TEST_SCOPE_ALLOW_PATTERN are both configured. The server refuses user_id values that do not match the configured test-scope pattern.
+
+## Request Body (application/json)
+
+```json
+{
+  "properties": {
+    "user_id": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_id"
+  ],
+  "type": "object"
+}
+```
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 200 | Number of memories deleted for the requested scope. |
+| 400 | Input validation error |
+| 401 | Missing or invalid bearer token |
+| 403 | Request is authenticated but not allowed |
+| 500 | Internal server error |
+
+---
+
+## Soft-delete (tombstone) a document.
+
+Source: https://docs.atomicstrata.ai/api-reference/http/delete-document
+
+# Soft-delete (tombstone) a document.
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `deleteDocument` from the vendored `atomicmemory-core` spec.
+
+**DELETE** `/v1/documents/{id}`
+
+Idempotent: a second DELETE on the same id returns success with `already_deleted: true`. Subsequent GETs of the deleted id return 404.
+
+## Parameters
+
+| In | Name | Required | Type | Description |
+|---|---|---|---|---|
+| path | `id` | yes | string |  |
+| query | `user_id` | yes | string |  |
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 200 | Soft-delete acknowledgement. |
+| 400 | Input validation error |
+| 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -316,6 +395,41 @@ Delete a single memory by UUID.
 | 200 | Deletion success. |
 | 400 | Input validation error |
 | 404 | Memory not found |
+| 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
+
+---
+
+## Soft-delete an artifact (optionally cascading documents).
+
+Source: https://docs.atomicstrata.ai/api-reference/http/delete-storage-artifact
+
+# Soft-delete an artifact (optionally cascading documents).
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `deleteStorageArtifact` from the vendored `atomicmemory-core` spec.
+
+**DELETE** `/v1/storage/artifacts/{id}`
+
+Reference-aware delete. Default `policy=artifact_only` returns 409 `artifact_in_use` if any active document references the artifact; `policy=with_documents` cascades a soft-delete to those documents first. No `force` parameter is supported.
+
+## Parameters
+
+| In | Name | Required | Type | Description |
+|---|---|---|---|---|
+| path | `id` | yes | string |  |
+| query | `policy` | no | string | Delete behaviour when documents reference the artifact. `artifact_only` (default) returns 409 `artifact_in_use` if any non-deleted documents reference it. `with_documents` cascades a soft-delete to those documents first. |
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 200 | Artifact deleted (or delete failed at the backend). |
+| 400 | Input validation error |
+| 404 | Artifact not found. |
+| 409 | Artifact is referenced by active documents (`error_code: artifact_in_use`) OR another caller holds an active delete claim and this caller never ran the delete (`error_code: delete_in_flight`, `retryable: true`). |
 | 500 | Internal server error |
 
 ---
@@ -362,6 +476,8 @@ Evaluate decay candidates. dry_run=false archives them.
 | 200 | Decay evaluation + archived count. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -430,6 +546,8 @@ Expand a list of memory IDs into full objects.
 | 200 | Expanded memories array. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -461,6 +579,8 @@ Look up the trust level for a (user, agent) pair.
 | 200 | Agent id + trust level. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -491,6 +611,67 @@ Aggregate mutation statistics for a user's memory store.
 | 200 | Mutation summary. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
+
+---
+
+## Fetch a single document by UUID.
+
+Source: https://docs.atomicstrata.ai/api-reference/http/get-document
+
+# Fetch a single document by UUID.
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `getDocument` from the vendored `atomicmemory-core` spec.
+
+**GET** `/v1/documents/{id}`
+
+Fetch a single document by UUID.
+
+## Parameters
+
+| In | Name | Required | Type | Description |
+|---|---|---|---|---|
+| path | `id` | yes | string |  |
+| query | `user_id` | yes | string |  |
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 200 | Document record. |
+| 400 | Input validation error |
+| 404 | Document not found |
+| 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
+
+---
+
+## Read upload + index byte caps and raw-storage capability.
+
+Source: https://docs.atomicstrata.ai/api-reference/http/get-document-limits
+
+# Read upload + index byte caps and raw-storage capability.
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `getDocumentLimits` from the vendored `atomicmemory-core` spec.
+
+**GET** `/v1/documents/limits`
+
+Public preflight surface. Clients call this to size requests and decide whether to attempt a managed-blob upload. The values are a composition-time snapshot of the runtime config; no PII, no per-user state. Mirrors the auth posture of `/health`.
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 200 | Document limits + raw_storage capability. |
+| 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -506,15 +687,7 @@ Mirrors OpenAPI operation `getLessonStats` from the vendored `atomicmemory-core`
 
 **GET** `/v1/memories/lessons/stats`
 
-Return the count of currently active lessons for a user, broken
-down by lesson type — a lightweight per-user health signal. A
-lesson is a recorded failure pattern (blocked injection, low-trust
-write, high-confidence contradiction, or user report) that future
-retrievals filter against. See [Lessons](/platform/lessons) for
-background. Use this endpoint to surface a count badge or alert
-on spikes (e.g. sustained growth in `injection_blocked`) without
-exposing the raw pattern text — use `GET /v1/memories/lessons`
-for the full rows.
+Lesson statistics for a user.
 
 ## Parameters
 
@@ -529,6 +702,8 @@ for the full rows.
 | 200 | Stats. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -563,6 +738,8 @@ Fetch a single memory by UUID.
 | 400 | Input validation error |
 | 404 | Memory not found |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -594,6 +771,8 @@ Per-memory version history.
 | 200 | Audit trail. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -647,6 +826,8 @@ Recent mutations for a user, limit-bounded.
 | 200 | Recent mutations. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -677,6 +858,8 @@ Get deferred-mutation reconciliation status.
 | 200 | Status payload. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -707,6 +890,153 @@ Aggregate memory statistics for a user.
 | 200 | Stats payload. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
+
+---
+
+## Read an artifact metadata projection.
+
+Source: https://docs.atomicstrata.ai/api-reference/http/get-storage-artifact
+
+# Read an artifact metadata projection.
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `getStorageArtifact` from the vendored `atomicmemory-core` spec.
+
+**GET** `/v1/storage/artifacts/{id}`
+
+Read an artifact metadata projection.
+
+## Parameters
+
+| In | Name | Required | Type | Description |
+|---|---|---|---|---|
+| path | `id` | yes | string |  |
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 200 | Artifact metadata. |
+| 404 | Artifact not found. |
+| 500 | Internal server error |
+
+---
+
+## Read the raw bytes for a managed artifact.
+
+Source: https://docs.atomicstrata.ai/api-reference/http/get-storage-artifact-content
+
+# Read the raw bytes for a managed artifact.
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `getStorageArtifactContent` from the vendored `atomicmemory-core` spec.
+
+**GET** `/v1/storage/artifacts/{id}/content`
+
+Returns the artifact bytes for managed-mode artifacts. Pointer-mode artifacts return 409 `pointer_content_not_managed` — the server never proxies pointer content.
+
+## Parameters
+
+| In | Name | Required | Type | Description |
+|---|---|---|---|---|
+| path | `id` | yes | string |  |
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 200 | Raw bytes. |
+| 404 | Artifact not found. |
+| 409 | Pointer-mode artifact; fetch the URI directly. |
+| 500 | Internal server error |
+| 503 | Managed storage is disabled for this deployment. |
+
+---
+
+## Read the direct storage API capability snapshot.
+
+Source: https://docs.atomicstrata.ai/api-reference/http/get-storage-capabilities
+
+# Read the direct storage API capability snapshot.
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `getStorageCapabilities` from the vendored `atomicmemory-core` spec.
+
+**GET** `/v1/storage/capabilities`
+
+Public preflight surface for the storage API. Clients call this before attempting a managed-mode artifact upload. The response describes what the direct `/v1/storage/artifacts/*` API supports for the active backend — Filecoin direct managed upload is not yet supported in v1, so every capability flag reports `false` for Filecoin here. Filecoin still has full feature support through document ingestion (see `/v1/documents/limits`).
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 200 | Capability snapshot for the direct storage API. |
+| 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
+
+---
+
+## Chunk + embed text for a registered document.
+
+Source: https://docs.atomicstrata.ai/api-reference/http/index-document
+
+# Chunk + embed text for a registered document.
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `indexDocument` from the vendored `atomicmemory-core` spec.
+
+**POST** `/v1/documents/{id}/index`
+
+Deterministic char-window chunking, batched embeddings via the core embedding provider, and one provenance-linked memory per chunk. Idempotent on byte-identical text under the current chunker_version: the response's `idempotent_skip` flag indicates whether work was performed. A re-index with new text soft-deletes the prior generation of chunks + derived memories before inserting the fresh one.
+
+## Parameters
+
+| In | Name | Required | Type | Description |
+|---|---|---|---|---|
+| path | `id` | yes | string |  |
+
+## Request Body (application/json)
+
+```json
+{
+  "description": "Chunk + embed the supplied text for the registered document, creating one provenance-linked memory per chunk. Idempotent on byte-identical text under the current chunker_version.",
+  "properties": {
+    "text": {
+      "description": "Required. text.",
+      "minLength": 1,
+      "type": "string"
+    },
+    "user_id": {
+      "description": "Required. user_id.",
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_id",
+    "text"
+  ],
+  "type": "object"
+}
+```
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 200 | Indexing result with chunk + memory counts. |
+| 400 | Input validation error |
+| 404 | Document not found |
+| 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -722,7 +1052,7 @@ Mirrors OpenAPI operation `ingestMemory` from the vendored `atomicmemory-core` s
 
 **POST** `/v1/memories/ingest`
 
-Ingest a conversation transcript with full extraction.
+Full-extraction ingest. The `metadata` field on the body schema is **rejected with 400** on this route — caller metadata is only supported on `POST /v1/memories/ingest/quick` with `skip_extraction=true` and no workspace context.
 
 ## Request Body (application/json)
 
@@ -751,12 +1081,22 @@ Ingest a conversation transcript with full extraction.
           }
         ]
       },
-      "description": "Optional per-request overlay on RuntimeConfig. Keys correspond to RuntimeConfig field names; values must be primitives (boolean / number / string / null). Unknown keys are accepted but surfaced via the X-Atomicmem-Unknown-Override-Keys response header and a server-side warning log, they do not cause a 400. Scope: just this request, no server mutation.",
+      "description": "Optional per-request overlay on RuntimeConfig. Keys correspond to RuntimeConfig field names; values must be primitives (boolean / number / string / null). Unknown keys are accepted but surfaced via the X-Atomicmem-Unknown-Override-Keys response header and a server-side warning log — they do not cause a 400. Scope: just this request — no server mutation.",
       "type": "object"
     },
     "conversation": {
       "description": "Required. conversation.",
       "minLength": 1,
+      "type": "string"
+    },
+    "metadata": {
+      "additionalProperties": {},
+      "description": "Caller-supplied metadata, persisted alongside the memory. Honored ONLY on /v1/memories/ingest/quick with skip_extraction=true and no workspace context — rejected with 400 on every other branch. Reserved keys (RESERVED_METADATA_KEYS in repository-types) are rejected. Max 32 KB UTF-8 serialized.",
+      "type": "object"
+    },
+    "session_id": {
+      "description": "Optional thread/session identifier used to scope ingest, search, and list symmetrically.",
+      "maxLength": 256,
       "type": "string"
     },
     "skip_extraction": {
@@ -805,6 +1145,8 @@ Ingest a conversation transcript with full extraction.
 | 200 | Ingest result with extracted facts. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -820,7 +1162,7 @@ Mirrors OpenAPI operation `ingestMemoryQuick` from the vendored `atomicmemory-co
 
 **POST** `/v1/memories/ingest/quick`
 
-Quick ingest (storeVerbatim when skip_extraction=true).
+Quick or verbatim ingest. The `metadata` field is **honored only** when `skip_extraction=true` and no workspace context (`workspace_id` / `agent_id` / `visibility`) is provided; otherwise rejected with 400.
 
 ## Request Body (application/json)
 
@@ -849,12 +1191,22 @@ Quick ingest (storeVerbatim when skip_extraction=true).
           }
         ]
       },
-      "description": "Optional per-request overlay on RuntimeConfig. Keys correspond to RuntimeConfig field names; values must be primitives (boolean / number / string / null). Unknown keys are accepted but surfaced via the X-Atomicmem-Unknown-Override-Keys response header and a server-side warning log, they do not cause a 400. Scope: just this request, no server mutation.",
+      "description": "Optional per-request overlay on RuntimeConfig. Keys correspond to RuntimeConfig field names; values must be primitives (boolean / number / string / null). Unknown keys are accepted but surfaced via the X-Atomicmem-Unknown-Override-Keys response header and a server-side warning log — they do not cause a 400. Scope: just this request — no server mutation.",
       "type": "object"
     },
     "conversation": {
       "description": "Required. conversation.",
       "minLength": 1,
+      "type": "string"
+    },
+    "metadata": {
+      "additionalProperties": {},
+      "description": "Caller-supplied metadata, persisted alongside the memory. Honored ONLY on /v1/memories/ingest/quick with skip_extraction=true and no workspace context — rejected with 400 on every other branch. Reserved keys (RESERVED_METADATA_KEYS in repository-types) are rejected. Max 32 KB UTF-8 serialized.",
+      "type": "object"
+    },
+    "session_id": {
+      "description": "Optional thread/session identifier used to scope ingest, search, and list symmetrically.",
+      "maxLength": 256,
       "type": "string"
     },
     "skip_extraction": {
@@ -903,6 +1255,8 @@ Quick ingest (storeVerbatim when skip_extraction=true).
 | 200 | Ingest result. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -933,6 +1287,115 @@ List open agent conflicts for a user.
 | 200 | Conflicts list. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
+
+---
+
+## List active documents for a user, optionally filtered by source_site.
+
+Source: https://docs.atomicstrata.ai/api-reference/http/list-documents
+
+# List active documents for a user, optionally filtered by source_site.
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `listDocuments` from the vendored `atomicmemory-core` spec.
+
+**GET** `/v1/documents/list`
+
+List active documents for a user, optionally filtered by source_site.
+
+## Parameters
+
+| In | Name | Required | Type | Description |
+|---|---|---|---|---|
+| query | `user_id` | yes | string |  |
+| query | `source_site` | no | string |  |
+| query | `limit` | no | string |  |
+| query | `offset` | no | string |  |
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 200 | Document list with count. |
+| 400 | Input validation error |
+| 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
+
+---
+
+## Cursor-paginated user-scoped document list with status-bucket filter.
+
+Source: https://docs.atomicstrata.ai/api-reference/http/list-documents-for-user
+
+# Cursor-paginated user-scoped document list with status-bucket filter.
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `listDocumentsForUser` from the vendored `atomicmemory-core` spec.
+
+**GET** `/v1/documents`
+
+Returns active documents for the supplied `user_id`, ordered `(created_at DESC, id DESC)`. The opaque `cursor` is the `next_cursor` from the previous page (base64-url JSON tuple); malformed cursors return 400. The `status` query param buckets rows for the recovery surfaces: `'failed'` (any layer failed), `'unsupported'` (extraction marked unsupported), `'pending'` (extraction or semantic_index in pending/running), or `'all'` (default — every active row).
+
+## Parameters
+
+| In | Name | Required | Type | Description |
+|---|---|---|---|---|
+| query | `user_id` | yes | string |  |
+| query | `limit` | no | string |  |
+| query | `cursor` | no | string |  |
+| query | `status` | no | string |  |
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 200 | Cursor-paginated document list. |
+| 400 | Input validation error |
+| 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
+
+---
+
+## Documents WITHOUT non-deleted memories, narrowed by recovery-status filter.
+
+Source: https://docs.atomicstrata.ai/api-reference/http/list-documents-without-memories
+
+# Documents WITHOUT non-deleted memories, narrowed by recovery-status filter.
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `listDocumentsWithoutMemories` from the vendored `atomicmemory-core` spec.
+
+**GET** `/v1/documents/without-memories`
+
+Backs the passport synthetic-row stream and the UI "uploaded but unindexed" surface. A row appears when it has zero non-deleted memories AND at least one layer status sits in the supplied filter. Filter omitted -> server default 'recovery-relevant set (extraction in pending/failed/unsupported, semantic_index in pending/failed, raw_storage in raw_storage_failed). Cursor + limit semantics match `GET /v1/documents`.
+
+## Parameters
+
+| In | Name | Required | Type | Description |
+|---|---|---|---|---|
+| query | `user_id` | yes | string |  |
+| query | `limit` | no | string |  |
+| query | `cursor` | no | string |  |
+| query | `extraction` | no | string |  |
+| query | `semantic_index` | no | string |  |
+| query | `raw_storage` | no | string |  |
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 200 | Cursor-paginated unbacked-document list. |
+| 400 | Input validation error |
+| 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -948,14 +1411,7 @@ Mirrors OpenAPI operation `listLessons` from the vendored `atomicmemory-core` sp
 
 **GET** `/v1/memories/lessons`
 
-List every active "lesson" for a user, newest first. A lesson is a
-recorded failure pattern (blocked prompt-injection attempt,
-low-trust write, high-confidence contradiction, or user report)
-that future retrievals match against by embedding similarity to
-warn or block known-bad queries. See [Lessons](/platform/lessons)
-for the full concept guide, including what gets recorded and how
-the search pipeline consumes it. Returns full pattern text — treat
-the response as sensitive.
+List active lessons for a user.
 
 ## Parameters
 
@@ -970,6 +1426,8 @@ the response as sensitive.
 | 200 | Lessons list. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -998,6 +1456,7 @@ List memories for a user (or workspace).
 | query | `agent_id` | no | string |  |
 | query | `source_site` | no | string |  |
 | query | `episode_id` | no | string |  |
+| query | `session_id` | no | string | Optional thread/session identifier used to scope ingest, search, and list symmetrically. |
 
 ## Responses
 
@@ -1006,6 +1465,286 @@ List memories for a user (or workspace).
 | 200 | Paginated memory list. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
+
+---
+
+## Memory-backed passport feed: grouped doc rows + standalone memories.
+
+Source: https://docs.atomicstrata.ai/api-reference/http/list-passport-feed
+
+# Memory-backed passport feed: grouped doc rows + standalone memories.
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `listPassportFeed` from the vendored `atomicmemory-core` spec.
+
+**GET** `/v1/documents/passport-feed`
+
+Single SQL UNION ALL: one row per documentId-with-memories (grouped on `raw_document_id`, joined to `raw_documents` for the status envelope) plus 1:1 standalone-memory rows (memories whose `raw_document_id IS NULL`). Sorted by `(sort_at DESC, sort_id DESC)`; the webapp passport route consumes this as the memory-feed stream of its server-side two-stream merge. Cursor + limit semantics match the other document list routes; opaque `next_cursor` is the tuple of the last consumed row.
+
+## Parameters
+
+| In | Name | Required | Type | Description |
+|---|---|---|---|---|
+| query | `user_id` | yes | string |  |
+| query | `limit` | no | string |  |
+| query | `cursor` | no | string |  |
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 200 | Passport feed page. |
+| 400 | Input validation error |
+| 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
+
+---
+
+## Mark the document as extraction-failed.
+
+Source: https://docs.atomicstrata.ai/api-reference/http/mark-extraction-failure
+
+# Mark the document as extraction-failed.
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `markExtractionFailure` from the vendored `atomicmemory-core` spec.
+
+**POST** `/v1/documents/{id}/extraction-failure`
+
+Service-owned status transition: callers declare *that* extraction failed and *what category* via a bounded `error_code`. The route service-truncates `error_message` to a fixed cap and rejects arbitrary status combinations. Idempotent on retry; 409 on invalid source state with the row's current per-layer status echoed in the response body.
+
+## Parameters
+
+| In | Name | Required | Type | Description |
+|---|---|---|---|---|
+| path | `id` | yes | string |  |
+
+## Request Body (application/json)
+
+```json
+{
+  "additionalProperties": false,
+  "description": "Constrained transition body for the extraction-failure route. The route loads the row under a per-document advisory lock, verifies the current state is one of the allowed source states, and writes `extraction_status=\"failed\"` + `semantic_index_status=\"not_required\"` + a sanitised `last_error.layer=\"extraction\"`. 409 on invalid transitions; idempotent on repeat for already-failed rows.",
+  "properties": {
+    "error_code": {
+      "description": "Bounded extraction-layer failure code. Open-ended exception messages ride on `error_message`; this code is what the UI / metrics layer pivots on.",
+      "enum": [
+        "parser_threw",
+        "parser_timeout",
+        "parser_oom",
+        "unsupported_encoding",
+        "corrupt_input",
+        "unknown"
+      ],
+      "type": "string"
+    },
+    "error_message": {
+      "type": "string"
+    },
+    "user_id": {
+      "description": "Required. user_id.",
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_id",
+    "error_code",
+    "error_message"
+  ],
+  "type": "object"
+}
+```
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 200 | Marker write acknowledgement; durable row echoed. |
+| 400 | Input validation error |
+| 404 | Document not found |
+| 409 | Invalid extraction state transition. The response body echoes `current.{raw_storage_status,extraction_status,semantic_index_status}` so the caller can reason about retries. |
+| 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
+
+---
+
+## Mark the document as index-failed.
+
+Source: https://docs.atomicstrata.ai/api-reference/http/mark-index-failure
+
+# Mark the document as index-failed.
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `markIndexFailure` from the vendored `atomicmemory-core` spec.
+
+**POST** `/v1/documents/{id}/index-failure`
+
+Service-owned status transition. The `index_text_too_large` code on a `extraction_status='pending'` row atomically advances extraction to `'complete'` AND writes `semantic_index_status='failed'` so the durable row reflects the upload-pipeline sequence. Idempotent on retry; 409 on invalid source state.
+
+## Parameters
+
+| In | Name | Required | Type | Description |
+|---|---|---|---|---|
+| path | `id` | yes | string |  |
+
+## Request Body (application/json)
+
+```json
+{
+  "additionalProperties": false,
+  "description": "Constrained transition body for the index-failure route. Permitted transitions: (a) `extraction_status=\"complete\"` + `semantic_index_status=\"pending\"` -> writes `semantic_index_status=\"failed\"`; (b) `extraction_status=\"pending\"` + `semantic_index_status=\"pending\"` AND `error_code=\"index_text_too_large\"` -> atomically writes `extraction_status=\"complete\"` + `semantic_index_status=\"failed\"`; (c) idempotent retry on already-failed rows. Any other state returns 409.",
+  "properties": {
+    "error_code": {
+      "description": "Bounded semantic-index-layer failure code. `index_text_too_large` is the upload-pipeline shortcut for the case where extracted text exceeded the index byte cap before reaching `POST /:id/index`.",
+      "enum": [
+        "index_text_too_large",
+        "extraction_empty",
+        "unknown"
+      ],
+      "type": "string"
+    },
+    "error_message": {
+      "type": "string"
+    },
+    "user_id": {
+      "description": "Required. user_id.",
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_id",
+    "error_code",
+    "error_message"
+  ],
+  "type": "object"
+}
+```
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 200 | Marker write acknowledgement; durable row echoed. |
+| 400 | Input validation error |
+| 404 | Document not found |
+| 409 | Invalid index state transition; current per-layer status echoed. |
+| 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
+
+---
+
+## Register a pointer artifact or upload a managed artifact.
+
+Source: https://docs.atomicstrata.ai/api-reference/http/put-storage-artifact
+
+# Register a pointer artifact or upload a managed artifact.
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `putStorageArtifact` from the vendored `atomicmemory-core` spec.
+
+**POST** `/v1/storage/artifacts`
+
+Pointer mode sends a JSON body with `mode: "pointer"` plus a caller-supplied `uri`; the server stores the reference but NEVER fetches the URI. Managed mode sends the raw bytes with `?mode=managed[&disclose_content_hash=true]` and an optional `X-AtomicMemory-Metadata` base64-JSON header. Filecoin direct managed uploads return 501 in v1.
+
+## Request Body (application/json)
+
+```json
+{
+  "description": "Discriminated union over put-artifact mode.",
+  "oneOf": [
+    {
+      "additionalProperties": false,
+      "description": "Pointer-mode artifact registration body. The server stores the URI as a reference; it NEVER fetches the URI itself.",
+      "properties": {
+        "content_hash": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "content_type": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "metadata": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          },
+          "description": "Caller-supplied metadata. Decoded JSON must be ≤4 KiB; encoded header value must be ≤8 KiB when sent via `X-AtomicMemory-Metadata`.",
+          "type": "object"
+        },
+        "mode": {
+          "enum": [
+            "pointer"
+          ],
+          "type": "string"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "uri": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "mode",
+        "uri",
+        "content_type"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "description": "Managed-mode marker. The route uses query params for the managed-mode contract; the body is raw bytes, not JSON. Included in the discriminated union so a managed-mode JSON body (caller mistake) parses cleanly and is rejected at the route layer.",
+      "properties": {
+        "mode": {
+          "enum": [
+            "managed"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "mode"
+      ],
+      "type": "object"
+    }
+  ]
+}
+```
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 201 | Artifact created. |
+| 400 | Input validation error |
+| 411 | Content-Length is required for managed uploads. |
+| 413 | Managed upload body exceeds the configured cap. |
+| 500 | Internal server error |
+| 501 | Direct Filecoin managed upload is not supported in v1. |
+| 503 | Managed storage is disabled for this deployment. |
 
 ---
 
@@ -1043,6 +1782,152 @@ Reconcile deferred mutations for a user (or all users when user_id is absent).
 | 200 | Reconciliation result. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
+
+---
+
+## Register a pointer-only document.
+
+Source: https://docs.atomicstrata.ai/api-reference/http/register-document
+
+# Register a pointer-only document.
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `registerDocument` from the vendored `atomicmemory-core` spec.
+
+**POST** `/v1/documents`
+
+Idempotent on (user_id, source_site, provider, external_id, provider_version). Returns 201 on first registration; 200 on a re-register that matches an active row. Registration accepts `storage_mode = 'pointer_only'`; managed_blob and inline_small_text return 400.
+
+## Request Body (application/json)
+
+```json
+{
+  "additionalProperties": false,
+  "description": "Register a document pointer. Document registration accepts pointer_only mode; managed_blob and inline_small_text return 400.",
+  "properties": {
+    "account_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "consent_policy": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "content_hash": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "display_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "external_id": {
+      "description": "Required. external_id.",
+      "minLength": 1,
+      "type": "string"
+    },
+    "external_uri": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "extraction_status": {
+      "description": "Initial extraction-layer state at register time. 'pending' = caller intends to extract; 'not_required' = pointer-only flow (default); 'unsupported' = caller knows the file type cannot be extracted. Service-owned values ('running', 'complete', 'failed') are rejected.",
+      "enum": [
+        "pending",
+        "not_required",
+        "unsupported"
+      ],
+      "type": "string"
+    },
+    "metadata": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "mime_type": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provider": {
+      "description": "Required. provider.",
+      "minLength": 1,
+      "type": "string"
+    },
+    "provider_version": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "retention_policy": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "semantic_index_status": {
+      "description": "Initial semantic-index-layer state at register time. 'pending' = caller intends to index; 'not_required' = no indexing planned. Service-owned transitions handle 'running', 'complete', 'failed', 'stale'.",
+      "enum": [
+        "pending",
+        "not_required"
+      ],
+      "type": "string"
+    },
+    "size_bytes": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "source_modified_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "source_site": {
+      "description": "Required. source_site.",
+      "minLength": 1,
+      "type": "string"
+    },
+    "storage_mode": {
+      "enum": [
+        "pointer_only"
+      ],
+      "type": "string"
+    },
+    "user_id": {
+      "description": "Required. user_id.",
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_id",
+    "source_site",
+    "provider",
+    "external_id"
+  ],
+  "type": "object"
+}
+```
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 200 | Idempotent re-registration; document already existed. |
+| 201 | Document registered. |
+| 400 | Input validation error |
+| 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -1058,14 +1943,7 @@ Mirrors OpenAPI operation `reportLesson` from the vendored `atomicmemory-core` s
 
 **POST** `/v1/memories/lessons/report`
 
-Record a `user_reported` lesson on behalf of the caller. Used when
-a user clicks "this memory is wrong / harmful" or an operator
-sweep finds bad content the automatic detectors missed. The
-recorded pattern is embedded and consulted by future retrievals
-for the same user; `severity: 'critical'` causes subsequent
-matching queries to be refused outright, lower severities annotate
-the response with a warning. See [Lessons](/platform/lessons) for
-background.
+Report a new lesson.
 
 ## Request Body (application/json)
 
@@ -1105,6 +1983,8 @@ background.
 | 200 | Lesson id. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -1153,6 +2033,8 @@ Delete all memories for a given user + source_site.
 | 200 | Reset result. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -1205,6 +2087,8 @@ Resolve a specific conflict with one of the three enum variants.
 | 200 | Resolution confirmation. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -1270,7 +2154,7 @@ Full semantic search with optional temporal / retrieval-mode / token-budget cont
           }
         ]
       },
-      "description": "Optional per-request overlay on RuntimeConfig. Keys correspond to RuntimeConfig field names; values must be primitives (boolean / number / string / null). Unknown keys are accepted but surfaced via the X-Atomicmem-Unknown-Override-Keys response header and a server-side warning log, they do not cause a 400. Scope: just this request, no server mutation.",
+      "description": "Optional per-request overlay on RuntimeConfig. Keys correspond to RuntimeConfig field names; values must be primitives (boolean / number / string / null). Unknown keys are accepted but surfaced via the X-Atomicmem-Unknown-Override-Keys response header and a server-side warning log — they do not cause a 400. Scope: just this request — no server mutation.",
       "type": "object"
     },
     "limit": {
@@ -1294,11 +2178,22 @@ Full semantic search with optional temporal / retrieval-mode / token-budget cont
       ],
       "type": "string"
     },
+    "session_id": {
+      "description": "Optional thread/session identifier used to scope ingest, search, and list symmetrically.",
+      "maxLength": 256,
+      "type": "string"
+    },
     "skip_repair": {
       "type": "boolean"
     },
     "source_site": {
       "type": "string"
+    },
+    "threshold": {
+      "description": "Optional normalized relevance threshold. Results below this semantic relevance floor are excluded before injection packaging.",
+      "maximum": 1,
+      "minimum": 0,
+      "type": "number"
     },
     "token_budget": {
       "maximum": 50000,
@@ -1339,6 +2234,8 @@ Full semantic search with optional temporal / retrieval-mode / token-budget cont
 | 200 | Search results with injection_text and citations. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -1404,7 +2301,7 @@ Latency-optimized search (skips LLM repair loop). ~88% lower latency than /searc
           }
         ]
       },
-      "description": "Optional per-request overlay on RuntimeConfig. Keys correspond to RuntimeConfig field names; values must be primitives (boolean / number / string / null). Unknown keys are accepted but surfaced via the X-Atomicmem-Unknown-Override-Keys response header and a server-side warning log, they do not cause a 400. Scope: just this request, no server mutation.",
+      "description": "Optional per-request overlay on RuntimeConfig. Keys correspond to RuntimeConfig field names; values must be primitives (boolean / number / string / null). Unknown keys are accepted but surfaced via the X-Atomicmem-Unknown-Override-Keys response header and a server-side warning log — they do not cause a 400. Scope: just this request — no server mutation.",
       "type": "object"
     },
     "limit": {
@@ -1428,11 +2325,22 @@ Latency-optimized search (skips LLM repair loop). ~88% lower latency than /searc
       ],
       "type": "string"
     },
+    "session_id": {
+      "description": "Optional thread/session identifier used to scope ingest, search, and list symmetrically.",
+      "maxLength": 256,
+      "type": "string"
+    },
     "skip_repair": {
       "type": "boolean"
     },
     "source_site": {
       "type": "string"
+    },
+    "threshold": {
+      "description": "Optional normalized relevance threshold. Results below this semantic relevance floor are excluded before injection packaging.",
+      "maximum": 1,
+      "minimum": 0,
+      "type": "number"
     },
     "token_budget": {
       "maximum": 50000,
@@ -1473,6 +2381,8 @@ Latency-optimized search (skips LLM repair loop). ~88% lower latency than /searc
 | 200 | Search results. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -1532,6 +2442,8 @@ Set the calling user's trust level for a given agent.
 | 200 | Agent id + applied trust level. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
 
 ---
 
@@ -1547,7 +2459,7 @@ Mirrors OpenAPI operation `updateConfig` from the vendored `atomicmemory-core` s
 
 **PUT** `/v1/memories/config`
 
-Set CORE_RUNTIME_CONFIG_MUTATION_ENABLED=true to enable. Startup-only fields (embedding_provider/model, voyage_api_key, voyage_document_model, voyage_query_model, llm_provider/model) return 400 with a `rejected` array listing the offending fields.
+Set CORE_RUNTIME_CONFIG_MUTATION_ENABLED=true to enable. Startup-only fields (embedding_provider/model, llm_provider/model) return 400 with a `rejected` array listing the offending fields.
 
 ## Request Body (application/json)
 
@@ -1567,6 +2479,78 @@ Set CORE_RUNTIME_CONFIG_MUTATION_ENABLED=true to enable. Startup-only fields (em
 | 200 | Applied changes + config snapshot. |
 | 400 | Input validation error OR startup-only fields were supplied. |
 | 410 | Runtime config mutation is disabled in production. |
+| 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
+
+---
+
+## Upload managed raw bytes for a registered document.
+
+Source: https://docs.atomicstrata.ai/api-reference/http/upload-raw-document
+
+# Upload managed raw bytes for a registered document.
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `uploadRawDocument` from the vendored `atomicmemory-core` spec.
+
+**PUT** `/v1/documents/{id}/raw`
+
+Stores the request body as the document's managed blob via the configured `RawContentStore` adapter (`local_fs` or `s3`), and promotes the document row to `storage_mode='managed_blob'` / `raw_storage_status='blob_stored'`. Idempotent on byte-identical input under the same document. Different bytes against an already-stored managed blob return 409 because the managed slot is immutable per row to avoid orphaning the prior blob. Returns 503 when the deployment runs `rawStorageMode='pointer_only'`.
+
+## Parameters
+
+| In | Name | Required | Type | Description |
+|---|---|---|---|---|
+| path | `id` | yes | string |  |
+| query | `user_id` | yes | string |  |
+| query | `content_type` | no | string |  |
+
+## Request Body
+
+See operation schema in the OpenAPI spec.
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 200 | Upload result with storage URI + content hash + size. |
+| 400 | Input validation error |
+| 404 | Document not found |
+| 409 | Conflict: the document already has a managed blob with a different content_hash. Register a fresh document for the new bytes — the existing blob is not overwritten. |
+| 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
+
+---
+
+## Run the backend's verification (head-probe in v1).
+
+Source: https://docs.atomicstrata.ai/api-reference/http/verify-storage-artifact
+
+# Run the backend's verification (head-probe in v1).
+
+> Agent index: [llms.txt](/llms.txt)
+
+Mirrors OpenAPI operation `verifyStorageArtifact` from the vendored `atomicmemory-core` spec.
+
+**POST** `/v1/storage/artifacts/{id}/verify`
+
+Pointer-mode artifacts always return `kind: 'unsupported'` — the server never fetches the registered URI.
+
+## Parameters
+
+| In | Name | Required | Type | Description |
+|---|---|---|---|---|
+| path | `id` | yes | string |  |
+
+## Responses
+
+| Status | Description |
+|---|---|
+| 200 | Verification result. |
+| 404 | Artifact not found. |
 | 500 | Internal server error |
 
 ---
@@ -1918,6 +2902,8 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/claude-code
 
 > Agent index: [llms.txt](/llms.txt)
 
+The `atomicmemory-integrations` marketplace source is temporary for Claude Code plugin discovery. Source and development now live in the [`atomicstrata/atomicmemory`](https://github.com/atomicstrata/atomicmemory/tree/main/plugins/claude-code) monorepo.
+
 AtomicMemory integrates with Claude Code through the shared MCP server, a memory protocol skill, and Claude-specific lifecycle hooks.
 
 ## Deployment targets
@@ -1971,7 +2957,18 @@ claude plugin marketplace add atomicstrata/atomicmemory-integrations
 claude plugin install claude-code@atomicmemory
 ```
 
-### 2. Use Claude Code for local extraction
+The `atomicmemory-integrations` marketplace source is temporary for Claude Code plugin discovery. Source and development now live in the [`plugins/claude-code`](https://github.com/atomicstrata/atomicmemory/tree/main/plugins/claude-code) monorepo package.
+
+### 2. Start AtomicMemory core
+
+Start [local AtomicMemory core](/quickstart) first, or set `ATOMICMEMORY_API_URL` and `ATOMICMEMORY_API_KEY` to an existing AtomicMemory service:
+
+```bash
+export ATOMICMEMORY_API_URL="http://127.0.0.1:3050"
+export ATOMICMEMORY_API_KEY="local-dev-key"
+```
+
+### 3. Use Claude Code for local extraction
 
 ```bash
 claude auth login
@@ -1979,17 +2976,17 @@ export LLM_PROVIDER=claude-code
 export EMBEDDING_PROVIDER=transformers
 ```
 
-Uses your Claude Code login; no separate Anthropic API key needed.
+Set `LLM_PROVIDER=claude-code` and `EMBEDDING_PROVIDER=transformers` in the environment that starts the AtomicMemory core process. That lets core use your Claude Code login for extraction; it does not make the plugin start core for you.
 
-### 3. Start Claude Code
+### 4. Start Claude Code
 
 ```bash
 claude
 ```
 
-The plugin starts the local runtime and exposes memory tools.
+The plugin connects to the configured AtomicMemory service and exposes memory tools.
 
-### 4. Verify memory tools
+### 5. Verify memory tools
 
 Ask Claude Code to list its MCP tools. You should see:
 
@@ -2003,16 +3000,16 @@ Ask Claude Code to list its MCP tools. You should see:
 -   **Cross-session recall.** Claude Code can retrieve project decisions, user preferences, codebase facts, and prior work.
 -   **Prompt-time retrieval.** `UserPromptSubmit` searches memory before the model turn and injects matching memories as untrusted reference context.
 -   **Deterministic capture.** `PostCompact`, `Stop`, and `TaskCompleted` store compact session records without asking the model to reconstruct everything.
--   **Auto-managed local runtime.** For local use, the plugin starts and manages the AtomicMemory runtime instead of requiring a separate core quickstart.
+-   **Local or external core.** For local use, start AtomicMemory core with the quickstart first. For team deployments, point `ATOMICMEMORY_API_URL` and `ATOMICMEMORY_API_KEY` at the service your team manages.
 -   **Memory protocol skill.** The installed skill teaches Claude when to search, when to ingest, and when to create handoff snapshots.
 -   **Scoped memory.** `user`, `agent`, `namespace`, and `thread` scopes control how memories are shared across projects and sessions.
 -   **Backend-agnostic SDK path.** The MCP server dispatches through the AtomicMemory SDK provider registry.
 
 ## Modes of operation
 
-### Local auto-managed mode
+### Local core mode
 
-Use local auto-managed mode for personal Claude Code memory. The plugin starts AtomicMemory locally, binds Claude Code hooks to it, and can use `LLM_PROVIDER=claude-code` for extraction without a separate Anthropic API key.
+Use local core mode for personal Claude Code memory. Start AtomicMemory core with the [quickstart](/quickstart), then install the plugin so Claude Code can call the MCP server and lifecycle hooks. The core process can use `LLM_PROVIDER=claude-code` for extraction without a separate Anthropic API key.
 
 | Capability | Included |
 | --- | --- |
@@ -2020,7 +3017,7 @@ Use local auto-managed mode for personal Claude Code memory. The plugin starts A
 | Memory protocol skill | Yes |
 | Prompt-time retrieval hooks | Yes |
 | Session capture hooks | Yes |
-| Local runtime management | Yes |
+| Local runtime management | No; start core separately |
 
 ### External AtomicMemory mode
 
@@ -2081,12 +3078,12 @@ Default behavior:
 
 | Setting | Default |
 | --- | --- |
-| Runtime | Auto-managed local AtomicMemory |
-| Service URL | Local plugin-managed runtime |
+| Runtime | User-managed AtomicMemory core |
+| Service URL | `http://127.0.0.1:3050` unless `ATOMICMEMORY_API_URL` is set |
 | User scope | Claude Code user/session context, then local fallback |
 | Agent scope | `claude-code` |
 | Capture level | `balanced` |
-| Memory extraction provider | `LLM_PROVIDER=claude-code` for personal local use, or an API-backed provider |
+| Memory extraction provider | Configured on the AtomicMemory core process |
 
 Common overrides:
 
@@ -2097,7 +3094,7 @@ export ATOMICMEMORY_SCOPE_NAMESPACE="repo-or-project"
 export ATOMICMEMORY_CAPTURE_LEVEL=balanced
 ```
 
-`LLM_PROVIDER` and `EMBEDDING_PROVIDER` configure the local AtomicMemory core runtime. Claude Code hooks and the MCP server use `ATOMICMEMORY_*` values for service URL, scope, and capture policy. The `claude-code` provider consumes the user's Claude Code / Claude subscription limits and is for personal local use.
+`LLM_PROVIDER` and `EMBEDDING_PROVIDER` configure the AtomicMemory core process. Claude Code hooks and the MCP server use `ATOMICMEMORY_*` values for service URL, scope, and capture policy. The `claude-code` provider consumes the user's Claude Code / Claude subscription limits and is for personal local use.
 
 When you are running your own shared AtomicMemory runtime instead of using Claude Code's local authenticated session, configure an API-backed extraction provider:
 
@@ -2113,12 +3110,12 @@ Advanced values:
 
 | Env var | Used by | Purpose |
 | --- | --- | --- |
-| `LLM_PROVIDER` | local runtime | Extraction provider. Use `claude-code` for personal local use without a separate Anthropic API key. |
-| `LLM_MODEL` | local runtime | Optional model override. Omit when using Claude Code's configured default. |
-| `EMBEDDING_PROVIDER` | local runtime | Embedding provider. Use `transformers` or `ollama` to avoid an OpenAI embedding key. |
-| `ANTHROPIC_API_KEY` | local runtime | Anthropic provider key for production or team usage. |
-| `OPENAI_API_KEY` | local runtime | OpenAI provider key. |
-| `ATOMICMEMORY_API_URL` | MCP + hooks | External AtomicMemory service URL. When omitted, the plugin uses local auto-managed mode. |
+| `LLM_PROVIDER` | core process | Extraction provider. Use `claude-code` for personal local use without a separate Anthropic API key. |
+| `LLM_MODEL` | core process | Optional model override. Omit when using Claude Code's configured default. |
+| `EMBEDDING_PROVIDER` | core process | Embedding provider. Use `transformers` or `ollama` to avoid an OpenAI embedding key. |
+| `ANTHROPIC_API_KEY` | core process | Anthropic provider key for production or team usage. |
+| `OPENAI_API_KEY` | core process | OpenAI provider key. |
+| `ATOMICMEMORY_API_URL` | MCP + hooks | AtomicMemory service URL. Defaults to local core at `http://127.0.0.1:3050` when omitted. |
 | `ATOMICMEMORY_API_KEY` | MCP + hooks | API key for an external AtomicMemory service. |
 | `ATOMICMEMORY_SCOPE_USER` | MCP + hooks | User identity override. |
 | `ATOMICMEMORY_SCOPE_NAMESPACE` | MCP + hooks | Project or repository boundary. |
@@ -2287,7 +3284,7 @@ Requires [local AtomicMemory core](/quickstart) at `http://127.0.0.1:3050`. The 
 
 ### Plugin mode
 
-Use plugin mode when you want Codex to receive both the MCP tools and the memory protocol skill. The Codex plugin assets in `atomicmemory-integrations/plugins/codex` are source-distributed today; use the MCP quick start above for public setup, or point a team/repo Codex marketplace at a local clone when you want the skill installed through Codex's plugin system.
+Use plugin mode when you want Codex to receive both the MCP tools and the memory protocol skill. The Codex plugin assets in [`plugins/codex`](https://github.com/atomicstrata/atomicmemory/tree/main/plugins/codex) are source-distributed today; use the MCP quick start above for public setup, or point a team/repo Codex marketplace at a local clone when you want the skill installed through Codex's plugin system.
 
 | Capability | Included |
 | --- | --- |
@@ -2384,7 +3381,7 @@ The installed skill guides Codex to:
 | No memory tools appear | Run `codex mcp list`, restart Codex after changing MCP config, and confirm `npx -y @atomicmemory/mcp-server` works in the same environment. |
 | Local core is not running | Start it with the [Core Quickstart](/quickstart), then retry the MCP tool call. |
 | Connection failed | Verify local AtomicMemory core is running at `http://127.0.0.1:3050`, or verify `ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, and `ATOMICMEMORY_API_KEY` for remote/provider-specific setups. |
-| Plugin not found | Plugin mode is source-distributed today; confirm the marketplace entry points at a local clone of `atomicmemory-integrations/plugins/codex`. |
+| Plugin not found | Plugin mode is source-distributed today; confirm the marketplace entry points at a local clone of `atomicmemory/plugins/codex`. |
 | Unexpected memory sharing | Add `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or `ATOMICMEMORY_SCOPE_THREAD`. |
 
 ## Development
@@ -2760,8 +3757,8 @@ export ATOMICMEMORY_SCOPE_USER="pip"
 For local provider development, install from a checkout instead:
 
 ```bash
-git clone https://github.com/atomicstrata/atomicmemory-integrations.git
-cd atomicmemory-integrations
+git clone https://github.com/atomicstrata/atomicmemory.git
+cd atomicmemory
 
 mkdir -p "$HERMES_HOME/plugins/memory"
 ln -s "$(pwd)/plugins/hermes" "$HERMES_HOME/plugins/memory/atomicmemory"
@@ -2942,8 +3939,8 @@ Set `apiUrl` only when OpenClaw should connect to a different AtomicMemory servi
 For local plugin development, install from a checkout instead:
 
 ```bash
-git clone https://github.com/atomicstrata/atomicmemory-integrations.git
-cd atomicmemory-integrations
+git clone https://github.com/atomicstrata/atomicmemory.git
+cd atomicmemory
 pnpm install
 pnpm --filter @atomicmemory/openclaw-plugin build
 openclaw plugins install -l ./plugins/openclaw
@@ -3017,7 +4014,7 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/langchain-js
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory is planned as a LangChain adapter that can work either as memory infrastructure or as explicit agent tools.
+AtomicMemory provides LangChain JS helpers and agent tools around an injected AtomicMemory SDK client.
 
 ## Deployment targets
 
@@ -3059,45 +4056,46 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/langchain-js/local
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory support for LangChain JS is planned. The adapter will expose durable semantic memory through LangChain-native memory and tool surfaces.
-
-Planned
-
-This adapter is on the roadmap. The API below is the intended shape, not a shipped package.
+AtomicMemory support for LangChain JS exposes durable semantic memory through helper functions and LangChain-native tools.
 
 ## What you get
 
--   **Chat memory surface.** A planned `AtomicMemoryChatMemory` for chains that expect LangChain memory.
--   **Agent tools.** Planned `memory_search` and `memory_ingest` tools for agent executors.
--   **Backend-agnostic SDK path.** The adapter will use the AtomicMemory SDK provider registry.
+-   **Agent tools.** `memory_search` and `memory_ingest` tools built with `@langchain/core/tools`.
+-   **Helper functions.** `searchMemory()` and `ingestTurn()` for custom chains, callbacks, and LCEL steps.
+-   **Backend-agnostic SDK path.** The adapter uses the AtomicMemory SDK provider registry through your `MemoryClient`.
 
-## Planned API
+## Install
 
-| API | Purpose |
-| --- | --- |
-| `AtomicMemoryChatMemory` | Drop-in chat memory for chains that expect LangChain memory. |
-| `createAtomicMemoryTools()` | Create `memory_search` and `memory_ingest` tools for agent executors. |
+```bash
+npm install @atomicmemory/langchain @atomicmemory/sdk @langchain/core@^0.3.80 zod
+```
 
-## Intended usage
+## Usage
 
 ```ts
-import { ConversationChain } from 'langchain/chains';
-import { AtomicMemoryChatMemory } from '@atomicmemory/langchain';
+import { createMemoryTools } from '@atomicmemory/langchain';
 
-const memory = new AtomicMemoryChatMemory({
-  client: memoryClient,
-  scope: { user: userId },
+const { searchTool, ingestTool } = createMemoryTools(memoryClient, {
+  scope: { user: userId, namespace: 'support' },
+});
+```
+
+```ts
+import { ingestTurn, searchMemory } from '@atomicmemory/langchain';
+
+const recalled = await searchMemory(memoryClient, {
+  query: userMessage,
+  scope: { user: userId, namespace: 'support' },
 });
 
-const chain = new ConversationChain({ llm, memory });
+await ingestTurn(memoryClient, {
+  messages,
+  completion,
+  scope: { user: userId, namespace: 'support' },
+});
 ```
 
-```ts
-import { createAtomicMemoryTools } from '@atomicmemory/langchain';
-
-const tools = createAtomicMemoryTools(memoryClient, { scope });
-const executor = await initializeAgentExecutorWithOptions([...tools], llm);
-```
+Scope is fixed when the tools are created, so the model cannot rebind tools to another user.
 
 ## See also
 
@@ -3114,7 +4112,7 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/langgraph-js
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory is planned as a LangGraph integration that complements graph-scoped checkpointers with durable memory across runs.
+AtomicMemory provides LangGraph node factories that add durable retrieval and ingest beside graph-scoped checkpointers.
 
 ## Deployment targets
 
@@ -3156,43 +4154,42 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/langgraph-js/local
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory support for LangGraph JS is planned. The adapter will provide durable semantic memory next to LangGraph's run-scoped checkpointers.
-
-Planned
-
-This adapter is on the roadmap. The API below is the intended shape, not a shipped package.
+AtomicMemory support for LangGraph JS provides durable semantic memory next to LangGraph's run-scoped checkpointers.
 
 ## What you get
 
--   **Durable graph memory.** A planned store-like memory layer that survives across graph runs.
--   **Helper nodes.** Planned `recall` and `remember` nodes for retrieval and ingest inside a graph.
--   **Backend-agnostic SDK path.** The adapter will use the AtomicMemory SDK provider registry.
+-   **Retrieve node.** `createMemoryRetrieveNode()` searches memory before the model step.
+-   **Ingest node.** `createMemoryIngestNode()` persists the completed turn after the model step.
+-   **Backend-agnostic SDK path.** The adapter uses the AtomicMemory SDK provider registry through your `MemoryClient`.
 
-## Planned API
+## Install
 
-| API | Purpose |
-| --- | --- |
-| `AtomicMemoryStore` | Store-like access to durable memories across graph runs. |
-| `recall` / `remember` helper nodes | Graph nodes for retrieval and ingest inside a state graph. |
-
-## Intended usage
-
-```ts
-import { StateGraph } from '@langchain/langgraph';
-import { AtomicMemoryStore } from '@atomicmemory/langgraph';
-
-const store = new AtomicMemoryStore({
-  client: memoryClient,
-  scope: { user: userId },
-});
-
-const graph = new StateGraph(State)
-  .addNode('recall', recallNode)
-  .addNode('respond', respondNode)
-  .compile({ store });
+```bash
+npm install @atomicmemory/langgraph @atomicmemory/sdk @langchain/langgraph@^0.4.0
 ```
 
-Nodes can call `store.search(query)` and `store.put(fact)` directly, or use the planned helper nodes.
+## Usage
+
+```ts
+import {
+  createMemoryIngestNode,
+  createMemoryRetrieveNode,
+} from '@atomicmemory/langgraph';
+
+const recall = createMemoryRetrieveNode(memoryClient, {
+  scope: { user: userId },
+  getQuery: (state) => state.messages.at(-1)?.content ?? '',
+  applyContext: (_state, context) => ({ memoryContext: context }),
+});
+
+const remember = createMemoryIngestNode(memoryClient, {
+  scope: { user: userId },
+  getMessages: (state) => state.messages,
+  getCompletion: (state) => state.finalAnswer,
+});
+```
+
+The factories emit plain async state-node functions, so they can be registered with your graph without adding runtime framework ownership to AtomicMemory.
 
 ## See also
 
@@ -3209,7 +4206,7 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/mastra
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory is planned as a Mastra adapter that maps Mastra memory hooks onto AtomicMemory retrieval and ingest primitives.
+AtomicMemory provides Mastra tools that map agent memory search and ingest onto AtomicMemory retrieval and ingest primitives.
 
 ## Deployment targets
 
@@ -3251,42 +4248,31 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/mastra/local
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory support for Mastra is planned. The adapter will wrap `MemoryClient` as a Mastra-compatible memory provider for agents that need durable recall across runs.
-
-Planned
-
-This adapter is on the roadmap. The API below is the intended shape, not a shipped package.
+AtomicMemory support for Mastra exposes durable memory search and ingest as Mastra tools around your SDK `MemoryClient`.
 
 ## What you get
 
--   **Mastra memory adapter.** A planned `atomicMemory()` adapter for Mastra agents.
--   **Lifecycle mapping.** Mastra memory hooks mapped to AtomicMemory search and ingest.
--   **Backend-agnostic SDK path.** The adapter will use the AtomicMemory SDK provider registry.
+-   **Agent tools.** `memory_search` and `memory_ingest` tools created with Mastra `createTool()`.
+-   **Helper functions.** `searchMemory()` and `ingestTurn()` for custom Mastra workflows.
+-   **Backend-agnostic SDK path.** The adapter uses the AtomicMemory SDK provider registry through your `MemoryClient`.
 
-## Planned API
+## Install
 
-| API | Purpose |
-| --- | --- |
-| `atomicMemory()` | Mastra memory adapter backed by AtomicMemory. |
-| Lifecycle mapping | Mastra memory hooks mapped to AtomicMemory search and ingest. |
-| Telemetry envelope | AtomicMemory observability surfaced through Mastra telemetry. |
+```bash
+npm install @atomicmemory/mastra @atomicmemory/sdk @mastra/core zod
+```
 
-## Intended usage
+## Usage
 
 ```ts
-import { Agent } from '@mastra/core';
-import { atomicMemory } from '@atomicmemory/mastra';
+import { createMemoryTools } from '@atomicmemory/mastra';
 
-const agent = new Agent({
-  name: 'support',
-  instructions: 'Answer with durable customer context when relevant.',
-  model,
-  memory: atomicMemory({
-    client: memoryClient,
-    scope: { user: userId, namespace: 'support' },
-  }),
+const { searchTool, ingestTool } = createMemoryTools(memoryClient, {
+  scope: { user: userId, namespace: 'support' },
 });
 ```
+
+Register those tools on the Mastra agent that should be able to retrieve or store durable memory. Scope is fixed when the tools are created, so the model cannot rebind tools to another user.
 
 ## See also
 
@@ -3712,25 +4698,25 @@ AtomicMemory adds durable memory to coding agents, AI frameworks, and terminal w
 
 | Integration | Best for | Status | Docs |
 | --- | --- | --- | --- |
-| Claude Code | MCP tools, memory skill, lifecycle hooks, and local runtime management. | Published; cloud planned. | [Overview](/integrations/coding-agents/claude-code) · [Local](/integrations/coding-agents/claude-code/local) |
+| Claude Code | MCP tools, memory skill, lifecycle hooks, and local core connection. | Published; hosted mode planned. | [Overview](/integrations/coding-agents/claude-code) · [Local](/integrations/coding-agents/claude-code/local) |
 | Codex | MCP tools plus a memory protocol skill for task-start recall and handoffs. | Manual; packaged plugin planned. | [Overview](/integrations/coding-agents/codex) · [Local](/integrations/coding-agents/codex/local) |
-| OpenClaw | Plugin and skill bundle for cross-channel agent memory. | Published; cloud planned. | [Overview](/integrations/coding-agents/openclaw) · [Local](/integrations/coding-agents/openclaw/local) |
-| Hermes Agent | Native Python memory provider with prefetch, turn sync, and explicit tools. | Packaged provider; cloud planned. | [Overview](/integrations/coding-agents/hermes) · [Local](/integrations/coding-agents/hermes/local) |
+| OpenClaw | Plugin and skill bundle for cross-channel agent memory. | Published; hosted mode planned. | [Overview](/integrations/coding-agents/openclaw) · [Local](/integrations/coding-agents/openclaw/local) |
+| Hermes Agent | Native Python memory provider with prefetch, turn sync, and explicit tools. | Packaged provider; hosted mode planned. | [Overview](/integrations/coding-agents/hermes) · [Local](/integrations/coding-agents/hermes/local) |
 | Cursor | MCP tools plus Cursor rules for durable memory behavior. | Available manually via MCP + rules; packaged plugin planned. | [Overview](/integrations/coding-agents/cursor) · [Local](/integrations/coding-agents/cursor/local) |
 
 ## Frameworks
 
 | Integration | Best for | Status | Docs |
 | --- | --- | --- | --- |
-| Vercel AI SDK | Pre-call retrieval and post-call ingest around `generateText` / `streamText`. | Published; cloud planned. | [Overview](/integrations/frameworks/vercel-ai-sdk) · [Local](/integrations/frameworks/vercel-ai-sdk/local) |
-| OpenAI Agents SDK | Memory-aware `run()` flows and optional function tools. | Published; cloud planned. | [Overview](/integrations/frameworks/openai-agents) · [Local](/integrations/frameworks/openai-agents/local) |
-| LangChain (JS) | Planned chat memory and tool wrappers. | Planned. | [Overview](/integrations/frameworks/langchain-js) · [Local](/integrations/frameworks/langchain-js/local) |
-| LangGraph (JS) | Planned graph-store memory layer next to checkpointers. | Planned. | [Overview](/integrations/frameworks/langgraph-js) · [Local](/integrations/frameworks/langgraph-js/local) |
-| Mastra | Planned Mastra memory adapter. | Planned. | [Overview](/integrations/frameworks/mastra) · [Local](/integrations/frameworks/mastra/local) |
+| Vercel AI SDK | Pre-call retrieval and post-call ingest around `generateText` / `streamText`. | Published; hosted mode planned. | [Overview](/integrations/frameworks/vercel-ai-sdk) · [Local](/integrations/frameworks/vercel-ai-sdk/local) |
+| OpenAI Agents SDK | Memory-aware `run()` flows and optional function tools. | Published; hosted mode planned. | [Overview](/integrations/frameworks/openai-agents) · [Local](/integrations/frameworks/openai-agents/local) |
+| LangChain (JS) | Memory search/ingest tools and helper functions around an injected SDK client. | Published; hosted mode planned. | [Overview](/integrations/frameworks/langchain-js) · [Local](/integrations/frameworks/langchain-js/local) |
+| LangGraph (JS) | Retrieve and ingest node factories for durable memory inside state graphs. | Published; hosted mode planned. | [Overview](/integrations/frameworks/langgraph-js) · [Local](/integrations/frameworks/langgraph-js/local) |
+| Mastra | Memory search/ingest tools for Mastra agents. | Published; hosted mode planned. | [Overview](/integrations/frameworks/mastra) · [Local](/integrations/frameworks/mastra/local) |
 
 ## Shared memory surface
 
-Most coding-agent integrations use the shared MCP server from [`atomicmemory-integrations`](https://github.com/atomicstrata/atomicmemory-integrations):
+Most coding-agent integrations use the shared MCP server from the [`packages/mcp-server`](https://github.com/atomicstrata/atomicmemory/tree/main/packages/mcp-server) package in the public [`atomicstrata/atomicmemory`](https://github.com/atomicstrata/atomicmemory) monorepo:
 
 | Tool | Purpose |
 | --- | --- |
@@ -3749,7 +4735,11 @@ Integrations are backend-agnostic. The SDK's [`MemoryProvider` model](/sdk/conce
 
 ## Contributing
 
-Source lives at [`atomicstrata/atomicmemory-integrations`](https://github.com/atomicstrata/atomicmemory-integrations).
+Source lives in the public [`atomicstrata/atomicmemory`](https://github.com/atomicstrata/atomicmemory) monorepo:
+
+-   MCP server: [`packages/mcp-server`](https://github.com/atomicstrata/atomicmemory/tree/main/packages/mcp-server)
+-   Framework adapters: [`adapters/*`](https://github.com/atomicstrata/atomicmemory/tree/main/adapters)
+-   Host plugins: [`plugins/*`](https://github.com/atomicstrata/atomicmemory/tree/main/plugins)
 
 ---
 
@@ -6183,8 +7173,8 @@ If you're building in TypeScript or JavaScript, the [SDK Quickstart](/sdk/quicks
 If you are changing core itself, clone the repo and run the source stack instead of the published image:
 
 ```bash
-git clone https://github.com/atomicstrata/atomicmemory-core.git
-cd atomicmemory-core
+git clone https://github.com/atomicstrata/atomicmemory.git
+cd atomicmemory/packages/core
 cp .env.example .env
 # edit .env, set OPENAI_API_KEY
 docker compose up -d --build

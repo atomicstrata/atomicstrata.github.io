@@ -104,8 +104,8 @@ export ATOMICMEMORY_SCOPE_USER="pip"
 For local provider development, install from a checkout instead:
 
 ```bash
-git clone https://github.com/atomicstrata/atomicmemory-integrations.git
-cd atomicmemory-integrations
+git clone https://github.com/atomicstrata/atomicmemory.git
+cd atomicmemory
 
 mkdir -p "$HERMES_HOME/plugins/memory"
 ln -s "$(pwd)/plugins/hermes" "$HERMES_HOME/plugins/memory/atomicmemory"

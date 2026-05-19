@@ -76,8 +76,8 @@ Set `apiUrl` only when OpenClaw should connect to a different AtomicMemory servi
 For local plugin development, install from a checkout instead:
 
 ```bash
-git clone https://github.com/atomicstrata/atomicmemory-integrations.git
-cd atomicmemory-integrations
+git clone https://github.com/atomicstrata/atomicmemory.git
+cd atomicmemory
 pnpm install
 pnpm --filter @atomicmemory/openclaw-plugin build
 openclaw plugins install -l ./plugins/openclaw

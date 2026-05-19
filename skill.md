@@ -32,9 +32,9 @@ Three discovery surfaces are exposed at the site root:
 
 Append `.md` to any documentation URL to fetch the markdown form directly. For example:
 
-- `https://docs.atomicmemory.ai/platform/providers.md`
-- `https://docs.atomicmemory.ai/sdk/overview.md`
-- `https://docs.atomicmemory.ai/api-reference/http/ingest-memory.md`
+- `https://docs.atomicstrata.ai/platform/providers.md`
+- `https://docs.atomicstrata.ai/sdk/overview.md`
+- `https://docs.atomicstrata.ai/api-reference/http/ingest-memory.md`
 
 The HTML form (without the `.md` suffix) is for human readers; cite that URL when linking.
 
@@ -52,10 +52,10 @@ The HTML form (without the `.md` suffix) is for human readers; cite that URL whe
 
 ## Citation guidance
 
-- Link to the canonical HTML URL when citing in an answer (e.g. `https://docs.atomicmemory.ai/platform/providers`)
+- Link to the canonical HTML URL when citing in an answer (e.g. `https://docs.atomicstrata.ai/platform/providers`)
 - Link to the `.md` URL only when the consumer is another agent fetching the markdown
 - Prefer linking the HTTP API operation page (`/api-reference/http/<op>`) over the OpenAPI yaml when describing endpoint shape
-- Source code lives at `https://github.com/atomicmemory/atomicmemory-core` (engine) and `https://github.com/atomicmemory/atomicmemory-sdk` (TypeScript SDK), link there for implementation specifics not covered in docs
+- Source code lives in the public monorepo at `https://github.com/atomicstrata/atomicmemory`, with the engine in `packages/core`, the TypeScript SDK in `packages/sdk`, framework adapters in `adapters/*`, and host plugins in `plugins/*`
 
 ## MCP
 

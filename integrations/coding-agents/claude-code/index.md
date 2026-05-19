@@ -2,6 +2,8 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
+The `atomicmemory-integrations` marketplace source is temporary for Claude Code plugin discovery. Source and development now live in the [`atomicstrata/atomicmemory`](https://github.com/atomicstrata/atomicmemory/tree/main/plugins/claude-code) monorepo.
+
 AtomicMemory integrates with Claude Code through the shared MCP server, a memory protocol skill, and Claude-specific lifecycle hooks.
 
 ## Deployment targets

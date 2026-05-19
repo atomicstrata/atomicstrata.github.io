@@ -43,7 +43,7 @@
 
 ## Integrations
 
-- [Claude Code](https://docs.atomicstrata.ai/integrations/coding-agents/claude-code.md): AtomicMemory integrates with Claude Code through the shared MCP server, a memory protocol skill, and Claude-specific lifecycle hooks.
+- [Claude Code](https://docs.atomicstrata.ai/integrations/coding-agents/claude-code.md): The atomicmemory-integrations marketplace source is temporary for Claude Code
 - [Claude Code Cloud](https://docs.atomicstrata.ai/integrations/coding-agents/claude-code/cloud.md): Cloud deployment details for Claude Code are coming soon.
 - [Claude Code Local](https://docs.atomicstrata.ai/integrations/coding-agents/claude-code/local.md): Give Claude Code persistent, cross-session memory backed by AtomicMemory.
 - [Codex](https://docs.atomicstrata.ai/integrations/coding-agents/codex.md): AtomicMemory integrates with Codex through the shared MCP server and a memory protocol skill that handles retrieval, durable writes, and handoff snapshots.
@@ -58,15 +58,15 @@
 - [OpenClaw](https://docs.atomicstrata.ai/integrations/coding-agents/openclaw.md): AtomicMemory integrates with OpenClaw as a plugin and skill bundle backed by the same MCP server and SDK primitives used elsewhere in the platform.
 - [OpenClaw Cloud](https://docs.atomicstrata.ai/integrations/coding-agents/openclaw/cloud.md): Cloud deployment details for OpenClaw are coming soon.
 - [OpenClaw Local](https://docs.atomicstrata.ai/integrations/coding-agents/openclaw/local.md): Give OpenClaw persistent, cross-channel memory backed by AtomicMemory.
-- [LangChain (JS)](https://docs.atomicstrata.ai/integrations/frameworks/langchain-js.md): AtomicMemory is planned as a LangChain adapter that can work either as memory infrastructure or as explicit agent tools.
+- [LangChain (JS)](https://docs.atomicstrata.ai/integrations/frameworks/langchain-js.md): AtomicMemory provides LangChain JS helpers and agent tools around an injected AtomicMemory SDK client.
 - [LangChain (JS) Cloud](https://docs.atomicstrata.ai/integrations/frameworks/langchain-js/cloud.md): Cloud deployment details for the LangChain adapter are coming soon.
-- [LangChain (JS) Local](https://docs.atomicstrata.ai/integrations/frameworks/langchain-js/local.md): AtomicMemory support for LangChain JS is planned.
-- [LangGraph (JS)](https://docs.atomicstrata.ai/integrations/frameworks/langgraph-js.md): AtomicMemory is planned as a LangGraph integration that complements graph-scoped checkpointers with durable memory across runs.
+- [LangChain (JS) Local](https://docs.atomicstrata.ai/integrations/frameworks/langchain-js/local.md): AtomicMemory support for LangChain JS exposes durable semantic memory through helper functions and LangChain-native tools.
+- [LangGraph (JS)](https://docs.atomicstrata.ai/integrations/frameworks/langgraph-js.md): AtomicMemory provides LangGraph node factories that add durable retrieval and ingest beside graph-scoped checkpointers.
 - [LangGraph (JS) Cloud](https://docs.atomicstrata.ai/integrations/frameworks/langgraph-js/cloud.md): Cloud deployment details for the LangGraph adapter are coming soon.
-- [LangGraph (JS) Local](https://docs.atomicstrata.ai/integrations/frameworks/langgraph-js/local.md): AtomicMemory support for LangGraph JS is planned.
-- [Mastra](https://docs.atomicstrata.ai/integrations/frameworks/mastra.md): AtomicMemory is planned as a Mastra adapter that maps Mastra memory hooks onto AtomicMemory retrieval and ingest primitives.
+- [LangGraph (JS) Local](https://docs.atomicstrata.ai/integrations/frameworks/langgraph-js/local.md): AtomicMemory support for LangGraph JS provides durable semantic memory next to LangGraph's run-scoped checkpointers.
+- [Mastra](https://docs.atomicstrata.ai/integrations/frameworks/mastra.md): AtomicMemory provides Mastra tools that map agent memory search and ingest onto AtomicMemory retrieval and ingest primitives.
 - [Mastra Cloud](https://docs.atomicstrata.ai/integrations/frameworks/mastra/cloud.md): Cloud deployment details for the Mastra adapter are coming soon.
-- [Mastra Local](https://docs.atomicstrata.ai/integrations/frameworks/mastra/local.md): AtomicMemory support for Mastra is planned.
+- [Mastra Local](https://docs.atomicstrata.ai/integrations/frameworks/mastra/local.md): AtomicMemory support for Mastra exposes durable memory search and ingest as Mastra tools around your SDK MemoryClient.
 - [OpenAI Agents SDK](https://docs.atomicstrata.ai/integrations/frameworks/openai-agents.md): AtomicMemory integrates with the OpenAI Agents SDK through an adapter that augments run input with memory and ingests completed turns back into durable storage.
 - [OpenAI Agents SDK Cloud](https://docs.atomicstrata.ai/integrations/frameworks/openai-agents/cloud.md): Cloud deployment details for the OpenAI Agents SDK adapter are coming soon.
 - [OpenAI Agents SDK Local](https://docs.atomicstrata.ai/integrations/frameworks/openai-agents/local.md): Give OpenAI Agents SDK applications persistent memory backed by AtomicMemory.
@@ -82,32 +82,51 @@
 - [Memory-cap status for a user's store.](https://docs.atomicstrata.ai/api-reference/http/check-memory-cap.md): Memory-cap status for a user's store.
 - [Compute consolidation candidates; optionally execute (execute=true).](https://docs.atomicstrata.ai/api-reference/http/consolidate-memories.md): Compute consolidation candidates; optionally execute (execute=true).
 - [Conventions](https://docs.atomicstrata.ai/api-reference/http/conventions.md): General conventions that apply across every /v1/memories/ and /v1/agents/ route.
-- [Deactivate a lesson by id.](https://docs.atomicstrata.ai/api-reference/http/deactivate-lesson.md): Mark a lesson inactive (`active = false`).
+- [Deactivate a lesson by id.](https://docs.atomicstrata.ai/api-reference/http/deactivate-lesson.md): Deactivate a lesson by id.
+- [Delete one allowed disposable test scope.](https://docs.atomicstrata.ai/api-reference/http/delete-admin-scope.md): Mounted only when CORE_ADMIN_API_KEY and CORE_TEST_SCOPE_ALLOW_PATTERN are both configured.
+- [Soft-delete (tombstone) a document.](https://docs.atomicstrata.ai/api-reference/http/delete-document.md): Idempotent: a second DELETE on the same id returns success with `already_deleted: true`.
 - [Delete a single memory by UUID.](https://docs.atomicstrata.ai/api-reference/http/delete-memory.md): Delete a single memory by UUID.
+- [Soft-delete an artifact (optionally cascading documents).](https://docs.atomicstrata.ai/api-reference/http/delete-storage-artifact.md): Reference-aware delete.
 - [Evaluate decay candidates. dry_run=false archives them.](https://docs.atomicstrata.ai/api-reference/http/evaluate-decay.md): Evaluate decay candidates.
 - [Expand a list of memory IDs into full objects.](https://docs.atomicstrata.ai/api-reference/http/expand-memories.md): Expand a list of memory IDs into full objects.
 - [Look up the trust level for a (user, agent) pair.](https://docs.atomicstrata.ai/api-reference/http/get-agent-trust.md): Look up the trust level for a (user, agent) pair.
 - [Aggregate mutation statistics for a user's memory store.](https://docs.atomicstrata.ai/api-reference/http/get-audit-summary.md): Aggregate mutation statistics for a user's memory store.
-- [Lesson statistics for a user.](https://docs.atomicstrata.ai/api-reference/http/get-lesson-stats.md): Return the count of currently active lessons for a user, broken
+- [Fetch a single document by UUID.](https://docs.atomicstrata.ai/api-reference/http/get-document.md): Fetch a single document by UUID.
+- [Read upload + index byte caps and raw-storage capability.](https://docs.atomicstrata.ai/api-reference/http/get-document-limits.md): Public preflight surface.
+- [Lesson statistics for a user.](https://docs.atomicstrata.ai/api-reference/http/get-lesson-stats.md): Lesson statistics for a user.
 - [Fetch a single memory by UUID.](https://docs.atomicstrata.ai/api-reference/http/get-memory.md): Fetch a single memory by UUID.
 - [Per-memory version history.](https://docs.atomicstrata.ai/api-reference/http/get-memory-audit-trail.md): Per-memory version history.
 - [Subsystem liveness + current runtime config snapshot.](https://docs.atomicstrata.ai/api-reference/http/get-memory-health.md): Subsystem liveness + current runtime config snapshot.
 - [Recent mutations for a user, limit-bounded.](https://docs.atomicstrata.ai/api-reference/http/get-recent-audit.md): Recent mutations for a user, limit-bounded.
 - [Get deferred-mutation reconciliation status.](https://docs.atomicstrata.ai/api-reference/http/get-reconcile-status.md): Get deferred-mutation reconciliation status.
 - [Aggregate memory statistics for a user.](https://docs.atomicstrata.ai/api-reference/http/get-stats.md): Aggregate memory statistics for a user.
-- [Ingest a conversation transcript with full extraction.](https://docs.atomicstrata.ai/api-reference/http/ingest-memory.md): Ingest a conversation transcript with full extraction.
-- [Quick ingest (storeVerbatim when skip_extraction=true).](https://docs.atomicstrata.ai/api-reference/http/ingest-memory-quick.md): Quick ingest (storeVerbatim when skip_extraction=true).
+- [Read an artifact metadata projection.](https://docs.atomicstrata.ai/api-reference/http/get-storage-artifact.md): Read an artifact metadata projection.
+- [Read the raw bytes for a managed artifact.](https://docs.atomicstrata.ai/api-reference/http/get-storage-artifact-content.md): Returns the artifact bytes for managed-mode artifacts.
+- [Read the direct storage API capability snapshot.](https://docs.atomicstrata.ai/api-reference/http/get-storage-capabilities.md): Public preflight surface for the storage API.
+- [Chunk + embed text for a registered document.](https://docs.atomicstrata.ai/api-reference/http/index-document.md): Deterministic char-window chunking, batched embeddings via the core embedding provider, and one provenance-linked memory per chunk.
+- [Ingest a conversation transcript with full extraction.](https://docs.atomicstrata.ai/api-reference/http/ingest-memory.md): Full-extraction ingest.
+- [Quick ingest (storeVerbatim when skip_extraction=true).](https://docs.atomicstrata.ai/api-reference/http/ingest-memory-quick.md): Quick or verbatim ingest.
 - [List open agent conflicts for a user.](https://docs.atomicstrata.ai/api-reference/http/list-agent-conflicts.md): List open agent conflicts for a user.
-- [List active lessons for a user.](https://docs.atomicstrata.ai/api-reference/http/list-lessons.md): List every active 'lesson' for a user, newest first.
+- [List active documents for a user, optionally filtered by source_site.](https://docs.atomicstrata.ai/api-reference/http/list-documents.md): List active documents for a user, optionally filtered by source_site.
+- [Cursor-paginated user-scoped document list with status-bucket filter.](https://docs.atomicstrata.ai/api-reference/http/list-documents-for-user.md): Returns active documents for the supplied `user_id`, ordered `(created_at DESC, id DESC)`.
+- [Documents WITHOUT non-deleted memories, narrowed by recovery-status filter.](https://docs.atomicstrata.ai/api-reference/http/list-documents-without-memories.md): Backs the passport synthetic-row stream and the UI 'uploaded but unindexed' surface.
+- [List active lessons for a user.](https://docs.atomicstrata.ai/api-reference/http/list-lessons.md): List active lessons for a user.
 - [List memories for a user (or workspace).](https://docs.atomicstrata.ai/api-reference/http/list-memories.md): List memories for a user (or workspace).
+- [Memory-backed passport feed: grouped doc rows + standalone memories.](https://docs.atomicstrata.ai/api-reference/http/list-passport-feed.md): Single SQL UNION ALL: one row per documentId-with-memories (grouped on `raw_document_id`, joined to `raw_documents` for the status envelope) plus 1:1 standalone-memory rows (memories whose `raw_document_id IS NULL`).
+- [Mark the document as extraction-failed.](https://docs.atomicstrata.ai/api-reference/http/mark-extraction-failure.md): Service-owned status transition: callers declare *that* extraction failed and *what category* via a bounded `error_code`.
+- [Mark the document as index-failed.](https://docs.atomicstrata.ai/api-reference/http/mark-index-failure.md): Service-owned status transition.
+- [Register a pointer artifact or upload a managed artifact.](https://docs.atomicstrata.ai/api-reference/http/put-storage-artifact.md): Pointer mode sends a JSON body with `mode: 'pointer'` plus a caller-supplied `uri`; the server stores the reference but NEVER fetches the URI.
 - [Reconcile deferred mutations for a user (or all users when user_id is absent).](https://docs.atomicstrata.ai/api-reference/http/reconcile-deferred.md): Reconcile deferred mutations for a user (or all users when user_id is absent).
-- [Report a new lesson.](https://docs.atomicstrata.ai/api-reference/http/report-lesson.md): Record a `user_reported` lesson on behalf of the caller.
+- [Register a pointer-only document.](https://docs.atomicstrata.ai/api-reference/http/register-document.md): Idempotent on (user_id, source_site, provider, external_id, provider_version).
+- [Report a new lesson.](https://docs.atomicstrata.ai/api-reference/http/report-lesson.md): Report a new lesson.
 - [Delete all memories for a given user + source_site.](https://docs.atomicstrata.ai/api-reference/http/reset-by-source.md): Delete all memories for a given user + source_site.
 - [Resolve a specific conflict with one of the three enum variants.](https://docs.atomicstrata.ai/api-reference/http/resolve-agent-conflict.md): Resolve a specific conflict with one of the three enum variants.
 - [Full semantic search with optional temporal / retrieval-mode / token-budget controls.](https://docs.atomicstrata.ai/api-reference/http/search-memories.md): Full semantic search with optional temporal / retrieval-mode / token-budget controls.
 - [Latency-optimized search (skips LLM repair loop). ~88% lower latency than /search.](https://docs.atomicstrata.ai/api-reference/http/search-memories-fast.md): Latency-optimized search (skips LLM repair loop).
 - [Set the calling user's trust level for a given agent.](https://docs.atomicstrata.ai/api-reference/http/set-agent-trust.md): Set the calling user's trust level for a given agent.
 - [Mutate runtime config (dev/test only). 410 when disabled.](https://docs.atomicstrata.ai/api-reference/http/update-config.md): Set CORE_RUNTIME_CONFIG_MUTATION_ENABLED=true to enable.
+- [Upload managed raw bytes for a registered document.](https://docs.atomicstrata.ai/api-reference/http/upload-raw-document.md): Stores the request body as the document's managed blob via the configured `RawContentStore` adapter (`local_fs` or `s3`), and promotes the document row to `storage_mode='managed_blob'` / `raw_storage_status='blob_stored'`.
+- [Run the backend's verification (head-probe in v1).](https://docs.atomicstrata.ai/api-reference/http/verify-storage-artifact.md): Pointer-mode artifacts always return `kind: 'unsupported'` — the server never fetches the registered URI.
 
 ## Other
 

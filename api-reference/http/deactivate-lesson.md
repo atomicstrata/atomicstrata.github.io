@@ -6,12 +6,7 @@ Mirrors OpenAPI operation `deactivateLesson` from the vendored `atomicmemory-cor
 
 **DELETE** `/v1/memories/lessons/{id}`
 
-Mark a lesson inactive (`active = false`). Active is the only
-state that affects retrieval, so a deactivated lesson is ignored
-by future search-time checks but preserved in the database for
-audit. Use this to reverse a false positive or retire a lesson
-whose source has been investigated. See [Lessons](/platform/lessons)
-for background.
+Deactivate a lesson by id.
 
 ## Parameters
 
@@ -27,3 +22,5 @@ for background.
 | 200 | Success. |
 | 400 | Input validation error |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |

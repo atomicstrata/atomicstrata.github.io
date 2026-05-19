@@ -133,8 +133,8 @@ If you're building in TypeScript or JavaScript, the [SDK Quickstart](/sdk/quicks
 If you are changing core itself, clone the repo and run the source stack instead of the published image:
 
 ```bash
-git clone https://github.com/atomicstrata/atomicmemory-core.git
-cd atomicmemory-core
+git clone https://github.com/atomicstrata/atomicmemory.git
+cd atomicmemory/packages/core
 cp .env.example .env
 # edit .env, set OPENAI_API_KEY
 docker compose up -d --build

@@ -8,4 +8,4 @@ Version: `1.0.0`
 
 Semantic memory engine for AI applications. Request/response bodies are JSON; fields on the wire use snake_case.
 
-License: [MIT](https://opensource.org/licenses/MIT)
+License: [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)

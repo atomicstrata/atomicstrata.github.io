@@ -44,7 +44,7 @@ Requires [local AtomicMemory core](/quickstart) at `http://127.0.0.1:3050`. The 
 
 ### Plugin mode
 
-Use plugin mode when you want Codex to receive both the MCP tools and the memory protocol skill. The Codex plugin assets in `atomicmemory-integrations/plugins/codex` are source-distributed today; use the MCP quick start above for public setup, or point a team/repo Codex marketplace at a local clone when you want the skill installed through Codex's plugin system.
+Use plugin mode when you want Codex to receive both the MCP tools and the memory protocol skill. The Codex plugin assets in [`plugins/codex`](https://github.com/atomicstrata/atomicmemory/tree/main/plugins/codex) are source-distributed today; use the MCP quick start above for public setup, or point a team/repo Codex marketplace at a local clone when you want the skill installed through Codex's plugin system.
 
 | Capability | Included |
 | --- | --- |
@@ -141,7 +141,7 @@ The installed skill guides Codex to:
 | No memory tools appear | Run `codex mcp list`, restart Codex after changing MCP config, and confirm `npx -y @atomicmemory/mcp-server` works in the same environment. |
 | Local core is not running | Start it with the [Core Quickstart](/quickstart), then retry the MCP tool call. |
 | Connection failed | Verify local AtomicMemory core is running at `http://127.0.0.1:3050`, or verify `ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, and `ATOMICMEMORY_API_KEY` for remote/provider-specific setups. |
-| Plugin not found | Plugin mode is source-distributed today; confirm the marketplace entry points at a local clone of `atomicmemory-integrations/plugins/codex`. |
+| Plugin not found | Plugin mode is source-distributed today; confirm the marketplace entry points at a local clone of `atomicmemory/plugins/codex`. |
 | Unexpected memory sharing | Add `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or `ATOMICMEMORY_SCOPE_THREAD`. |
 
 ## Development

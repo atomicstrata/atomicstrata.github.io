@@ -8,25 +8,25 @@ AtomicMemory adds durable memory to coding agents, AI frameworks, and terminal w
 
 | Integration | Best for | Status | Docs |
 | --- | --- | --- | --- |
-| Claude Code | MCP tools, memory skill, lifecycle hooks, and local runtime management. | Published; cloud planned. | [Overview](/integrations/coding-agents/claude-code) · [Local](/integrations/coding-agents/claude-code/local) |
+| Claude Code | MCP tools, memory skill, lifecycle hooks, and local core connection. | Published; hosted mode planned. | [Overview](/integrations/coding-agents/claude-code) · [Local](/integrations/coding-agents/claude-code/local) |
 | Codex | MCP tools plus a memory protocol skill for task-start recall and handoffs. | Manual; packaged plugin planned. | [Overview](/integrations/coding-agents/codex) · [Local](/integrations/coding-agents/codex/local) |
-| OpenClaw | Plugin and skill bundle for cross-channel agent memory. | Published; cloud planned. | [Overview](/integrations/coding-agents/openclaw) · [Local](/integrations/coding-agents/openclaw/local) |
-| Hermes Agent | Native Python memory provider with prefetch, turn sync, and explicit tools. | Packaged provider; cloud planned. | [Overview](/integrations/coding-agents/hermes) · [Local](/integrations/coding-agents/hermes/local) |
+| OpenClaw | Plugin and skill bundle for cross-channel agent memory. | Published; hosted mode planned. | [Overview](/integrations/coding-agents/openclaw) · [Local](/integrations/coding-agents/openclaw/local) |
+| Hermes Agent | Native Python memory provider with prefetch, turn sync, and explicit tools. | Packaged provider; hosted mode planned. | [Overview](/integrations/coding-agents/hermes) · [Local](/integrations/coding-agents/hermes/local) |
 | Cursor | MCP tools plus Cursor rules for durable memory behavior. | Available manually via MCP + rules; packaged plugin planned. | [Overview](/integrations/coding-agents/cursor) · [Local](/integrations/coding-agents/cursor/local) |
 
 ## Frameworks
 
 | Integration | Best for | Status | Docs |
 | --- | --- | --- | --- |
-| Vercel AI SDK | Pre-call retrieval and post-call ingest around `generateText` / `streamText`. | Published; cloud planned. | [Overview](/integrations/frameworks/vercel-ai-sdk) · [Local](/integrations/frameworks/vercel-ai-sdk/local) |
-| OpenAI Agents SDK | Memory-aware `run()` flows and optional function tools. | Published; cloud planned. | [Overview](/integrations/frameworks/openai-agents) · [Local](/integrations/frameworks/openai-agents/local) |
-| LangChain (JS) | Planned chat memory and tool wrappers. | Planned. | [Overview](/integrations/frameworks/langchain-js) · [Local](/integrations/frameworks/langchain-js/local) |
-| LangGraph (JS) | Planned graph-store memory layer next to checkpointers. | Planned. | [Overview](/integrations/frameworks/langgraph-js) · [Local](/integrations/frameworks/langgraph-js/local) |
-| Mastra | Planned Mastra memory adapter. | Planned. | [Overview](/integrations/frameworks/mastra) · [Local](/integrations/frameworks/mastra/local) |
+| Vercel AI SDK | Pre-call retrieval and post-call ingest around `generateText` / `streamText`. | Published; hosted mode planned. | [Overview](/integrations/frameworks/vercel-ai-sdk) · [Local](/integrations/frameworks/vercel-ai-sdk/local) |
+| OpenAI Agents SDK | Memory-aware `run()` flows and optional function tools. | Published; hosted mode planned. | [Overview](/integrations/frameworks/openai-agents) · [Local](/integrations/frameworks/openai-agents/local) |
+| LangChain (JS) | Memory search/ingest tools and helper functions around an injected SDK client. | Published; hosted mode planned. | [Overview](/integrations/frameworks/langchain-js) · [Local](/integrations/frameworks/langchain-js/local) |
+| LangGraph (JS) | Retrieve and ingest node factories for durable memory inside state graphs. | Published; hosted mode planned. | [Overview](/integrations/frameworks/langgraph-js) · [Local](/integrations/frameworks/langgraph-js/local) |
+| Mastra | Memory search/ingest tools for Mastra agents. | Published; hosted mode planned. | [Overview](/integrations/frameworks/mastra) · [Local](/integrations/frameworks/mastra/local) |
 
 ## Shared memory surface
 
-Most coding-agent integrations use the shared MCP server from [`atomicmemory-integrations`](https://github.com/atomicstrata/atomicmemory-integrations):
+Most coding-agent integrations use the shared MCP server from the [`packages/mcp-server`](https://github.com/atomicstrata/atomicmemory/tree/main/packages/mcp-server) package in the public [`atomicstrata/atomicmemory`](https://github.com/atomicstrata/atomicmemory) monorepo:
 
 | Tool | Purpose |
 | --- | --- |
@@ -45,4 +45,8 @@ Integrations are backend-agnostic. The SDK's [`MemoryProvider` model](/sdk/conce
 
 ## Contributing
 
-Source lives at [`atomicstrata/atomicmemory-integrations`](https://github.com/atomicstrata/atomicmemory-integrations).
+Source lives in the public [`atomicstrata/atomicmemory`](https://github.com/atomicstrata/atomicmemory) monorepo:
+
+-   MCP server: [`packages/mcp-server`](https://github.com/atomicstrata/atomicmemory/tree/main/packages/mcp-server)
+-   Framework adapters: [`adapters/*`](https://github.com/atomicstrata/atomicmemory/tree/main/adapters)
+-   Host plugins: [`plugins/*`](https://github.com/atomicstrata/atomicmemory/tree/main/plugins)

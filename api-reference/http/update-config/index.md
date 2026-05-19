@@ -6,7 +6,7 @@ Mirrors OpenAPI operation `updateConfig` from the vendored `atomicmemory-core` s
 
 **PUT** `/v1/memories/config`
 
-Set CORE_RUNTIME_CONFIG_MUTATION_ENABLED=true to enable. Startup-only fields (embedding_provider/model, voyage_api_key, voyage_document_model, voyage_query_model, llm_provider/model) return 400 with a `rejected` array listing the offending fields.
+Set CORE_RUNTIME_CONFIG_MUTATION_ENABLED=true to enable. Startup-only fields (embedding_provider/model, llm_provider/model) return 400 with a `rejected` array listing the offending fields.
 
 ## Request Body (application/json)
 
@@ -27,3 +27,5 @@ Set CORE_RUNTIME_CONFIG_MUTATION_ENABLED=true to enable. Startup-only fields (em
 | 400 | Input validation error OR startup-only fields were supplied. |
 | 410 | Runtime config mutation is disabled in production. |
 | 500 | Internal server error |
+| 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
+| 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
