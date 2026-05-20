@@ -9,11 +9,11 @@ Give Claude Code persistent, cross-session memory backed by AtomicMemory. The in
 ### 1. Install the plugin
 
 ```bash
-claude plugin marketplace add atomicstrata/atomicmemory-integrations
+claude plugin marketplace add atomicstrata/atomicmemory --sparse .claude-plugin plugins/claude-code
 claude plugin install claude-code@atomicmemory
 ```
 
-The `atomicmemory-integrations` marketplace source is temporary for Claude Code plugin discovery. Source and development now live in the [`plugins/claude-code`](https://github.com/atomicstrata/atomicmemory/tree/main/plugins/claude-code) monorepo package.
+The Claude Code plugin is discovered from the public AtomicMemory monorepo. Source and development live in the [`plugins/claude-code`](https://github.com/atomicstrata/atomicmemory/tree/main/plugins/claude-code) package.
 
 ### 2. Start AtomicMemory core
 
@@ -99,7 +99,7 @@ Register the published MCP server directly:
   "mcpServers": {
     "atomicmemory": {
       "command": "npx",
-      "args": ["-y", "@atomicmemory/mcp-server"],
+      "args": ["-y", "--package=@atomicmemory/mcp-server", "atomicmemory-mcp"],
       "env": {
         "ATOMICMEMORY_API_URL": "http://127.0.0.1:3050",
         "ATOMICMEMORY_API_KEY": "local-dev-key"
@@ -108,6 +108,8 @@ Register the published MCP server directly:
   }
 }
 ```
+
+After creating the project `.mcp.json`, [approve/trust the project MCP server and verify it with `claude mcp list`](#claude-code-does-not-show-atomicmemory-mcp-tools) before starting a Claude Code session that needs AtomicMemory tools.
 
 | Capability | Included |
 | --- | --- |
@@ -226,9 +228,35 @@ The installed skill guides Claude Code to:
 
 ## Troubleshooting
 
+### Claude Code does not show AtomicMemory MCP tools
+
+If you configured AtomicMemory through a project `.mcp.json`, Claude Code may require the project MCP server to be approved/trusted before the tools are available.
+
+From the project root, run:
+
+```bash
+claude mcp list
+claude mcp get atomicmemory
+```
+
+If Claude Code prompts you to approve the project MCP server, approve it and restart the Claude Code session. If you previously rejected the server, reset the project choices and run the verification commands again:
+
+```bash
+claude mcp reset-project-choices
+```
+
+For non-interactive Docker or CI smoke tests only, use a disposable workspace and create a project-local settings file:
+
+```bash
+mkdir -p .claude
+printf '%s\n' '{"enableAllProjectMcpServers":true}' > .claude/settings.json
+```
+
+Do not use `enableAllProjectMcpServers` casually in normal projects. It trusts all project MCP servers from `.mcp.json`.
+
 | Symptom | Fix |
 | --- | --- |
-| No memory tools appear | Restart Claude Code after installing the plugin or changing MCP config. |
+| No memory tools appear | Restart Claude Code after installing the plugin or changing MCP config. For MCP-only `.mcp.json` setups, verify project trust with `claude mcp list`. |
 | Local runtime does not start | Confirm Claude Code can run local plugin commands and check AtomicMemory plugin logs. |
 | `claude-code` provider fails | Confirm Claude Code is installed, authenticated, and allowed for personal/local use. Use `ANTHROPIC_API_KEY` for production. |
 | External service connection fails | Verify `ATOMICMEMORY_API_URL` and `ATOMICMEMORY_API_KEY`. |

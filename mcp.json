@@ -1,15 +1,16 @@
 {
   "schemaVersion": "2025-03-26",
   "name": "atomicmemory",
-  "description": "AtomicMemory MCP server, exposes memory_search, memory_ingest, and memory_package over MCP. Currently local-install (stdio) only; a hosted HTTP endpoint is on the roadmap.",
+  "description": "AtomicMemory MCP server, exposes memory_search, memory_ingest, memory_package, and memory_list over stdio MCP. The server is published as @atomicmemory/mcp-server and is intended to be launched by agent hosts with npx.",
   "documentation": "https://docs.atomicstrata.ai/integrations/coding-agents/claude-code",
   "transport": {
     "type": "stdio",
     "install": {
-      "method": "local-build",
+      "method": "npx",
       "repository": "https://github.com/atomicstrata/atomicmemory/tree/main/packages/mcp-server",
       "package": "@atomicmemory/mcp-server",
-      "binary": "packages/mcp-server/dist/bin.js",
+      "command": "npx",
+      "args": ["-y", "--package=@atomicmemory/mcp-server", "atomicmemory-mcp"],
       "instructions": "https://docs.atomicstrata.ai/integrations/coding-agents/claude-code"
     }
   },
@@ -25,19 +26,23 @@
     {
       "name": "memory_package",
       "description": "Token-budgeted curated context package. Use when broad context matters more than a single fact lookup."
+    },
+    {
+      "name": "memory_list",
+      "description": "Recent scoped-memory listing. Use when the user asks what memory records exist for a configured scope."
     }
   ],
   "config": {
     "env": [
-      { "name": "ATOMICMEMORY_API_URL", "required": true, "description": "URL of the AtomicMemory core HTTP service." },
-      { "name": "ATOMICMEMORY_API_KEY", "required": true, "secret": true, "description": "API key for the AtomicMemory core service." },
-      { "name": "ATOMICMEMORY_PROVIDER", "required": true, "enum": ["atomicmemory", "mem0"], "description": "Backend provider, atomicmemory for AtomicMemory core, mem0 for the mem0 backend." },
+      { "name": "ATOMICMEMORY_API_URL", "required": false, "description": "URL of the memory backend. Defaults to local AtomicMemory core at http://127.0.0.1:3050 for provider=atomicmemory; required for mem0." },
+      { "name": "ATOMICMEMORY_API_KEY", "required": false, "secret": true, "description": "Optional bearer credential forwarded to providers that require HTTP authorization." },
+      { "name": "ATOMICMEMORY_PROVIDER", "required": false, "enum": ["atomicmemory", "mem0"], "description": "Backend provider. Defaults to atomicmemory." },
       { "name": "ATOMICMEMORY_SCOPE_USER", "required": false, "description": "User scope for the MCP session." },
-      { "name": "ATOMICMEMORY_SCOPE_WORKSPACE", "required": false, "description": "Workspace scope for the MCP session." },
+      { "name": "ATOMICMEMORY_SCOPE_NAMESPACE", "required": false, "description": "Namespace/workspace scope for the MCP session." },
       { "name": "ATOMICMEMORY_SCOPE_AGENT", "required": false, "description": "Agent scope for the MCP session." }
     ]
   },
-  "status": "local-install-only",
+  "status": "published-stdio",
   "hostedEndpoint": null,
   "homepage": "https://docs.atomicstrata.ai",
   "license": "Apache-2.0"

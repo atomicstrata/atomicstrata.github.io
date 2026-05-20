@@ -41,9 +41,13 @@
 - [SDK Overview](https://docs.atomicstrata.ai/sdk/overview.md): A TypeScript client for memory and artifact storage, pluggable across backends.
 - [SDK Quickstart](https://docs.atomicstrata.ai/sdk/quickstart.md): Install, initialize, and make your first ingest and search, with MemoryClient wired to a running atomicmemory-core.
 
+## CLI
+
+- [AtomicMemory CLI](https://docs.atomicstrata.ai/cli.md): atomicmemory is the human- and agent-facing command line for AtomicMemory.
+
 ## Integrations
 
-- [Claude Code](https://docs.atomicstrata.ai/integrations/coding-agents/claude-code.md): The atomicmemory-integrations marketplace source is temporary for Claude Code
+- [Claude Code](https://docs.atomicstrata.ai/integrations/coding-agents/claude-code.md): The Claude Code plugin is discovered from the public AtomicMemory monorepo.
 - [Claude Code Cloud](https://docs.atomicstrata.ai/integrations/coding-agents/claude-code/cloud.md): Cloud deployment details for Claude Code are coming soon.
 - [Claude Code Local](https://docs.atomicstrata.ai/integrations/coding-agents/claude-code/local.md): Give Claude Code persistent, cross-session memory backed by AtomicMemory.
 - [Codex](https://docs.atomicstrata.ai/integrations/coding-agents/codex.md): AtomicMemory integrates with Codex through the shared MCP server and a memory protocol skill that handles retrieval, durable writes, and handoff snapshots.
@@ -127,10 +131,6 @@
 - [Mutate runtime config (dev/test only). 410 when disabled.](https://docs.atomicstrata.ai/api-reference/http/update-config.md): Set CORE_RUNTIME_CONFIG_MUTATION_ENABLED=true to enable.
 - [Upload managed raw bytes for a registered document.](https://docs.atomicstrata.ai/api-reference/http/upload-raw-document.md): Stores the request body as the document's managed blob via the configured `RawContentStore` adapter (`local_fs` or `s3`), and promotes the document row to `storage_mode='managed_blob'` / `raw_storage_status='blob_stored'`.
 - [Run the backend's verification (head-probe in v1).](https://docs.atomicstrata.ai/api-reference/http/verify-storage-artifact.md): Pointer-mode artifacts always return `kind: 'unsupported'` — the server never fetches the registered URI.
-
-## Other
-
-- [AtomicMemory CLI](https://docs.atomicstrata.ai/cli.md): atomicmemory is the human- and agent-facing command line for AtomicMemory.
 
 ## Optional
 

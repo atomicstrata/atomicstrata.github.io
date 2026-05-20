@@ -15,7 +15,7 @@ export ATOMICMEMORY_API_KEY="local-dev-key"
 codex mcp add atomicmemory \
   --env ATOMICMEMORY_API_URL="$ATOMICMEMORY_API_URL" \
   --env ATOMICMEMORY_API_KEY="$ATOMICMEMORY_API_KEY" \
-  -- npx -y @atomicmemory/mcp-server
+  -- npx -y --package=@atomicmemory/mcp-server atomicmemory-mcp
 ```
 
 ### 2. Verify memory tools
@@ -89,7 +89,7 @@ codex mcp add atomicmemory \
   --env ATOMICMEMORY_PROVIDER="$ATOMICMEMORY_PROVIDER" \
   --env ATOMICMEMORY_API_URL="$ATOMICMEMORY_API_URL" \
   --env ATOMICMEMORY_API_KEY="$ATOMICMEMORY_API_KEY" \
-  -- npx -y @atomicmemory/mcp-server
+  -- npx -y --package=@atomicmemory/mcp-server atomicmemory-mcp
 ```
 
 Optional scope overrides:
@@ -138,7 +138,7 @@ The installed skill guides Codex to:
 
 | Symptom | Fix |
 | --- | --- |
-| No memory tools appear | Run `codex mcp list`, restart Codex after changing MCP config, and confirm `npx -y @atomicmemory/mcp-server` works in the same environment. |
+| No memory tools appear | Run `codex mcp list`, restart Codex after changing MCP config, and confirm `npx -y --package=@atomicmemory/mcp-server atomicmemory-mcp` works in the same environment. |
 | Local core is not running | Start it with the [Core Quickstart](/quickstart), then retry the MCP tool call. |
 | Connection failed | Verify local AtomicMemory core is running at `http://127.0.0.1:3050`, or verify `ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, and `ATOMICMEMORY_API_KEY` for remote/provider-specific setups. |
 | Plugin not found | Plugin mode is source-distributed today; confirm the marketplace entry points at a local clone of `atomicmemory/plugins/codex`. |

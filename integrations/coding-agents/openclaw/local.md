@@ -12,7 +12,9 @@ Give OpenClaw persistent, cross-channel memory backed by AtomicMemory. The plugi
 openclaw plugins install @atomicmemory/openclaw-plugin
 ```
 
-### 2. Restart OpenClaw
+### 2. Restart OpenClaw if needed
+
+If OpenClaw is already running, restart the gateway so it loads the newly installed plugin:
 
 ```bash
 openclaw gateway restart

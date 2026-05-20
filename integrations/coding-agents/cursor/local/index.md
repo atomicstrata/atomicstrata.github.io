@@ -16,7 +16,7 @@ Add this to `.cursor/mcp.json` or `~/.cursor/mcp.json`:
     "atomicmemory": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@atomicmemory/mcp-server"],
+      "args": ["-y", "--package=@atomicmemory/mcp-server", "atomicmemory-mcp"],
       "env": {
         "ATOMICMEMORY_API_URL": "http://127.0.0.1:3050",
         "ATOMICMEMORY_API_KEY": "local-dev-key"
