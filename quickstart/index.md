@@ -20,13 +20,13 @@ export OPENAI_API_KEY="sk-..."
 
 docker run -d --pull always \
   --name atomicmemory-core \
-  -p 127.0.0.1:3050:3050 \
+  -p 127.0.0.1:17350:17350 \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
   -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
   ghcr.io/atomicstrata/atomicmemory-core:latest
 ```
 
-The container binds core to `127.0.0.1:3050`. The volume mount persists the embedded Postgres database on your host at `$HOME/.atomicstrata/atomicmemory-docker`, so your local memory data survives container restarts, image upgrades, and container recreation.
+The container binds core to `127.0.0.1:17350`. The volume mount persists the embedded Postgres database on your host at `$HOME/.atomicstrata/atomicmemory-docker`, so your local memory data survives container restarts, image upgrades, and container recreation.
 
 For local Docker runs, core defaults `DATABASE_URL` to embedded Postgres and sets a local development API key:
 
@@ -68,7 +68,7 @@ printf '%s\n' 'local-dev-key' | \
 atomicmemory init \
   --profile local \
   --provider atomicmemory \
-  --api-url http://127.0.0.1:3050 \
+  --api-url http://127.0.0.1:17350 \
   --trust-surface local \
   --user "$USER" \
   --namespace quickstart \
@@ -82,7 +82,7 @@ Hit the memory subsystem health endpoint to confirm the server is live and see t
 
 ```bash
 curl -H 'Authorization: Bearer local-dev-key' \
-  http://localhost:3050/v1/memories/health
+  http://localhost:17350/v1/memories/health
 ```
 
 You should get back a JSON object with `"status": "ok"` and a `config` snapshot showing the selected embedding and LLM providers.
@@ -92,7 +92,7 @@ You should get back a JSON object with `"status": "ok"` and a `config` snapshot 
 Send a conversation and let AtomicMemory extract structured facts, embed them, and run AUDN to decide what to store.
 
 ```bash
-curl -X POST http://localhost:3050/v1/memories/ingest \
+curl -X POST http://localhost:17350/v1/memories/ingest \
   -H 'Content-Type: application/json' \
   -H 'Authorization: Bearer local-dev-key' \
   -d '{"user_id":"alice","conversation":"user: I ship Go backends and TypeScript frontends.","source_site":"quickstart"}'
@@ -105,7 +105,7 @@ The response reports `facts_extracted`, `memories_stored`, `stored_memory_ids`, 
 Query the memories you just created. AtomicMemory runs semantic retrieval, applies the active retrieval profile, and packages the result. Hybrid retrieval (vector + BM25/FTS with RRF fusion) is available through the `quality` profile or per-request config overrides, but the default `balanced` profile keeps it off.
 
 ```bash
-curl -X POST http://localhost:3050/v1/memories/search \
+curl -X POST http://localhost:17350/v1/memories/search \
   -H 'Content-Type: application/json' \
   -H 'Authorization: Bearer local-dev-key' \
   -d '{"user_id":"alice","query":"what stack does alice use?"}'

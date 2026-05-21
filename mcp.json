@@ -34,7 +34,7 @@
   ],
   "config": {
     "env": [
-      { "name": "ATOMICMEMORY_API_URL", "required": false, "description": "URL of the memory backend. Defaults to local AtomicMemory core at http://127.0.0.1:3050 for provider=atomicmemory; required for mem0." },
+      { "name": "ATOMICMEMORY_API_URL", "required": false, "description": "URL of the memory backend. Defaults to local AtomicMemory core at http://127.0.0.1:17350 for provider=atomicmemory; required for mem0." },
       { "name": "ATOMICMEMORY_API_KEY", "required": false, "secret": true, "description": "Optional bearer credential forwarded to providers that require HTTP authorization." },
       { "name": "ATOMICMEMORY_PROVIDER", "required": false, "enum": ["atomicmemory", "mem0"], "description": "Backend provider. Defaults to atomicmemory." },
       { "name": "ATOMICMEMORY_SCOPE_USER", "required": false, "description": "User scope for the MCP session." },

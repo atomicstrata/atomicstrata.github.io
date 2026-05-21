@@ -2,26 +2,41 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Give Hermes Agent persistent, cross-session memory backed by AtomicMemory. Unlike MCP-backed coding-agent plugins, Hermes uses a native Python memory provider that participates directly in prefetch, turn sync, and shutdown hooks.
+Give Hermes Agent persistent, cross-session memory backed by AtomicMemory. Unlike MCP-backed coding-agent plugins, Hermes uses a native Python memory provider that participates directly in prefetch, turn sync, and shutdown hooks. The published npm installer copies the provider into your Hermes profile; the provider then uses the published AtomicMemory Python SDK from the Hermes Python environment.
 
 ## Quick start
 
-### 1. Install the provider
+### 1. Start AtomicMemory core
+
+Start local core first. It should be reachable at `http://127.0.0.1:17350`.
+
+```bash
+export OPENAI_API_KEY="sk-..."
+
+docker run -d --pull always \
+  --name atomicmemory-core \
+  -p 127.0.0.1:17350:17350 \
+  -e OPENAI_API_KEY=$OPENAI_API_KEY \
+  -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
+  ghcr.io/atomicstrata/atomicmemory-core:latest
+```
+
+### 2. Install the provider
 
 ```bash
 npx -y @atomicmemory/hermes-plugin install
 ```
 
-### 2. Configure the backend
+By default, the installer writes to `$HERMES_HOME/plugins/atomicmemory`. When `HERMES_HOME` is unset, it uses `$HOME/.hermes/plugins/atomicmemory`.
+
+### 3. Configure the backend
 
 ```bash
-export ATOMICMEMORY_API_URL="http://127.0.0.1:3050"
+export ATOMICMEMORY_API_URL="http://127.0.0.1:17350"
 export ATOMICMEMORY_API_KEY="local-dev-key"
 ```
 
-Start [local AtomicMemory core](/quickstart) first if it is not already running.
-
-### 3. Select the provider
+### 4. Select the provider
 
 ```bash
 hermes memory setup
@@ -35,6 +50,7 @@ hermes memory status
 -   **Non-blocking ingest.** Completed turns sync in the background.
 -   **Shared or siloed memory.** Hermes can recall all user memories or only Hermes-ingested memories.
 -   **Explicit tools.** Agents can search, package context, store conclusions, and inspect recent records.
+-   **SDK-backed provider.** Hermes-specific code owns registration and hooks; memory semantics flow through the published Python SDK.
 
 ## Modes of operation
 
@@ -69,7 +85,7 @@ Required environment:
 
 | Env var | Purpose |
 | --- | --- |
-| `ATOMICMEMORY_API_URL` | AtomicMemory core URL. |
+| `ATOMICMEMORY_API_URL` | AtomicMemory core URL. Required; the Hermes provider intentionally has no default API URL. |
 | `ATOMICMEMORY_API_KEY` | Bearer credential for the Core Quickstart service or any protected AtomicMemory service. |
 
 Optional environment:
@@ -111,12 +127,7 @@ mkdir -p "$HERMES_HOME/plugins"
 ln -s "$(pwd)/plugins/hermes" "$HERMES_HOME/plugins/atomicmemory"
 ```
 
-The provider is also prepared for Hermes' Python entry-point plugin path. After the Python package is published, teams that manage Hermes with Python packages can install it into the Hermes virtualenv instead:
-
-```bash
-uv pip install atomicmemory-hermes \
-  --python "$HOME/.hermes/hermes-agent/venv/bin/python"
-```
+The published npm package is the supported distribution path for the provider itself. Its `plugin.yaml` declares the Python SDK dependency that Hermes should install into its own Python environment.
 
 ## Tools
 
@@ -141,14 +152,14 @@ uv pip install atomicmemory-hermes \
 
 | Symptom | Fix |
 | --- | --- |
-| Provider does not appear | Confirm the provider is installed under `$HERMES_HOME/plugins/atomicmemory`. |
-| Provider unavailable | Confirm `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and that Hermes installed the provider package dependencies. |
+| Provider does not appear | Confirm the provider is installed under `$HERMES_HOME/plugins/atomicmemory`, or under `$HOME/.hermes/plugins/atomicmemory` when `HERMES_HOME` is unset. |
+| Provider unavailable | Confirm `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and that Hermes installed the `atomicmemory` Python SDK dependency from `plugin.yaml`. |
 | Siloed recall fails | Use `ATOMICMEMORY_PROVIDER=atomicmemory` or switch to `shared`. |
 | Calls pause after repeated backend failures | Hermes opens a circuit breaker after five SDK failures and resumes after roughly two minutes. Check the AtomicMemory service before retrying. |
 
 ## Update
 
-After changing the Hermes provider, restart Hermes so it reloads the plugin. For source installs, update the integrations checkout and rerun the provider install or symlink step before restarting.
+After changing the Hermes provider, restart Hermes so it reloads the plugin. For published installs, rerun `npx -y @atomicmemory/hermes-plugin install` after updating the package. For source installs, update the monorepo checkout and refresh the symlink before restarting.
 
 ## Development
 

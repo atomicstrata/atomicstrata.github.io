@@ -21,7 +21,7 @@ import { MemoryClient } from '@atomicmemory/sdk';
 const memory = new MemoryClient({
   providers: {
     atomicmemory: {
-      apiUrl: 'http://localhost:3050',
+      apiUrl: 'http://localhost:17350',
       apiKey: 'local-dev-key',
     },
   },
@@ -48,13 +48,13 @@ Use `AtomicMemoryClient` when you also need storage artifacts:
 import { AtomicMemoryClient } from '@atomicmemory/sdk';
 
 const client = new AtomicMemoryClient({
-  apiUrl: 'http://localhost:3050',
+  apiUrl: 'http://localhost:17350',
   apiKey: process.env.ATOMICMEMORY_API_KEY!,
   userId: 'u1',
   memory: {
     providers: {
       atomicmemory: {
-        apiUrl: 'http://localhost:3050',
+        apiUrl: 'http://localhost:17350',
         apiKey: process.env.ATOMICMEMORY_API_KEY!,
       },
     },

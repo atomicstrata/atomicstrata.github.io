@@ -20,7 +20,7 @@ import { MemoryClient } from '@atomicmemory/sdk';
 const memory = new MemoryClient({
   providers: {
     atomicmemory: {
-      apiUrl: 'http://127.0.0.1:3050',
+      apiUrl: 'http://127.0.0.1:17350',
       apiKey: 'local-dev-key',
     },
   },
@@ -134,7 +134,7 @@ docker rm -f atomicmemory-core
 
 docker run -d --pull always \
   --name atomicmemory-core \
-  -p 127.0.0.1:3050:3050 \
+  -p 127.0.0.1:17350:17350 \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
   -e RETRIEVAL_PROFILE=quality \
   -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
@@ -145,7 +145,7 @@ Verify the backend reports hybrid search:
 
 ```bash
 curl -s -H 'Authorization: Bearer local-dev-key' \
-  http://localhost:3050/v1/memories/health
+  http://localhost:17350/v1/memories/health
 ```
 
 The response should include `"hybrid_search_enabled": true`.

@@ -12,13 +12,13 @@ Use `AtomicMemoryClient.storage` for artifact operations:
 import { AtomicMemoryClient } from '@atomicmemory/sdk';
 
 const client = new AtomicMemoryClient({
-  apiUrl: 'http://localhost:3050',
+  apiUrl: 'http://localhost:17350',
   apiKey: process.env.ATOMICMEMORY_API_KEY!,
   userId: 'demo-user',
   memory: {
     providers: {
       atomicmemory: {
-        apiUrl: 'http://localhost:3050',
+        apiUrl: 'http://localhost:17350',
         apiKey: process.env.ATOMICMEMORY_API_KEY!,
       },
     },
@@ -88,7 +88,7 @@ The Python SDK exposes the same storage API with Python field names.
 from atomicmemory import StorageClient
 
 with StorageClient({
-    "apiUrl": "http://localhost:3050",
+    "apiUrl": "http://localhost:17350",
     "apiKey": "server-api-key",
     "userId": "demo-user",
 }) as client:
@@ -107,7 +107,7 @@ For large managed objects, use streaming reads rather than buffering the whole r
 
 ```python
 with StorageClient({
-    "apiUrl": "http://localhost:3050",
+    "apiUrl": "http://localhost:17350",
     "apiKey": "server-api-key",
     "userId": "demo-user",
 }) as client:

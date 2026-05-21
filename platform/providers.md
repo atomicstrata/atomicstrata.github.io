@@ -81,12 +81,13 @@ export type EmbeddingProviderName =
 | `ollama` | Ollama native `/api/chat` endpoint |
 | `openai-compatible` | Any OpenAI-schema endpoint (LM Studio, vLLM, …) |
 | `claude-code` | Local Claude Code Agent SDK session for personal development |
+| `codex` | Local Codex account session for personal development |
 
 Declared in [`config.ts:15`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/config.ts#L15):
 
 ```ts
 export type LLMProviderName =
-  EmbeddingProviderName | 'groq' | 'anthropic' | 'google-genai' | 'claude-code';
+  EmbeddingProviderName | 'groq' | 'anthropic' | 'google-genai' | 'claude-code' | 'codex';
 ```
 
 Note the subtype relationship: the LLM provider union builds on the embedding provider names, then adds chat-only providers. Embedding-only providers such as `transformers` and `voyage` have no chat backend.
@@ -265,6 +266,16 @@ LLM_PROVIDER=claude-code
 ```
 
 `claude-code` is only for local developer machines. It consumes the user's Claude Code / Claude subscription limits, requires Claude Code to be installed and authenticated, and should not be used for hosted or team deployments. Pair it with a non-OpenAI embedding provider such as `EMBEDDING_PROVIDER=transformers` or `EMBEDDING_PROVIDER=ollama` if you also want to avoid an OpenAI embedding API key.
+
+For personal local Codex use, the default setup is the logged-in `codex` account path:
+
+```bash
+codex login
+LLM_PROVIDER=codex
+EMBEDDING_PROVIDER=transformers
+```
+
+`codex` is also only for local developer machines. Core reads the auth file created by `codex login` and calls the Codex backend directly. No OpenAI API key is required. It consumes the user's Codex account limits and should not be used for hosted or team deployments; use `LLM_PROVIDER=openai` plus `OPENAI_API_KEY` for that mode. Core resolves that auth file from `CODEX_AUTH_PATH` when set, then `CODEX_HOME/auth.json`, then `$HOME/.codex/auth.json`.
 
 The ingest service, the search service, the AUDN decision loop, the repair loop, none of them have a single `if (provider === 'ollama')` branch. That is the provider-agnostic boundary working as designed.
 

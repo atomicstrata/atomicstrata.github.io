@@ -6,7 +6,7 @@ General conventions that apply across every `/v1/memories/*` and `/v1/agents/*` 
 
 ## Request and response format
 
--   Base URL defaults to `http://localhost:3050` for local runs.
+-   Base URL defaults to `http://localhost:17350` for local runs.
 -   Request and response bodies are JSON.
 -   Field names use `snake_case` (e.g. `user_id`, `source_site`).
 
@@ -50,7 +50,7 @@ This shape applies to 400 (input validation), 404 (resource not found), and 500 
 
 The server allows requests from:
 
--   `http://localhost:3050`
+-   `http://localhost:17350`
 -   `http://localhost:3081`
 
 Preflight `OPTIONS` requests are handled automatically.

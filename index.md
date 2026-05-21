@@ -27,7 +27,7 @@ The pitch is not "we do more." It is: the seams are explicit, the contracts are 
 ## Platform at a glance
 
 -   **Pluggable storage**, five domain-facing store interfaces so ingest, search, CRUD, lifecycle, and trust each see only the contract they need ([stores](/platform/stores))
--   **Pluggable providers**, embeddings via openai, openai-compatible, ollama, transformers (local WASM), or voyage; LLM via openai, openai-compatible, ollama, anthropic, google, or groq ([providers](/platform/providers)); optional artifact storage via pointer mode, local filesystem, S3, or Filecoin ([artifact storage](/platform/artifact-storage))
+-   **Pluggable providers**, embeddings via openai, openai-compatible, ollama, transformers (local WASM), or voyage; LLM via openai, openai-compatible, ollama, anthropic, google, groq, Claude Code, or Codex ([providers](/platform/providers)); optional artifact storage via pointer mode, local filesystem, S3, or Filecoin ([artifact storage](/platform/artifact-storage))
 -   **Explicit composition**, a single composition root wires the runtime container; no hidden singletons, no global state ([composition](/platform/composition))
 -   **First-class scope**, user, workspace, and agent scopes dispatched at the request boundary, not bolted on after ([scope](/platform/scope))
 -   **Observability as contract**, every search response carries a stable trace schema so dashboards and evals never break on a refactor ([observability](/platform/observability))

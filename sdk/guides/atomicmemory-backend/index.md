@@ -83,7 +83,7 @@ Run `memory.capabilities()` at init and cache the result, you'll know exactly wh
 -   **`apiKey`**, set a bearer token on the SDK side and a matching gate on core. Don't rely on `testMode` identity in production.
 -   **`timeout`**, the default 30s is fine for most paths. Tighten for latency-sensitive UIs; loosen for batch workloads that trigger large searches.
 -   **`apiVersion`**, pin to the version your core is on. Leave as `'v1'` unless you've deployed a different API version.
--   **Network reachability**, core runs on port `3050` by default. Verify from your deployment target (container? serverless? browser?) that the URL resolves.
+-   **Network reachability**, core runs on port `17350` by default. Verify from your deployment target (container? serverless? browser?) that the URL resolves.
 
 ## Next
 

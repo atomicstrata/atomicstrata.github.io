@@ -18,7 +18,7 @@ Providers are instantiated at init time from the `providers` config. The registr
 new MemoryClient({
   providers: {
     atomicmemory: {
-      apiUrl: 'http://localhost:3050',
+      apiUrl: 'http://localhost:17350',
       apiKey: 'local-dev-key',
     },
     mem0: { apiUrl: 'http://localhost:8000' },

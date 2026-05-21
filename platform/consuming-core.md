@@ -27,7 +27,7 @@ Boot core as a server (`npm start`) and issue JSON requests. Snake\_case on the 
 This is the most portable integration path. If you are writing TypeScript and do not need direct HTTP control, use [`@atomicmemory/sdk`](/sdk/overview) on top of this API instead of hand-rolling request wrappers.
 
 ```ts
-const res = await fetch('http://localhost:3050/v1/memories/ingest', {
+const res = await fetch('http://localhost:17350/v1/memories/ingest', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ const {
 ```
 
 ```ts
-const res = await fetch('http://localhost:3050/v1/memories/search', {
+const res = await fetch('http://localhost:17350/v1/memories/search', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ The full endpoint surface and response shapes are documented under [HTTP API Ref
 All four memory routes (`/search`, `/search/fast`, `/ingest`, `/ingest/quick`) accept an optional `config_override` body field that overlays the startup `RuntimeConfig` for the scope of that one request. Scope is strictly per-request; the startup singleton is not mutated.
 
 ```ts
-const res = await fetch('http://localhost:3050/v1/memories/search', {
+const res = await fetch('http://localhost:17350/v1/memories/search', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ export OPENAI_API_KEY="sk-..."
 
 docker run -d --pull always \
   --name atomicmemory-core \
-  -p 127.0.0.1:3050:3050 \
+  -p 127.0.0.1:17350:17350 \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
   -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
   ghcr.io/atomicstrata/atomicmemory-core:latest
@@ -179,7 +179,7 @@ Contributors can still validate the source checkout with `docker-compose.smoke-i
 
 Key env overrides:
 
--   `APP_PORT` (default `3061`), host port bound to the core container's 3050
+-   `APP_PORT` (default `3061`), host port bound to the core container's 17350
 -   `POSTGRES_PORT` (default `5444`), host port for the pgvector container
 -   `EMBEDDING_PROVIDER` / `EMBEDDING_MODEL` / `EMBEDDING_DIMENSIONS`, already wired to `transformers` / `Xenova/all-MiniLM-L6-v2` / `384` for offline runs
 

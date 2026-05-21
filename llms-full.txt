@@ -35,7 +35,7 @@ The pitch is not "we do more." It is: the seams are explicit, the contracts are 
 ## Platform at a glance
 
 -   **Pluggable storage**, five domain-facing store interfaces so ingest, search, CRUD, lifecycle, and trust each see only the contract they need ([stores](/platform/stores))
--   **Pluggable providers**, embeddings via openai, openai-compatible, ollama, transformers (local WASM), or voyage; LLM via openai, openai-compatible, ollama, anthropic, google, or groq ([providers](/platform/providers)); optional artifact storage via pointer mode, local filesystem, S3, or Filecoin ([artifact storage](/platform/artifact-storage))
+-   **Pluggable providers**, embeddings via openai, openai-compatible, ollama, transformers (local WASM), or voyage; LLM via openai, openai-compatible, ollama, anthropic, google, groq, Claude Code, or Codex ([providers](/platform/providers)); optional artifact storage via pointer mode, local filesystem, S3, or Filecoin ([artifact storage](/platform/artifact-storage))
 -   **Explicit composition**, a single composition root wires the runtime container; no hidden singletons, no global state ([composition](/platform/composition))
 -   **First-class scope**, user, workspace, and agent scopes dispatched at the request boundary, not bolted on after ([scope](/platform/scope))
 -   **Observability as contract**, every search response carries a stable trace schema so dashboards and evals never break on a refactor ([observability](/platform/observability))
@@ -205,7 +205,7 @@ General conventions that apply across every `/v1/memories/*` and `/v1/agents/*` 
 
 ## Request and response format
 
--   Base URL defaults to `http://localhost:3050` for local runs.
+-   Base URL defaults to `http://localhost:17350` for local runs.
 -   Request and response bodies are JSON.
 -   Field names use `snake_case` (e.g. `user_id`, `source_site`).
 
@@ -249,7 +249,7 @@ This shape applies to 400 (input validation), 404 (resource not found), and 500 
 
 The server allows requests from:
 
--   `http://localhost:3050`
+-   `http://localhost:17350`
 -   `http://localhost:3081`
 
 Preflight `OPTIONS` requests are handled automatically.
@@ -2613,7 +2613,7 @@ printf '%s\n' 'local-dev-key' | \
 atomicmemory init \
   --profile local \
   --provider atomicmemory \
-  --api-url http://127.0.0.1:3050 \
+  --api-url http://127.0.0.1:17350 \
   --trust-surface local \
   --user "$USER" \
   --namespace my-project \
@@ -2633,7 +2633,7 @@ For environment-only configuration:
 
 ```bash
 export ATOMICMEMORY_PROVIDER="atomicmemory"
-export ATOMICMEMORY_API_URL="http://127.0.0.1:3050"
+export ATOMICMEMORY_API_URL="http://127.0.0.1:17350"
 export ATOMICMEMORY_API_KEY="local-dev-key"
 export ATOMICMEMORY_TRUST_SURFACE="local"
 export ATOMICMEMORY_SCOPE_USER="$USER"
@@ -2671,7 +2671,7 @@ If you skip `init`, `status` and memory commands need equivalent flags or enviro
 ```bash
 atomicmemory status \
   --provider atomicmemory \
-  --api-url http://127.0.0.1:3050 \
+  --api-url http://127.0.0.1:17350 \
   --trust-surface local \
   --user "$USER"
 ```
@@ -2691,7 +2691,7 @@ The dashboard keeps the prompt at the bottom and appends command results above i
 On a fresh machine, run `init` before relying on interactive commands such as `status`, `add`, or `search`. If the dashboard says `scope not configured`, either run `init`, set `ATOMICMEMORY_SCOPE_USER` plus the provider environment variables above, or include flags directly in the command you type into the dashboard:
 
 ```text
-status --provider atomicmemory --api-url http://127.0.0.1:3050 --trust-surface local --user alice
+status --provider atomicmemory --api-url http://127.0.0.1:17350 --trust-surface local --user alice
 ```
 
 | Input | Purpose |
@@ -2753,7 +2753,7 @@ Provider-backed commands accept the same provider and scope overrides:
 ```bash
 atomicmemory search "release policy" \
   --provider atomicmemory \
-  --api-url http://127.0.0.1:3050 \
+  --api-url http://127.0.0.1:17350 \
   --trust-surface local \
   --user "$USER" \
   --namespace atomicmemory-integrations
@@ -2798,6 +2798,16 @@ export EMBEDDING_PROVIDER=transformers
 ```
 
 That mode is for personal/local use. It requires Claude Code to be installed and logged in, consumes the user's Claude Code / Claude subscription limits, and is not the recommended path for hosted or team deployments. `LLM_PROVIDER` configures the local AtomicMemory core process; CLI profile variables such as `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and scope still configure how the CLI reaches that core process.
+
+Codex local extraction defaults to account-auth:
+
+```bash
+codex login
+export LLM_PROVIDER=codex
+export EMBEDDING_PROVIDER=transformers
+```
+
+This is the default Codex local setup. Core reads the auth file created by `codex login` and calls the Codex backend directly. No OpenAI API key is required. It consumes the user's Codex account limits and is not the recommended path for hosted or team deployments; use `LLM_PROVIDER=openai` plus `OPENAI_API_KEY` for that mode.
 
 ## Machine output
 
@@ -2950,7 +2960,28 @@ Give Claude Code persistent, cross-session memory backed by AtomicMemory. The in
 
 ## Quick start
 
-### 1. Install the plugin
+### 1. Start AtomicMemory core
+
+Log in to Claude Code, then start local core with Claude Code account auth and local embeddings:
+
+```bash
+claude auth login
+
+docker run -d --pull always \
+  --name atomicmemory-core \
+  -p 127.0.0.1:17350:17350 \
+  -e LLM_PROVIDER=claude-code \
+  -e EMBEDDING_PROVIDER=transformers \
+  -e EMBEDDING_DIMENSIONS=384 \
+  -e CLAUDE_CONFIG_DIR=/home/appuser/.claude \
+  -v $HOME/.claude:/home/appuser/.claude:ro \
+  -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
+  ghcr.io/atomicstrata/atomicmemory-core:latest
+```
+
+The plugin defaults to the local core URL and local quickstart key.
+
+### 2. Install the plugin
 
 ```bash
 claude plugin marketplace add atomicstrata/atomicmemory --sparse .claude-plugin plugins/claude-code
@@ -2959,26 +2990,7 @@ claude plugin install claude-code@atomicmemory
 
 The Claude Code plugin is discovered from the public AtomicMemory monorepo. Source and development live in the [`plugins/claude-code`](https://github.com/atomicstrata/atomicmemory/tree/main/plugins/claude-code) package.
 
-### 2. Start AtomicMemory core
-
-Start [local AtomicMemory core](/quickstart) first, or set `ATOMICMEMORY_API_URL` and `ATOMICMEMORY_API_KEY` to an existing AtomicMemory service:
-
-```bash
-export ATOMICMEMORY_API_URL="http://127.0.0.1:3050"
-export ATOMICMEMORY_API_KEY="local-dev-key"
-```
-
-### 3. Use Claude Code for local extraction
-
-```bash
-claude auth login
-export LLM_PROVIDER=claude-code
-export EMBEDDING_PROVIDER=transformers
-```
-
-Set `LLM_PROVIDER=claude-code` and `EMBEDDING_PROVIDER=transformers` in the environment that starts the AtomicMemory core process. That lets core use your Claude Code login for extraction; it does not make the plugin start core for you.
-
-### 4. Start Claude Code
+### 3. Start Claude Code
 
 ```bash
 claude
@@ -2986,7 +2998,7 @@ claude
 
 The plugin connects to the configured AtomicMemory service and exposes memory tools.
 
-### 5. Verify memory tools
+### 4. Verify memory tools
 
 Ask Claude Code to list its MCP tools. You should see:
 
@@ -2994,6 +3006,10 @@ Ask Claude Code to list its MCP tools. You should see:
 -   `memory_ingest`
 -   `memory_package`
 -   `memory_list`
+
+Important note
+
+This quickstart uses the free local `transformers` embedding model so it can run without a separate embedding API key. For production or higher-recall use, switch core to a stronger paid embedding provider as soon as you are ready.
 
 ## Features
 
@@ -3009,7 +3025,7 @@ Ask Claude Code to list its MCP tools. You should see:
 
 ### Local core mode
 
-Use local core mode for personal Claude Code memory. Start AtomicMemory core with the [quickstart](/quickstart), then install the plugin so Claude Code can call the MCP server and lifecycle hooks. The core process can use `LLM_PROVIDER=claude-code` for extraction without a separate Anthropic API key.
+Use local core mode for personal Claude Code memory. Start AtomicMemory core with Claude Code account auth, then install the plugin so Claude Code can call the MCP server and lifecycle hooks. The core process uses `LLM_PROVIDER=claude-code` for extraction without a separate Anthropic API key.
 
 | Capability | Included |
 | --- | --- |
@@ -3045,7 +3061,7 @@ Register the published MCP server directly:
       "command": "npx",
       "args": ["-y", "--package=@atomicmemory/mcp-server", "atomicmemory-mcp"],
       "env": {
-        "ATOMICMEMORY_API_URL": "http://127.0.0.1:3050",
+        "ATOMICMEMORY_API_URL": "http://127.0.0.1:17350",
         "ATOMICMEMORY_API_KEY": "local-dev-key"
       }
     }
@@ -3081,7 +3097,7 @@ Default behavior:
 | Setting | Default |
 | --- | --- |
 | Runtime | User-managed AtomicMemory core |
-| Service URL | `http://127.0.0.1:3050` unless `ATOMICMEMORY_API_URL` is set |
+| Service URL | `http://127.0.0.1:17350` unless `ATOMICMEMORY_API_URL` is set |
 | User scope | Claude Code user/session context, then local fallback |
 | Agent scope | `claude-code` |
 | Capture level | `balanced` |
@@ -3090,13 +3106,21 @@ Default behavior:
 Common overrides:
 
 ```bash
-export LLM_PROVIDER=claude-code
-export EMBEDDING_PROVIDER=transformers
 export ATOMICMEMORY_SCOPE_NAMESPACE="repo-or-project"
 export ATOMICMEMORY_CAPTURE_LEVEL=balanced
 ```
 
-`LLM_PROVIDER` and `EMBEDDING_PROVIDER` configure the AtomicMemory core process. Claude Code hooks and the MCP server use `ATOMICMEMORY_*` values for service URL, scope, and capture policy. The `claude-code` provider consumes the user's Claude Code / Claude subscription limits and is for personal local use.
+Claude Code hooks and the MCP server use `ATOMICMEMORY_*` values for service URL, scope, and capture policy. When omitted, the local defaults are `ATOMICMEMORY_API_URL=http://127.0.0.1:17350` and `ATOMICMEMORY_API_KEY=local-dev-key`.
+
+The quickstart starts local core with Claude Code account auth:
+
+```bash
+export LLM_PROVIDER=claude-code
+export EMBEDDING_PROVIDER=transformers
+export EMBEDDING_DIMENSIONS=384
+```
+
+The `claude-code` provider routes through Anthropic's Agent SDK, consumes the user's Claude Code / Claude account limits according to Anthropic policy, and is for personal local use.
 
 When you are running your own shared AtomicMemory runtime instead of using Claude Code's local authenticated session, configure an API-backed extraction provider:
 
@@ -3117,7 +3141,7 @@ Advanced values:
 | `EMBEDDING_PROVIDER` | core process | Embedding provider. Use `transformers` or `ollama` to avoid an OpenAI embedding key. |
 | `ANTHROPIC_API_KEY` | core process | Anthropic provider key for production or team usage. |
 | `OPENAI_API_KEY` | core process | OpenAI provider key. |
-| `ATOMICMEMORY_API_URL` | MCP + hooks | AtomicMemory service URL. Defaults to local core at `http://127.0.0.1:3050` when omitted. |
+| `ATOMICMEMORY_API_URL` | MCP + hooks | AtomicMemory service URL. Defaults to local core at `http://127.0.0.1:17350` when omitted. |
 | `ATOMICMEMORY_API_KEY` | MCP + hooks | API key for an external AtomicMemory service. |
 | `ATOMICMEMORY_SCOPE_USER` | MCP + hooks | User identity override. |
 | `ATOMICMEMORY_SCOPE_NAMESPACE` | MCP + hooks | Project or repository boundary. |
@@ -3202,7 +3226,7 @@ Do not use `enableAllProjectMcpServers` casually in normal projects. It trusts a
 | --- | --- |
 | No memory tools appear | Restart Claude Code after installing the plugin or changing MCP config. For MCP-only `.mcp.json` setups, verify project trust with `claude mcp list`. |
 | Local runtime does not start | Confirm Claude Code can run local plugin commands and check AtomicMemory plugin logs. |
-| `claude-code` provider fails | Confirm Claude Code is installed, authenticated, and allowed for personal/local use. Use `ANTHROPIC_API_KEY` for production. |
+| `claude-code` provider fails | Run `claude auth login`, then verify with `claude auth status --json`, `claude doctor`, or `claude --version`. Use `LLM_PROVIDER=anthropic` and `ANTHROPIC_API_KEY` for hosted or team deployments. |
 | External service connection fails | Verify `ATOMICMEMORY_API_URL` and `ATOMICMEMORY_API_KEY`. |
 | Unexpected memory sharing | Add `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or `ATOMICMEMORY_SCOPE_THREAD`. |
 | Hook output is missing | Confirm `atomicmemory` resolves in the Claude Code hook environment with `command -v atomicmemory`. |
@@ -3274,19 +3298,41 @@ Give Codex persistent, cross-session memory backed by AtomicMemory. The public s
 
 ## Quick start
 
-### 1. Register the MCP server
+### 1. Start AtomicMemory core
+
+Log in to Codex, then start local core with Codex account auth and local embeddings:
 
 ```bash
-export ATOMICMEMORY_API_URL="http://127.0.0.1:3050"
-export ATOMICMEMORY_API_KEY="local-dev-key"
+codex login
 
+docker run -d --pull always \
+  --name atomicmemory-core \
+  -p 127.0.0.1:17350:17350 \
+  -e LLM_PROVIDER=codex \
+  -e EMBEDDING_PROVIDER=transformers \
+  -e EMBEDDING_DIMENSIONS=384 \
+  -e CODEX_AUTH_PATH=/home/appuser/.codex/auth.json \
+  -v $HOME/.codex:/home/appuser/.codex:ro \
+  -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
+  ghcr.io/atomicstrata/atomicmemory-core:latest
+```
+
+### 2. Connect Codex
+
+```bash
 codex mcp add atomicmemory \
-  --env ATOMICMEMORY_API_URL="$ATOMICMEMORY_API_URL" \
-  --env ATOMICMEMORY_API_KEY="$ATOMICMEMORY_API_KEY" \
   -- npx -y --package=@atomicmemory/mcp-server atomicmemory-mcp
 ```
 
-### 2. Verify memory tools
+The MCP server defaults to the local core URL and local quickstart key.
+
+### 3. Start Codex
+
+```bash
+codex
+```
+
+### 4. Verify memory tools
 
 ```bash
 codex mcp list
@@ -3299,12 +3345,20 @@ Ask Codex to list MCP tools. You should see:
 -   `memory_package`
 -   `memory_list`
 
-Requires [local AtomicMemory core](/quickstart) at `http://127.0.0.1:3050`. The local quickstart core uses `local-dev-key` as its bearer key. Uses your local machine user by default. See [Configuration](#configuration) for remote services, API keys, and scope overrides.
+Uses your local machine user by default. See [Configuration](#configuration) for remote services, API keys, and scope overrides.
+
+Important note
+
+This quickstart uses the free local `transformers` embedding model so it can run without a separate embedding API key. For production or higher-recall use, switch core to a stronger paid embedding provider as soon as you are ready.
 
 ## Features
 
 -   **Cross-session recall.** Codex can retrieve project decisions, user preferences, codebase facts, and prior work.
+-   **MCP memory tools.** The public setup exposes `memory_search`, `memory_ingest`, `memory_package`, and `memory_list`.
+-   **Account-auth local extraction.** Local core can use the logged-in Codex account for extraction with `LLM_PROVIDER=codex`, so no OpenAI API key is required for the quickstart.
+-   **Local or external core.** For local use, start AtomicMemory core with the quickstart first. For team deployments, point `ATOMICMEMORY_API_URL` and `ATOMICMEMORY_API_KEY` at the service your team manages.
 -   **Optional memory protocol skill.** The source-distributed plugin teaches Codex when to search, when to ingest, and when to create handoff snapshots.
+-   **Optional lifecycle hooks.** Codex hooks can add prompt-time retrieval and deterministic lifecycle capture when `features.codex_hooks = true`.
 -   **Scoped memory.** `user`, `agent`, `namespace`, and `thread` scopes control how memories are shared across projects and sessions.
 -   **Backend-agnostic SDK path.** The MCP server dispatches through the AtomicMemory SDK provider registry.
 
@@ -3318,8 +3372,9 @@ Use plugin mode when you want Codex to receive both the MCP tools and the memory
 | --- | --- |
 | MCP tools | Yes |
 | Memory protocol skill | Yes |
-| Prompt-time retrieval hooks | Optional |
-| Session capture hooks | Optional |
+| Prompt-time retrieval hooks | Optional; enable Codex hooks separately |
+| Session capture hooks | Optional; enable Codex hooks separately |
+| Local runtime management | No; start core separately |
 
 ### MCP-only mode
 
@@ -3329,6 +3384,8 @@ Use MCP-only mode when you want explicit memory tools without agent skill instru
 | --- | --- |
 | MCP tools | Yes |
 | Memory protocol skill | No |
+| Prompt-time retrieval hooks | No |
+| Session capture hooks | No |
 
 ### CLI-generated hooks
 
@@ -3342,7 +3399,7 @@ Codex stop responses are often shorter than Claude Code responses. Start with `A
 
 ## Configuration
 
-For `provider=atomicmemory`, the MCP server defaults to local AtomicMemory core at `http://127.0.0.1:3050`. The Core Quickstart service still requires its development bearer key. Use provider connection variables when Codex should connect to the quickstart core, a different AtomicMemory service, or another provider such as Mem0:
+For `provider=atomicmemory`, the MCP server defaults to local AtomicMemory core at `http://127.0.0.1:17350` with the local quickstart key `local-dev-key`. Use provider connection variables when Codex should connect to a different AtomicMemory service or another provider such as Mem0:
 
 ```bash
 export ATOMICMEMORY_PROVIDER="atomicmemory"
@@ -3371,6 +3428,27 @@ export ATOMICMEMORY_SCOPE_THREAD="thread-id"
 
 Add optional scope variables with more `--env` arguments, or set them in the shell environment Codex inherits.
 
+### Default local extraction through Codex login
+
+The quickstart starts local core with Codex account auth:
+
+```bash
+export LLM_PROVIDER=codex
+export EMBEDDING_PROVIDER=transformers
+export EMBEDDING_DIMENSIONS=384
+```
+
+Set those variables on the AtomicMemory core process before starting it. The MCP setup above is unchanged: Codex still connects to core through the MCP server's local defaults or explicit provider connection variables. `LLM_PROVIDER=codex` reads the auth file created by `codex login` and calls the Codex backend directly. No OpenAI API key is required in this mode. It is for personal local development, consumes the logged-in Codex account's limits, and is not recommended for hosted or team deployments.
+
+Core resolves the Codex auth file from `CODEX_AUTH_PATH` when set, otherwise from `CODEX_HOME/auth.json`, otherwise from `$HOME/.codex/auth.json`. The quickstart sets `CODEX_AUTH_PATH` explicitly because Docker runs core as its own container user.
+
+For hosted or team deployments, use an API-key provider instead:
+
+```bash
+export LLM_PROVIDER=openai
+export OPENAI_API_KEY="sk-..."
+```
+
 Optional:
 
 | Env var | Purpose |
@@ -3382,6 +3460,8 @@ Optional:
 | `ATOMICMEMORY_SCOPE_AGENT` | Optional agent identity override. |
 | `ATOMICMEMORY_SCOPE_NAMESPACE` | Project or repository boundary. |
 | `ATOMICMEMORY_SCOPE_THREAD` | Session or conversation boundary. |
+| `CODEX_AUTH_PATH` | Core-only path to the auth file created by `codex login`. |
+| `CODEX_HOME` | Core-only Codex home directory used when `CODEX_AUTH_PATH` is unset. |
 
 ## MCP tools
 
@@ -3408,7 +3488,8 @@ The installed skill guides Codex to:
 | --- | --- |
 | No memory tools appear | Run `codex mcp list`, restart Codex after changing MCP config, and confirm `npx -y --package=@atomicmemory/mcp-server atomicmemory-mcp` works in the same environment. |
 | Local core is not running | Start it with the [Core Quickstart](/quickstart), then retry the MCP tool call. |
-| Connection failed | Verify local AtomicMemory core is running at `http://127.0.0.1:3050`, or verify `ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, and `ATOMICMEMORY_API_KEY` for remote/provider-specific setups. |
+| `codex` extraction provider fails | Run `codex login` again and confirm the core process can read the auth file. For Docker, keep `-v $HOME/.codex:/home/appuser/.codex:ro` and `-e CODEX_AUTH_PATH=/home/appuser/.codex/auth.json` together. |
+| Connection failed | Verify local AtomicMemory core is running at `http://127.0.0.1:17350`, or verify `ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, and `ATOMICMEMORY_API_KEY` for remote/provider-specific setups. |
 | Plugin not found | Plugin mode is source-distributed today; confirm the marketplace entry points at a local clone of `atomicmemory/plugins/codex`. |
 | Unexpected memory sharing | Add `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or `ATOMICMEMORY_SCOPE_THREAD`. |
 
@@ -3472,11 +3553,28 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/cursor/local
 
 > Agent index: [llms.txt](/llms.txt)
 
-Cursor support is available today as a manual local integration using the AtomicMemory MCP server and Cursor rules. A packaged Cursor plugin and Cursor Cloud deployment are planned but not yet available.
+Cursor support is available today as a manual local integration using the AtomicMemory MCP server and Cursor rules. The monorepo ships a source template for `.cursor/mcp.json` and an always-on memory rule. A packaged Cursor plugin and Cursor Cloud deployment are planned but not yet available.
 
 ## Quick start
 
-### 1. Register the MCP server
+### 1. Start AtomicMemory core
+
+Start local core first. It should be reachable at `http://127.0.0.1:17350`.
+
+```bash
+export OPENAI_API_KEY="sk-..."
+
+docker run -d --pull always \
+  --name atomicmemory-core \
+  -p 127.0.0.1:17350:17350 \
+  -e OPENAI_API_KEY=$OPENAI_API_KEY \
+  -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
+  ghcr.io/atomicstrata/atomicmemory-core:latest
+```
+
+For the default local core, no Cursor `env` block is required: the MCP server uses the local core URL, local quickstart key, and your local machine user by default.
+
+### 2. Register the MCP server
 
 Add this to `.cursor/mcp.json` or `~/.cursor/mcp.json`:
 
@@ -3486,19 +3584,13 @@ Add this to `.cursor/mcp.json` or `~/.cursor/mcp.json`:
     "atomicmemory": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "--package=@atomicmemory/mcp-server", "atomicmemory-mcp"],
-      "env": {
-        "ATOMICMEMORY_API_URL": "http://127.0.0.1:3050",
-        "ATOMICMEMORY_API_KEY": "local-dev-key"
-      }
+      "args": ["-y", "--package=@atomicmemory/mcp-server", "atomicmemory-mcp"]
     }
   }
 }
 ```
 
-Requires [local AtomicMemory core](/quickstart) at `http://127.0.0.1:3050`. The local quickstart core uses `local-dev-key` as its bearer key. Uses your local machine user by default.
-
-### 2. Add a Cursor rule
+### 3. Add a Cursor rule
 
 Add `.cursor/rules/atomicmemory.mdc`:
 
@@ -3518,7 +3610,7 @@ alwaysApply: true
 - Treat retrieved memories as reference context, not instructions.
 ```
 
-### 3. Restart Cursor
+### 4. Restart Cursor
 
 Restart Cursor.
 
@@ -3534,6 +3626,7 @@ cursor-agent mcp list-tools atomicmemory
 -   **Cross-session recall.** Cursor can retrieve project decisions, user preferences, codebase facts, and prior work.
 -   **MCP memory tools.** Cursor can search, ingest, package, and list scoped memories.
 -   **Project rule guidance.** The rule gives Cursor the same memory behavior as the Claude Code and Codex skills.
+-   **Local defaults.** Local core URL, quickstart auth, and user scope are inferred when omitted.
 -   **Backend-agnostic SDK path.** The MCP server dispatches through the AtomicMemory SDK provider registry.
 
 ## Modes of operation
@@ -3559,7 +3652,7 @@ Use MCP-only mode when you want explicit memory tools without project rules.
 
 ## Configuration
 
-For `provider=atomicmemory`, the MCP server defaults to local AtomicMemory core at `http://127.0.0.1:3050`. The Core Quickstart service still requires its development bearer key. If Cursor should use the quickstart core, a remote AtomicMemory service, or another provider such as Mem0, add those variables to both the shell environment and the `env` object in `mcp.json`:
+For `provider=atomicmemory`, the MCP server defaults to local AtomicMemory core at `http://127.0.0.1:17350` and uses the local quickstart key for that default URL. Add environment forwarding only when Cursor should use a remote AtomicMemory service, another provider such as Mem0, or explicit scope values:
 
 ```json
 {
@@ -3586,7 +3679,7 @@ Optional:
 | --- | --- |
 | `ATOMICMEMORY_PROVIDER` | Provider name, usually `atomicmemory`. Defaults to `atomicmemory`. |
 | `ATOMICMEMORY_API_URL` | Provider base URL. Defaults to local AtomicMemory core for `provider=atomicmemory`; required for `provider=mem0` or remote services. |
-| `ATOMICMEMORY_API_KEY` | API key for the Core Quickstart service or any provider that requires auth. |
+| `ATOMICMEMORY_API_KEY` | API key for remote services or providers that require auth. Omit it for the default local core. |
 | `ATOMICMEMORY_SCOPE_USER` | Stable user identity for memory scope. Defaults to the local machine user when omitted. |
 | `ATOMICMEMORY_SCOPE_AGENT` | Agent identity. |
 | `ATOMICMEMORY_SCOPE_NAMESPACE` | Project or repository boundary. |
@@ -3683,26 +3776,41 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/hermes/local
 
 > Agent index: [llms.txt](/llms.txt)
 
-Give Hermes Agent persistent, cross-session memory backed by AtomicMemory. Unlike MCP-backed coding-agent plugins, Hermes uses a native Python memory provider that participates directly in prefetch, turn sync, and shutdown hooks.
+Give Hermes Agent persistent, cross-session memory backed by AtomicMemory. Unlike MCP-backed coding-agent plugins, Hermes uses a native Python memory provider that participates directly in prefetch, turn sync, and shutdown hooks. The published npm installer copies the provider into your Hermes profile; the provider then uses the published AtomicMemory Python SDK from the Hermes Python environment.
 
 ## Quick start
 
-### 1. Install the provider
+### 1. Start AtomicMemory core
+
+Start local core first. It should be reachable at `http://127.0.0.1:17350`.
+
+```bash
+export OPENAI_API_KEY="sk-..."
+
+docker run -d --pull always \
+  --name atomicmemory-core \
+  -p 127.0.0.1:17350:17350 \
+  -e OPENAI_API_KEY=$OPENAI_API_KEY \
+  -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
+  ghcr.io/atomicstrata/atomicmemory-core:latest
+```
+
+### 2. Install the provider
 
 ```bash
 npx -y @atomicmemory/hermes-plugin install
 ```
 
-### 2. Configure the backend
+By default, the installer writes to `$HERMES_HOME/plugins/atomicmemory`. When `HERMES_HOME` is unset, it uses `$HOME/.hermes/plugins/atomicmemory`.
+
+### 3. Configure the backend
 
 ```bash
-export ATOMICMEMORY_API_URL="http://127.0.0.1:3050"
+export ATOMICMEMORY_API_URL="http://127.0.0.1:17350"
 export ATOMICMEMORY_API_KEY="local-dev-key"
 ```
 
-Start [local AtomicMemory core](/quickstart) first if it is not already running.
-
-### 3. Select the provider
+### 4. Select the provider
 
 ```bash
 hermes memory setup
@@ -3716,6 +3824,7 @@ hermes memory status
 -   **Non-blocking ingest.** Completed turns sync in the background.
 -   **Shared or siloed memory.** Hermes can recall all user memories or only Hermes-ingested memories.
 -   **Explicit tools.** Agents can search, package context, store conclusions, and inspect recent records.
+-   **SDK-backed provider.** Hermes-specific code owns registration and hooks; memory semantics flow through the published Python SDK.
 
 ## Modes of operation
 
@@ -3750,7 +3859,7 @@ Required environment:
 
 | Env var | Purpose |
 | --- | --- |
-| `ATOMICMEMORY_API_URL` | AtomicMemory core URL. |
+| `ATOMICMEMORY_API_URL` | AtomicMemory core URL. Required; the Hermes provider intentionally has no default API URL. |
 | `ATOMICMEMORY_API_KEY` | Bearer credential for the Core Quickstart service or any protected AtomicMemory service. |
 
 Optional environment:
@@ -3792,12 +3901,7 @@ mkdir -p "$HERMES_HOME/plugins"
 ln -s "$(pwd)/plugins/hermes" "$HERMES_HOME/plugins/atomicmemory"
 ```
 
-The provider is also prepared for Hermes' Python entry-point plugin path. After the Python package is published, teams that manage Hermes with Python packages can install it into the Hermes virtualenv instead:
-
-```bash
-uv pip install atomicmemory-hermes \
-  --python "$HOME/.hermes/hermes-agent/venv/bin/python"
-```
+The published npm package is the supported distribution path for the provider itself. Its `plugin.yaml` declares the Python SDK dependency that Hermes should install into its own Python environment.
 
 ## Tools
 
@@ -3822,14 +3926,14 @@ uv pip install atomicmemory-hermes \
 
 | Symptom | Fix |
 | --- | --- |
-| Provider does not appear | Confirm the provider is installed under `$HERMES_HOME/plugins/atomicmemory`. |
-| Provider unavailable | Confirm `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and that Hermes installed the provider package dependencies. |
+| Provider does not appear | Confirm the provider is installed under `$HERMES_HOME/plugins/atomicmemory`, or under `$HOME/.hermes/plugins/atomicmemory` when `HERMES_HOME` is unset. |
+| Provider unavailable | Confirm `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and that Hermes installed the `atomicmemory` Python SDK dependency from `plugin.yaml`. |
 | Siloed recall fails | Use `ATOMICMEMORY_PROVIDER=atomicmemory` or switch to `shared`. |
 | Calls pause after repeated backend failures | Hermes opens a circuit breaker after five SDK failures and resumes after roughly two minutes. Check the AtomicMemory service before retrying. |
 
 ## Update
 
-After changing the Hermes provider, restart Hermes so it reloads the plugin. For source installs, update the integrations checkout and rerun the provider install or symlink step before restarting.
+After changing the Hermes provider, restart Hermes so it reloads the plugin. For published installs, rerun `npx -y @atomicmemory/hermes-plugin install` after updating the package. For source installs, update the monorepo checkout and refresh the symlink before restarting.
 
 ## Development
 
@@ -3893,17 +3997,34 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/openclaw/local
 
 > Agent index: [llms.txt](/llms.txt)
 
-Give OpenClaw persistent, cross-channel memory backed by AtomicMemory. The plugin registers an AtomicMemory-backed memory provider and ships a skill bundle that teaches agents when to search, ingest, and write deterministic session snapshots.
+Give OpenClaw persistent, cross-channel memory backed by AtomicMemory. The plugin embeds the shared AtomicMemory MCP server in-process, registers four memory tools, and ships a skill bundle that teaches agents when to search, ingest, and write deterministic session snapshots.
 
 ## Quick start
 
-### 1. Install the plugin
+### 1. Start AtomicMemory core
+
+Start local core first. It should be reachable at `http://127.0.0.1:17350`.
+
+```bash
+export OPENAI_API_KEY="sk-..."
+
+docker run -d --pull always \
+  --name atomicmemory-core \
+  -p 127.0.0.1:17350:17350 \
+  -e OPENAI_API_KEY=$OPENAI_API_KEY \
+  -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
+  ghcr.io/atomicstrata/atomicmemory-core:latest
+```
+
+For the default local core, no OpenClaw plugin config is required: the embedded MCP server uses the local core URL, local quickstart key, and your local machine user by default.
+
+### 2. Install the plugin
 
 ```bash
 openclaw plugins install @atomicmemory/openclaw-plugin
 ```
 
-### 2. Restart OpenClaw if needed
+### 3. Restart OpenClaw if needed
 
 If OpenClaw is already running, restart the gateway so it loads the newly installed plugin:
 
@@ -3911,13 +4032,12 @@ If OpenClaw is already running, restart the gateway so it loads the newly instal
 openclaw gateway restart
 ```
 
-Requires [local AtomicMemory core](/quickstart) at `http://127.0.0.1:3050`. The local quickstart core uses `local-dev-key` as its bearer key. Uses your local machine user by default.
-
 ## Features
 
 -   **Cross-channel memory.** A fact saved in one chat channel can be recalled later from another channel.
 -   **Permission-aware skill.** The skill declares network and credential permissions without filesystem or shell access.
 -   **Four memory tools.** The plugin exposes `memory_search`, `memory_ingest`, `memory_package`, and `memory_list`, backed by the shared MCP server embedded in-process.
+-   **Local defaults.** Local `apiUrl`, local quickstart auth, and user scope are inferred when omitted.
 -   **Backend-agnostic SDK path.** Provider selection uses the AtomicMemory SDK provider registry.
 
 ## Modes of operation
@@ -3939,17 +4059,23 @@ OpenClaw memory capture is prompt/tool driven. Agents search before answering wh
 
 ## Configuration
 
-For local AtomicMemory core, `apiUrl` is optional and defaults to `http://127.0.0.1:3050`, but the Core Quickstart service requires the development bearer key:
+For local AtomicMemory core, plugin config is optional. The embedded MCP server defaults to `http://127.0.0.1:17350`, uses the local quickstart key for that URL, and derives `scope.user` from the local machine user.
+
+Add config only when you need explicit scoping or a non-default provider:
 
 ```json
 {
   "provider": "atomicmemory",
-  "apiUrl": "http://127.0.0.1:3050",
-  "apiKey": "local-dev-key"
+  "apiUrl": "http://127.0.0.1:17350",
+  "scope": {
+    "user": "pip",
+    "agent": "openclaw",
+    "namespace": "personal-assistant"
+  }
 }
 ```
 
-OpenClaw passes optional plugin config from `openclaw.plugin.json` into the provider. Set `scope.user` only when the local machine user is not the right channel-agnostic memory identity.
+OpenClaw passes optional plugin config from `openclaw.plugin.json` into the provider. Set `scope.user` only when the local machine user is not the right channel-agnostic memory identity. Set `apiKey` only when your allowed local service uses a non-default bearer key.
 
 The shipped skill manifest allows only the local AtomicMemory core origins listed below. Do not point this plugin at a remote service unless your OpenClaw administrator also updates and revalidates the plugin skill permissions.
 
@@ -3966,9 +4092,9 @@ openclaw plugins install -l ./plugins/openclaw
 | Field | Purpose |
 | --- | --- |
 | `provider` | AtomicMemory SDK provider name. |
-| `apiUrl` | Optional provider base URL. Defaults to local AtomicMemory core for `provider: "atomicmemory"`. The shipped skill manifest allows `http://127.0.0.1:3050` and `http://localhost:3050`. |
-| `apiKey` | Bearer credential for the Core Quickstart service or any allowed local service that requires HTTP authorization. |
-| `scope.user` | Stable user identity shared across OpenClaw channels. |
+| `apiUrl` | Optional provider base URL. Defaults to local AtomicMemory core for `provider: "atomicmemory"`. The shipped skill manifest allows `http://127.0.0.1:17350` and `http://localhost:17350`. |
+| `apiKey` | Optional bearer credential. Omit it for the default local core; provide it for an allowed local service with a non-default key. |
+| `scope.user` | Stable user identity shared across OpenClaw channels. Defaults to the local machine user. |
 | `scope.agent` | Agent identity. |
 | `scope.namespace` | Project, assistant, or deployment boundary. |
 | `scope.thread` | Optional conversation boundary. |
@@ -3996,8 +4122,8 @@ The skill manifest declares only network and credential access:
 ```yaml
 permissions:
   network:
-    - http://127.0.0.1:3050
-    - http://localhost:3050
+    - http://127.0.0.1:17350
+    - http://localhost:17350
   credentials: []
   filesystem: []
   shell: []
@@ -4010,7 +4136,7 @@ permissions:
 | Plugin changes do not appear | Restart the OpenClaw host after updating the plugin. |
 | Local core is not running | Start it with the [Core Quickstart](/quickstart), then retry the memory tool call. |
 | Memory crosses unwanted channels | Add `scope.namespace`, `scope.agent`, or `scope.thread`. |
-| Provider connection fails | Verify local core is running at an allowed origin and confirm `apiUrl` and `apiKey` match the Core Quickstart service. |
+| Provider connection fails | Verify local core is running at an allowed origin. If you configured `apiUrl` or `apiKey`, confirm both values match the service you are running. |
 
 ## Development
 
@@ -4367,7 +4493,7 @@ import { MemoryClient } from '@atomicmemory/sdk';
 const memory = new MemoryClient({
   providers: {
     atomicmemory: {
-      apiUrl: 'http://127.0.0.1:3050',
+      apiUrl: 'http://127.0.0.1:17350',
       apiKey: 'local-dev-key',
     },
   },
@@ -4558,7 +4684,7 @@ import { MemoryClient } from '@atomicmemory/sdk';
 const memory = new MemoryClient({
   providers: {
     atomicmemory: {
-      apiUrl: 'http://127.0.0.1:3050',
+      apiUrl: 'http://127.0.0.1:17350',
       apiKey: 'local-dev-key',
     },
   },
@@ -4672,7 +4798,7 @@ docker rm -f atomicmemory-core
 
 docker run -d --pull always \
   --name atomicmemory-core \
-  -p 127.0.0.1:3050:3050 \
+  -p 127.0.0.1:17350:17350 \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
   -e RETRIEVAL_PROFILE=quality \
   -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
@@ -4683,7 +4809,7 @@ Verify the backend reports hybrid search:
 
 ```bash
 curl -s -H 'Authorization: Bearer local-dev-key' \
-  http://localhost:3050/v1/memories/health
+  http://localhost:17350/v1/memories/health
 ```
 
 The response should include `"hybrid_search_enabled": true`.
@@ -4718,9 +4844,9 @@ AtomicMemory adds durable memory to coding agents, AI frameworks, and terminal w
 | --- | --- | --- | --- |
 | Claude Code | MCP tools, memory skill, lifecycle hooks, and local core connection. | Published; hosted mode planned. | [Overview](/integrations/coding-agents/claude-code) · [Local](/integrations/coding-agents/claude-code/local) |
 | Codex | MCP tools plus a memory protocol skill for task-start recall and handoffs. | Manual; packaged plugin planned. | [Overview](/integrations/coding-agents/codex) · [Local](/integrations/coding-agents/codex/local) |
-| OpenClaw | Plugin and skill bundle for cross-channel agent memory. | Published; hosted mode planned. | [Overview](/integrations/coding-agents/openclaw) · [Local](/integrations/coding-agents/openclaw/local) |
-| Hermes Agent | Native Python memory provider with prefetch, turn sync, and explicit tools. | Packaged provider; hosted mode planned. | [Overview](/integrations/coding-agents/hermes) · [Local](/integrations/coding-agents/hermes/local) |
-| Cursor | MCP tools plus Cursor rules for durable memory behavior. | Available manually via MCP + rules; packaged plugin planned. | [Overview](/integrations/coding-agents/cursor) · [Local](/integrations/coding-agents/cursor/local) |
+| OpenClaw | Published plugin with embedded MCP tools and a memory skill bundle for cross-channel agent memory. | Published; hosted mode planned. | [Overview](/integrations/coding-agents/openclaw) · [Local](/integrations/coding-agents/openclaw/local) |
+| Hermes Agent | Published native Python memory provider with prefetch, turn sync, and explicit tools. | Packaged provider; hosted mode planned. | [Overview](/integrations/coding-agents/hermes) · [Local](/integrations/coding-agents/hermes/local) |
+| Cursor | MCP tools plus Cursor rules for durable memory behavior. | Manual local MCP + rule template; packaged plugin planned. | [Overview](/integrations/coding-agents/cursor) · [Local](/integrations/coding-agents/cursor/local) |
 
 ## Frameworks
 
@@ -5452,7 +5578,7 @@ Boot core as a server (`npm start`) and issue JSON requests. Snake\_case on the 
 This is the most portable integration path. If you are writing TypeScript and do not need direct HTTP control, use [`@atomicmemory/sdk`](/sdk/overview) on top of this API instead of hand-rolling request wrappers.
 
 ```ts
-const res = await fetch('http://localhost:3050/v1/memories/ingest', {
+const res = await fetch('http://localhost:17350/v1/memories/ingest', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -5473,7 +5599,7 @@ const {
 ```
 
 ```ts
-const res = await fetch('http://localhost:3050/v1/memories/search', {
+const res = await fetch('http://localhost:17350/v1/memories/search', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -5493,7 +5619,7 @@ The full endpoint surface and response shapes are documented under [HTTP API Ref
 All four memory routes (`/search`, `/search/fast`, `/ingest`, `/ingest/quick`) accept an optional `config_override` body field that overlays the startup `RuntimeConfig` for the scope of that one request. Scope is strictly per-request; the startup singleton is not mutated.
 
 ```ts
-const res = await fetch('http://localhost:3050/v1/memories/search', {
+const res = await fetch('http://localhost:17350/v1/memories/search', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -5579,7 +5705,7 @@ export OPENAI_API_KEY="sk-..."
 
 docker run -d --pull always \
   --name atomicmemory-core \
-  -p 127.0.0.1:3050:3050 \
+  -p 127.0.0.1:17350:17350 \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
   -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
   ghcr.io/atomicstrata/atomicmemory-core:latest
@@ -5604,7 +5730,7 @@ Contributors can still validate the source checkout with `docker-compose.smoke-i
 
 Key env overrides:
 
--   `APP_PORT` (default `3061`), host port bound to the core container's 3050
+-   `APP_PORT` (default `3061`), host port bound to the core container's 17350
 -   `POSTGRES_PORT` (default `5444`), host port for the pgvector container
 -   `EMBEDDING_PROVIDER` / `EMBEDDING_MODEL` / `EMBEDDING_DIMENSIONS`, already wired to `transformers` / `Xenova/all-MiniLM-L6-v2` / `384` for offline runs
 
@@ -6236,12 +6362,13 @@ export type EmbeddingProviderName =
 | `ollama` | Ollama native `/api/chat` endpoint |
 | `openai-compatible` | Any OpenAI-schema endpoint (LM Studio, vLLM, …) |
 | `claude-code` | Local Claude Code Agent SDK session for personal development |
+| `codex` | Local Codex account session for personal development |
 
 Declared in [`config.ts:15`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/config.ts#L15):
 
 ```ts
 export type LLMProviderName =
-  EmbeddingProviderName | 'groq' | 'anthropic' | 'google-genai' | 'claude-code';
+  EmbeddingProviderName | 'groq' | 'anthropic' | 'google-genai' | 'claude-code' | 'codex';
 ```
 
 Note the subtype relationship: the LLM provider union builds on the embedding provider names, then adds chat-only providers. Embedding-only providers such as `transformers` and `voyage` have no chat backend.
@@ -6420,6 +6547,16 @@ LLM_PROVIDER=claude-code
 ```
 
 `claude-code` is only for local developer machines. It consumes the user's Claude Code / Claude subscription limits, requires Claude Code to be installed and authenticated, and should not be used for hosted or team deployments. Pair it with a non-OpenAI embedding provider such as `EMBEDDING_PROVIDER=transformers` or `EMBEDDING_PROVIDER=ollama` if you also want to avoid an OpenAI embedding API key.
+
+For personal local Codex use, the default setup is the logged-in `codex` account path:
+
+```bash
+codex login
+LLM_PROVIDER=codex
+EMBEDDING_PROVIDER=transformers
+```
+
+`codex` is also only for local developer machines. Core reads the auth file created by `codex login` and calls the Codex backend directly. No OpenAI API key is required. It consumes the user's Codex account limits and should not be used for hosted or team deployments; use `LLM_PROVIDER=openai` plus `OPENAI_API_KEY` for that mode. Core resolves that auth file from `CODEX_AUTH_PATH` when set, then `CODEX_HOME/auth.json`, then `$HOME/.codex/auth.json`.
 
 The ingest service, the search service, the AUDN decision loop, the repair loop, none of them have a single `if (provider === 'ollama')` branch. That is the provider-agnostic boundary working as designed.
 
@@ -7078,13 +7215,13 @@ export OPENAI_API_KEY="sk-..."
 
 docker run -d --pull always \
   --name atomicmemory-core \
-  -p 127.0.0.1:3050:3050 \
+  -p 127.0.0.1:17350:17350 \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
   -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
   ghcr.io/atomicstrata/atomicmemory-core:latest
 ```
 
-The container binds core to `127.0.0.1:3050`. The volume mount persists the embedded Postgres database on your host at `$HOME/.atomicstrata/atomicmemory-docker`, so your local memory data survives container restarts, image upgrades, and container recreation.
+The container binds core to `127.0.0.1:17350`. The volume mount persists the embedded Postgres database on your host at `$HOME/.atomicstrata/atomicmemory-docker`, so your local memory data survives container restarts, image upgrades, and container recreation.
 
 For local Docker runs, core defaults `DATABASE_URL` to embedded Postgres and sets a local development API key:
 
@@ -7126,7 +7263,7 @@ printf '%s\n' 'local-dev-key' | \
 atomicmemory init \
   --profile local \
   --provider atomicmemory \
-  --api-url http://127.0.0.1:3050 \
+  --api-url http://127.0.0.1:17350 \
   --trust-surface local \
   --user "$USER" \
   --namespace quickstart \
@@ -7140,7 +7277,7 @@ Hit the memory subsystem health endpoint to confirm the server is live and see t
 
 ```bash
 curl -H 'Authorization: Bearer local-dev-key' \
-  http://localhost:3050/v1/memories/health
+  http://localhost:17350/v1/memories/health
 ```
 
 You should get back a JSON object with `"status": "ok"` and a `config` snapshot showing the selected embedding and LLM providers.
@@ -7150,7 +7287,7 @@ You should get back a JSON object with `"status": "ok"` and a `config` snapshot 
 Send a conversation and let AtomicMemory extract structured facts, embed them, and run AUDN to decide what to store.
 
 ```bash
-curl -X POST http://localhost:3050/v1/memories/ingest \
+curl -X POST http://localhost:17350/v1/memories/ingest \
   -H 'Content-Type: application/json' \
   -H 'Authorization: Bearer local-dev-key' \
   -d '{"user_id":"alice","conversation":"user: I ship Go backends and TypeScript frontends.","source_site":"quickstart"}'
@@ -7163,7 +7300,7 @@ The response reports `facts_extracted`, `memories_stored`, `stored_memory_ids`, 
 Query the memories you just created. AtomicMemory runs semantic retrieval, applies the active retrieval profile, and packages the result. Hybrid retrieval (vector + BM25/FTS with RRF fusion) is available through the `quality` profile or per-request config overrides, but the default `balanced` profile keeps it off.
 
 ```bash
-curl -X POST http://localhost:3050/v1/memories/search \
+curl -X POST http://localhost:17350/v1/memories/search \
   -H 'Content-Type: application/json' \
   -H 'Authorization: Bearer local-dev-key' \
   -d '{"user_id":"alice","query":"what stack does alice use?"}'
@@ -7607,7 +7744,7 @@ Providers are instantiated at init time from the `providers` config. The registr
 new MemoryClient({
   providers: {
     atomicmemory: {
-      apiUrl: 'http://localhost:3050',
+      apiUrl: 'http://localhost:17350',
       apiKey: 'local-dev-key',
     },
     mem0: { apiUrl: 'http://localhost:8000' },
@@ -7834,13 +7971,13 @@ Use `AtomicMemoryClient.storage` for artifact operations:
 import { AtomicMemoryClient } from '@atomicmemory/sdk';
 
 const client = new AtomicMemoryClient({
-  apiUrl: 'http://localhost:3050',
+  apiUrl: 'http://localhost:17350',
   apiKey: process.env.ATOMICMEMORY_API_KEY!,
   userId: 'demo-user',
   memory: {
     providers: {
       atomicmemory: {
-        apiUrl: 'http://localhost:3050',
+        apiUrl: 'http://localhost:17350',
         apiKey: process.env.ATOMICMEMORY_API_KEY!,
       },
     },
@@ -7910,7 +8047,7 @@ The Python SDK exposes the same storage API with Python field names.
 from atomicmemory import StorageClient
 
 with StorageClient({
-    "apiUrl": "http://localhost:3050",
+    "apiUrl": "http://localhost:17350",
     "apiKey": "server-api-key",
     "userId": "demo-user",
 }) as client:
@@ -7929,7 +8066,7 @@ For large managed objects, use streaming reads rather than buffering the whole r
 
 ```python
 with StorageClient({
-    "apiUrl": "http://localhost:3050",
+    "apiUrl": "http://localhost:17350",
     "apiKey": "server-api-key",
     "userId": "demo-user",
 }) as client:
@@ -8057,7 +8194,7 @@ Run `memory.capabilities()` at init and cache the result, you'll know exactly wh
 -   **`apiKey`**, set a bearer token on the SDK side and a matching gate on core. Don't rely on `testMode` identity in production.
 -   **`timeout`**, the default 30s is fine for most paths. Tighten for latency-sensitive UIs; loosen for batch workloads that trigger large searches.
 -   **`apiVersion`**, pin to the version your core is on. Leave as `'v1'` unless you've deployed a different API version.
--   **Network reachability**, core runs on port `3050` by default. Verify from your deployment target (container? serverless? browser?) that the URL resolves.
+-   **Network reachability**, core runs on port `17350` by default. Verify from your deployment target (container? serverless? browser?) that the URL resolves.
 
 ## Next
 
@@ -8527,7 +8664,7 @@ async function withProvider(defaultProvider: 'atomicmemory' | 'mem0') {
   const memory = new MemoryClient({
     providers: {
       atomicmemory: {
-        apiUrl: 'http://localhost:3050',
+        apiUrl: 'http://localhost:17350',
         apiKey: 'local-dev-key',
       },
       mem0: { apiUrl: 'http://localhost:8000' },
@@ -8631,7 +8768,7 @@ import { MemoryClient } from '@atomicmemory/sdk';
 const memory = new MemoryClient({
   providers: {
     atomicmemory: {
-      apiUrl: 'http://localhost:3050',
+      apiUrl: 'http://localhost:17350',
       apiKey: 'local-dev-key',
     },
   },
@@ -8658,13 +8795,13 @@ Use `AtomicMemoryClient` when you also need storage artifacts:
 import { AtomicMemoryClient } from '@atomicmemory/sdk';
 
 const client = new AtomicMemoryClient({
-  apiUrl: 'http://localhost:3050',
+  apiUrl: 'http://localhost:17350',
   apiKey: process.env.ATOMICMEMORY_API_KEY!,
   userId: 'u1',
   memory: {
     providers: {
       atomicmemory: {
-        apiUrl: 'http://localhost:3050',
+        apiUrl: 'http://localhost:17350',
         apiKey: process.env.ATOMICMEMORY_API_KEY!,
       },
     },
@@ -8712,7 +8849,7 @@ Install, initialize, and make your first ingest and search, with `MemoryClient` 
 ## Prerequisites
 
 -   **Node.js 22+** (FOC/Filecoin storage paths require Node 24+)
--   **A running `atomicmemory-core`**, follow the [Core Quickstart](/quickstart) if you have not yet brought one up; we assume `http://localhost:3050` below
+-   **A running `atomicmemory-core`**, follow the [Core Quickstart](/quickstart) if you have not yet brought one up; we assume `http://localhost:17350` below
 
 ## Step 1, Install
 
@@ -8732,7 +8869,7 @@ import { MemoryClient } from '@atomicmemory/sdk';
 const memory = new MemoryClient({
   providers: {
     atomicmemory: {
-      apiUrl: 'http://localhost:3050',
+      apiUrl: 'http://localhost:17350',
       apiKey: 'local-dev-key',
     },
   },
@@ -8749,7 +8886,7 @@ If you configure more than one provider, pass `defaultProvider` to pick which on
 new MemoryClient({
   providers: {
     atomicmemory: {
-      apiUrl: 'http://localhost:3050',
+      apiUrl: 'http://localhost:17350',
       apiKey: 'local-dev-key',
     },
     mem0: { apiUrl: 'http://localhost:8888', pathPrefix: '' },
@@ -8808,13 +8945,13 @@ If your app also needs to reference files or raw bytes, use `AtomicMemoryClient.
 import { AtomicMemoryClient } from '@atomicmemory/sdk';
 
 const client = new AtomicMemoryClient({
-  apiUrl: 'http://localhost:3050',
+  apiUrl: 'http://localhost:17350',
   apiKey: process.env.ATOMICMEMORY_API_KEY!,
   userId: 'demo-user',
   memory: {
     providers: {
       atomicmemory: {
-        apiUrl: 'http://localhost:3050',
+        apiUrl: 'http://localhost:17350',
         apiKey: 'local-dev-key',
       },
     },

@@ -7,7 +7,7 @@ Install, initialize, and make your first ingest and search, with `MemoryClient` 
 ## Prerequisites
 
 -   **Node.js 22+** (FOC/Filecoin storage paths require Node 24+)
--   **A running `atomicmemory-core`**, follow the [Core Quickstart](/quickstart) if you have not yet brought one up; we assume `http://localhost:3050` below
+-   **A running `atomicmemory-core`**, follow the [Core Quickstart](/quickstart) if you have not yet brought one up; we assume `http://localhost:17350` below
 
 ## Step 1, Install
 
@@ -27,7 +27,7 @@ import { MemoryClient } from '@atomicmemory/sdk';
 const memory = new MemoryClient({
   providers: {
     atomicmemory: {
-      apiUrl: 'http://localhost:3050',
+      apiUrl: 'http://localhost:17350',
       apiKey: 'local-dev-key',
     },
   },
@@ -44,7 +44,7 @@ If you configure more than one provider, pass `defaultProvider` to pick which on
 new MemoryClient({
   providers: {
     atomicmemory: {
-      apiUrl: 'http://localhost:3050',
+      apiUrl: 'http://localhost:17350',
       apiKey: 'local-dev-key',
     },
     mem0: { apiUrl: 'http://localhost:8888', pathPrefix: '' },
@@ -103,13 +103,13 @@ If your app also needs to reference files or raw bytes, use `AtomicMemoryClient.
 import { AtomicMemoryClient } from '@atomicmemory/sdk';
 
 const client = new AtomicMemoryClient({
-  apiUrl: 'http://localhost:3050',
+  apiUrl: 'http://localhost:17350',
   apiKey: process.env.ATOMICMEMORY_API_KEY!,
   userId: 'demo-user',
   memory: {
     providers: {
       atomicmemory: {
-        apiUrl: 'http://localhost:3050',
+        apiUrl: 'http://localhost:17350',
         apiKey: 'local-dev-key',
       },
     },

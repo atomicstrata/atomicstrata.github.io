@@ -52,7 +52,7 @@ printf '%s\n' 'local-dev-key' | \
 atomicmemory init \
   --profile local \
   --provider atomicmemory \
-  --api-url http://127.0.0.1:3050 \
+  --api-url http://127.0.0.1:17350 \
   --trust-surface local \
   --user "$USER" \
   --namespace my-project \
@@ -72,7 +72,7 @@ For environment-only configuration:
 
 ```bash
 export ATOMICMEMORY_PROVIDER="atomicmemory"
-export ATOMICMEMORY_API_URL="http://127.0.0.1:3050"
+export ATOMICMEMORY_API_URL="http://127.0.0.1:17350"
 export ATOMICMEMORY_API_KEY="local-dev-key"
 export ATOMICMEMORY_TRUST_SURFACE="local"
 export ATOMICMEMORY_SCOPE_USER="$USER"
@@ -110,7 +110,7 @@ If you skip `init`, `status` and memory commands need equivalent flags or enviro
 ```bash
 atomicmemory status \
   --provider atomicmemory \
-  --api-url http://127.0.0.1:3050 \
+  --api-url http://127.0.0.1:17350 \
   --trust-surface local \
   --user "$USER"
 ```
@@ -130,7 +130,7 @@ The dashboard keeps the prompt at the bottom and appends command results above i
 On a fresh machine, run `init` before relying on interactive commands such as `status`, `add`, or `search`. If the dashboard says `scope not configured`, either run `init`, set `ATOMICMEMORY_SCOPE_USER` plus the provider environment variables above, or include flags directly in the command you type into the dashboard:
 
 ```text
-status --provider atomicmemory --api-url http://127.0.0.1:3050 --trust-surface local --user alice
+status --provider atomicmemory --api-url http://127.0.0.1:17350 --trust-surface local --user alice
 ```
 
 | Input | Purpose |
@@ -192,7 +192,7 @@ Provider-backed commands accept the same provider and scope overrides:
 ```bash
 atomicmemory search "release policy" \
   --provider atomicmemory \
-  --api-url http://127.0.0.1:3050 \
+  --api-url http://127.0.0.1:17350 \
   --trust-surface local \
   --user "$USER" \
   --namespace atomicmemory-integrations
@@ -237,6 +237,16 @@ export EMBEDDING_PROVIDER=transformers
 ```
 
 That mode is for personal/local use. It requires Claude Code to be installed and logged in, consumes the user's Claude Code / Claude subscription limits, and is not the recommended path for hosted or team deployments. `LLM_PROVIDER` configures the local AtomicMemory core process; CLI profile variables such as `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and scope still configure how the CLI reaches that core process.
+
+Codex local extraction defaults to account-auth:
+
+```bash
+codex login
+export LLM_PROVIDER=codex
+export EMBEDDING_PROVIDER=transformers
+```
+
+This is the default Codex local setup. Core reads the auth file created by `codex login` and calls the Codex backend directly. No OpenAI API key is required. It consumes the user's Codex account limits and is not the recommended path for hosted or team deployments; use `LLM_PROVIDER=openai` plus `OPENAI_API_KEY` for that mode.
 
 ## Machine output
 
