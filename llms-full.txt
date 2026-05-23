@@ -61,7 +61,7 @@ Source: https://docs.atomicstrata.ai/api-reference/http/atomicmemory-http-api
 
 Mirrors the OpenAPI `info` block from the vendored `atomicmemory-core` spec.
 
-Version: `1.0.0`
+Version: `1.0.6`
 
 Semantic memory engine for AI applications. Request/response bodies are JSON; fields on the wire use snake_case.
 
@@ -1640,6 +1640,24 @@ Service-owned status transition. The `index_text_too_large` code on a `extractio
 | 500 | Internal server error |
 | 502 | Upstream AI provider returned an unrecoverable failure (auth, non-retryable 4xx). |
 | 503 | Upstream AI provider is rate-limited, quota-exhausted, or returned 5xx; consult `retryable`. |
+
+---
+
+## OpenAPI Spec
+
+Source: https://docs.atomicstrata.ai/api-reference/http/openapi-spec
+
+# OpenAPI Spec
+
+> Agent index: [llms.txt](/llms.txt)
+
+Download the canonical AtomicMemory Core OpenAPI document:
+
+[
+
+Download atomicmemory-core-openapi.yaml
+
+](/atomicmemory-core-openapi.yaml)
 
 ---
 
