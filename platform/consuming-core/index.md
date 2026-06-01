@@ -20,6 +20,12 @@
 
 All three are designed to converge on the same composition root (`createCoreRuntime`). A parity test, [`research-consumption-seams.test.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/app/__tests__/research-consumption-seams.test.ts), guards the main ingest/search path across modes.
 
+## MCP is an adapter, not an authority
+
+`@atomicmemory/mcp-server` exposes core to MCP-compatible agent hosts as a small set of tools (search, ingest, package, list). It is a thin callable-tool adapter that speaks to core through the same HTTP/SDK contract above — not a separate authority. The REST API and the [`@atomicmemory/sdk`](/sdk/overview) type surface remain the authoritative memory contract: provenance, scope, mutation results, retrieval scores, and context-package metadata are defined there.
+
+MCP tool results are returned as JSON-stringified text for host compatibility. Treat that text as a transport convenience, not a separate audit surface — for evidence or audit purposes, read the REST/SDK projection rather than parsing tool text. New memory semantics land in core and the SDK first; the MCP adapter exposes them, it does not define them.
+
 ## HTTP
 
 Boot core as a server (`npm start`) and issue JSON requests. Snake\_case on the wire.
