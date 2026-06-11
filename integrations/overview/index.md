@@ -21,6 +21,7 @@ AtomicMemory adds durable memory to coding agents, AI frameworks, and terminal w
 | Vercel AI SDK | Pre-call retrieval and post-call ingest around `generateText` / `streamText`. | Published; hosted mode planned. | [Overview](/integrations/frameworks/vercel-ai-sdk) · [Local](/integrations/frameworks/vercel-ai-sdk/local) |
 | OpenAI Agents SDK | Memory-aware `run()` flows and optional function tools. | Published; hosted mode planned. | [Overview](/integrations/frameworks/openai-agents) · [Local](/integrations/frameworks/openai-agents/local) |
 | LangChain (JS) | Memory search/ingest tools and helper functions around an injected SDK client. | Published; hosted mode planned. | [Overview](/integrations/frameworks/langchain-js) · [Local](/integrations/frameworks/langchain-js/local) |
+| Langflow | Custom visual-flow components for explicit store, prompt-ready search context, read-only chat memory, and scoped deletion. | Published; hosted mode planned. | [Overview](/integrations/frameworks/langflow) · [Local](/integrations/frameworks/langflow/local) |
 | LangGraph (JS) | Retrieve and ingest node factories for durable memory inside state graphs. | Published; hosted mode planned. | [Overview](/integrations/frameworks/langgraph-js) · [Local](/integrations/frameworks/langgraph-js/local) |
 | Mastra | Memory search/ingest tools for Mastra agents. | Published; hosted mode planned. | [Overview](/integrations/frameworks/mastra) · [Local](/integrations/frameworks/mastra/local) |
 

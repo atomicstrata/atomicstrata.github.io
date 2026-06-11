@@ -38,6 +38,15 @@ Quick or verbatim ingest. The `metadata` field is **honored only** when `skip_ex
       "description": "Optional per-request overlay on RuntimeConfig. Keys correspond to RuntimeConfig field names; values must be primitives (boolean / number / string / null). Unknown keys are accepted but surfaced via the X-Atomicmem-Unknown-Override-Keys response header and a server-side warning log — they do not cause a 400. Scope: just this request — no server mutation.",
       "type": "object"
     },
+    "content_class": {
+      "description": "Optional sensitivity class of the supplied content: 'summary' (distilled, hosted-safe), 'redacted' (sensitive spans removed by the caller), or 'raw' (verbatim prompt/response/diff/source). When the deployment runs RAW_CONTENT_POLICY=reject, ingest of 'raw' content — or content with no content_class at all (treated as unknown/raw) — is rejected with 422 raw_content_rejected.",
+      "enum": [
+        "summary",
+        "redacted",
+        "raw"
+      ],
+      "type": "string"
+    },
     "conversation": {
       "description": "Required. conversation.",
       "minLength": 1,

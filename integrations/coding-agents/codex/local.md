@@ -163,7 +163,7 @@ Optional:
 | --- | --- |
 | `ATOMICMEMORY_PROVIDER` | Provider name, usually `atomicmemory`. Defaults to `atomicmemory`. |
 | `ATOMICMEMORY_API_URL` | Provider base URL. Defaults to local AtomicMemory core for `provider=atomicmemory`; required for `provider=mem0` or remote services. |
-| `ATOMICMEMORY_API_KEY` | API key for the Core Quickstart service or any provider that requires auth. |
+| `ATOMICMEMORY_API_KEY` | API key for the local Docker service or any provider that requires auth. |
 | `ATOMICMEMORY_SCOPE_USER` | Stable user identity for memory scope. Defaults to the local machine user when omitted. |
 | `ATOMICMEMORY_SCOPE_AGENT` | Optional agent identity override. |
 | `ATOMICMEMORY_SCOPE_NAMESPACE` | Project or repository boundary. |
@@ -195,7 +195,7 @@ The installed skill guides Codex to:
 | Symptom | Fix |
 | --- | --- |
 | No memory tools appear | Run `codex mcp list`, restart Codex after changing MCP config, and confirm `npx -y --package=@atomicmemory/mcp-server atomicmemory-mcp` works in the same environment. |
-| Local core is not running | Start it with the [Core Quickstart](/quickstart), then retry the MCP tool call. |
+| Local core is not running | Start it with the Docker command in the quickstart above, then retry the MCP tool call. |
 | `codex` extraction provider fails | Run `codex login` again and confirm the core process can read the auth file. For Docker, keep `-v $HOME/.codex:/home/appuser/.codex:ro` and `-e CODEX_AUTH_PATH=/home/appuser/.codex/auth.json` together. |
 | Connection failed | Verify local AtomicMemory core is running at `http://127.0.0.1:17350`, or verify `ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, and `ATOMICMEMORY_API_KEY` for remote/provider-specific setups. |
 | Plugin not found | Plugin mode is source-distributed today; confirm the marketplace entry points at a local clone of `atomicmemory/plugins/codex`. |

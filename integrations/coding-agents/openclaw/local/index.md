@@ -16,12 +16,19 @@ export OPENAI_API_KEY="sk-..."
 docker run -d --pull always \
   --name atomicmemory-core \
   -p 127.0.0.1:17350:17350 \
+  -e LLM_PROVIDER=openai \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
+  -e EMBEDDING_PROVIDER=transformers \
+  -e EMBEDDING_DIMENSIONS=384 \
   -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
   ghcr.io/atomicstrata/atomicmemory-core:latest
 ```
 
 For the default local core, no OpenClaw plugin config is required: the embedded MCP server uses the local core URL, local quickstart key, and your local machine user by default.
+
+Important note
+
+This quickstart uses the free local `transformers` embedding model so it can run without a separate embedding API key. For production or higher-recall use, switch core to a stronger paid embedding provider as soon as you are ready.
 
 ### 2. Install the plugin
 
@@ -139,7 +146,7 @@ permissions:
 | Symptom | Fix |
 | --- | --- |
 | Plugin changes do not appear | Restart the OpenClaw host after updating the plugin. |
-| Local core is not running | Start it with the [Core Quickstart](/quickstart), then retry the memory tool call. |
+| Local core is not running | Start it with the Docker command in the quickstart above, then retry the memory tool call. |
 | Memory crosses unwanted channels | Add `scope.namespace`, `scope.agent`, or `scope.thread`. |
 | Provider connection fails | Verify local core is running at an allowed origin. If you configured `apiUrl` or `apiKey`, confirm both values match the service you are running. |
 

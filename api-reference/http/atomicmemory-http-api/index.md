@@ -4,7 +4,7 @@
 
 Mirrors the OpenAPI `info` block from the vendored `atomicmemory-core` spec.
 
-Version: `1.0.6`
+Version: `1.0.0`
 
 Semantic memory engine for AI applications. Request/response bodies are JSON; fields on the wire use snake_case.
 

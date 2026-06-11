@@ -16,12 +16,19 @@ export OPENAI_API_KEY="sk-..."
 docker run -d --pull always \
   --name atomicmemory-core \
   -p 127.0.0.1:17350:17350 \
+  -e LLM_PROVIDER=openai \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
+  -e EMBEDDING_PROVIDER=transformers \
+  -e EMBEDDING_DIMENSIONS=384 \
   -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
   ghcr.io/atomicstrata/atomicmemory-core:latest
 ```
 
 For the default local core, no Cursor `env` block is required: the MCP server uses the local core URL, local quickstart key, and your local machine user by default.
+
+Important note
+
+This quickstart uses the free local `transformers` embedding model so it can run without a separate embedding API key. For production or higher-recall use, switch core to a stronger paid embedding provider as soon as you are ready.
 
 ### 2. Register the MCP server
 
@@ -157,7 +164,7 @@ Cursor uses a rule file instead of a packaged skill. Keep the rule small and exp
 | Symptom | Fix |
 | --- | --- |
 | No memory tools appear | Restart Cursor after changing MCP settings. |
-| Local core is not running | Start it with the [Core Quickstart](/quickstart), then retry the MCP tool call. |
+| Local core is not running | Start it with the Docker command in the quickstart above, then retry the MCP tool call. |
 | MCP server fails | Confirm `@atomicmemory/mcp-server` is reachable from Cursor's environment. |
 | Unexpected memory sharing | Add `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or `ATOMICMEMORY_SCOPE_THREAD`. |
 

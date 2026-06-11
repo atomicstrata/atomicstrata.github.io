@@ -6,13 +6,35 @@ Give Vercel AI SDK applications persistent memory backed by AtomicMemory. The ad
 
 ## Quick start
 
-### 1. Install the adapter
+### 1. Start AtomicMemory core
+
+Start local core first. It should be reachable at `http://127.0.0.1:17350`.
+
+```bash
+export OPENAI_API_KEY="sk-..."
+
+docker run -d --pull always \
+  --name atomicmemory-core \
+  -p 127.0.0.1:17350:17350 \
+  -e LLM_PROVIDER=openai \
+  -e OPENAI_API_KEY=$OPENAI_API_KEY \
+  -e EMBEDDING_PROVIDER=transformers \
+  -e EMBEDDING_DIMENSIONS=384 \
+  -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
+  ghcr.io/atomicstrata/atomicmemory-core:latest
+```
+
+Important note
+
+This quickstart uses the free local `transformers` embedding model so it can run without a separate embedding API key. For production or higher-recall use, switch core to a stronger paid embedding provider as soon as you are ready.
+
+### 2. Install the adapter
 
 ```bash
 npm install @atomicmemory/vercel-ai @atomicmemory/sdk
 ```
 
-### 2. Configure memory
+### 3. Configure memory
 
 ```ts
 import { MemoryClient } from '@atomicmemory/sdk';
@@ -34,7 +56,7 @@ const scope = {
 };
 ```
 
-### 3. Wrap a model call
+### 4. Wrap a model call
 
 ```ts
 import { streamText } from 'ai';
@@ -135,7 +157,10 @@ docker rm -f atomicmemory-core
 docker run -d --pull always \
   --name atomicmemory-core \
   -p 127.0.0.1:17350:17350 \
+  -e LLM_PROVIDER=openai \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
+  -e EMBEDDING_PROVIDER=transformers \
+  -e EMBEDDING_DIMENSIONS=384 \
   -e RETRIEVAL_PROFILE=quality \
   -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
   ghcr.io/atomicstrata/atomicmemory-core:latest

@@ -16,10 +16,17 @@ export OPENAI_API_KEY="sk-..."
 docker run -d --pull always \
   --name atomicmemory-core \
   -p 127.0.0.1:17350:17350 \
+  -e LLM_PROVIDER=openai \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
+  -e EMBEDDING_PROVIDER=transformers \
+  -e EMBEDDING_DIMENSIONS=384 \
   -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
   ghcr.io/atomicstrata/atomicmemory-core:latest
 ```
+
+Important note
+
+This quickstart uses the free local `transformers` embedding model so it can run without a separate embedding API key. For production or higher-recall use, switch core to a stronger paid embedding provider as soon as you are ready.
 
 ### 2. Install the provider
 
@@ -67,7 +74,7 @@ hermes memory status
 
 ## Configuration
 
-The Core Quickstart's local Docker service requires the development bearer key shown above. For a remote AtomicMemory service, use that service's issued key:
+The local Docker service started above requires the development bearer key shown in the quickstart. For a remote AtomicMemory service, use that service's issued key:
 
 ```bash
 export ATOMICMEMORY_API_URL="https://memory.yourco.com"
@@ -86,7 +93,7 @@ Required environment:
 | Env var | Purpose |
 | --- | --- |
 | `ATOMICMEMORY_API_URL` | AtomicMemory core URL. Required; the Hermes provider intentionally has no default API URL. |
-| `ATOMICMEMORY_API_KEY` | Bearer credential for the Core Quickstart service or any protected AtomicMemory service. |
+| `ATOMICMEMORY_API_KEY` | Bearer credential for the local Docker service or any protected AtomicMemory service. |
 
 Optional environment:
 

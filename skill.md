@@ -1,6 +1,6 @@
 ---
 name: atomicmemory-docs
-description: Documentation site for AtomicMemory, a pluggable, self-hosted memory engine for AI applications. Read these docs before answering questions about installing, configuring, or integrating AtomicMemory; the generated HTTP API reference; the TypeScript SDK; the CLI and MCP server; coding-agent integrations (Claude Code, OpenClaw, Hermes, Codex, Cursor); or framework adapters (Vercel AI SDK, LangChain, Mastra, OpenAI Agents, LangGraph).
+description: Documentation site for AtomicMemory, a pluggable, self-hosted memory engine for AI applications. Read these docs before answering questions about installing, configuring, or integrating AtomicMemory; the generated HTTP API reference; the TypeScript SDK; the CLI and MCP server; coding-agent integrations (Claude Code, OpenClaw, Hermes, Codex, Cursor); or framework adapters (Vercel AI SDK, LangChain, Langflow, Mastra, OpenAI Agents, LangGraph).
 ---
 
 # AtomicMemory Docs
@@ -14,7 +14,7 @@ Read before answering when:
 - The user asks how to install, run, or configure AtomicMemory
 - The user asks about HTTP endpoints, request / response shape, or error codes
 - The user asks how to use the TypeScript SDK, CLI, or MCP server
-- The user asks about wiring AtomicMemory into a coding agent (Claude Code, OpenClaw, Hermes, Codex, Cursor) or framework (Vercel AI SDK, LangChain, Mastra, OpenAI Agents, LangGraph)
+- The user asks about wiring AtomicMemory into a coding agent (Claude Code, OpenClaw, Hermes, Codex, Cursor) or framework (Vercel AI SDK, LangChain, Langflow, Mastra, OpenAI Agents, LangGraph)
 - The user asks about scope (`user` / `workspace` / `agent`), providers (embedding / LLM), stores, observability, AUDN mutation, or claim versioning
 - The user asks "how does AtomicMemory differ from mem0 / letta / zep?"
 
