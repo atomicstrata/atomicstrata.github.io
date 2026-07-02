@@ -30,7 +30,7 @@ Two optional tuning fields control recall depth and context size: `defaultBudget
 
 ## Scope maps to banks
 
-Hindsight groups memories into per-user banks, and the provider derives the bank from `scope.user` — so **every operation needs a user scope**:
+Hindsight groups memories into per-user banks, and the provider derives the bank from `scope.user` - so **every operation needs a user scope**:
 
 ```typescript
 const page = await memory.search({
@@ -52,7 +52,7 @@ const page = await memory.search({
 
 Two provider-specific behaviors to plan around:
 
--   **Verbatim ingest is rejected.** `ingest({ mode: 'verbatim' })` throws `UnsupportedOperationError` — Hindsight always processes what it retains. `text` and `messages` modes are supported.
+-   **Verbatim ingest is rejected.** `ingest({ mode: 'verbatim' })` throws `UnsupportedOperationError` - Hindsight always processes what it retains. `text` and `messages` modes are supported.
 -   **Search results carry no relevance score.** Hindsight recall does not return per-hit scores, so `score` is always `0` on results. Don't sort or threshold by score with this backend.
 
 Use the capability-probing pattern from [Capabilities](/sdk/concepts/capabilities) to handle differences gracefully:
@@ -86,7 +86,7 @@ const op = await ops.get({ user: 'demo' }, res.operation_id);
 ## When to pick Hindsight
 
 -   You're already running Hindsight (Cloud or self-hosted) and want it behind the same client as your other memory backends
--   You want Hindsight's retain/recall/reflect model — including LLM-synthesized insights via `reflect` — without coding to its API directly
+-   You want Hindsight's retain/recall/reflect model - including LLM-synthesized insights via `reflect` - without coding to its API directly
 -   You're comparing memory engines behind a single client
 
 For greenfield deployments where temporal queries, versioning, and verbatim storage matter, `atomicmemory-core` is the supported first-class path.

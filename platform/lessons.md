@@ -2,15 +2,15 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-A **lesson** is a recorded failure pattern that AtomicMemory has seen for a specific user — a prompt-injection attempt that was blocked, a low-trust source that tried to write a fact, a high-confidence contradiction that forced a SUPERSEDE/DELETE, or a memory the user explicitly flagged as wrong. Each lesson is stored with a vector embedding of the offending text, a severity, and provenance. Before any future retrieval runs for that user, the search pipeline embeds the query and asks: *"have I been burned by something like this before?"* If a match crosses the similarity threshold, the retrieval either annotates the response with a warning or — for `critical` matches — refuses to return anything.
+A **lesson** is a recorded failure pattern that AtomicMemory has seen for a specific user - a prompt-injection attempt that was blocked, a low-trust source that tried to write a fact, a high-confidence contradiction that forced a SUPERSEDE/DELETE, or a memory the user explicitly flagged as wrong. Each lesson is stored with a vector embedding of the offending text, a severity, and provenance. Before any future retrieval runs for that user, the search pipeline embeds the query and asks: *"have I been burned by something like this before?"* If a match crosses the similarity threshold, the retrieval either annotates the response with a warning or - for `critical` matches - refuses to return anything.
 
 In other words: **lessons are the engine's long-term immune system.** They turn one-off bad inputs into durable per-user filters, without operator intervention.
 
-This page explains what they are, when they get recorded, what each of the four HTTP endpoints is for, and how to think about the data they expose. Lessons are an optional subsystem — they only run when `lessonsEnabled` is set on the [runtime config](/platform/consuming-core) and a `LessonStore` is wired into the [composition root](/platform/composition).
+This page explains what they are, when they get recorded, what each of the four HTTP endpoints is for, and how to think about the data they expose. Lessons are an optional subsystem - they only run when `lessonsEnabled` is set on the [runtime config](/platform/consuming-core) and a `LessonStore` is wired into the [composition root](/platform/composition).
 
 ## Why they exist
 
-Memory systems that ingest from untrusted surfaces — chat transcripts, browser captures, third-party agents — are exposed to two classes of contamination that ordinary retrieval ranking can't fix:
+Memory systems that ingest from untrusted surfaces - chat transcripts, browser captures, third-party agents - are exposed to two classes of contamination that ordinary retrieval ranking can't fix:
 
 1.  **Adversarial inputs.** A prompt-injection payload looks like normal text. Even after the input sanitizer catches it, the same attacker (or the same compromised source) tends to try the *same shape of payload* again. Embedding-similarity search over recorded blocks catches the re-attempt before it ever reaches a model.
 2.  **Low-signal or contradicted writes.** Trust scoring rejects a fact today; tomorrow the same low-trust source ingests near-identical text. Without a memory of yesterday's rejection, retrieval is forced to re-evaluate from scratch every time. Lessons collapse that loop into a single embedding lookup.
@@ -26,7 +26,7 @@ Five lesson **types** are declared on the wire. Four of them are auto-recorded b
 | `injection_blocked` | input sanitizer flags a prompt-injection attempt (`block`\-severity finding) | `high` (1–2 findings) → `critical` (≥3) | ingest pipeline, automatic |
 | `trust_violation` | the writing source's trust score falls below `trustScoreMinThreshold` | `medium` (`< threshold`) → `high` (`< 0.1`) | ingest pipeline, automatic |
 | `contradiction_pattern` | a SUPERSEDE or DELETE fires with contradiction confidence ≥ 0.8 | `medium` | ingest pipeline, automatic |
-| `false_memory` *(reserved)* | not yet recorded by any service path | — | reserved for future automatic detection |
+| `false_memory` *(reserved)* | not yet recorded by any service path | \- | reserved for future automatic detection |
 | `user_reported` | operator/end-user explicitly flags a memory via `POST /lessons/report` | `high` by default; caller may pass `low | medium | high | critical` | application code |
 
 Every lesson row carries:
@@ -61,17 +61,19 @@ export interface LessonRow {
 
 Every search runs through `checkLessons` before results are returned. The check embeds the query, runs a cosine-similarity lookup against the user's active lessons (similarity threshold `0.75`, top `3` matches), and returns three things:
 
--   `safe: boolean` — `false` only if any matched lesson has severity `critical`. A `false` here causes the orchestrator to skip core retrieval entirely and return an empty memory list with a `lessonCheck` block explaining why.
--   `warnings: string[]` — one short warning per matched lesson, suitable for surfacing in a UI ("flagged previously: …").
--   `highestSeverity: 'none' | 'low' | 'medium' | 'high' | 'critical'` — so callers can decide their own gating without parsing the warnings.
+-   `safe: boolean` - `false` only if any matched lesson has severity `critical`. A `false` here causes the orchestrator to skip core retrieval entirely and return an empty memory list with a `lessonCheck` block explaining why.
+-   `warnings: string[]` - one short warning per matched lesson, suitable for surfacing in a UI ("flagged previously: …").
+-   `highestSeverity: 'none' | 'low' | 'medium' | 'high' | 'critical'` - so callers can decide their own gating without parsing the warnings.
 
 The full block also appears on the search response (`lessonCheck` / `lesson_check`), so application code can render it without making a second round-trip. In the SDK it shows up on `SearchResult.lessonCheck`; on the wire it's the `lesson_check` field on the search response.
 
 ## The four HTTP endpoints
 
-All four endpoints live under `/v1/memories/lessons*` and are user-scoped — every read and every write requires a `userId` query parameter, mirroring the rest of the memories surface.
+All four endpoints live under `/v1/memories/lessons*` and are user-scoped
 
-### GET /v1/memories/lessons — list
+-   every read and every write requires a `userId` query parameter, mirroring the rest of the memories surface.
+
+### GET /v1/memories/lessons - list
 
 Returns all active lessons for a user, newest first. Use it to:
 
@@ -79,11 +81,11 @@ Returns all active lessons for a user, newest first. Use it to:
 -   debug a blocked retrieval (the `lessonCheck` from search names matched lesson IDs; this endpoint resolves them),
 -   audit what your ingest pipeline has been recording over time.
 
-The pattern text is included in each row, so the response can be sensitive — treat the endpoint the same way you treat memory contents.
+The pattern text is included in each row, so the response can be sensitive - treat the endpoint the same way you treat memory contents.
 
 See: [List active lessons](/api-reference/http/list-lessons).
 
-### GET /v1/memories/lessons/stats — counts only
+### GET /v1/memories/lessons/stats - counts only
 
 Returns just the aggregate count of active lessons per type:
 
@@ -99,11 +101,13 @@ Returns just the aggregate count of active lessons per type:
 }
 ```
 
-This is the right endpoint when you want a **lightweight health signal** — a number you can show next to a user, watch for spikes (e.g. sudden growth in `injection_blocked` from a single source), or feed into monitoring without exposing pattern text.
+This is the right endpoint when you want a **lightweight health signal**
+
+-   a number you can show next to a user, watch for spikes (e.g. sudden growth in `injection_blocked` from a single source), or feed into monitoring without exposing pattern text.
 
 See: [Lesson statistics](/api-reference/http/get-lesson-stats).
 
-### POST /v1/memories/lessons/report — operator-driven recording
+### POST /v1/memories/lessons/report - operator-driven recording
 
 Records a `user_reported` lesson on behalf of the caller. The body specifies the offending pattern, the source memory IDs that produced it, and an optional severity. Use it when:
 
@@ -115,7 +119,7 @@ This is the only endpoint where the **application controls severity**. The defau
 
 See: [Report a new lesson](/api-reference/http/report-lesson).
 
-### DELETE /v1/memories/lessons/:id — retire
+### DELETE /v1/memories/lessons/:id - retire
 
 Marks a lesson inactive (`active = false` in the DB). Active is the only state that affects retrieval, so a deactivated lesson is effectively ignored but still preserved for audit. Use it to:
 
@@ -139,9 +143,9 @@ When the flag is off, search returns no `lessonCheck` block, the four endpoints 
 
 A few practical patterns:
 
--   **Surface a count to users.** Poll `GET /lessons/stats` on dashboard load; show `total_active` as a small badge. Don't fetch `GET /lessons` unless the user clicks into details — the patterns can contain raw prompt-injection payloads.
+-   **Surface a count to users.** Poll `GET /lessons/stats` on dashboard load; show `total_active` as a small badge. Don't fetch `GET /lessons` unless the user clicks into details - the patterns can contain raw prompt-injection payloads.
 -   **Alert on spikes.** Diff `by_type.injection_blocked` against a recent baseline; a sustained jump is usually a single bad source. Cross- reference with `GET /lessons` to find the source site listed in each row's `metadata.sourceSite`.
--   **Wire user feedback to `POST /lessons/report`.** When a "flag this memory" affordance fires, send the memory ID and a one-sentence rationale as the `pattern`. Severity `high` is the right default — bump to `critical` only when the user explicitly says "block this".
+-   **Wire user feedback to `POST /lessons/report`.** When a "flag this memory" affordance fires, send the memory ID and a one-sentence rationale as the `pattern`. Severity `high` is the right default - bump to `critical` only when the user explicitly says "block this".
 -   **Roll back over-eager auto-recording.** Pull recent rows from `GET /lessons`, inspect the `metadata` to spot false-positive triggers, and `DELETE /lessons/:id` the offenders. The deactivated rows remain queryable in the DB but no longer affect retrieval.
 
 ## SDK access
@@ -161,6 +165,6 @@ await client.memory.lessons.delete(lessonId, userId);
 
 ## See also
 
--   [Stores](/platform/stores) — where `LessonStore` plugs into the composition root.
--   [Architecture](/platform/architecture) — how `checkLessons` slots into the search orchestrator.
--   [Consuming core](/platform/consuming-core) — runtime config surface including the `lessonsEnabled` flag.
+-   [Stores](/platform/stores) - where `LessonStore` plugs into the composition root.
+-   [Architecture](/platform/architecture) - how `checkLessons` slots into the search orchestrator.
+-   [Consuming core](/platform/consuming-core) - runtime config surface including the `lessonsEnabled` flag.

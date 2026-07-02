@@ -68,9 +68,9 @@ Every SDK method has a corresponding HTTP endpoint on core. Useful if you're deb
 
 ## Verbatim ingest, idempotent by your own id
 
-`mode: 'verbatim'` stores the content as a single record without LLM extraction — use it for context blobs where extraction would over-split or yield nothing. Stamp a caller-owned `metadata.externalId` to make re-ingest idempotent: re-ingesting the same id updates the existing record in place instead of creating a duplicate (you can also fetch it back with [GET /v1/memories/by-external-id](/api-reference/http/get-memory-by-external-id)).
+`mode: 'verbatim'` stores the content as a single record without LLM extraction - use it for context blobs where extraction would over-split or yield nothing. Stamp a caller-owned `metadata.externalId` to make re-ingest idempotent: re-ingesting the same id updates the existing record in place instead of creating a duplicate (you can also fetch it back with [GET /v1/memories/by-external-id](/api-reference/http/get-memory-by-external-id)).
 
-Verbatim content is stored raw, so a core running the default `RAW_CONTENT_POLICY=reject` refuses it unless you stamp a non-raw `contentClass`. Choose the class that matches what you're actually sending — the SDK never labels content for you, so an unstamped (or `'raw'`) verbatim ingest fails closed against a `reject` core rather than mislabeling raw content as safe:
+Verbatim content is stored raw, so a core running the default `RAW_CONTENT_POLICY=reject` refuses it unless you stamp a non-raw `contentClass`. Choose the class that matches what you're actually sending - the SDK never labels content for you, so an unstamped (or `'raw'`) verbatim ingest fails closed against a `reject` core rather than mislabeling raw content as safe:
 
 ```typescript
 await memory.ingest({
