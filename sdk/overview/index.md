@@ -4,11 +4,11 @@
 
 A TypeScript client for memory and artifact storage, pluggable across backends.
 
-`@atomicmemory/sdk` is a platform utility, not a framework. It gives application code a single, typed API for ingest, search, context assembly, and optional artifact storage, and it stays agnostic to which memory engine sits behind it. The same client can talk to a self-hosted `atomicmemory-core`, a Mem0 service, or a custom backend you wire yourself.
+`@atomicmemory/sdk` is a platform utility, not a framework. It gives application code a single, typed API for ingest, search, context assembly, and optional artifact storage, and it stays agnostic to which memory engine sits behind it. The same client can talk to a self-hosted `atomicmemory-core`, a Mem0 or Hindsight service, an llm-wiki-compiler wiki, or a custom backend you wire yourself.
 
 ## Value Prop
 
--   **Backend-agnostic via `MemoryProvider`.** Every operation routes through the `MemoryProvider` interface. Swap `atomicmemory-core` for Mem0, or a provider you write, with a config change, not a rewrite. Apps inspect provider capabilities at runtime and gracefully degrade when a backend does not support an extension (packaging, temporal search, versioning, etc.).
+-   **Backend-agnostic via `MemoryProvider`.** Every operation routes through the `MemoryProvider` interface. Swap `atomicmemory-core` for Mem0, Hindsight, an llmwiki wiki, or a provider you write, with a config change, not a rewrite. Apps inspect provider capabilities at runtime and gracefully degrade when a backend does not support an extension (packaging, temporal search, versioning, etc.).
 -   **Browser / extension / Node / worker-ready.** ESM + CJS dual build, subpath exports, and WASM-based local embeddings via `@huggingface/transformers`. The same package runs in a Chrome extension, a Next.js app, a serverless handler, or a web worker.
 -   **Artifact storage client.** `AtomicMemoryClient.storage` wraps core's `/v1/storage/artifacts*` routes for pointer artifacts, managed uploads, metadata reads, verification, and delete flows. Managed providers such as S3 or Filecoin remain optional server configuration.
 -   **Client-side primitives for composition.** The `/storage`, `/embedding`, and `/search` subpath exports ship standalone, `StorageManager`, `EmbeddingGenerator`, `SemanticSearch`. You can compose memory features directly from these without ever constructing `MemoryClient`. The SDK is a bundle of reusable parts, not a single mandatory object.

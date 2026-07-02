@@ -8401,7 +8401,7 @@ Source: https://docs.atomicstrata.ai/sdk/concepts/capabilities
 
 > Agent index: [llms.txt](/llms.txt)
 
-Not every memory backend supports every operation. `atomicmemory-core` ships context packaging and temporal search; Mem0 does not. A custom provider you write might support neither. The SDK's design is to make these differences **runtime-queryable** rather than baked into types, so the same application code can target any configured backend.
+Not every memory backend supports every operation. `atomicmemory-core` ships context packaging and temporal search; Mem0 supports neither; Hindsight supports packaging and reflection but not temporal search. A custom provider you write might support neither. The SDK's design is to make these differences **runtime-queryable** rather than baked into types, so the same application code can target any configured backend.
 
 ## The Capabilities object
 
@@ -8521,7 +8521,7 @@ The default transformers.js build loads its WASM runtime from the CDN. For offli
 -   Offline demos
 -   Combining embeddings from the same model as the server for consistency
 
-If you're using `MemoryClient` with `atomicmemory-core` or Mem0, you probably do **not** need this module, the backend embeds for you.
+If you're using `MemoryClient` with `atomicmemory-core`, Mem0, or Hindsight, you probably do **not** need this module, the backend embeds for you.
 
 ## Next
 
@@ -8548,7 +8548,7 @@ This is why capabilities are runtime-queryable: an app that wants to use `memory
 
 ## The registry
 
-Providers are instantiated at init time from the `providers` config. The registry (`src/memory/providers/registry.ts`) maps provider names to factory functions. The default registry includes `atomicmemory` and `mem0`:
+Providers are instantiated at init time from the `providers` config. The registry (`src/memory/providers/registry.ts`) maps provider names to factory functions. The default registry includes `atomicmemory`, `mem0`, and `hindsight`; the llmwiki providers register through their own factories from `@atomicmemory/llmwiki` (see [Using the llmwiki backends](/sdk/guides/llmwiki-backend)):
 
 ```typescript
 new MemoryClient({
@@ -8577,8 +8577,10 @@ This design is deliberate: extensions are optional, but they are not second-clas
 
 -   **`AtomicMemoryProvider`**, HTTP client for `atomicmemory-core`. Implements the core operations plus `Packager`, `TemporalSearch`, `Versioner`, `Updater`, `Health`. See [Using the atomicmemory backend](/sdk/guides/atomicmemory-backend).
 -   **`Mem0Provider`**, HTTP client for Mem0. Implements core operations plus `Health`. See [Using the Mem0 backend](/sdk/guides/mem0-backend).
+-   **`HindsightProvider`**, HTTP client for Hindsight. Implements core operations plus `Packager`, `Reflect`, `Health`, and two Hindsight-specific extensions (`hindsight.retain`, `hindsight.operations`). See [Using the Hindsight backend](/sdk/guides/hindsight-backend).
+-   **`SnapshotLLMWikiProvider`** and **`LiveLLMWikiProvider`** (from `@atomicmemory/llmwiki`), read-only and writable providers over llm-wiki-compiler wikis. Both implement `Packager`; the live provider adds an explicit `compile()` step. See [Using the llmwiki backends](/sdk/guides/llmwiki-backend).
 
-A third provider is always possible, you write it. See [Writing a custom provider](/sdk/guides/custom-provider).
+The next provider is always possible, you write it. See [Writing a custom provider](/sdk/guides/custom-provider).
 
 ## Naming
 
@@ -9027,7 +9029,7 @@ Run `memory.capabilities()` at init and cache the result, you'll know exactly wh
 ## Next
 
 -   [Swapping backends](/sdk/guides/swapping-backends), moving memories from atomicmemory to another provider
--   [Using the Mem0 backend](/sdk/guides/mem0-backend), the alternate path
+-   [Using the Mem0 backend](/sdk/guides/mem0-backend), [Hindsight](/sdk/guides/hindsight-backend), and [llmwiki](/sdk/guides/llmwiki-backend), the alternate paths
 
 ---
 
@@ -9192,7 +9194,7 @@ Source: https://docs.atomicstrata.ai/sdk/guides/custom-provider
 
 > Agent index: [llms.txt](/llms.txt)
 
-The provider interface is deliberately small. If you want to back `MemoryClient` with something other than `atomicmemory-core` or Mem0, an internal memory service, a Pinecone-fronted store, a SQLite-over-disk prototype, you write a `MemoryProvider` and register it. Application code keeps calling the same client methods.
+The provider interface is deliberately small. If you want to back `MemoryClient` with something other than the shipped backends (`atomicmemory-core`, Mem0, Hindsight, llmwiki), an internal memory service, a Pinecone-fronted store, a SQLite-over-disk prototype, you write a `MemoryProvider` and register it. Application code keeps calling the same client methods.
 
 ## Minimum implementation
 
@@ -9737,6 +9739,8 @@ const memory = await withProvider('atomicmemory');
 const memory2 = await withProvider('mem0');
 ```
 
+The same pattern covers any registered provider — `hindsight`, the llmwiki providers, or one you write — since selection is just the `providers` map plus `defaultProvider`.
+
 If you have an in-flight operation on the old client, let it complete before the swap, destroying the client mid-request is not a supported path.
 
 ## Migration: moving memories between providers
@@ -9806,11 +9810,11 @@ Source: https://docs.atomicstrata.ai/sdk/overview
 
 A TypeScript client for memory and artifact storage, pluggable across backends.
 
-`@atomicmemory/sdk` is a platform utility, not a framework. It gives application code a single, typed API for ingest, search, context assembly, and optional artifact storage, and it stays agnostic to which memory engine sits behind it. The same client can talk to a self-hosted `atomicmemory-core`, a Mem0 service, or a custom backend you wire yourself.
+`@atomicmemory/sdk` is a platform utility, not a framework. It gives application code a single, typed API for ingest, search, context assembly, and optional artifact storage, and it stays agnostic to which memory engine sits behind it. The same client can talk to a self-hosted `atomicmemory-core`, a Mem0 or Hindsight service, an llm-wiki-compiler wiki, or a custom backend you wire yourself.
 
 ## Value Prop
 
--   **Backend-agnostic via `MemoryProvider`.** Every operation routes through the `MemoryProvider` interface. Swap `atomicmemory-core` for Mem0, or a provider you write, with a config change, not a rewrite. Apps inspect provider capabilities at runtime and gracefully degrade when a backend does not support an extension (packaging, temporal search, versioning, etc.).
+-   **Backend-agnostic via `MemoryProvider`.** Every operation routes through the `MemoryProvider` interface. Swap `atomicmemory-core` for Mem0, Hindsight, an llmwiki wiki, or a provider you write, with a config change, not a rewrite. Apps inspect provider capabilities at runtime and gracefully degrade when a backend does not support an extension (packaging, temporal search, versioning, etc.).
 -   **Browser / extension / Node / worker-ready.** ESM + CJS dual build, subpath exports, and WASM-based local embeddings via `@huggingface/transformers`. The same package runs in a Chrome extension, a Next.js app, a serverless handler, or a web worker.
 -   **Artifact storage client.** `AtomicMemoryClient.storage` wraps core's `/v1/storage/artifacts*` routes for pointer artifacts, managed uploads, metadata reads, verification, and delete flows. Managed providers such as S3 or Filecoin remain optional server configuration.
 -   **Client-side primitives for composition.** The `/storage`, `/embedding`, and `/search` subpath exports ship standalone, `StorageManager`, `EmbeddingGenerator`, `SemanticSearch`. You can compose memory features directly from these without ever constructing `MemoryClient`. The SDK is a bundle of reusable parts, not a single mandatory object.
@@ -10040,7 +10044,7 @@ For the full surface, see the [API Reference overview](/sdk/api/overview).
 
 -   Understand the pluggable-backend story in [Provider model](/sdk/concepts/provider-model).
 -   Register or upload files with [Artifact storage](/sdk/guides/artifact-storage).
--   Swap `atomicmemory` for a different backend in [Using the Mem0 backend](/sdk/guides/mem0-backend) or [Writing a custom provider](/sdk/guides/custom-provider).
+-   Swap `atomicmemory` for a different backend in [Using the Mem0 backend](/sdk/guides/mem0-backend), [Using the Hindsight backend](/sdk/guides/hindsight-backend), [Using the llmwiki backends](/sdk/guides/llmwiki-backend), or [Writing a custom provider](/sdk/guides/custom-provider).
 -   Build memory features without a backend at all using [Browser primitives](/sdk/guides/browser-primitives).
 
 ---

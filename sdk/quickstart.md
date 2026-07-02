@@ -143,5 +143,5 @@ For the full surface, see the [API Reference overview](/sdk/api/overview).
 
 -   Understand the pluggable-backend story in [Provider model](/sdk/concepts/provider-model).
 -   Register or upload files with [Artifact storage](/sdk/guides/artifact-storage).
--   Swap `atomicmemory` for a different backend in [Using the Mem0 backend](/sdk/guides/mem0-backend) or [Writing a custom provider](/sdk/guides/custom-provider).
+-   Swap `atomicmemory` for a different backend in [Using the Mem0 backend](/sdk/guides/mem0-backend), [Using the Hindsight backend](/sdk/guides/hindsight-backend), [Using the llmwiki backends](/sdk/guides/llmwiki-backend), or [Writing a custom provider](/sdk/guides/custom-provider).
 -   Build memory features without a backend at all using [Browser primitives](/sdk/guides/browser-primitives).

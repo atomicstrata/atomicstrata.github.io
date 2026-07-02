@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-The provider interface is deliberately small. If you want to back `MemoryClient` with something other than `atomicmemory-core` or Mem0, an internal memory service, a Pinecone-fronted store, a SQLite-over-disk prototype, you write a `MemoryProvider` and register it. Application code keeps calling the same client methods.
+The provider interface is deliberately small. If you want to back `MemoryClient` with something other than the shipped backends (`atomicmemory-core`, Mem0, Hindsight, llmwiki), an internal memory service, a Pinecone-fronted store, a SQLite-over-disk prototype, you write a `MemoryProvider` and register it. Application code keeps calling the same client methods.
 
 ## Minimum implementation
 

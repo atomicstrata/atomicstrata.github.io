@@ -35,6 +35,8 @@ const memory = await withProvider('atomicmemory');
 const memory2 = await withProvider('mem0');
 ```
 
+The same pattern covers any registered provider — `hindsight`, the llmwiki providers, or one you write — since selection is just the `providers` map plus `defaultProvider`.
+
 If you have an in-flight operation on the old client, let it complete before the swap, destroying the client mid-request is not a supported path.
 
 ## Migration: moving memories between providers

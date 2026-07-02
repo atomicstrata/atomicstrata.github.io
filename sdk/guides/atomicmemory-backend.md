@@ -106,4 +106,4 @@ Run `memory.capabilities()` at init and cache the result, you'll know exactly wh
 ## Next
 
 -   [Swapping backends](/sdk/guides/swapping-backends), moving memories from atomicmemory to another provider
--   [Using the Mem0 backend](/sdk/guides/mem0-backend), the alternate path
+-   [Using the Mem0 backend](/sdk/guides/mem0-backend), [Hindsight](/sdk/guides/hindsight-backend), and [llmwiki](/sdk/guides/llmwiki-backend), the alternate paths

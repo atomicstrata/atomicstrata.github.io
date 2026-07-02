@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Not every memory backend supports every operation. `atomicmemory-core` ships context packaging and temporal search; Mem0 does not. A custom provider you write might support neither. The SDK's design is to make these differences **runtime-queryable** rather than baked into types, so the same application code can target any configured backend.
+Not every memory backend supports every operation. `atomicmemory-core` ships context packaging and temporal search; Mem0 supports neither; Hindsight supports packaging and reflection but not temporal search. A custom provider you write might support neither. The SDK's design is to make these differences **runtime-queryable** rather than baked into types, so the same application code can target any configured backend.
 
 ## The Capabilities object
 

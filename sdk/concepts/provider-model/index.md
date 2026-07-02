@@ -12,7 +12,7 @@ This is why capabilities are runtime-queryable: an app that wants to use `memory
 
 ## The registry
 
-Providers are instantiated at init time from the `providers` config. The registry (`src/memory/providers/registry.ts`) maps provider names to factory functions. The default registry includes `atomicmemory` and `mem0`:
+Providers are instantiated at init time from the `providers` config. The registry (`src/memory/providers/registry.ts`) maps provider names to factory functions. The default registry includes `atomicmemory`, `mem0`, and `hindsight`; the llmwiki providers register through their own factories from `@atomicmemory/llmwiki` (see [Using the llmwiki backends](/sdk/guides/llmwiki-backend)):
 
 ```typescript
 new MemoryClient({
@@ -41,8 +41,10 @@ This design is deliberate: extensions are optional, but they are not second-clas
 
 -   **`AtomicMemoryProvider`**, HTTP client for `atomicmemory-core`. Implements the core operations plus `Packager`, `TemporalSearch`, `Versioner`, `Updater`, `Health`. See [Using the atomicmemory backend](/sdk/guides/atomicmemory-backend).
 -   **`Mem0Provider`**, HTTP client for Mem0. Implements core operations plus `Health`. See [Using the Mem0 backend](/sdk/guides/mem0-backend).
+-   **`HindsightProvider`**, HTTP client for Hindsight. Implements core operations plus `Packager`, `Reflect`, `Health`, and two Hindsight-specific extensions (`hindsight.retain`, `hindsight.operations`). See [Using the Hindsight backend](/sdk/guides/hindsight-backend).
+-   **`SnapshotLLMWikiProvider`** and **`LiveLLMWikiProvider`** (from `@atomicmemory/llmwiki`), read-only and writable providers over llm-wiki-compiler wikis. Both implement `Packager`; the live provider adds an explicit `compile()` step. See [Using the llmwiki backends](/sdk/guides/llmwiki-backend).
 
-A third provider is always possible, you write it. See [Writing a custom provider](/sdk/guides/custom-provider).
+The next provider is always possible, you write it. See [Writing a custom provider](/sdk/guides/custom-provider).
 
 ## Naming
 

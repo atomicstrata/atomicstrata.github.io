@@ -46,7 +46,7 @@ The default transformers.js build loads its WASM runtime from the CDN. For offli
 -   Offline demos
 -   Combining embeddings from the same model as the server for consistency
 
-If you're using `MemoryClient` with `atomicmemory-core` or Mem0, you probably do **not** need this module, the backend embeds for you.
+If you're using `MemoryClient` with `atomicmemory-core`, Mem0, or Hindsight, you probably do **not** need this module, the backend embeds for you.
 
 ## Next
 
