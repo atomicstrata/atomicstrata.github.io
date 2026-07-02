@@ -35,6 +35,8 @@
 - [Browser entry](https://docs.atomicstrata.ai/sdk/guides/browser-helpers.md): The SDK ships a slim entry point for applications that run in the browser against a backend-hosted memory engine.
 - [Browser primitives](https://docs.atomicstrata.ai/sdk/guides/browser-primitives.md): This guide bypasses MemoryClient.
 - [Writing a custom provider](https://docs.atomicstrata.ai/sdk/guides/custom-provider.md): The provider interface is deliberately small.
+- [Using the Hindsight backend](https://docs.atomicstrata.ai/sdk/guides/hindsight-backend.md): HindsightProvider is the SDK's HTTP client for Hindsight, Vectorize's memory engine built around per-user memory banks with retain, recall, and reflect operations.
+- [Using the llmwiki backends](https://docs.atomicstrata.ai/sdk/guides/llmwiki-backend.md): @atomicmemory/llmwiki connects AtomicMemory to llm-wiki-compiler (llmwiki), which compiles raw sources into an interlinked markdown wiki.
 - [Using the Mem0 backend](https://docs.atomicstrata.ai/sdk/guides/mem0-backend.md): Mem0Provider is the SDK's HTTP client for Mem0.
 - [Node.js / server-side](https://docs.atomicstrata.ai/sdk/guides/nodejs-server.md): Using the SDK server-side is supported, the package is ESM + CJS, has no browser-only code on its critical path, and the subpath storage primitives run anywhere Node does.
 - [Swapping backends](https://docs.atomicstrata.ai/sdk/guides/swapping-backends.md): The SDK's provider architecture makes the capability of swapping backends real; this guide covers the operational story.
