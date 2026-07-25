@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-`AtomicMemoryProvider` is the SDK's HTTP client for [atomicmemory-core](/). It ships with the SDK and is the default backend when you configure `default: 'atomicmemory'`.
+`AtomicMemoryProvider` is the SDK's HTTP client for [atomicmemory-core](/introduction). It ships with the SDK and is the default backend when you configure `default: 'atomicmemory'`.
 
 ## Wire it up
 

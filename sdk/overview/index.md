@@ -85,4 +85,4 @@ import { MemoryClient } from '@atomicmemory/sdk/browser';
 -   Run through the [Quickstart](/sdk/quickstart) for a 5-minute install and first call.
 -   Store or reference files with [Artifact storage](/sdk/guides/artifact-storage).
 -   Read the [Provider model](/sdk/concepts/provider-model) to understand how the backend-agnostic story works in detail.
--   If you are looking for the memory engine itself, the server, the HTTP API, the claim schema, start at the [Core introduction](/).
+-   If you are looking for the memory engine itself, the server, the HTTP API, the claim schema, start at the [Core introduction](/introduction).

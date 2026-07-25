@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkatomicmemory_docs=globalThis.webpackChunkatomicmemory_docs||[]).push([[1235],{88552(s){s.exports=JSON.parse('{"name":"docusaurus-plugin-content-pages","id":"default"}')}}]);

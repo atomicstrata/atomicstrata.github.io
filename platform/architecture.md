@@ -8,6 +8,30 @@ This page walks through the five domains, shows where each lives in the real sou
 
 ## The five domains
 
+Facade
+
+MemoryService
+
+delegates to
+
+Five domains
+
+Ingestextraction · AUDN · embedding
+
+Searchretrieval · packaging
+
+CRUDget · update · delete
+
+Lifecycleconsolidation · decay
+
+Trustscoring · sources
+
+share
+
+Shared contract
+
+MemoryServiceDepsstores · embeddings · LLM
+
 The `MemoryService` class is a **thin facade**. It holds no business logic, every public method delegates to one of five domain modules. Here is the whole shape of the facade (see [`src/services/memory-service.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/memory-service.ts)):
 
 atomicmemory-core/src/services/memory-service.ts

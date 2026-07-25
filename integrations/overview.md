@@ -4,6 +4,24 @@
 
 AtomicMemory adds durable memory to coding agents, AI frameworks, and terminal workflows through the same provider-backed memory layer. Choose the host you use, install the local integration, and point it at your AtomicMemory backend.
 
+Your host
+
+Coding agentsClaude Code · Codex · Cursor · OpenClaw · Hermes
+
+FrameworksVercel AI · LangChain · LangGraph · Langflow · Mastra
+
+MCP tools / SDK adapters
+
+Shared surface
+
+MCP server
+
+SDK adapters
+
+Backend
+
+AtomicMemoryhosted or self-hosted
+
 ## Coding agents
 
 | Integration | Best for | Status | Docs |

@@ -1,8 +1,17 @@
-# Quickstart
+# Open Source Quickstart
 
 > Agent index: [llms.txt](/llms.txt)
 
-Start a local memory service from the published Docker image, then run your first ingest and search.
+Start a **self-hosted** memory service from the published Docker image, then run your first ingest and search.
+
+Looking for the fastest path?
+
+This page self-hosts the engine on your own machine — you supply Docker, a storage volume, and an OpenAI API key. If you would rather not run infrastructure, [**AtomicMemory**](/cloud/quickstart) gets you to your first stored memory in under five minutes with just an API key. Same engine, same API. See [Cloud vs Open Source](/cloud-vs-open-source).
+
+1.  1Start core`docker run`
+2.  2Verify health`/v1/memories/health`
+3.  3First ingest`/v1/memories/ingest`
+4.  4First search`/v1/memories/search`
 
 ## Prerequisites
 

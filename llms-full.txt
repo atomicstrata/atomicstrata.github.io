@@ -1,55 +1,6 @@
-# AtomicMemory, full corpus
+# Atomic Strata Docs, full corpus
 
 > Generated snapshot of every page on https://docs.atomicstrata.ai/, in stable URL order. Use llms.txt for the index.
-
-## Introduction
-
-Source: https://docs.atomicstrata.ai/
-
-# Introduction
-
-> Agent index: [llms.txt](/llms.txt)
-
-AtomicMemory is an open-source memory engine for AI applications, semantic retrieval, AUDN mutation (Add / Update / Delete / No-op), and contradiction-safe claim versioning, delivered as an HTTP service you can run from a published Docker image. It is pluggable at every seam: swap the embedding provider, the LLM, the artifact-storage backend, or the scope model without forking. The engine ships as a standardized platform layer, not a framework, not a SaaS, so your agents, assistants, and products can compose the memory stack they need.
-
-## Why AtomicMemory
-
-AI memory is becoming a platform concern, not a product feature. Most existing options force a hosted runtime, a specific agent framework, or a proprietary query language. AtomicMemory is designed around the opposite defaults.
-
-Memory is also production state. If remembered facts can change agent behavior, engineers need to inspect them, correct them, audit where they came from, and replace the parts of the system they disagree with. Most memory products optimize for recall first and expose operational control later. AtomicMemory is built for memory you can own.
-
-| Production requirement | AtomicMemory | mem0 | Letta | Zep |
-| --- | --- | --- | --- | --- |
-| Own the memory layer, not rent a hosted opinion | **Best fit.** Apache-2.0 engine, self-hosted by default, Postgres-backed, no required hosted control plane. | OSS plus hosted platform orientation. | Self-hosted agent runtime. | OSS plus commercial / hosted platform orientation. |
-| Inspect memory during an incident | **Best fit.** Stored content, trust, source, timestamps, mutation lineage, and audit surfaces live in inspectable engine state and ordinary Postgres. | Inspection depends on Mem0's exposed APIs and platform surfaces. | Inspection happens through the Letta agent/runtime model. | Inspection depends on the server and hosted / platform surfaces. |
-| Correct bad memory without wiping the user | **Best fit.** AUDN mutation, `SUPERSEDE`, `CLARIFY`, trust scoring, CRUD, consolidation, and decay are core domains. | Primarily memory add/search/update/delete abstraction. | Memory correction is coupled to agent state. | Memory correction is coupled to the server's memory model. |
-| Debug why retrieval behaved a certain way | **Best fit.** Search responses separate retrieval, packaging, and final context assembly in a structured observability envelope. | Logs and integrations. | Framework-dependent tracing. | Hosted / server observability. |
-| Swap internals without rewriting the product | **Best fit.** Ingest, Search, CRUD, Lifecycle, Trust, stores, embeddings, LLMs, and SDK backends are explicit typed seams. | Provider and storage choices exist, but the core pipeline is not exposed as five replaceable domains. | Customize by adopting or extending the Letta agent runtime. | Customize mostly through server configuration and supported APIs. |
-| Run deterministic local tests and benchmarks | **Best fit.** The same engine boots as production HTTP, in-process TypeScript, or ephemeral test server from `createCoreRuntime`. | Possible, but not the primary product shape. | Possible inside the Letta framework. | Server-oriented; less suited to per-test composition. |
-| Keep app code portable across memory engines | **Best fit.** The TypeScript SDK routes through `MemoryProvider`, so apps can compare AtomicMemory, Mem0, or custom backends behind one interface. | You integrate with Mem0's SDK/API. | You integrate with Letta's agent/runtime abstractions. | You integrate with Zep's server/API model. |
-
-Sources for third-party positioning: [Mem0 OSS overview](https://docs.mem0.ai/open-source/overview), [Letta intro](https://docs.letta.com/guides/get-started/intro), [Zep overview](https://help.getzep.com/overview). AtomicMemory architecture details: [Architecture](/platform/architecture), [Composition](/platform/composition), [Scope](/platform/scope), [Observability](/platform/observability).
-
-The pitch is not "we do more." It is: the seams are explicit, the contracts are stable, and you compose your own stack.
-
-## Platform at a glance
-
--   **Pluggable storage**, five domain-facing store interfaces so ingest, search, CRUD, lifecycle, and trust each see only the contract they need ([stores](/platform/stores))
--   **Pluggable providers**, embeddings via openai, openai-compatible, ollama, transformers (local WASM), or voyage; LLM via openai, openai-compatible, ollama, anthropic, google, groq, Claude Code, or Codex ([providers](/platform/providers)); optional artifact storage via pointer mode, local filesystem, S3, or Filecoin ([artifact storage](/platform/artifact-storage))
--   **Explicit composition**, a single composition root wires the runtime container; no hidden singletons, no global state ([composition](/platform/composition))
--   **First-class scope**, user, workspace, and agent scopes dispatched at the request boundary, not bolted on after ([scope](/platform/scope))
--   **Observability as contract**, every search response carries a stable trace schema so dashboards and evals never break on a refactor ([observability](/platform/observability))
--   **Domain separation**, Ingest, Search, CRUD, Lifecycle, and Trust are independent domains with their own routes and services ([architecture](/platform/architecture))
-
-## Try it in 2 minutes
-
-The fastest path is the [Quickstart](/quickstart): set an API key, run `ghcr.io/atomicstrata/atomicmemory-core:latest`, and run your first ingest and search with two curl commands.
-
-Core is HTTP-first, so any language works today. The [TypeScript SDK](/sdk/overview) gives TypeScript and JavaScript consumers typed request and response shapes, richer ergonomics, scope-aware helpers, and a pluggable provider model that decouples your app from any particular memory engine. The Python SDK serves Python-native integrations such as Hermes. Nothing about core requires either SDK.
-
-AtomicMemory is [Apache-2.0 licensed](https://github.com/atomicstrata/atomicmemory-core/blob/main/LICENSE). Self-host it, fork it, run it behind your own gateway, the platform is yours.
-
----
 
 ## AtomicMemory HTTP API
 
@@ -3324,6 +3275,1828 @@ Optional harness environment variables:
 
 ---
 
+## Cloud vs Open Source
+
+Source: https://docs.atomicstrata.ai/cloud-vs-open-source
+
+# Cloud vs Open Source
+
+> Agent index: [llms.txt](/llms.txt)
+
+AtomicMemory ships in two consumption modes backed by the **same memory engine**. The API surface, the AUDN mutation model, the retrieval pipeline, and the observability envelope are identical. What differs is who runs the infrastructure.
+
+Start with **AtomicMemory** unless you have a specific reason to self-host.
+
+Question
+
+Must data stay on your own infrastructure?
+
+No
+
+Hosted
+
+AtomicMemoryconsole, traces, and keys managed for you
+
+Yes
+
+Self-hosted
+
+AtomicMemory OSSyou run the engine and the database
+
+Either way you get the **same engine, the same API, and the same SDK**.
+
+## At a glance
+
+|  | **AtomicMemory** | **Open Source** |
+| --- | --- | --- |
+| **Setup** | Sign up, copy an API key | Docker, Postgres volume, provider keys |
+| **You provide** | Nothing | Host, database, OpenAI (or local) provider keys |
+| **Runs where** | `api.atomicstrata.ai` | Your machine, your VPC, your cluster |
+| **Console, traces, usage** | Included | Build your own on the observability envelope |
+| **Orgs, projects, scoped keys** | Included | Single-tenant; you model tenancy yourself |
+| **Data residency** | Managed by AtomicStrata | Entirely yours |
+| **License / cost** | Usage-based | Apache-2.0, free |
+| **Best for** | Shipping a product, prototypes, teams | Air-gapped, regulated, or infra-owning teams |
+
+## Choose AtomicMemory when
+
+-   You want your first memory stored in under five minutes.
+-   You want the developer console, traces, conflict inspection, and usage tracking without building them.
+-   You need orgs, projects, environments, and scoped API keys out of the box.
+-   Running and upgrading a Postgres + pgvector service is not where you want to spend time.
+
+→ [Cloud Quickstart](/cloud/quickstart)
+
+## Choose Open Source when
+
+-   Memory data cannot leave your infrastructure for regulatory or contractual reasons.
+-   You need to run air-gapped or fully offline, including local embedding models.
+-   You want to fork the engine, replace a store, or add a provider.
+-   You are running deterministic tests or benchmarks against an ephemeral in-process engine.
+
+→ [Open Source Quickstart](/quickstart)
+
+## Moving between them
+
+The [TypeScript SDK](/sdk/overview) routes through `MemoryProvider`, so the same application code targets either mode. Switching is a configuration change — point at `https://api.atomicstrata.ai` with a Cloud project key, or at your own host with your own key. See [one SDK, self-hosted or managed](/cloud/use-cases/one-sdk-self-hosted-or-managed).
+
+The [HTTP API](/api-reference/http/conventions) is the same in both modes, so non-TypeScript consumers move by changing a base URL and a credential.
+
+---
+
+## Authentication
+
+Source: https://docs.atomicstrata.ai/cloud/authentication
+
+# Authentication
+
+> Agent index: [llms.txt](/llms.txt)
+
+AtomicMemory exposes two authentication surfaces. Use the right credential for each route class - mixing them returns `401`.
+
+Callers
+
+CLI / SDK / MCP / PlaygroundProject API key
+
+Developer consoleSession JWT
+
+Route classes
+
+Memory API`/v1/*`
+
+Dashboard API`/api/*`
+
+user keys never forwarded
+
+Engine
+
+AtomicMemory Core`AM_CORE_API_KEY` only
+
+## Summary
+
+| Surface | Routes | Credential | Used by |
+| --- | --- | --- | --- |
+| **Memory API** | `/v1/*` | Project API key (`amc_<env>_<random>`) | CLI, SDK, MCP, Playground |
+| **Dashboard API** | `/api/*` | Session JWT (`Authorization: Bearer <jwt>`) | Developer console (server-side) |
+
+The cloud gateway **never** forwards user API keys to AtomicMemory Core. Outbound core calls use the infrastructure credential `AM_CORE_API_KEY` only.
+
+## Project API keys
+
+API keys are created in the console under **API Keys** or during onboarding.
+
+```text
+Authorization: Bearer amc_dev_xxxxxxxxxxxxxxxx
+```
+
+Properties:
+
+-   Returned **exactly once** at creation; stored server-side as argon2 hash + display prefix
+-   Scoped to a single project and environment (`dev`, `staging`, `prod`)
+-   Rate-limited per key (`RATE_LIMIT_PER_SECOND`, `RATE_LIMIT_BURST`)
+-   Verified on every `/v1/*` request
+
+Example:
+
+```bash
+curl -X POST https://api.atomicstrata.ai/v1/memories/search/fast \
+  -H "Authorization: Bearer $ATOMICMEMORY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"user_id": "default", "query": "seat preference", "limit": 5}'
+```
+
+### SDK and MCP
+
+Point integrations at the cloud API URL:
+
+```bash
+export ATOMICMEMORY_API_URL=https://api.atomicstrata.ai
+export ATOMICMEMORY_API_KEY=amc_dev_xxxxxxxxxxxxxxxx
+```
+
+MCP tools (`memory_ingest`, `memory_search`, `memory_list`, `memory_package`) hit the core-isomorphic `/v1/memories/*` routes through this gateway.
+
+## Dashboard session JWT
+
+Dashboard routes under `/api/*` require a signed-in console session. The web app obtains a JWT server-side and forwards it as `Authorization: Bearer <jwt>`.
+
+### JWT audience (non-local deploys)
+
+Configure your identity provider's session JWT template with:
+
+```json
+{
+  "aud": "atomicmemory-cloud"
+}
+```
+
+The `aud` claim must match `JWT_AUDIENCE` on the cloud API.
+
+### Browser proxy pattern
+
+The developer console **never** calls the cloud API directly from the browser for dashboard operations. Next.js Route Handlers at `/api/proxy/*` obtain the session token server-side and forward the JWT to `AM_API_URL`.
+
+This keeps CORS strict - set `CORS_ALLOWED_ORIGINS` on the API to the console origin only (`https://memory.atomicstrata.ai`).
+
+### Playground API key auth
+
+The Playground posts to `/api/proxy/v1/memories/*` with the user's pasted API key. The key stays in browser memory only - it is not embedded in client bundles.
+
+## CLI auth modes
+
+The [Cloud CLI](/cloud/cli) supports two flows:
+
+| Command | Auth | Purpose |
+| --- | --- | --- |
+| `am auth login` | OAuth PKCE + browser | Dashboard commands (`am org list`, `am key create`, …) |
+| `ATOMICMEMORY_API_KEY` env | Project API key | Memory operations (`am memory ingest`, `am memory search`) |
+
+Memory ingest does **not** require `am auth login` when `ATOMICMEMORY_API_KEY` is set.
+
+## Local projects
+
+Projects with `type: local` are rejected by the cloud gateway (`400 bad_request`). Connect local projects directly to a self-hosted core instance - they bypass cloud entirely.
+
+## Security reporting
+
+Report vulnerabilities per the [AtomicMemory API SECURITY policy](https://github.com/atomicstrata/am-cloud-api/blob/main/SECURITY.md).
+
+## Related docs
+
+-   [Cloud Quickstart](/cloud/quickstart) - create your first API key
+-   [Developer Console](/cloud/console) - proxy and SSE architecture
+-   [Cloud HTTP API](/cloud/how-to/dashboard) - route reference
+
+---
+
+## Cloud CLI
+
+Source: https://docs.atomicstrata.ai/cloud/cli
+
+# Cloud CLI
+
+> Agent index: [llms.txt](/llms.txt)
+
+The **AtomicMemory CLI** (`atomicmemory` / **`am`**) is a Rust binary for browser login, org/project/API-key management, and memory operations against the hosted cloud API.
+
+Not the npm CLI
+
+This is **not** the Node.js [`@atomicmemory/cli`](/cli) package. The npm CLI targets local/self-hosted core workflows with an Ink terminal UI. The Cloud CLI ships from [`am-cloud-api`](https://github.com/atomicstrata/am-cloud-api) and defaults to `https://api.atomicstrata.ai`.
+
+## Install
+
+```bash
+curl -fsSL https://get.atomicstrata.ai/install.sh | sh
+```
+
+Prebuilt binaries for macOS and Linux (x86\_64 + arm64). Installs to `~/.local/bin` by default and adds the **`am`** symlink.
+
+Pin a version:
+
+```bash
+curl -fsSL https://get.atomicstrata.ai/install.sh | sh -s -- --version 0.1.0
+```
+
+Skip PATH modification:
+
+```bash
+curl -fsSL https://get.atomicstrata.ai/install.sh | sh -s -- --no-modify-path
+```
+
+## Quick start
+
+### Dashboard commands (OAuth)
+
+```bash
+am auth login
+am overview
+```
+
+Uses PKCE + browser - no config file required. The public OAuth `client_id` is baked into the binary.
+
+### Memory commands (API key)
+
+```bash
+export ATOMICMEMORY_API_URL=https://api.atomicstrata.ai
+export ATOMICMEMORY_API_KEY=amc_dev_xxxxxxxxxxxxxxxx
+
+am memory ingest "I prefer aisle seats when flying."
+am memory search "seat preference"
+am memory list
+```
+
+Get your API key from the [developer console](https://memory.atomicstrata.ai) during onboarding or under **API Keys**.
+
+## Defaults
+
+| Setting | Default |
+| --- | --- |
+| API URL | `https://api.atomicstrata.ai` |
+| OAuth callback | `http://127.0.0.1:9876/callback` |
+
+Override with environment variables or `~/.atomicmemory/` credentials after `am auth login`.
+
+## Common commands
+
+| Command | Description |
+| --- | --- |
+| `am auth login` | Browser OAuth login for dashboard API |
+| `am org list` | List organizations |
+| `am project list` | List projects |
+| `am key create` | Create an API key |
+| `am memory ingest <text>` | Ingest a memory claim |
+| `am memory ingest --file ./memories.jsonl` | Batch ingest |
+| `am memory search <query>` | Search memories |
+| `am memory list` | List stored memories |
+
+## Uninstall
+
+```bash
+curl -fsSL https://get.atomicstrata.ai/install.sh | sh -s -- --uninstall
+```
+
+Removes binaries and PATH block. Credentials under `~/.atomicmemory/` are left intact unless you purge them manually.
+
+## Related docs
+
+-   [Cloud Quickstart](/cloud/quickstart) - first ingest happy path
+-   [Authentication](/cloud/authentication) - API key vs OAuth
+-   [npm CLI (local core)](/cli) - self-hosted Docker workflows
+
+---
+
+## Developer Console
+
+Source: https://docs.atomicstrata.ai/cloud/console
+
+# Developer Console
+
+> Agent index: [llms.txt](/llms.txt)
+
+The AtomicMemory developer console at **[memory.atomicstrata.ai](https://memory.atomicstrata.ai)** is a Next.js dashboard for provisioning projects, managing API keys, exploring memories, and inspecting AUDN mutation traces.
+
+All `/app/*` routes require sign-in. The marketing landing page and `/share/*` public memory viewer stay open without an account.
+
+## First-run onboarding
+
+New users follow a guided path:
+
+1.  Sign up at `/signup`
+2.  Gateway at `/app` redirects to `/app/onboarding` when no project exists or a cloud project has zero API keys
+3.  Default org + `default-project` are auto-provisioned
+4.  First API key is revealed exactly once with copy-to-clipboard and CLI commands
+5.  Redirect to project **Overview** after acknowledgment
+
+See [Cloud Quickstart](/cloud/quickstart) for the full happy path.
+
+## Project workspace
+
+Each project includes:
+
+| Section | Purpose |
+| --- | --- |
+| **Overview** | Stats, integration snippets, setup checklist |
+| **Memories** | Memory Explorer with filters, inline evidence, trace deep-links |
+| **Traces** | AUDN mutation and retrieval trace viewer (live SSE updates) |
+| **API Keys** | Create, list, and revoke project keys |
+| **Usage** | Usage events and stored memory counts |
+| **Playground** | Interactive ingest and search (managed or local core) |
+| **Settings** | Project configuration |
+| **Audit** | Project-scoped admin audit log |
+
+## How the console reaches the API
+
+| Data plane | Auth |
+| --- | --- |
+| Browser → Next.js `/api/proxy/*` → cloud API | Session JWT (console) or pasted API key (Playground) |
+
+The console never exposes `AM_API_URL` to the browser bundle.
+
+## Real-time updates
+
+The console uses Server-Sent Events (SSE) proxied same-origin:
+
+| Stream | Route | Events |
+| --- | --- | --- |
+| Memories | `/api/proxy/projects/{id}/memories/stream` | `ready`, `memory` |
+| Traces | `/api/proxy/projects/{id}/traces/stream` | `ready`, `trace` |
+
+Live updates appear in the Memory Explorer and trace views without polling.
+
+## Setup checklist
+
+The sidebar **SetupGuide** tracks activation milestones:
+
+-   First API key created
+-   First ingest completed
+-   First search completed
+
+Complete these from the Overview page or Playground.
+
+## Integration snippets
+
+The project Overview surfaces copy-paste snippets for:
+
+-   MCP (`@atomicmemory/mcp`)
+-   TypeScript and Python SDKs
+-   Claude Code plugin
+-   Cloud CLI (`am memory ingest`)
+
+Snippets use your project's API base URL automatically for managed projects.
+
+## Public memory sharing
+
+`/share/*` renders a read-only memory list for unauthenticated visitors. Sign-in CTAs appear in the chrome for visitors who want full console access.
+
+## Related docs
+
+-   [Authentication](/cloud/authentication) - how the console authenticates to the API
+-   [Cloud HTTP API](/cloud/how-to/dashboard) - dashboard and memory routes
+-   [Platform Observability](/platform/observability) - trace schema on the engine side
+
+---
+
+## Managing API Keys
+
+Source: https://docs.atomicstrata.ai/cloud/how-to/api-keys
+
+# Managing API Keys
+
+> Agent index: [llms.txt](/llms.txt)
+
+The **API Keys** page is where a cloud project's credentials live. Every request your application makes to the memory API is authenticated by a key issued here. Keys are per project; local projects don't use them - the browser reaches your local proxy directly, so this page shows an empty state instead.
+
+## What it does
+
+-   Creates a key from a **name** and an **environment** (Development, Staging, or Production).
+-   Reveals each new secret **exactly once**, then retains only its masked prefix.
+-   Lists every key with its status, environment, prefix, creation time, and last use.
+
+## How it works
+
+The full secret is shown a single time in a reveal banner the moment a key is created or rotated - copy it then, because it is never displayed again. Your application supplies it as an environment variable alongside the API URL:
+
+```bash
+export ATOMICMEMORY_API_KEY="<paste-your-secret>"
+export ATOMICMEMORY_API_URL="<your-api-url>"
+```
+
+**Rotating** a key issues a fresh secret and revokes the old one in the same step; the replacement records which key it superseded (`rotated from`), so the lineage stays auditable. **Revoking** permanently disables a key. Both actions invalidate a live credential, so each asks for inline confirmation before it fires - a misclick must not silently break a production integration.
+
+warning
+
+A secret is shown only at creation or rotation and never again. If you lose it, rotate the key to mint a new one - the original cannot be recovered.
+
+## Key capabilities
+
+-   **One-time secrets** - the plaintext key is revealed once; only the prefix is stored afterward.
+-   **Rotate in place** - swap the secret while preserving the key's identity and its rotated-from history.
+-   **Environment tags** - mark each key dev, staging, or prod to keep surfaces separated.
+
+## Related
+
+-   [The Dashboard](/cloud/how-to/dashboard)
+-   [Usage & Limits](/cloud/how-to/usage)
+-   [Reading the Audit Log](/cloud/how-to/audit-log)
+
+---
+
+## Reading the Audit Log
+
+Source: https://docs.atomicstrata.ai/cloud/how-to/audit-log
+
+# Reading the Audit Log
+
+> Agent index: [llms.txt](/llms.txt)
+
+The **Audit Log** is the administrative record for a cloud project. It captures changes to the project's configuration - API keys, settings, and lifecycle events - so you can answer who did what, and when. It is scoped per project and, like other managed surfaces, applies to cloud projects only; local projects show an empty state.
+
+## What it does
+
+-   Lists the project's administrative events, most recent first.
+-   Shows, for each event, the **time**, the **action**, the **actor** who performed it, and the **resource** it touched.
+-   Loads the latest batch of events (up to 100) for the active project.
+
+## How it works
+
+The log is a read-only table. Each row pairs an action with the actor's user ID and, where an event targets a specific object, a `resourceType:resourceId` reference - otherwise the resource column shows a dash. Timestamps are absolute, so events line up with the moment they were recorded.
+
+Keep the distinction with [Traces](/cloud/how-to/traces) clear: the Audit Log tracks *administrative* actions on the project itself, while Traces track the *memory mutations* your application drives through ingest and search.
+
+info
+
+An empty log simply means no administrative actions have been recorded for this project yet - it fills in as keys are created, settings change, and lifecycle events occur.
+
+## Key capabilities
+
+-   **Accountable** - every entry names the actor behind the change.
+-   **Scoped** - each project keeps its own independent record.
+-   **Config-focused** - surfaces credential, settings, and lifecycle changes, not data-plane traffic.
+
+## Related
+
+-   [Managing API Keys](/cloud/how-to/api-keys)
+-   [Understanding Traces](/cloud/how-to/traces)
+-   [The Dashboard](/cloud/how-to/dashboard)
+
+---
+
+## Billing
+
+Source: https://docs.atomicstrata.ai/cloud/how-to/billing
+
+# Billing
+
+> Agent index: [llms.txt](/llms.txt)
+
+**Billing** manages your organization's subscription and shows how much of your plan you have used. It is scoped to the organization, so a single subscription covers every project the org owns.
+
+## What it does
+
+-   Shows the current plan, its price, and subscription status - active, free trial, canceling, or not subscribed.
+-   Tracks live usage against your plan's limits: projects, API keys, and monthly write tokens.
+-   Starts or upgrades a subscription through hosted checkout, and opens the billing portal to update payment or cancel.
+-   Surfaces renewal and trial-end dates so you know when the next charge lands.
+
+## How it works
+
+Only writes are metered. Every `ingest` consumes processed tokens that count toward a monthly allowance and reset at the end of each billing period; retrieval and storage are unmetered within your plan's limits. When you reach the monthly token cap, writes pause until you upgrade - search and storage keep working.
+
+The **Developer** plan is $29/mo and includes 5M processed tokens per month, 3 projects, 5 organization API keys, and a 30-day activity log. Only organization admins can change the subscription; other members see billing read-only.
+
+info
+
+Reaching the monthly write-token limit pauses ingestion only. Retrieval and storage stay available within your plan limits - upgrade to resume writes.
+
+## Key capabilities
+
+-   **Organization-scoped** - one subscription covers all of the org's projects.
+-   **Live usage** - projects, API keys, and write-token consumption against plan limits, with a reset date.
+-   **Writes-only metering** - retrieval and storage are unmetered within limits.
+-   **Self-serve management** - subscribe, upgrade, or manage payment and cancellation from the portal.
+-   **Role-gated** - only org admins can change the plan.
+
+## Related
+
+-   [Usage](/cloud/how-to/usage)
+-   [Projects & Workspaces](/cloud/how-to/projects)
+-   [Project Settings](/cloud/how-to/settings)
+
+---
+
+## Resolving Conflicts
+
+Source: https://docs.atomicstrata.ai/cloud/how-to/conflicts
+
+# Resolving Conflicts
+
+> Agent index: [llms.txt](/llms.txt)
+
+The **Conflict queue** is where a project admin reviews competing beliefs the memory layer could not reconcile on its own, and applies a resolution. It is the human-in-the-loop backstop for the reconciliation that normally happens automatically.
+
+## What it does
+
+-   Lists the open conflicts for the project, each pairing two competing claims.
+-   Shows a selected conflict side by side as **Claim A** and **Claim B** for review.
+-   Applies an admin resolution action, with an optional reason attached to the decision.
+
+## How it works
+
+Conflicts arise when the memory layer holds competing claims it can't confidently reconcile. The same AUDN reconciliation surfaced on [mutation traces](/cloud/how-to/traces) settles most contradictions automatically; the ones it can't are what land in this queue.
+
+Select a conflict from the list to see both claims. Enter an optional resolution reason, then choose one of four actions:
+
+-   **Reject** - decline the competing claim.
+-   **Request evidence** - hold the conflict pending stronger support.
+-   **Promote** - accept the competing claim.
+-   **Escalate** - route it for further review.
+
+info
+
+The conflict queue is admin-only and available on managed (cloud) projects - local self-hosted projects do not expose it. Governance conflict resolution is still rolling out during the beta, so an empty queue is expected while it ships.
+
+## Key capabilities
+
+-   **Human-in-the-loop** - nothing silently overwrites a competing belief; unresolved conflicts wait for an admin.
+-   **Side-by-side review** - compare Claim A and Claim B before deciding.
+-   **Documented decisions** - attach a reason to any resolution action.
+-   **Scoped to admins** - only project admins can view or act on the queue.
+
+## Related
+
+-   [What is Memories](/cloud/how-to/what-is-memories)
+-   [Understanding Traces](/cloud/how-to/traces)
+-   [Using the Playground](/cloud/how-to/playground)
+
+---
+
+## The Dashboard
+
+Source: https://docs.atomicstrata.ai/cloud/how-to/dashboard
+
+# The Dashboard
+
+> Agent index: [llms.txt](/llms.txt)
+
+The **Dashboard** is the first thing you see when you open a project. It answers three questions at a glance: what is stored, how do I connect, and what happened recently. For a cloud project it doubles as the activation path - get a key, wire up a tool, then confirm the traffic lands.
+
+## What it does
+
+-   Shows headline **stats** - stored memories and ingest, search, and package request counts - each with a tooltip defining exactly what it counts.
+-   Provides **Connect your tools**: copy-ready snippets for Cursor, Claude Code, Claude Desktop, any MCP client, and the Node SDK, Python SDK, and CLI.
+-   Lists the **most recent traces** with a link through to the full history.
+-   Nudges you to **create an API key** first when the project has none.
+
+## How it works
+
+Each stat maps to a concrete API surface - for example, ingest requests count successful `POST /v1/ingest` calls - so the numbers are auditable, not estimates. The tool snippets are pre-filled with this project's API URL; drop one into the tool you already use:
+
+```ts
+import { MemoryClient } from '@atomicmemory/sdk'
+
+const memory = new MemoryClient({
+  providers: { atomicmemory: { apiUrl: '<your-api-url>', apiKey: process.env.ATOMICMEMORY_API_KEY } },
+})
+```
+
+**Local projects** render a different overview: a live connection pill that pings your proxy, `n/a` stat placeholders (local usage isn't reported to the cloud), and the same tool snippets pointed at your local URL instead of a hosted key.
+
+## Key capabilities
+
+-   **Defined metrics** - every stat's tooltip states the exact call it counts.
+-   **One-paste integration** - connect a tool without leaving the page.
+-   **Recent activity** - see the latest traces and jump to the full log.
+
+## Related
+
+-   [What is Memories](/cloud/how-to/what-is-memories)
+-   [Understanding Traces](/cloud/how-to/traces)
+-   [Managing API Keys](/cloud/how-to/api-keys)
+-   [Usage & Limits](/cloud/how-to/usage)
+
+---
+
+## Using the Playground
+
+Source: https://docs.atomicstrata.ai/cloud/how-to/playground
+
+# Using the Playground
+
+> Agent index: [llms.txt](/llms.txt)
+
+The **Playground** lets you ingest memories and run searches against your project straight from the dashboard - no terminal, no client code. It closes the loop: every result deep-links into the Memory Explorer so you can inspect exactly what happened.
+
+## What it does
+
+-   **Ingest** - push a piece of conversation or a claim and watch the memory layer store, update, or skip it.
+-   **Search** - run a semantic query and see the matching memories ranked by trust.
+-   Deep-links every stored or matched memory into the [Memory Explorer](/cloud/how-to/what-is-memories) so you can inspect exactly what was written or retrieved.
+
+## How it works
+
+Paste a project API key (it starts with `amc_`) into the key field, then work in the **Ingest** or **Search** tab.
+
+-   **Ingest** takes free-form content and a user ID. On success it reports how many memories were stored, updated, and skipped, and lists the resulting memory IDs as links.
+-   **Search** takes a query and a user ID and returns up to ten hits, each showing its claim, trust score, type, and status.
+
+For managed (cloud) projects the requests are proxied same-origin through the dashboard; for local self-hosted projects they go straight to your core instance. Either way, each call also writes a trace you can open from the [Traces](/cloud/how-to/traces) page.
+
+tip
+
+The API key lives in the page's memory only - it is never stored or persisted. Grab a project key from [API Keys](/cloud/how-to/api-keys) and paste it in each session.
+
+## Key capabilities
+
+-   **No-code loop** - exercise ingest and search without leaving the dashboard.
+-   **Trust-ranked results** - search hits are scored so you can see what your application would actually retrieve.
+-   **Deep links** - jump from any stored or matched memory straight to its full record in the Memory Explorer.
+-   **Managed or local** - works against cloud-managed projects and self-hosted core alike.
+
+## Related
+
+-   [What is Memories](/cloud/how-to/what-is-memories)
+-   [Understanding Traces](/cloud/how-to/traces)
+-   [Resolving Conflicts](/cloud/how-to/conflicts)
+
+---
+
+## Projects & Workspaces
+
+Source: https://docs.atomicstrata.ai/cloud/how-to/projects
+
+# Projects & Workspaces
+
+> Agent index: [llms.txt](/llms.txt)
+
+**Projects** are the workspaces that hold your memory layer. Every memory, API key, trace, and usage record belongs to exactly one project, and every project belongs to an organization. The Projects page is where you create them, group them by environment, and drop into a project's workspace.
+
+## What it does
+
+-   Lists every project in the current organization, grouped by environment (`dev`, `staging`, `prod`) with a filter across all four buckets.
+-   Shows each project's name, slug, environment, stored-memory count, and last activity, and links straight to its Overview.
+-   Creates new projects from **New project** - you pick a type, **Cloud (managed)** or **Local (self-hosted)**, and, for cloud, an environment.
+-   Enforces your plan's project limit: at the cap, creation is blocked and an upgrade prompt appears.
+
+## How it works
+
+A project is an isolated workspace - its memories, keys, traces, and usage never cross into another project. Where that memory data physically lives depends on the project **type** you choose at creation.
+
+A **managed** project is hosted by AtomicMemory: you ingest and search with a project API key from anywhere. A **local** project runs against your own `atomicmemory-core` on your machine - the dashboard talks to it directly from the browser, and the cloud stores only the project's metadata (name, slug, type), never its memories.
+
+info
+
+For a local project, your self-hosted core must serve `/v1/*` with CORS allowing this dashboard's origin. Managed projects need none of this - you just create an API key.
+
+## Key capabilities
+
+-   **Isolated workspaces** - memories, keys, traces, and usage stay scoped to a single project.
+-   **Managed or self-hosted** - let AtomicMemory host the data, or point a project at a core you run yourself.
+-   **Environment lanes** - keep `dev`, `staging`, and `prod` separate and filterable.
+-   **Plan-aware limits** - project count is bounded by your plan, and the page shows your organization's usage against it.
+
+## Related
+
+-   [Project Settings](/cloud/how-to/settings)
+-   [API Keys](/cloud/how-to/api-keys)
+-   [Billing](/cloud/how-to/billing)
+-   [What is Memories](/cloud/how-to/what-is-memories)
+
+---
+
+## Project Settings
+
+Source: https://docs.atomicstrata.ai/cloud/how-to/settings
+
+# Project Settings
+
+> Agent index: [llms.txt](/llms.txt)
+
+**Project Settings** configures a single project and manages its lifecycle - from renaming it to exporting its data or deleting it outright. Billing and organization controls are surfaced here too, so you can manage the whole project without leaving the page.
+
+## What it does
+
+-   Renames the project; the new name shows in the dashboard and in API responses.
+-   Displays the project type (managed or local) and, for a local project, the Local API URL the dashboard calls.
+-   Shows memory- and trace-retention defaults (retention is not configurable yet).
+-   Bundles billing, organization management, data export, and project deletion into one place.
+
+## How it works
+
+**General** - the project name is editable and saved on submit; the project type and local URL are fixed at creation and shown read-only. Retention appears as defaults - 90 days for memories, 30 days for traces - and is not adjustable today.
+
+**Billing** - a compact view of the same organization subscription you manage on the [Billing](/cloud/how-to/billing) page.
+
+**Organization** - opens your organization profile to manage members and roles.
+
+**Data** (managed projects only) - export every memory and trace for the project as JSONL.
+
+**Danger zone** - delete the project, which permanently removes it along with all of its memories and traces.
+
+warning
+
+Deleting a project is permanent. It removes the project along with every memory and trace it contains, and cannot be undone.
+
+## Key capabilities
+
+-   **Rename** - update the display name used across the dashboard and API.
+-   **Data residency at a glance** - see whether memory data is managed or local, and the local URL when self-hosted.
+-   **Organization management** - jump to members and roles.
+-   **Export** - download a managed project's memories and traces as JSONL.
+-   **Delete** - permanently remove a project and all of its data.
+
+## Related
+
+-   [Projects & Workspaces](/cloud/how-to/projects)
+-   [Billing](/cloud/how-to/billing)
+-   [API Keys](/cloud/how-to/api-keys)
+
+---
+
+## Understanding Traces
+
+Source: https://docs.atomicstrata.ai/cloud/how-to/traces
+
+# Understanding Traces
+
+> Agent index: [llms.txt](/llms.txt)
+
+The **Traces** page records what the memory layer did on every request your application made. Each retrieval, mutation, and package call becomes an inspectable **trace** - the memories it touched, the decision it reached, and the payload it returned.
+
+## What it does
+
+-   Streams traces live, newest first, as your application calls the memory layer - with a connection pill and a reconnect control if the stream drops.
+-   Filters by type - retrieval, mutation, or package - and mirrors the choice into the URL, so a filtered view is shareable and survives a refresh.
+-   Opens a detail view for any trace: the memories it included and excluded, the reconciliation decision, and the final response.
+
+## How it works
+
+Each call the memory layer serves writes exactly one trace row. A `search` produces a **retrieval** trace; an `ingest` produces a **mutation** trace; a context-packaging request produces a **package** trace.
+
+```ts
+// A search call...
+await memory.search({ query: "seat preferences", scope: { user: "user_001" } });
+// ...writes one retrieval trace: which memories were included, which were
+// excluded, and the exact payload returned.
+```
+
+Open a **retrieval** trace to see two columns - **Included** and **Excluded** memories, each with its trust score - plus the final response payload. Open a **mutation** trace to see the AUDN decision (such as add, update, supersede, or no-op) with its confidence and reason, the previous claim struck through against the new claim, the source evidence, and the incoming input. Package traces appear in the list and filter; opening one shows its summary card.
+
+The list is a live, recent window - it prepends new traces as they stream in rather than paginating a full history.
+
+## Key capabilities
+
+-   **Live stream** - traces appear the moment a request is served, with a reconnect control when the connection drops.
+-   **Type filter** - isolate retrieval, mutation, or package traces; the filter lives in the URL.
+-   **Decision transparency** - every mutation trace records the AUDN decision, its confidence, and the reason behind it.
+-   **Traceable to memories** - jump from an included memory straight to its record in the [Memory Explorer](/cloud/how-to/what-is-memories).
+
+## Related
+
+-   [What is Memories](/cloud/how-to/what-is-memories)
+-   [Resolving Conflicts](/cloud/how-to/conflicts)
+-   [Using the Playground](/cloud/how-to/playground)
+
+---
+
+## Usage & Limits
+
+Source: https://docs.atomicstrata.ai/cloud/how-to/usage
+
+# Usage & Limits
+
+> Agent index: [llms.txt](/llms.txt)
+
+The **Usage** page is the project's meter. It shows how much traffic the memory API has handled, how much you're storing, and where you stand against your organization's plan limits - the numbers that drive cost.
+
+## What it does
+
+-   Reports **request** counts: ingest, search, and package calls, plus total tokens processed.
+-   Reports **storage**: stored memories, stored traces, embedding operations, and bytes used.
+-   Charts **request volume over the last 30 days**, split by ingest, search, and package.
+-   Surfaces your **plan limits** - projects, API keys, and monthly write tokens - with a link to manage the plan.
+
+## How it works
+
+Plan limits are **organization-scoped**: the projects, API keys, and monthly write-token allowances apply across your whole organization, and the write-token meter resets each billing period. The stat cards and the volume chart below them are **project-scoped** - they count only this project's traffic and storage. When a project has seen no traffic in the last 30 days, the chart is replaced by an empty state rather than a flat line.
+
+info
+
+Because limits are shared across the organization, usage on one project counts toward the same caps as every other - manage the plan itself from the Billing page.
+
+## Key capabilities
+
+-   **Cost drivers at a glance** - request and token counts map directly to what you're billed for.
+-   **Storage visibility** - see stored memories, traces, and bytes in one place.
+-   **Limit tracking** - watch write-token consumption against your plan before you hit the cap.
+
+## Related
+
+-   [Billing & Plans](/cloud/how-to/billing)
+-   [The Dashboard](/cloud/how-to/dashboard)
+-   [Managing API Keys](/cloud/how-to/api-keys)
+
+---
+
+## What is Memories
+
+Source: https://docs.atomicstrata.ai/cloud/how-to/what-is-memories
+
+# What is Memories
+
+> Agent index: [llms.txt](/llms.txt)
+
+The **Memories** page is the inspector for your project's memory layer. Every fact, preference, or claim the layer has ingested shows up here as a structured **memory** you can read, filter, and trace back to the moment it was written.
+
+## What it does
+
+-   Lists every stored memory for the active project, newest first.
+-   Filters by scope (project, user, or agent) so you can see exactly what one end-user's assistant would recall.
+-   Opens a detail view for any memory - its claim, the reasoning behind it, its scope, and the trace that produced it.
+
+## How it works
+
+When your application calls `ingest`, the memory layer does not blindly append text. It reconciles the new information against what it already knows and records the decision (add, update, delete, or no-op). The Memories page renders the **result** of those decisions - the current, reconciled state - while the [Traces](/cloud/how-to/traces) page shows the decisions themselves.
+
+![ingest() flows into Reconcile, which resolves to an Add, Update, Delete, or No-op decision, updating the stored Memories and recording a Trace.](/img/cloud/memory-reconciliation.svg)
+
+Every write is reconciled against existing memory, never blindly appended.
+
+```ts
+await memory.ingest({
+  messages: [{ role: "user", content: "I prefer aisle seats." }],
+  scope: { user: "user_001" },
+});
+```
+
+Search reads from this same reconciled state, so what you see on the Memories page is what your application retrieves at query time.
+
+## Key capabilities
+
+-   **Inspectable state** - nothing is hidden; every claim is visible and queryable.
+-   **Scoped views** - isolate memory per user or agent.
+-   **Traceable** - jump from any memory to the trace that created it.
+
+## Related
+
+-   [Understanding Traces](/cloud/how-to/traces)
+-   [Resolving Conflicts](/cloud/how-to/conflicts)
+
+---
+
+## Overview
+
+Source: https://docs.atomicstrata.ai/cloud/overview
+
+# AtomicMemory
+
+> Agent index: [llms.txt](/llms.txt)
+
+**AtomicMemory** is hosted, multi-tenant memory infrastructure for AI agents. It provides orgs, projects, API keys, usage tracking, and a developer console - while the open-source **AtomicMemory Core** engine handles embeddings, vector storage, retrieval, fact extraction, and AUDN mutation.
+
+Console: **[memory.atomicstrata.ai](https://memory.atomicstrata.ai)**  
+API: **`https://api.atomicstrata.ai`**
+
+## Cloud vs Core
+
+| Layer | Owns | Where it runs |
+| --- | --- | --- |
+| **Cloud gateway** | Tenancy, API keys, JWT dashboard auth, traces, usage, billing hooks | `am-cloud-api` (public) |
+| **Developer console** | Onboarding, Memory Explorer, traces, playground | [memory.atomicstrata.ai](https://memory.atomicstrata.ai) |
+| **Core engine** | pgvector index, fact extraction, retrieval, LLM repair loop | Private ECS service (not user-facing) |
+
+Use **Cloud** when you want a managed endpoint and dashboard with zero infrastructure. Use **Core** when you need full data residency, custom deployment, or to embed the engine in your own stack. The same SDK and MCP tools work against both - point `ATOMICMEMORY_API_URL` at Cloud or your self-hosted core.
+
+Weighing hosted against self-hosted? See [Cloud vs Open Source](/cloud-vs-open-source).
+
+## Architecture
+
+Clients (untrusted)
+
+CLI / SDK / Web
+
+Dashboard (web)
+
+`amc_…` key or session JWT
+
+am-cloud-api (gateway)
+
+API-key authn
+
+Tenancy mapping
+
+Trace + usage
+
+`AM_CORE_API_KEY` infra only
+
+AtomicMemory Core (private)
+
+pgvector index
+
+AUDN mutation
+
+retrieval + LLM
+
+## Trust boundaries
+
+-   The **`amc_…` API key** is the only credential clients see. It is verified in the cloud gateway (argon2 hash + display prefix) and is **never** forwarded to core.
+-   **`AM_CORE_API_KEY`** is an infrastructure credential that lives only in the cloud environment. It authenticates outbound calls to core.
+-   **`ProjectType::Local`** projects are rejected with `400` before any core call. Local traffic should hit the project's own core URL directly and bypass the cloud gateway.
+
+## Multi-tenancy mapping
+
+Every cloud project maps to exactly one core `user_id`, guaranteeing no cross-project leakage at the storage layer.
+
+| Cloud concept | Core field | Notes |
+| --- | --- | --- |
+| `project_id` | `user_id = "project:{project_id}"` | Hard tenant boundary on every outbound request |
+| SDK `user_id` / `scope.user` | `session_id` | Per-user filtering on reads |
+| SDK `agent_id` / `scope.agent` | `agent_id` | Pass-through |
+| SDK `workspace_id` | `workspace_id` | Pass-through; core requires `agent_id` when set |
+
+## When to choose Cloud
+
+Choose **AtomicMemory** if you:
+
+-   Want to ship agents with memory in minutes, not weeks
+-   Need inspectable mutation and retrieval traces in a dashboard
+-   Prefer managed Postgres, Redis, and scaling over operating core yourself
+-   Plan to migrate to self-hosted core later with the same SDK surface
+
+Choose **self-hosted Core** if you:
+
+-   Require on-prem or air-gapped deployment
+-   Need full control over embedding providers and LLM routing
+-   Want to embed `createCoreRuntime` in-process (TypeScript) without HTTP
+
+## Next steps
+
+-   [Cloud Quickstart](/cloud/quickstart) - sign up, get an API key, first ingest
+-   [Developer Console](/cloud/console) - dashboard tour
+-   [Authentication](/cloud/authentication) - API keys vs dashboard session JWT
+-   [Cloud CLI](/cloud/cli) - `am` / `atomicmemory` from `get.atomicstrata.ai`
+
+---
+
+## Quickstart
+
+Source: https://docs.atomicstrata.ai/cloud/quickstart
+
+# Cloud Quickstart
+
+> Agent index: [llms.txt](/llms.txt)
+
+Get from zero to your first inspectable memory in under five minutes using the hosted console and CLI.
+
+**Console:** [memory.atomicstrata.ai](https://memory.atomicstrata.ai)  
+**API:** `https://api.atomicstrata.ai`
+
+1.  1Sign up
+2.  2Onboarding
+3.  3Create API key
+4.  4Install CLI
+5.  5Configure + ingest
+6.  6Verify in console
+
+## Prerequisites
+
+-   A web browser
+-   Terminal access for the CLI (optional but recommended)
+
+## Step 1 - Sign up
+
+Open [memory.atomicstrata.ai](https://memory.atomicstrata.ai) and click **Get started**. Create an account at `/signup`.
+
+## Step 2 - Onboarding
+
+After sign-up, you land on `/app`. If you have no projects or no API keys on a cloud project, you are redirected to **`/app/onboarding`**.
+
+The console idempotently provisions:
+
+1.  A personal organization (named from your account display name)
+2.  A default project (`slug: default-project`, environment: `dev`)
+
+## Step 3 - Create your first API key
+
+Click **Create API key** in the onboarding modal. The backend returns the full secret **exactly once** - copy it before closing the modal.
+
+API keys use the format:
+
+```text
+Authorization: Bearer amc_<env>_<random>
+```
+
+## Step 4 - Install the CLI
+
+```bash
+curl -fsSL https://get.atomicstrata.ai/install.sh | sh
+```
+
+This installs `atomicmemory` and the short alias **`am`**. See [Cloud CLI](/cloud/cli) for full install options.
+
+## Step 5 - Configure and ingest
+
+```bash
+export ATOMICMEMORY_API_URL=https://api.atomicstrata.ai
+export ATOMICMEMORY_API_KEY=amc_dev_xxxxxxxxxxxxxxxx
+
+am memory ingest "I prefer aisle seats when flying."
+```
+
+Under the hood this calls `POST /v1/memories/ingest` on the cloud gateway. Example wire body:
+
+```json
+{
+  "user_id": "default",
+  "source_site": "cli",
+  "conversation": "I prefer aisle seats when flying."
+}
+```
+
+Batch ingest from a file:
+
+```bash
+am memory ingest --file ./memories.jsonl
+```
+
+## Step 6 - Verify in the console
+
+Open **Memories** in the project sidebar. The ingested claim should appear with `status: active` and an inline evidence excerpt.
+
+If a mutation trace was recorded, click **View trace** to open the AUDN detail at `/app/projects/{id}/traces/{traceId}`.
+
+## SDK alternative
+
+Same flow with the TypeScript SDK:
+
+```bash
+npm install @atomicmemory/sdk
+```
+
+```typescript
+import { MemoryClient } from '@atomicmemory/sdk';
+
+const memory = new MemoryClient({
+  providers: {
+    atomicmemory: {
+      apiUrl: 'https://api.atomicstrata.ai',
+      apiKey: process.env.ATOMICMEMORY_API_KEY,
+    },
+  },
+});
+
+await memory.ingest({
+  messages: [{ role: 'user', content: 'I prefer aisle seats when flying.' }],
+  scope: { user: 'user_001' },
+});
+
+const results = await memory.search({
+  query: 'seat preference',
+  scope: { user: 'user_001' },
+});
+```
+
+## cURL alternative
+
+```bash
+curl -X POST https://api.atomicstrata.ai/v1/memories/ingest \
+  -H "Authorization: Bearer $ATOMICMEMORY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user_id": "default",
+    "source_site": "curl",
+    "conversation": "I prefer aisle seats when flying."
+  }'
+```
+
+## What to do next
+
+-   Try the **Playground** in the console - ingest and search without leaving the browser
+-   Explore the [Developer Console](/cloud/console) - traces, usage, API keys
+-   Read [Authentication](/cloud/authentication) - when to use API keys vs dashboard JWT
+-   Point MCP or agent integrations at Cloud - see [Integrations](/integrations/overview)
+
+---
+
+## Audit every memory mutation
+
+Source: https://docs.atomicstrata.ai/cloud/use-cases/audit-every-mutation
+
+# Audit every memory mutation
+
+> Agent index: [llms.txt](/llms.txt)
+
+Memory that changes silently is impossible to defend. When an auditor or an incident asks what your agent remembered - and when it changed - you need a record you can read, not a black box. AtomicMemory captures every change to memory as an inspectable mutation trace.
+
+## The problem
+
+Most memory systems either overwrite state in place or append opaque blobs. Neither lets you answer the questions that matter after the fact: which claim changed, when, under whose credentials, and why. Reconstructing that from application logs is slow and rarely complete.
+
+## How the cloud helps
+
+Every write is reconciled into a decision - add, update, delete, supersede, clarify, or no-op - and each decision is recorded as a **mutation trace**. The trace carries the incoming input, the extracted claim, the previous and new values, the scope it applied to, the API key that made the call, and a timestamp. Administrative actions - creating or revoking keys, changing settings - are recorded separately in the **Audit log**.
+
+## How it works
+
+A single reconciled write leaves a complete record:
+
+```ts
+await memory.ingest({
+  messages: [{ role: "user", content: "Actually, I moved to New York." }],
+  scope: { user: "user_001" },
+});
+```
+
+That call produces a mutation trace with an `update` decision - the prior claim, the new claim, the confidence behind it, and the prefix of the key that wrote it. Open [Traces](/cloud/how-to/traces) and filter to mutations to read every change in reconciled order. Nothing changes in memory without leaving that record.
+
+## Key capabilities
+
+-   **Decisioned, not appended** - every write is an add / update / delete / supersede / clarify / no-op decision, each with a stated reason.
+-   **Attributable by key** - each trace records the API key prefix that made the call, so every change ties back to a specific service.
+-   **Scoped and timestamped** - filter by scope and read changes in order to reconstruct a precise timeline.
+-   **Admin trail alongside** - the [Audit log](/cloud/how-to/audit-log) records key and settings changes made by console users.
+
+## Outcomes
+
+When compliance asks what the agent remembered and when it changed, you answer from the record instead of reconstructing it. Incident review becomes reading a trace, not archaeology.
+
+## Get started
+
+Open [Traces](/cloud/how-to/traces) and filter to mutations, then review the [Audit log](/cloud/how-to/audit-log) for administrative actions. Pair it with [least-privilege API keys](/cloud/use-cases/scoped-api-keys) so every change is attributable to one service.
+
+---
+
+## Debug retrieval with traces
+
+Source: https://docs.atomicstrata.ai/cloud/use-cases/debug-retrieval
+
+# Debug retrieval with traces
+
+> Agent index: [llms.txt](/llms.txt)
+
+When an assistant recalls the wrong thing, the bug is usually retrieval, not the model. AtomicMemory records a retrieval trace for every search and lets you replay any query in the Playground - so you can see exactly which memories came back for a query, and narrow down why.
+
+## The problem
+
+The model answers with a stale preference, or misses a fact you know is stored. Was the memory never written? Written under a different scope? Or simply not returned for this phrasing of the query? Without visibility into retrieval you are guessing, and guessing against an opaque vector store is slow.
+
+## How the cloud helps
+
+Every `search` produces a [retrieval trace](/cloud/how-to/traces): the query, the scope, and the memories that were returned for it. When recall looks wrong, open the trace to confirm what the layer actually handed back - then reproduce the exact query in the [Playground](/cloud/how-to/playground) to iterate on phrasing and scope against live project memory.
+
+## How it works
+
+Run the search your app runs, then inspect what it returned:
+
+```ts
+const { results } = await memory.search({
+  query: "preferred airline",
+  scope: { user: "user_001" },
+});
+```
+
+If `results` doesn't contain the fact you expected, the retrieval trace for that call shows what did come back. Two causes surface fast:
+
+-   **Wrong scope** - the memory exists, but under a different `user` or `agent`. Confirm it on the [Memories](/cloud/how-to/what-is-memories) page with the scope filter.
+-   **Phrasing mismatch** - the query and the stored claim describe the same thing in different words. Reword and re-run in the Playground.
+
+tip
+
+Reproduce first, then fix. The Playground runs the same ingest and search path as your app, so a query that misbehaves in production misbehaves the same way here - giving you a deterministic loop.
+
+## Key capabilities
+
+-   **Retrieval traces** - every search records the query, scope, and the memories it returned.
+-   **Playground replay** - re-run any query interactively against live project memory.
+-   **Cross-check with Memories** - confirm a fact exists, and under which scope, when it doesn't come back.
+
+## Outcomes
+
+Retrieval bugs stop being guesswork. You see what a query returned, reproduce it in one place, and fix the scope or phrasing - instead of blaming the model.
+
+## Get started
+
+Run a search in the [Playground](/cloud/how-to/playground), open its retrieval trace, and compare the returned memories against what you expected. When the fact is missing, check the [Memories](/cloud/how-to/what-is-memories) page to see whether it was stored - and where.
+
+---
+
+## Deletion & retention by scope
+
+Source: https://docs.atomicstrata.ai/cloud/use-cases/deletion-and-retention
+
+# Deletion & retention by scope
+
+> Agent index: [llms.txt](/llms.txt)
+
+When someone asks to be forgotten, you need to remove their memory - and only theirs. AtomicMemory partitions memory by scope, so personal, user-scoped facts can be deleted without touching the shared context your team relies on.
+
+## The problem
+
+If memory is one undifferentiated store, "delete this user" is either impossible to target or dangerous - you risk erasing shared knowledge along with personal data. Retention becomes all-or-nothing, and every deletion request turns into a manual, error-prone hunt.
+
+## How the cloud helps
+
+Every memory carries a scope - project, user, or agent. Because personal facts are written under `scope.user`, you can remove exactly one person's memory while project-scoped, shared context stays in place. Deletion is reconciled and recorded like any other mutation, so removals are on the record.
+
+## How it works
+
+Personal facts are written under a user scope:
+
+```ts
+await memory.ingest({
+  messages: [{ role: "user", content: "My home airport is SFO." }],
+  scope: { user: "user_001" },
+});
+```
+
+In the **Memories** inspector, filter by that user's scope to see everything stored for them, then delete those memories. Shared, project-scoped memory does not match the filter and is left untouched. Writes can also reconcile to a `delete` decision when new input retires an old fact.
+
+info
+
+Retention is what you choose to keep versus remove - there is no silent expiry. Memory persists until a reconciled write or a deletion removes it, and every removal is captured as a mutation trace.
+
+## Key capabilities
+
+-   **Per-scope isolation** - user-scoped memory is separate from shared project memory.
+-   **Scoped deletion** - filter the [Memories](/cloud/how-to/what-is-memories) inspector to a user and remove only their memory.
+-   **Reconciled deletes** - later input can retire a fact through an `update` or `delete` decision.
+-   **Auditable removal** - every deletion is recorded as a mutation trace you can review.
+
+## Outcomes
+
+You satisfy right-to-be-forgotten and data-subject requests per person, without collateral loss of team context - and you can prove the removal happened.
+
+## Get started
+
+Open the [Memories](/cloud/how-to/what-is-memories) inspector, filter by a user scope, and delete. See [Audit every memory mutation](/cloud/use-cases/audit-every-mutation) for how removals are recorded.
+
+---
+
+## Long-term memory across sessions
+
+Source: https://docs.atomicstrata.ai/cloud/use-cases/long-term-memory
+
+# Long-term memory across sessions
+
+> Agent index: [llms.txt](/llms.txt)
+
+Most assistants forget everything the moment a conversation ends. The next session starts cold - the user re-explains their preferences, their context, their history. AtomicMemory gives your app a memory that persists across sessions and is scoped to each user.
+
+## The problem
+
+Conversation history in a prompt window is not memory. It is bounded, it is per-session, and it grows expensive fast. To make an assistant feel like it *knows* a user, you need durable facts you can retrieve later - which usually means designing a schema, running a database, and writing the retrieval logic yourself.
+
+## How the cloud helps
+
+The memory layer stores durable, reconciled facts per user and returns the relevant ones at query time. You `ingest` what happens in a session and `search` for what matters in the next - no schema, no vector database to operate, no retrieval code to maintain.
+
+## How it works
+
+Write memories as they happen, scoped to the end-user:
+
+```ts
+await memory.ingest({
+  messages: [{ role: "user", content: "I always fly out of SFO." }],
+  scope: { user: "user_001" },
+});
+```
+
+At the start of the next session, retrieve what is relevant to the task:
+
+```ts
+const { results } = await memory.search({
+  query: "preferred departure airport",
+  scope: { user: "user_001" },
+});
+```
+
+Because writes are reconciled rather than appended, a later "Actually, I moved to New York" updates the standing fact instead of contradicting it - and you can see exactly what changed on the [Memories](/cloud/how-to/what-is-memories) page.
+
+## Key capabilities
+
+-   **Per-user scope** - each user's memory is isolated by `scope.user`.
+-   **Reconciled writes** - new facts update existing ones instead of piling up.
+-   **Zero infrastructure** - no database or embedding pipeline to run.
+
+## Outcomes
+
+Your assistant greets returning users already knowing their context, sessions start warm instead of cold, and you ship personalization without owning a memory store.
+
+## Get started
+
+Create a project, grab an API key from **API Keys**, and make your first `ingest` / `search` calls from the [Playground](/cloud/how-to/what-is-memories) or the SDK.
+
+---
+
+## Monitor usage & limits
+
+Source: https://docs.atomicstrata.ai/cloud/use-cases/monitor-usage-and-limits
+
+# Monitor usage & limits
+
+> Agent index: [llms.txt](/llms.txt)
+
+Memory usage grows quietly - more users, more ingests, more stored memories. The Usage page puts a project's consumption next to your organization's plan limits so you can see headroom at a glance and act before it runs out.
+
+## The problem
+
+Consumption is invisible until it isn't. Without a single place that shows usage against limits, you find out you crossed a threshold only when a bill lands or requests start getting throttled - long after the growth that caused it.
+
+## How the cloud helps
+
+The Usage page renders this project's request volumes (ingest, search, package, tokens) and storage footprint (stored memories, traces, embedding operations, bytes) as stat cards, above a 30-day request-volume chart. Your organization's plan limits sit right beside the numbers, so the gap between "what we're using" and "what we're allowed" is always in view.
+
+## How it works
+
+Open **Usage** on a project. The plan panel shows your organization's limits with a link into [Billing](/cloud/how-to/billing); the stat cards show live request and storage counts; the chart shows request volume for the last 30 days. No instrumentation to add - the numbers are already there.
+
+info
+
+Plan limits are **organization-wide**, so usage from every project counts against the same allowance. Check Usage per project to find what's driving it.
+
+## Key capabilities
+
+-   **Consumption vs limits** - plan limits render beside live usage, not on a separate billing screen.
+-   **Cost drivers at a glance** - ingest, search, and package requests, tokens processed, and storage used, as individual stat cards.
+-   **30-day trend** - spot a climbing request-volume line before it compounds.
+
+## Outcomes
+
+You catch a spike while it's still headroom, plan an upgrade deliberately instead of reactively, and avoid the throttle-or-surprise-bill moment entirely.
+
+## Get started
+
+Open [Usage](/cloud/how-to/usage) from your project's sidebar, compare the stat cards against your plan limits, and follow the billing link if you're getting close.
+
+---
+
+## One SDK, self-hosted or managed
+
+Source: https://docs.atomicstrata.ai/cloud/use-cases/one-sdk-self-hosted-or-managed
+
+# One SDK, self-hosted or managed
+
+> Agent index: [llms.txt](/llms.txt)
+
+The same `MemoryClient` talks to a self-hosted `atomicmemory-core` running on your machine or to the managed cloud API. You pick where memory lives per project - and change your mind later without touching a single call site.
+
+## The problem
+
+Infrastructure decisions tend to happen too early. Self-host for control and you own a datastore before you've validated the product; reach for a managed service and you worry about lock-in. Either way, betting wrong usually means rewriting your integration once the real requirements show up.
+
+## How the cloud helps
+
+The SDK contract is identical in both directions. A project is either `local`
+
+-   your app talks straight to a self-hosted core - or `managed`, proxied through the cloud API. The console adapts its ingest and search wiring to match. Start against a local core, ship on the managed endpoint, or take the open-source core in-house later: the code that calls `ingest` and `search` never changes.
+
+## How it works
+
+Only the `apiUrl` differs between self-hosted and managed. Everything else - including every `ingest` and `search` call - stays the same:
+
+```ts
+import { MemoryClient } from "@atomicmemory/sdk";
+
+// self-hosted core → http://localhost:8080
+// managed cloud    → https://api.atomicstrata.ai
+const memory = new MemoryClient({
+  providers: {
+    atomicmemory: {
+      apiUrl: process.env.ATOMICMEMORY_API_URL,
+      apiKey: process.env.ATOMICMEMORY_API_KEY,
+    },
+  },
+});
+
+await memory.ingest({
+  messages: [{ role: "user", content: "I prefer aisle seats." }],
+  scope: { user: "user_001" },
+});
+```
+
+## Key capabilities
+
+-   **One contract** - the same `ingest` / `search` calls run against local or managed, so integration code is portable by default.
+-   **Local or managed projects** - the console adapts wiring per project; you choose where memory lives without changing your app.
+-   **No lock-in** - the managed API and the open-source core (Postgres + pgvector) share the SDK contract, so you can migrate any time.
+
+## Outcomes
+
+You prototype against a local core, ship on the managed endpoint, and keep the door open to self-hosting later - all without a rewrite, because the SDK is the only surface your app ever sees.
+
+## Get started
+
+Create a `local` or `managed` project on the [Projects](/cloud/how-to/projects) page, grab a key from [API Keys](/cloud/how-to/api-keys), and point `apiUrl` at your endpoint. Try both from the [Playground](/cloud/how-to/playground), or read [Prototype in the Playground](/cloud/use-cases/prototype-in-the-playground).
+
+---
+
+## Per-user personalization with scopes
+
+Source: https://docs.atomicstrata.ai/cloud/use-cases/per-user-personalization
+
+# Per-user personalization with scopes
+
+> Agent index: [llms.txt](/llms.txt)
+
+One deployment of your assistant serves everyone who signs in. Each of those users needs a memory that reflects only their own history - never the person in the next session. AtomicMemory gives you that separation through **scope**: every write and every read is tagged, and the memory layer keeps each scope apart.
+
+## The problem
+
+Personalization for many users is really an isolation problem. If every user's facts land in one shared space, User A's "reply in Spanish" and User B's "I'm vegan" pile up together, and the wrong preference surfaces for the wrong person. Partitioning that yourself is the usual tax: a tenant column on every table, a `WHERE` clause on every query, and a single missed filter away from leaking one user's context into another's answers.
+
+## How the cloud helps
+
+Scope *is* the partition. Every `ingest` and `search` carries a scope, and the memory layer stores and retrieves each scope's memory separately. Tag a write with `scope.user` and a search for that user reads only their memory - you get per-user separation without building a partitioning layer or hand-writing a filter. Scopes form a small hierarchy:
+
+-   `project` - facts that belong to the whole app, shared across all users.
+-   `user` - one end-user's own preferences and history.
+-   `agent` - a single assistant or persona within the app.
+
+## How it works
+
+Write each user's memory under their own `scope.user`:
+
+```ts
+await memory.ingest({
+  messages: [{ role: "user", content: "Reply to me in Spanish." }],
+  scope: { user: "user_a" },
+});
+
+await memory.ingest({
+  messages: [{ role: "user", content: "I'm vegan - never suggest meat." }],
+  scope: { user: "user_b" },
+});
+```
+
+A search reads only the scope you ask for, so one user never sees another's memory:
+
+```ts
+const { results } = await memory.search({
+  query: "language and dietary preferences",
+  scope: { user: "user_a" },
+});
+// results reflect user_a's language preference - never user_b's diet
+```
+
+Facts that belong to the whole application, not one person, go in project scope instead:
+
+```ts
+await memory.ingest({
+  messages: [{ role: "user", content: "Our support hours are 9-5 ET." }],
+  scope: { project: "acme_support" },
+});
+```
+
+You can confirm the separation on the [Memories](/cloud/how-to/what-is-memories) page by filtering the inspector to a single scope - you see exactly what one user's assistant would recall.
+
+tip
+
+Use a stable id from your own auth system as `scope.user`. Because it is the isolation key, it must be the same value every session - a rotating session id or a changing email scatters one person's memory across scopes.
+
+## Key capabilities
+
+-   **Scope hierarchy** - `project` for app-wide facts, `user` for each end-user, `agent` for a specific assistant.
+-   **Scoped reads** - a search returns only the scope you pass, so you never hand-write a tenant filter.
+-   **Verifiable separation** - filter the Memories inspector by scope to see what each user can recall.
+
+## Outcomes
+
+One deployment personalizes for thousands of users at once, each with a memory that reflects only their own history. You onboard a new user by choosing a new `scope.user` - there is nothing to provision per user.
+
+## Get started
+
+Create a project, grab an API key from **API Keys**, and make your first scoped `ingest` / `search` calls from the [Playground](/cloud/how-to/playground) or the SDK. Filter the [Memories](/cloud/how-to/what-is-memories) page by scope to watch isolation hold.
+
+---
+
+## Store preferences without a database
+
+Source: https://docs.atomicstrata.ai/cloud/use-cases/preferences-without-a-database
+
+# Store preferences without a database
+
+> Agent index: [llms.txt](/llms.txt)
+
+Preferences are the classic reason to reach for a database: a settings table, a preferences key-value store, a column for every toggle. But the preferences that make an assistant feel personal show up in conversation, change over time, and rarely fit a fixed schema. AtomicMemory lets you capture them through the same `ingest` and `search` you already use - no store to design.
+
+## The problem
+
+The moment your assistant should remember "keep answers short" or "I bill to the EU entity," you reach for storage: design a preferences table, pick the columns, write the UPSERT, and add a migration every time a new kind of preference appears. Much of what users tell you doesn't map to a column at all, and when a preference changes you still have to find and overwrite the right row yourself.
+
+## How the cloud helps
+
+You ingest the preference as ordinary conversation and search it back when you build the prompt - the memory *is* the store, so there is no schema to define. And because writes are reconciled rather than appended, a changed preference updates the standing fact instead of leaving two contradictory rows behind. The memory layer decides whether each write is an add, update, delete, or no-op, so evolving a preference costs you no lookup, no UPSERT, and no migration.
+
+## How it works
+
+Capture a preference the moment it comes up - nothing to design first:
+
+```ts
+await memory.ingest({
+  messages: [{ role: "user", content: "Use metric units and keep answers short." }],
+  scope: { user: "user_001" },
+});
+```
+
+Later the user changes their mind. You ingest it exactly the same way - no row to look up, no UPSERT to write:
+
+```ts
+await memory.ingest({
+  messages: [{ role: "user", content: "Actually, switch me to imperial units." }],
+  scope: { user: "user_001" },
+});
+```
+
+Reconciliation turns that second write into an *update* of the standing preference, not a new row. Read the current state back when you assemble the prompt:
+
+```ts
+const { results } = await memory.search({
+  query: "unit and formatting preferences",
+  scope: { user: "user_001" },
+});
+// returns the current preference: imperial units, short answers
+```
+
+info
+
+Every reconciliation is inspectable: the decision (update, no-op, …) shows on [Traces](/cloud/how-to/traces), the reconciled result on [Memories](/cloud/how-to/what-is-memories), and any disagreement between sources on [Conflicts](/cloud/how-to/conflicts).
+
+## Key capabilities
+
+-   **Reconciled, not appended** - a preference change updates the standing fact; the layer records whether it was an add, update, delete, or no-op.
+-   **No schema, no migrations** - a new kind of preference is just more memory, never a new column.
+-   **Natural-language facts** - store anything a user tells you, not only what fits a settings row.
+
+## Outcomes
+
+Your assistant honors durable preferences without you owning a preferences store. What it remembers grows as users tell you more, and it stays current as they change their minds - with no schema review and no migration to ship.
+
+## Get started
+
+Create a project, grab an API key from **API Keys**, and run an ingest-then-change-then-search cycle in the [Playground](/cloud/how-to/playground) to watch a preference reconcile in place. Then wire the same `ingest` / `search` calls into your app.
+
+---
+
+## Prototype in the Playground
+
+Source: https://docs.atomicstrata.ai/cloud/use-cases/prototype-in-the-playground
+
+# Prototype in the Playground
+
+> Agent index: [llms.txt](/llms.txt)
+
+Before you wire the SDK into an app, you want to know how memory behaves: what a query returns, how a write reconciles, whether the scope is right. The Playground lets you run `ingest` and `search` interactively against a real project and inspect the results - no code to write yet.
+
+## The problem
+
+Validating memory behaviour by editing application code is a slow loop: write a call, run the app, dig through logs, repeat - all before you even know the shape of a useful query. You end up debugging your integration and the memory layer at the same time.
+
+## How the cloud helps
+
+The Playground runs ingest and search from inside the dashboard against the same project your code will use. Managed projects proxy through the cloud API; local projects hit your self-hosted core directly. Every result deep-links into the [Trace Viewer](/cloud/how-to/traces) and the [Memory Explorer](/cloud/how-to/what-is-memories), so you see not just what came back but the decision that produced it.
+
+## How it works
+
+Open the Playground on a project, ingest a message, then run a search query and read the results inline. Each result links to the trace that created it and the stored memory it points to. Once the behaviour is right, the same calls drop straight into your app:
+
+```ts
+await memory.search({ query: "seat preference", scope: { user: "user_001" } });
+```
+
+tip
+
+In managed mode you paste an API key to run requests; the key stays in your browser's memory only. Grab one from [API Keys](/cloud/how-to/api-keys).
+
+## Key capabilities
+
+-   **Interactive ingest & search** - run the first query with no code at all.
+-   **Managed or local** - the same Playground drives either project type.
+-   **Traceable results** - every result links to its trace and its stored memory, so you can see why it matched.
+
+## Outcomes
+
+You confirm how memory behaves in minutes instead of build cycles, then copy the exact `ingest` and `search` calls into your application with confidence.
+
+## Get started
+
+Open the [Playground](/cloud/how-to/playground) on any project, run an ingest, then a search. When the results look right, wire the same calls with the SDK - see [One SDK, self-hosted or managed](/cloud/use-cases/one-sdk-self-hosted-or-managed).
+
+---
+
+## Reconcile facts instead of appending
+
+Source: https://docs.atomicstrata.ai/cloud/use-cases/reconcile-facts
+
+# Reconcile facts instead of appending
+
+> Agent index: [llms.txt](/llms.txt)
+
+Append-only memory rots. Every time a user restates something it becomes another row, contradictions pile up, and retrieval hands back three versions of the same fact. AtomicMemory reconciles each write against what it already knows, so memory stays consistent as facts change.
+
+## The problem
+
+A user says "I live in San Francisco," then months later "I moved to New York." A naive store keeps both. Now a search for their location returns two contradictory facts and the model picks one at random. The more your users talk, the noisier their memory gets - and the harder it is to trust any single recall.
+
+## How the cloud helps
+
+On every `ingest`, the layer compares the incoming information to existing memory and records an explicit decision - **Add** a new fact, **Update** an existing one, **Delete** one that no longer holds, or **No-op** when nothing changed. "Moved to New York" updates the standing location instead of duplicating it. When new information genuinely contradicts what's stored, the layer surfaces a [conflict](/cloud/how-to/conflicts) for review rather than silently overwriting or merging.
+
+## How it works
+
+The same scope, written twice, does not produce two facts:
+
+```ts
+// First session
+await memory.ingest({
+  messages: [{ role: "user", content: "I live in San Francisco." }],
+  scope: { user: "user_001" },
+});
+
+// Months later - same scope
+await memory.ingest({
+  messages: [{ role: "user", content: "I just moved to New York." }],
+  scope: { user: "user_001" },
+});
+```
+
+The second call doesn't append. The layer recognizes it's the same underlying fact and records an **Update** - the standing memory now reads New York, and the [Traces](/cloud/how-to/traces) page shows the before and after. A later search for the user's location returns one answer, not a contradiction.
+
+info
+
+Reconciliation is scoped. Facts are compared within a scope, so one user's move never rewrites another user's - or the shared project's - memory.
+
+## Key capabilities
+
+-   **AUDN decisions** - every write resolves to Add, Update, Delete, or No-op, never a blind append.
+-   **Conflicts surfaced** - contradictory facts are flagged for review, not silently merged away.
+-   **Consistent retrieval** - one fact per truth, so search returns a clean answer instead of a pile of restatements.
+
+## Outcomes
+
+Memory stays small and truthful as it grows. Retrieval returns the current fact, and every change is auditable as a decision on the Traces page rather than an opaque overwrite.
+
+## Get started
+
+Ingest the same fact twice from the [Playground](/cloud/how-to/playground) and watch the [Traces](/cloud/how-to/traces) page record an **Update** instead of a second **Add**. When a contradiction can't be resolved automatically, review it on the [Conflicts](/cloud/how-to/conflicts) page.
+
+---
+
+## Least-privilege scoped API keys
+
+Source: https://docs.atomicstrata.ai/cloud/use-cases/scoped-api-keys
+
+# Least-privilege scoped API keys
+
+> Agent index: [llms.txt](/llms.txt)
+
+A single shared credential across every service is a blast radius waiting to happen. AtomicMemory issues API keys per project, so each service reaches only that project's memory - and you can revoke or rotate any key on its own.
+
+## The problem
+
+One master key used everywhere means a single leak exposes all your memory, offboarding a service forces you to re-credential every other one, and you cannot tell which service wrote which memory. Access sprawls, and containment gets expensive.
+
+## How the cloud helps
+
+Keys are scoped to a project. A key created in one project cannot reach another project's memory, so giving each service its own project and key confines it to exactly the memory it needs. Every key can be revoked instantly or rotated in place, and each carries a prefix that ties its calls back to it.
+
+## How it works
+
+Create a key on a project's **API Keys** page with a name and an environment label (development, staging, or production). The secret is shown once - store it in your service's configuration:
+
+```ts
+const memory = new MemoryClient({
+  providers: {
+    atomicmemory: {
+      apiUrl: "https://api.atomicstrata.ai",
+      apiKey: process.env.ATOMICMEMORY_API_KEY,
+    },
+  },
+});
+```
+
+That key reaches only its project. Within the project, pass `scope` on each call to isolate memory per user or agent. If a key leaks or a service is decommissioned, revoke it - or rotate it to issue a fresh secret and retire the old one in a single step.
+
+## Key capabilities
+
+-   **Per-project boundary** - a key reaches only the memory in the project it belongs to.
+-   **Revoke instantly** - disable a key the moment it leaks or a service is retired.
+-   **Rotate in place** - replace a secret without minting a separate key; the old one is revoked automatically.
+-   **Attributable** - each key has a prefix that appears on the [traces](/cloud/how-to/traces) its calls produce.
+-   **One-time secret** - the full key is revealed once at creation, never stored for later retrieval.
+
+## Outcomes
+
+A leaked or retired service is contained by revoking one key, not re-credentialing your fleet. And because every write carries its key's prefix, you can always trace a memory back to the service that made it.
+
+## Get started
+
+Open a project's [API Keys](/cloud/how-to/api-keys) page and create a key per service. Then see [Audit every memory mutation](/cloud/use-cases/audit-every-mutation) to follow each key's writes through the trace log.
+
+---
+
+## See what's stored - and why
+
+Source: https://docs.atomicstrata.ai/cloud/use-cases/see-whats-stored
+
+# See what's stored - and why
+
+> Agent index: [llms.txt](/llms.txt)
+
+Most memory systems are a black box: you put data in and hope the right thing comes back out. AtomicMemory is built to be inspected. Every stored fact is visible on the Memories page, and every fact links back to the trace that produced it - so "what does my assistant know, and why" is a page you open, not a question you guess at.
+
+## The problem
+
+When memory is opaque, a wrong answer has no obvious cause. Was the fact never stored? Stored under a different scope? Overwritten by something newer? Without a view into the reconciled state, debugging is guesswork and reviewers have no way to audit what an assistant actually knows about a user.
+
+## How the cloud helps
+
+The [Memories](/cloud/how-to/what-is-memories) page renders the current, reconciled state of your project - every claim the layer holds, newest first, filterable by scope. Each memory carries the reasoning behind it and a link to the mutation trace that created or last changed it. Nothing is hidden: the state your application retrieves from is the state you can read on the page.
+
+## How it works
+
+Write a fact, then retrieve it. The results come from the same reconciled state the inspector renders:
+
+```ts
+await memory.ingest({
+  messages: [{ role: "user", content: "I'm vegetarian." }],
+  scope: { user: "user_001" },
+});
+
+const { results } = await memory.search({
+  query: "dietary restrictions",
+  scope: { user: "user_001" },
+});
+```
+
+Because search reads from the reconciled state, the Memories page is a faithful preview of what your app recalls at query time. From any memory, jump to its [trace](/cloud/how-to/traces) to see the decision - add, update, delete, or no-op - that produced it.
+
+tip
+
+The Memories page shows the *result*; the Traces page shows the *reasoning* behind it. Start at the fact, follow the link to see how it got there.
+
+## Key capabilities
+
+-   **Reconciled state, visible** - every stored claim on one page, newest first.
+-   **Scoped views** - filter by project, user, or agent to see exactly what one assistant would recall.
+-   **Fact-to-trace** - jump from any memory to the mutation trace that created or changed it.
+
+## Outcomes
+
+You can answer "what does the assistant know about this user, and why" without digging through logs. Reviewers audit memory state directly, and wrong answers become traceable instead of mysterious.
+
+## Get started
+
+Open the [Memories](/cloud/how-to/what-is-memories) page for a project, or ingest a fact from the [Playground](/cloud/how-to/playground) and watch it appear in the reconciled state. From there, follow any fact to its trace.
+
+---
+
+## Share a read-only memory view
+
+Source: https://docs.atomicstrata.ai/cloud/use-cases/share-a-read-only-view
+
+# Share a read-only memory view
+
+> Agent index: [llms.txt](/llms.txt)
+
+Sometimes the people who most want to see what your assistant remembers are the ones who shouldn't have a console login. The public share view renders a read-only memory list that needs no sign-in and locks every path out of itself.
+
+## The problem
+
+A reviewer, a stakeholder, or a teammate wants to inspect what the memory layer has stored - but provisioning them a full console account is overkill, and you don't want them editing, deleting, or wandering into the rest of the workspace.
+
+## How the cloud helps
+
+The share view fetches a memory endpoint directly in the viewer's browser and renders the same read-only memory list the console uses. The surrounding chrome is locked: every nav link and every row action bounces to `/login`. A viewer can read memories but can't reach the console, and there is no write path at all. You can optionally scope the view to a single end-user.
+
+## How it works
+
+Point the viewer at a reachable memory endpoint with `baseUrl`, and optionally narrow it to one user with `userId`:
+
+```text
+/share/memories?baseUrl=<your-memory-endpoint>&userId=user_001
+```
+
+The viewer opens straight into the locked, read-only list - no sign-in, no mutation controls, and no navigation out of the view.
+
+warning
+
+Anyone with the link can open the view - there is no per-viewer sign-in. Share links only for memory endpoints and user scopes you are comfortable exposing read-only.
+
+## Key capabilities
+
+-   **No sign-in for viewers** - read-only access with nothing to provision.
+-   **Locked chrome** - every nav link and row action bounces to `/login`; the console stays out of reach.
+-   **Optional user scope** - add `userId` to show one end-user's memories only.
+
+## Outcomes
+
+Stakeholders see exactly what the assistant remembers - scoped and read-only - without an account and without any way to change what's stored.
+
+## Get started
+
+Point a `/share/memories` link at your memory endpoint, add `&userId=` to scope it, and send it. To understand what viewers will see, read [What is Memories](/cloud/how-to/what-is-memories); to choose which project's endpoint to expose, see [Projects](/cloud/how-to/projects).
+
+---
+
 ## Claude Code
 
 Source: https://docs.atomicstrata.ai/integrations/coding-agents/claude-code
@@ -5641,6 +7414,24 @@ Source: https://docs.atomicstrata.ai/integrations/overview
 
 AtomicMemory adds durable memory to coding agents, AI frameworks, and terminal workflows through the same provider-backed memory layer. Choose the host you use, install the local integration, and point it at your AtomicMemory backend.
 
+Your host
+
+Coding agentsClaude Code · Codex · Cursor · OpenClaw · Hermes
+
+FrameworksVercel AI · LangChain · LangGraph · Langflow · Mastra
+
+MCP tools / SDK adapters
+
+Shared surface
+
+MCP server
+
+SDK adapters
+
+Backend
+
+AtomicMemoryhosted or self-hosted
+
 ## Coding agents
 
 | Integration | Best for | Status | Docs |
@@ -5691,6 +7482,81 @@ Source lives in the public [`atomicstrata/atomicmemory`](https://github.com/atom
 
 ---
 
+## Open Source
+
+Source: https://docs.atomicstrata.ai/introduction
+
+# Open Source
+
+> Agent index: [llms.txt](/llms.txt)
+
+Not sure which to start with?
+
+These pages cover the **self-hosted** engine you run yourself. Most developers should start with [**AtomicMemory**](/cloud/quickstart) — the same engine, hosted, with a console, traces, and scoped API keys. See [Cloud vs Open Source](/cloud-vs-open-source) to choose.
+
+AtomicMemory is an open-source memory engine for AI applications, semantic retrieval, AUDN mutation (Add / Update / Delete / No-op), and contradiction-safe claim versioning, delivered as an HTTP service you can run from a published Docker image. It is pluggable at every seam: swap the embedding provider, the LLM, the artifact-storage backend, or the scope model without forking. The engine ships as a standardized platform layer, not a framework, not a SaaS, so your agents, assistants, and products can compose the memory stack they need.
+
+## Why AtomicMemory
+
+AI memory is becoming a platform concern, not a product feature. Most existing options force a hosted runtime, a specific agent framework, or a proprietary query language. AtomicMemory is designed around the opposite defaults.
+
+Memory is also production state. If remembered facts can change agent behavior, engineers need to inspect them, correct them, audit where they came from, and replace the parts of the system they disagree with. Most memory products optimize for recall first and expose operational control later. AtomicMemory is built for memory you can own.
+
+| Production requirement | AtomicMemory | mem0 | Letta | Zep |
+| --- | --- | --- | --- | --- |
+| Own the memory layer, not rent a hosted opinion | **Best fit.** Apache-2.0 engine, self-hosted by default, Postgres-backed, no required hosted control plane. | OSS plus hosted platform orientation. | Self-hosted agent runtime. | OSS plus commercial / hosted platform orientation. |
+| Inspect memory during an incident | **Best fit.** Stored content, trust, source, timestamps, mutation lineage, and audit surfaces live in inspectable engine state and ordinary Postgres. | Inspection depends on Mem0's exposed APIs and platform surfaces. | Inspection happens through the Letta agent/runtime model. | Inspection depends on the server and hosted / platform surfaces. |
+| Correct bad memory without wiping the user | **Best fit.** AUDN mutation, `SUPERSEDE`, `CLARIFY`, trust scoring, CRUD, consolidation, and decay are core domains. | Primarily memory add/search/update/delete abstraction. | Memory correction is coupled to agent state. | Memory correction is coupled to the server's memory model. |
+| Debug why retrieval behaved a certain way | **Best fit.** Search responses separate retrieval, packaging, and final context assembly in a structured observability envelope. | Logs and integrations. | Framework-dependent tracing. | Hosted / server observability. |
+| Swap internals without rewriting the product | **Best fit.** Ingest, Search, CRUD, Lifecycle, Trust, stores, embeddings, LLMs, and SDK backends are explicit typed seams. | Provider and storage choices exist, but the core pipeline is not exposed as five replaceable domains. | Customize by adopting or extending the Letta agent runtime. | Customize mostly through server configuration and supported APIs. |
+| Run deterministic local tests and benchmarks | **Best fit.** The same engine boots as production HTTP, in-process TypeScript, or ephemeral test server from `createCoreRuntime`. | Possible, but not the primary product shape. | Possible inside the Letta framework. | Server-oriented; less suited to per-test composition. |
+| Keep app code portable across memory engines | **Best fit.** The TypeScript SDK routes through `MemoryProvider`, so apps can compare AtomicMemory, Mem0, or custom backends behind one interface. | You integrate with Mem0's SDK/API. | You integrate with Letta's agent/runtime abstractions. | You integrate with Zep's server/API model. |
+
+Sources for third-party positioning: [Mem0 OSS overview](https://docs.mem0.ai/open-source/overview), [Letta intro](https://docs.letta.com/guides/get-started/intro), [Zep overview](https://help.getzep.com/overview). AtomicMemory architecture details: [Architecture](/platform/architecture), [Composition](/platform/composition), [Scope](/platform/scope), [Observability](/platform/observability).
+
+The pitch is not "we do more." It is: the seams are explicit, the contracts are stable, and you compose your own stack.
+
+## Platform at a glance
+
+Your code
+
+App / agent
+
+HTTP API or TypeScript SDK
+
+Engine
+
+Five domainsIngest · Search · CRUD · Lifecycle · Trust
+
+swappable seams
+
+Pluggable
+
+StoresPostgres + pgvector
+
+EmbeddingsOpenAI · Ollama · WASM · Voyage
+
+LLMOpenAI · Anthropic · Ollama · …
+
+Artifactspointer · FS · S3 · Filecoin
+
+-   **Pluggable storage**, five domain-facing store interfaces so ingest, search, CRUD, lifecycle, and trust each see only the contract they need ([stores](/platform/stores))
+-   **Pluggable providers**, embeddings via openai, openai-compatible, ollama, transformers (local WASM), or voyage; LLM via openai, openai-compatible, ollama, anthropic, google, groq, Claude Code, or Codex ([providers](/platform/providers)); optional artifact storage via pointer mode, local filesystem, S3, or Filecoin ([artifact storage](/platform/artifact-storage))
+-   **Explicit composition**, a single composition root wires the runtime container; no hidden singletons, no global state ([composition](/platform/composition))
+-   **First-class scope**, user, workspace, and agent scopes dispatched at the request boundary, not bolted on after ([scope](/platform/scope))
+-   **Observability as contract**, every search response carries a stable trace schema so dashboards and evals never break on a refactor ([observability](/platform/observability))
+-   **Domain separation**, Ingest, Search, CRUD, Lifecycle, and Trust are independent domains with their own routes and services ([architecture](/platform/architecture))
+
+## Try it in 2 minutes
+
+The fastest path is the [Quickstart](/quickstart): set an API key, run `ghcr.io/atomicstrata/atomicmemory-core:latest`, and run your first ingest and search with two curl commands.
+
+Core is HTTP-first, so any language works today. The [TypeScript SDK](/sdk/overview) gives TypeScript and JavaScript consumers typed request and response shapes, richer ergonomics, scope-aware helpers, and a pluggable provider model that decouples your app from any particular memory engine. The Python SDK serves Python-native integrations such as Hermes. Nothing about core requires either SDK.
+
+AtomicMemory is [Apache-2.0 licensed](https://github.com/atomicstrata/atomicmemory-core/blob/main/LICENSE). Self-host it, fork it, run it behind your own gateway, the platform is yours.
+
+---
+
 ## Architecture
 
 Source: https://docs.atomicstrata.ai/platform/architecture
@@ -5704,6 +7570,30 @@ AtomicMemory is a **standardized platform layer for AI memory**, not a monolithi
 This page walks through the five domains, shows where each lives in the real source, and explains why this split matters when you're choosing between AtomicMemory and the single-binary alternatives.
 
 ## The five domains
+
+Facade
+
+MemoryService
+
+delegates to
+
+Five domains
+
+Ingestextraction · AUDN · embedding
+
+Searchretrieval · packaging
+
+CRUDget · update · delete
+
+Lifecycleconsolidation · decay
+
+Trustscoring · sources
+
+share
+
+Shared contract
+
+MemoryServiceDepsstores · embeddings · LLM
 
 The `MemoryService` class is a **thin facade**. It holds no business logic, every public method delegates to one of five domain modules. Here is the whole shape of the facade (see [`src/services/memory-service.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/services/memory-service.ts)):
 
@@ -8003,15 +9893,24 @@ That's what we mean by "pluggable at every seam".
 
 ---
 
-## Quickstart
+## Open Source Quickstart
 
 Source: https://docs.atomicstrata.ai/quickstart
 
-# Quickstart
+# Open Source Quickstart
 
 > Agent index: [llms.txt](/llms.txt)
 
-Start a local memory service from the published Docker image, then run your first ingest and search.
+Start a **self-hosted** memory service from the published Docker image, then run your first ingest and search.
+
+Looking for the fastest path?
+
+This page self-hosts the engine on your own machine — you supply Docker, a storage volume, and an OpenAI API key. If you would rather not run infrastructure, [**AtomicMemory**](/cloud/quickstart) gets you to your first stored memory in under five minutes with just an API key. Same engine, same API. See [Cloud vs Open Source](/cloud-vs-open-source).
+
+1.  1Start core`docker run`
+2.  2Verify health`/v1/memories/health`
+3.  3First ingest`/v1/memories/ingest`
+4.  4First search`/v1/memories/search`
 
 ## Prerequisites
 
@@ -8929,7 +10828,7 @@ Source: https://docs.atomicstrata.ai/sdk/guides/atomicmemory-backend
 
 > Agent index: [llms.txt](/llms.txt)
 
-`AtomicMemoryProvider` is the SDK's HTTP client for [atomicmemory-core](/). It ships with the SDK and is the default backend when you configure `default: 'atomicmemory'`.
+`AtomicMemoryProvider` is the SDK's HTTP client for [atomicmemory-core](/introduction). It ships with the SDK and is the default backend when you configure `default: 'atomicmemory'`.
 
 ## Wire it up
 
@@ -9895,7 +11794,7 @@ import { MemoryClient } from '@atomicmemory/sdk/browser';
 -   Run through the [Quickstart](/sdk/quickstart) for a 5-minute install and first call.
 -   Store or reference files with [Artifact storage](/sdk/guides/artifact-storage).
 -   Read the [Provider model](/sdk/concepts/provider-model) to understand how the backend-agnostic story works in detail.
--   If you are looking for the memory engine itself, the server, the HTTP API, the claim schema, start at the [Core introduction](/).
+-   If you are looking for the memory engine itself, the server, the HTTP API, the claim schema, start at the [Core introduction](/introduction).
 
 ---
 
@@ -9912,7 +11811,7 @@ Install, initialize, and make your first ingest and search, with `MemoryClient` 
 ## Prerequisites
 
 -   **Node.js 22+** (FOC/Filecoin storage paths require Node 24+)
--   **A running `atomicmemory-core`**, follow the [Core Quickstart](/quickstart) if you have not yet brought one up; we assume `http://localhost:17350` below
+-   **A memory endpoint** — either a hosted [AtomicMemory](/cloud/quickstart) project (point the client at `https://api.atomicstrata.ai` with your project key) or a self-hosted core via the [Open Source Quickstart](/quickstart); we assume a local `http://localhost:17350` below
 
 ## Step 1, Install
 
