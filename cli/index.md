@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-`@atomicmemory/cli` is the Node.js command line for direct self-hosted core workflows. It is separate from the Cloud CLI (`am` from [get.atomicstrata.ai](https://get.atomicstrata.ai)) — use [Cloud CLI](/cloud/cli) and the [Quickstart](/quickstart) for Connected Local activation.
+`@atomicmemory/cli` is the Node.js command line for direct self-hosted core workflows. It is separate from the AtomicMemory CLI (`am` from [get.atomicstrata.ai](https://get.atomicstrata.ai)) — use [AtomicMemory CLI](/cloud/cli) and the [Quickstart](/quickstart) for Connected Local activation.
 
 `atomicmemory` is also separate from the MCP server: `atomicmemory-mcp` is a stdio process for agent hosts, while this package is a terminal tool for setup, diagnostics, memory operations, and stable script output.
 
@@ -40,10 +40,10 @@ npx -y @atomicmemory/cli
 | Path | Use when | Start here |
 | --- | --- | --- |
 | Claude Code plugin | You want personal Claude Code memory with local runtime management and no separate API key for extraction. | [Claude Code Local](/integrations/coding-agents/claude-code/local) |
-| Connected Local (recommended) | You want Core on your machine with console visibility. | [Quickstart](/quickstart) via [Cloud CLI](/cloud/cli) (`am init`). |
+| Connected Local (recommended) | You want Core on your machine with console visibility. | [Quickstart](/quickstart) via [AtomicMemory CLI](/cloud/cli) (`am init`). |
 | Direct CLI against local core | You run `atomicmemory-core` yourself and want npm terminal commands. | [Core-only Docker](/core-only-docker), then configure a `local` profile below. |
 | Direct CLI against a self-hosted service | Your team operates AtomicMemory behind its own URL and token. | Configure a `self-hosted` profile below. |
-| Hosted Cloud | You want managed memory hosting. | [Cloud CLI](/cloud/cli) and [Add Hosted Cloud](/cloud/quickstart). |
+| Hosted Cloud | You want managed memory hosting. | [AtomicMemory CLI](/cloud/cli) and [Add Hosted Cloud](/cloud/quickstart). |
 | Mem0 adapter | You want the CLI shape against a Mem0 backend. | Use `--provider mem0`; AtomicMemory-only commands are capability-gated. |
 
 ## Configure

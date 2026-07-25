@@ -37,7 +37,7 @@ Already created a project in the console? Run `am init --project <slug>` instead
 -   Console connection — runtime shows **Online**
 -   End-to-end memory verification
 
-For a **Connected Local** project, use **Google Chrome** when viewing it in the console — your browser needs to reach Core directly, which is more reliable in Chrome. More detail: [Cloud CLI](/cloud/cli).
+For a **Connected Local** project, use **Google Chrome** when viewing it in the console — your browser needs to reach Core directly, which is more reliable in Chrome. More detail: [AtomicMemory CLI](/cloud/cli).
 
 ## 2. Add your first memory
 

@@ -1,4 +1,4 @@
-# Atomic Strata Docs, full corpus
+# Atomic Strata, full corpus
 
 > Generated snapshot of every page on https://docs.atomicstrata.ai/, in stable URL order. Use llms.txt for the index.
 
@@ -2934,7 +2934,7 @@ Source: https://docs.atomicstrata.ai/cli
 
 > Agent index: [llms.txt](/llms.txt)
 
-`@atomicmemory/cli` is the Node.js command line for direct self-hosted core workflows. It is separate from the Cloud CLI (`am` from [get.atomicstrata.ai](https://get.atomicstrata.ai)) — use [Cloud CLI](/cloud/cli) and the [Quickstart](/quickstart) for Connected Local activation.
+`@atomicmemory/cli` is the Node.js command line for direct self-hosted core workflows. It is separate from the AtomicMemory CLI (`am` from [get.atomicstrata.ai](https://get.atomicstrata.ai)) — use [AtomicMemory CLI](/cloud/cli) and the [Quickstart](/quickstart) for Connected Local activation.
 
 `atomicmemory` is also separate from the MCP server: `atomicmemory-mcp` is a stdio process for agent hosts, while this package is a terminal tool for setup, diagnostics, memory operations, and stable script output.
 
@@ -2972,10 +2972,10 @@ npx -y @atomicmemory/cli
 | Path | Use when | Start here |
 | --- | --- | --- |
 | Claude Code plugin | You want personal Claude Code memory with local runtime management and no separate API key for extraction. | [Claude Code Local](/integrations/coding-agents/claude-code/local) |
-| Connected Local (recommended) | You want Core on your machine with console visibility. | [Quickstart](/quickstart) via [Cloud CLI](/cloud/cli) (`am init`). |
+| Connected Local (recommended) | You want Core on your machine with console visibility. | [Quickstart](/quickstart) via [AtomicMemory CLI](/cloud/cli) (`am init`). |
 | Direct CLI against local core | You run `atomicmemory-core` yourself and want npm terminal commands. | [Core-only Docker](/core-only-docker), then configure a `local` profile below. |
 | Direct CLI against a self-hosted service | Your team operates AtomicMemory behind its own URL and token. | Configure a `self-hosted` profile below. |
-| Hosted Cloud | You want managed memory hosting. | [Cloud CLI](/cloud/cli) and [Add Hosted Cloud](/cloud/quickstart). |
+| Hosted Cloud | You want managed memory hosting. | [AtomicMemory CLI](/cloud/cli) and [Add Hosted Cloud](/cloud/quickstart). |
 | Mem0 adapter | You want the CLI shape against a Mem0 backend. | Use `--provider mem0`; AtomicMemory-only commands are capability-gated. |
 
 ## Configure
@@ -3456,7 +3456,7 @@ Console routes require a signed-in session. You never handle this credential dir
 
 ## CLI auth modes
 
-The [Cloud CLI](/cloud/cli) supports two flows:
+The [AtomicMemory CLI](/cloud/cli) supports two flows:
 
 | Command | Auth | Purpose |
 | --- | --- | --- |
@@ -3505,15 +3505,15 @@ For Cloud projects, the cloud gateway never forwards a user's API key to AtomicM
 
 ---
 
-## Cloud CLI
+## CLI
 
 Source: https://docs.atomicstrata.ai/cloud/cli
 
-# Cloud CLI
+# AtomicMemory CLI
 
 > Agent index: [llms.txt](/llms.txt)
 
-The **AtomicMemory Cloud CLI** (`atomicmemory` / **`am`**) is the primary CLI for Open Source activation and Cloud operations: browser login, Connected Local setup, org/project management, API keys, and memory commands.
+The **AtomicMemory CLI** (`atomicmemory` / **`am`**) is the primary CLI for both Open Source activation and Cloud operations: browser login, Connected Local setup, org/project management, API keys, and memory commands.
 
 Install from `get.atomicstrata.ai`. Defaults to `https://api.atomicstrata.ai`.
 
@@ -3732,7 +3732,7 @@ The project Overview surfaces copy-paste snippets for:
 -   MCP (`@atomicmemory/mcp`)
 -   TypeScript and Python SDKs
 -   Claude Code plugin
--   Cloud CLI (`am memory ingest`)
+-   AtomicMemory CLI (`am memory ingest`)
 
 Snippets use your project's API base URL automatically for Hosted Cloud projects.
 
@@ -4055,7 +4055,7 @@ Open your Cloud project in the console under **Memories** and confirm the migrat
 ## Related docs
 
 -   [Add Hosted Cloud](/cloud/quickstart) — create the Cloud project you're migrating into
--   [Cloud CLI](/cloud/cli) — full command reference, including migration
+-   [AtomicMemory CLI](/cloud/cli) — full command reference, including migration
 -   [Project Settings](/cloud/how-to/settings) — where a Cloud project's own data export lives
 -   [Troubleshooting](/cloud/troubleshooting) — Core and Cloud connection problems
 
@@ -4405,7 +4405,7 @@ See [Plans & Billing](/cloud/how-to/billing) for details.
 ## Advanced
 
 -   [Authentication](/cloud/authentication) — credential model and deployment details
--   [Cloud CLI](/cloud/cli) — full command reference
+-   [AtomicMemory CLI](/cloud/cli) — full command reference
 -   [Core architecture](/platform/architecture) — how the engine is composed
 -   [Core-only Docker](/core-only-docker) — run Core without a Cloud connection
 
@@ -4587,7 +4587,7 @@ Success looks like: the retried call succeeds (no `401`, no cap/limit response),
 ## Related docs
 
 -   [Platform Quickstart](/quickstart) — Connected Local activation with `am init`
--   [Cloud CLI](/cloud/cli) — full command reference
+-   [AtomicMemory CLI](/cloud/cli) — full command reference
 -   [Authentication](/cloud/authentication) — which credential goes where
 -   [Migrate to Hosted Cloud](/cloud/how-to/migrate) — moving memories from Local to Cloud
 
@@ -7832,7 +7832,7 @@ Most coding-agent integrations use the shared MCP server from the [`packages/mcp
 
 Framework integrations use the TypeScript or Python SDK directly, but keep the same loop: retrieve before the agent acts, ingest after useful work completes, and scope memory by user, agent, namespace, or thread.
 
-Terminal users: use the [Cloud CLI](/cloud/cli) (`am init`, Connected Local) or the [npm CLI](/cli) for direct self-hosted core workflows — search, ingest, profile setup, and hook generation.
+Terminal users: use the [AtomicMemory CLI](/cloud/cli) (`am init`, Connected Local) or the [npm CLI](/cli) for direct self-hosted core workflows — search, ingest, profile setup, and hook generation.
 
 ## Backend choice
 
@@ -10302,7 +10302,7 @@ Already created a project in the console? Run `am init --project <slug>` instead
 -   Console connection — runtime shows **Online**
 -   End-to-end memory verification
 
-For a **Connected Local** project, use **Google Chrome** when viewing it in the console — your browser needs to reach Core directly, which is more reliable in Chrome. More detail: [Cloud CLI](/cloud/cli).
+For a **Connected Local** project, use **Google Chrome** when viewing it in the console — your browser needs to reach Core directly, which is more reliable in Chrome. More detail: [AtomicMemory CLI](/cloud/cli).
 
 ## 2. Add your first memory
 

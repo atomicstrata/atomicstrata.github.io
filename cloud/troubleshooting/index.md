@@ -85,6 +85,6 @@ Success looks like: the retried call succeeds (no `401`, no cap/limit response),
 ## Related docs
 
 -   [Platform Quickstart](/quickstart) — Connected Local activation with `am init`
--   [Cloud CLI](/cloud/cli) — full command reference
+-   [AtomicMemory CLI](/cloud/cli) — full command reference
 -   [Authentication](/cloud/authentication) — which credential goes where
 -   [Migrate to Hosted Cloud](/cloud/how-to/migrate) — moving memories from Local to Cloud

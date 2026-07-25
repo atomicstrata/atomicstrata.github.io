@@ -1,8 +1,8 @@
-# Cloud CLI
+# AtomicMemory CLI
 
 > Agent index: [llms.txt](/llms.txt)
 
-The **AtomicMemory Cloud CLI** (`atomicmemory` / **`am`**) is the primary CLI for Open Source activation and Cloud operations: browser login, Connected Local setup, org/project management, API keys, and memory commands.
+The **AtomicMemory CLI** (`atomicmemory` / **`am`**) is the primary CLI for both Open Source activation and Cloud operations: browser login, Connected Local setup, org/project management, API keys, and memory commands.
 
 Install from `get.atomicstrata.ai`. Defaults to `https://api.atomicstrata.ai`.
 

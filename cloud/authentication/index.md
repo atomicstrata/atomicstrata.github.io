@@ -105,7 +105,7 @@ Console routes require a signed-in session. You never handle this credential dir
 
 ## CLI auth modes
 
-The [Cloud CLI](/cloud/cli) supports two flows:
+The [AtomicMemory CLI](/cloud/cli) supports two flows:
 
 | Command | Auth | Purpose |
 | --- | --- | --- |

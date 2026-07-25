@@ -1,4 +1,4 @@
-# Atomic Strata Docs
+# Atomic Strata
 
 > Standardized platform layer for AI memory, pluggable at every seam.
 
@@ -151,7 +151,7 @@
 
 - [Local vs Hosted Cloud](https://docs.atomicstrata.ai/cloud-vs-open-source.md): AtomicMemory runs in three modes backed by the same engine.
 - [Authentication](https://docs.atomicstrata.ai/cloud/authentication.md): AtomicMemory Cloud and Core each authenticate requests differently.
-- [Cloud CLI](https://docs.atomicstrata.ai/cloud/cli.md): The AtomicMemory Cloud CLI (atomicmemory / am) is the primary CLI
+- [CLI](https://docs.atomicstrata.ai/cloud/cli.md): The AtomicMemory CLI (atomicmemory / am) is the primary CLI for
 - [Developer Console](https://docs.atomicstrata.ai/cloud/console.md): The AtomicMemory developer console at memory.atomicstrata.ai is a Next.js dashboard for provisioning projects, managing API keys, exploring memories, and inspecting AUDN mutation traces.
 - [Managing API Keys](https://docs.atomicstrata.ai/cloud/how-to/api-keys.md): The API Keys page issues and manages the Hosted Cloud credentials your application uses to authenticate against a Cloud project's memory API.
 - [Reading the Audit Log](https://docs.atomicstrata.ai/cloud/how-to/audit-log.md): The Audit Log records the administrative actions taken on a Cloud project - key, settings, and lifecycle changes - so you can see who changed what and when.

@@ -52,7 +52,7 @@ The project Overview surfaces copy-paste snippets for:
 -   MCP (`@atomicmemory/mcp`)
 -   TypeScript and Python SDKs
 -   Claude Code plugin
--   Cloud CLI (`am memory ingest`)
+-   AtomicMemory CLI (`am memory ingest`)
 
 Snippets use your project's API base URL automatically for Hosted Cloud projects.
 

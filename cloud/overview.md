@@ -56,6 +56,6 @@ See [Plans & Billing](/cloud/how-to/billing) for details.
 ## Advanced
 
 -   [Authentication](/cloud/authentication) — credential model and deployment details
--   [Cloud CLI](/cloud/cli) — full command reference
+-   [AtomicMemory CLI](/cloud/cli) — full command reference
 -   [Core architecture](/platform/architecture) — how the engine is composed
 -   [Core-only Docker](/core-only-docker) — run Core without a Cloud connection

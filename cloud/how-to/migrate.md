@@ -43,6 +43,6 @@ Open your Cloud project in the console under **Memories** and confirm the migrat
 ## Related docs
 
 -   [Add Hosted Cloud](/cloud/quickstart) — create the Cloud project you're migrating into
--   [Cloud CLI](/cloud/cli) — full command reference, including migration
+-   [AtomicMemory CLI](/cloud/cli) — full command reference, including migration
 -   [Project Settings](/cloud/how-to/settings) — where a Cloud project's own data export lives
 -   [Troubleshooting](/cloud/troubleshooting) — Core and Cloud connection problems
