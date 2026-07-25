@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Most memory systems are a black box: you put data in and hope the right thing comes back out. AtomicMemory is built to be inspected. Every stored fact is visible on the Memories page, and every fact links back to the trace that produced it - so "what does my assistant know, and why" is a page you open, not a question you guess at.
+Most memory systems are a black box: you put data in and hope the right thing comes back out. AtomicMemory Cloud is built to be inspected. Every stored fact is visible on the Memories page, and every fact links back to the trace that produced it - so "what does my assistant know, and why" is a page you open, not a question you guess at.
 
 ## The problem
 

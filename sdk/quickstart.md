@@ -7,7 +7,11 @@ Install, initialize, and make your first ingest and search, with `MemoryClient` 
 ## Prerequisites
 
 -   **Node.js 22+** (FOC/Filecoin storage paths require Node 24+)
--   **A memory endpoint** — either a hosted [AtomicMemory](/cloud/quickstart) project (point the client at `https://api.atomicstrata.ai` with your project key) or a self-hosted core via the [Open Source Quickstart](/quickstart); we assume a local `http://localhost:17350` below
+-   **A running `atomicmemory-core`** at `http://localhost:17350` — start with the [Platform Quickstart](/quickstart) (`am init`) or [Core-only Docker](/core-only-docker)
+
+Local API key
+
+Examples below use `local-dev-key`, the default bearer for [Core-only Docker](/core-only-docker). After `am init`, use the `CORE_API_KEY` from `am instance status --show-secrets`.
 
 ## Step 1, Install
 

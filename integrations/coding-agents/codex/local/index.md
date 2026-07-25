@@ -4,6 +4,10 @@
 
 Give Codex persistent, cross-session memory backed by AtomicMemory. The public setup registers the AtomicMemory MCP server so Codex can recall prior work, store durable decisions, and create handoff snapshots. Teams that install the source-distributed Codex plugin can also add the AtomicMemory memory protocol skill.
 
+Already ran am init?
+
+`am init` starts Core with OpenAI for both extraction and embeddings (`LLM_PROVIDER=openai`) — not Codex account auth, and not this guide's local `transformers` embeddings. If you want either (account-auth extraction via `LLM_PROVIDER=codex` with no separate OpenAI key, or local embeddings with no OpenAI embedding key), keep running Core with the Docker command in step 1 below instead of the one `am init` started. If OpenAI for both is fine for you, you can skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` in place of `local-dev-key` wherever this guide shows it.
+
 ## Quick start
 
 ### 1. Start AtomicMemory core

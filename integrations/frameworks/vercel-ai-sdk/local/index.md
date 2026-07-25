@@ -4,6 +4,10 @@
 
 Give Vercel AI SDK applications persistent memory backed by AtomicMemory. The adapter retrieves relevant memories before a model call, injects them as guarded context, and ingests the completed turn after the model returns.
 
+Already ran am init?
+
+`am init`'s Core uses OpenAI for both extraction and embeddings. If you want this guide's local `transformers` embeddings (embeddings are computed locally; no embedding API calls), keep running Core with the Docker command in step 1 below. Otherwise, skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` instead of `local-dev-key`.
+
 ## Quick start
 
 ### 1. Start AtomicMemory core

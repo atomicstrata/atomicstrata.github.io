@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-The **Audit Log** is the administrative record for a cloud project. It captures changes to the project's configuration - API keys, settings, and lifecycle events - so you can answer who did what, and when. It is scoped per project and, like other managed surfaces, applies to cloud projects only; local projects show an empty state.
+The **Audit Log** is the administrative record for a **Cloud** project. It captures changes to the project's configuration - API keys, settings, and lifecycle events - so you can answer who did what, and when. It is scoped per project and tracks **Cloud** administrative activity specifically - console actions like creating a key or changing settings. **Local** project memory operations run on your own Core rather than through the console, so check [Traces](/cloud/how-to/traces) for that activity instead.
 
 ## What it does
 
@@ -18,7 +18,7 @@ Keep the distinction with [Traces](/cloud/how-to/traces) clear: the Audit Log tr
 
 info
 
-An empty log simply means no administrative actions have been recorded for this project yet - it fills in as keys are created, settings change, and lifecycle events occur.
+An empty log means no **Cloud** administrative events have been recorded for this project yet - not a project-type entitlement state - and it fills in as keys are created, settings change, and lifecycle events occur.
 
 ## Key capabilities
 

@@ -2930,15 +2930,17 @@ Pointer-mode artifacts always return `kind: 'unsupported'` — the server never 
 
 Source: https://docs.atomicstrata.ai/cli
 
-# AtomicMemory CLI
+# AtomicMemory CLI (npm)
 
 > Agent index: [llms.txt](/llms.txt)
 
-`atomicmemory` is the human- and agent-facing command line for AtomicMemory. It is separate from the MCP server: `atomicmemory-mcp` is a stdio process for agent hosts, while `atomicmemory` is a normal terminal tool for setup, diagnostics, memory operations, and stable script output.
+`@atomicmemory/cli` is the Node.js command line for direct self-hosted core workflows. It is separate from the Cloud CLI (`am` from [get.atomicstrata.ai](https://get.atomicstrata.ai)) — use [Cloud CLI](/cloud/cli) and the [Quickstart](/quickstart) for Connected Local activation.
+
+`atomicmemory` is also separate from the MCP server: `atomicmemory-mcp` is a stdio process for agent hosts, while this package is a terminal tool for setup, diagnostics, memory operations, and stable script output.
 
 The CLI uses the same backend-agnostic SDK provider model as the rest of AtomicMemory. The current CLI surface supports `atomicmemory` and `mem0`. Additional SDK providers require a CLI adapter, spec, and config-schema update before they are selectable from command scripts.
 
-The CLI package does **not** start a memory backend by itself. Direct memory commands need a configured AtomicMemory service, usually a local Docker quickstart or a self-hosted deployment. For Claude Code personal use, prefer the [Claude Code plugin](/integrations/coding-agents/claude-code/local): it installs the MCP server, skill, hooks, and auto-managed local runtime for you.
+The npm CLI does **not** start a memory backend by itself. Direct memory commands need a configured AtomicMemory service — usually Core from [Core-only Docker](/core-only-docker) or your own deployment. For Claude Code personal use, prefer the [Claude Code plugin](/integrations/coding-agents/claude-code/local): it installs the MCP server, skill, hooks, and auto-managed local runtime for you.
 
 ## What you get
 
@@ -2970,14 +2972,15 @@ npx -y @atomicmemory/cli
 | Path | Use when | Start here |
 | --- | --- | --- |
 | Claude Code plugin | You want personal Claude Code memory with local runtime management and no separate API key for extraction. | [Claude Code Local](/integrations/coding-agents/claude-code/local) |
-| Direct CLI against local core | You are running `atomicmemory-core` yourself and want terminal memory commands. | [Quickstart](/quickstart), then configure a `local` profile below. |
+| Connected Local (recommended) | You want Core on your machine with console visibility. | [Quickstart](/quickstart) via [Cloud CLI](/cloud/cli) (`am init`). |
+| Direct CLI against local core | You run `atomicmemory-core` yourself and want npm terminal commands. | [Core-only Docker](/core-only-docker), then configure a `local` profile below. |
 | Direct CLI against a self-hosted service | Your team operates AtomicMemory behind its own URL and token. | Configure a `self-hosted` profile below. |
-| Hosted AtomicMemory | You want AtomicMemory to operate the service. | Coming soon. |
+| Hosted Cloud | You want managed memory hosting. | [Cloud CLI](/cloud/cli) and [Add Hosted Cloud](/cloud/quickstart). |
 | Mem0 adapter | You want the CLI shape against a Mem0 backend. | Use `--provider mem0`; AtomicMemory-only commands are capability-gated. |
 
 ## Configure
 
-Create a named local profile for the Docker quickstart:
+Create a named local profile for a Core-only Docker deployment:
 
 ```bash
 printf '%s\n' 'local-dev-key' | \
@@ -3275,72 +3278,70 @@ Optional harness environment variables:
 
 ---
 
-## Cloud vs Open Source
+## Local vs Hosted Cloud
 
 Source: https://docs.atomicstrata.ai/cloud-vs-open-source
 
-# Cloud vs Open Source
+# Local vs Hosted Cloud
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory ships in two consumption modes backed by the **same memory engine**. The API surface, the AUDN mutation model, the retrieval pipeline, and the observability envelope are identical. What differs is who runs the infrastructure.
+AtomicMemory runs in three modes backed by the **same engine**. The API surface, the AUDN mutation model, the retrieval pipeline, and the observability envelope are identical — what differs is where Core runs and what the console can see.
 
-Start with **AtomicMemory** unless you have a specific reason to self-host.
+Start with **Connected Local** unless you have a specific reason not to.
 
-Question
+Start here
 
-Must data stay on your own infrastructure?
+Connected Local`am init` — Core on your machine, console shows runtime + traces. Free forever.
 
-No
+upgrade to Free ($0)
 
-Hosted
+Add when needed
 
-AtomicMemoryconsole, traces, and keys managed for you
+Hosted Cloudmanaged hosting, shared access, one project on Free
 
-Yes
-
-Self-hosted
-
-AtomicMemory OSSyou run the engine and the database
-
-Either way you get the **same engine, the same API, and the same SDK**.
+Prefer the engine with no account at all? [Core-only Docker](/core-only-docker) runs Core with curl — no console, no sign-in.
 
 ## At a glance
 
-|  | **AtomicMemory** | **Open Source** |
-| --- | --- | --- |
-| **Setup** | Sign up, copy an API key | Docker, Postgres volume, provider keys |
-| **You provide** | Nothing | Host, database, OpenAI (or local) provider keys |
-| **Runs where** | `api.atomicstrata.ai` | Your machine, your VPC, your cluster |
-| **Console, traces, usage** | Included | Build your own on the observability envelope |
-| **Orgs, projects, scoped keys** | Included | Single-tenant; you model tenancy yourself |
-| **Data residency** | Managed by AtomicStrata | Entirely yours |
-| **License / cost** | Usage-based | Apache-2.0, free |
-| **Best for** | Shipping a product, prototypes, teams | Air-gapped, regulated, or infra-owning teams |
+|  | **Connected Local** | **Hosted Cloud** | **Core-only Docker** |
+| --- | --- | --- | --- |
+| **Setup** | `am init` — one command | Upgrade to Free, create a Cloud project | `docker run` + curl |
+| **Where memories live** | Your machine, in Core | AtomicMemory-managed hosting | Your machine |
+| **Console** | Runtime status, memories, operation traces | Same, for the managed project | None |
+| **Account** | Sign-in creates a free Open Source org | Free tier ($0 self-serve upgrade) | Not required |
+| **Good for** | Evaluating, local dev, day-to-day use | Shared access without operating infrastructure | Air-gapped work, CI, no-console automation |
+| **Plan** | Open Source — free forever, one Local project | Free — keeps your Local project, adds one Cloud project | n/a |
 
-## Choose AtomicMemory when
+Team and Corporate plans are demo-led — [book a demo](https://atomicstrata.ai/demo) for pooled usage, more projects, and governed deployments.
 
--   You want your first memory stored in under five minutes.
--   You want the developer console, traces, conflict inspection, and usage tracking without building them.
--   You need orgs, projects, environments, and scoped API keys out of the box.
--   Running and upgrading a Postgres + pgvector service is not where you want to spend time.
+## Choose Connected Local when
 
-→ [Cloud Quickstart](/cloud/quickstart)
+-   You want your first memory stored in minutes, with the console showing exactly what Core did.
+-   Memories should live on your machine while you still get inspectable ingest, search, and mutation traces.
+-   You are evaluating, developing locally, or running a single-developer workflow.
 
-## Choose Open Source when
+→ [Quickstart](/quickstart)
 
--   Memory data cannot leave your infrastructure for regulatory or contractual reasons.
--   You need to run air-gapped or fully offline, including local embedding models.
+## Add Hosted Cloud when
+
+-   You need shared access to the same memories from more than one place.
+-   You want a managed endpoint without operating Postgres and Core yourself.
+-   You are ready to point production traffic at `https://api.atomicstrata.ai` with a project API key.
+
+→ [Add Hosted Cloud](/cloud/quickstart)
+
+## Choose Core-only Docker when
+
+-   You need the engine with no account and no console — air-gapped, CI, or fully offline work.
+-   You are embedding Core in your own stack and bringing your own observability.
 -   You want to fork the engine, replace a store, or add a provider.
--   You are running deterministic tests or benchmarks against an ephemeral in-process engine.
 
-→ [Open Source Quickstart](/quickstart)
+→ [Core-only Docker](/core-only-docker)
 
 ## Moving between them
 
-The [TypeScript SDK](/sdk/overview) routes through `MemoryProvider`, so the same application code targets either mode. Switching is a configuration change — point at `https://api.atomicstrata.ai` with a Cloud project key, or at your own host with your own key. See [one SDK, self-hosted or managed](/cloud/use-cases/one-sdk-self-hosted-or-managed).
-
-The [HTTP API](/api-reference/http/conventions) is the same in both modes, so non-TypeScript consumers move by changing a base URL and a credential.
+The [TypeScript SDK](/sdk/overview) and the [CLI](/cloud/cli) work identically against a local Core and a Hosted Cloud project — switching is a base URL and credential change, not a code change. To copy existing local memories into a Cloud project, see [Migrate to Hosted Cloud](/cloud/how-to/migrate).
 
 ---
 
@@ -3352,13 +3353,13 @@ Source: https://docs.atomicstrata.ai/cloud/authentication
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory exposes two authentication surfaces. Use the right credential for each route class - mixing them returns `401`.
+AtomicMemory Cloud and Core each authenticate requests differently. The console labels the two project types **Local** and **Cloud**; this page calls them **Connected Local** (Core running on your machine, connected to the console) and **Hosted Cloud** (fully managed hosting) once, then uses the shorter **Local**/**Cloud** labels below. Use the right credential for the surface you're calling — mixing them returns `401`.
 
 Callers
 
 CLI / SDK / MCP / PlaygroundProject API key
 
-Developer consoleSession JWT
+Developer consoleSession JWT (browser OAuth)
 
 Route classes
 
@@ -3372,18 +3373,32 @@ Engine
 
 AtomicMemory Core`AM_CORE_API_KEY` only
 
-## Summary
+## Which credential do I need?
 
-| Surface | Routes | Credential | Used by |
-| --- | --- | --- | --- |
-| **Memory API** | `/v1/*` | Project API key (`amc_<env>_<random>`) | CLI, SDK, MCP, Playground |
-| **Dashboard API** | `/api/*` | Session JWT (`Authorization: Bearer <jwt>`) | Developer console (server-side) |
+| I'm... | Use... | Get it from |
+| --- | --- | --- |
+| Running `am init` for the first time | Browser OAuth (PKCE) — handled automatically | The CLI opens your browser |
+| Calling the Cloud memory API (CLI, SDK, MCP, Playground) | A Cloud project API key (`amc_…`) | Console → **API Keys** |
+| Making Local memory calls against your own Core | A Core token / `CORE_API_KEY` | Your local Core instance (`am init` wires this up for you) |
+| Signed into the console in a browser | Your dashboard session — no key needed | Automatic after sign-in |
 
-The cloud gateway **never** forwards user API keys to AtomicMemory Core. Outbound core calls use the infrastructure credential `AM_CORE_API_KEY` only.
+Two things trip people up:
 
-## Project API keys
+-   A Cloud `amc_` key is **never** sent to Core as the memory bearer, and a Core token is **never** valid against the Cloud memory API. They are different credentials for different surfaces.
+-   Local projects still have a Cloud key, but it's used only for **heartbeat and trace sync** back to the console — never for memory calls. `am init` and `am doctor --smoke` manage it for you; you don't copy or paste it.
 
-API keys are created in the console under **API Keys** or during onboarding.
+## Where do memory calls go?
+
+Only **Cloud** memory routes go through the Cloud gateway. **Local** memory calls (ingest, search) go straight to your own Core — they never touch the Cloud gateway. Your local Core still reports a runtime heartbeat and operation traces to the console for visibility, so the console stays accurate even though your memory content never leaves your machine.
+
+| Project type | Memory calls (`ingest`, `search`) | Heartbeat + traces |
+| --- | --- | --- |
+| **Local** | Your own Core, direct — no Cloud gateway | Cloud, for console visibility |
+| **Cloud** | Cloud gateway | Cloud |
+
+## Cloud project API keys
+
+Create and manage these in the console under **API Keys**. See [Managing API Keys](/cloud/how-to/api-keys) for the full create/rotate/revoke flow.
 
 ```text
 Authorization: Bearer amc_dev_xxxxxxxxxxxxxxxx
@@ -3391,10 +3406,9 @@ Authorization: Bearer amc_dev_xxxxxxxxxxxxxxxx
 
 Properties:
 
--   Returned **exactly once** at creation; stored server-side as argon2 hash + display prefix
--   Scoped to a single project and environment (`dev`, `staging`, `prod`)
--   Rate-limited per key (`RATE_LIMIT_PER_SECOND`, `RATE_LIMIT_BURST`)
--   Verified on every `/v1/*` request
+-   Returned **exactly once** at creation; only a masked prefix is shown after
+-   Scoped to a single Cloud project
+-   Verified on every Cloud memory API request
 
 Example:
 
@@ -3407,18 +3421,57 @@ curl -X POST https://api.atomicstrata.ai/v1/memories/search/fast \
 
 ### SDK and MCP
 
-Point integrations at the cloud API URL:
+Point integrations at the Cloud API URL:
 
 ```bash
 export ATOMICMEMORY_API_URL=https://api.atomicstrata.ai
 export ATOMICMEMORY_API_KEY=amc_dev_xxxxxxxxxxxxxxxx
 ```
 
-MCP tools (`memory_ingest`, `memory_search`, `memory_list`, `memory_package`) hit the core-isomorphic `/v1/memories/*` routes through this gateway.
+MCP tools (`memory_ingest`, `memory_search`, `memory_list`, `memory_package`) hit the same `/v1/memories/*` routes through this gateway.
 
-## Dashboard session JWT
+### Playground
 
-Dashboard routes under `/api/*` require a signed-in console session. The web app obtains a JWT server-side and forwards it as `Authorization: Bearer <jwt>`.
+The Playground routes to the credential for the project's type: a **Cloud** project's Playground posts to the Cloud API with the Cloud project API key you paste in; a **Local** project's Playground calls your Core directly with your Local Core token instead, never through the Cloud gateway. Either way, the credential stays in browser memory only for that session — it is never stored or embedded in client bundles. See [Using the Playground](/cloud/how-to/playground) for the full walkthrough.
+
+## Local: Core token or CORE_API_KEY
+
+Local memory calls authenticate directly against your own Core, not the Cloud gateway. `am init` starts Core with a token already configured, so you rarely need to set this by hand — find it with:
+
+```bash
+am instance status --show-secrets
+```
+
+That prints the `CORE_API_KEY` `am init` generated for your Core. Point any SDK, MCP client, or curl call at your Core's URL (`http://127.0.0.1:17350` by default) with that token — not your Cloud `amc_` key.
+
+```bash
+export CORE_API_KEY="<value from am instance status --show-secrets>"
+```
+
+`local-dev-key` is a different, fixed default — it only applies to [Core-only Docker](/core-only-docker), where you run Core yourself without `am init`. It is not what `am init` configures.
+
+## Dashboard session
+
+Console routes require a signed-in session. You never handle this credential directly — sign in at [memory.atomicstrata.ai/signup](https://memory.atomicstrata.ai/signup) or [memory.atomicstrata.ai/login](https://memory.atomicstrata.ai/login) and the console manages the session for you, including for the Playground UI shell around a pasted Cloud key.
+
+## CLI auth modes
+
+The [Cloud CLI](/cloud/cli) supports two flows:
+
+| Command | Auth | Purpose |
+| --- | --- | --- |
+| `am init` / `am auth login` | Browser OAuth (PKCE) | Sign-in, project connection, dashboard commands (`am org list`, `am key create`, …) |
+| `ATOMICMEMORY_API_KEY` env | Cloud project API key | Cloud memory operations (`am memory ingest`, `am memory search`) |
+
+`am memory ingest`/`search` against a Cloud project don't require `am auth login` when `ATOMICMEMORY_API_KEY` is set. Against a Local project, the same commands use your local Core directly and need neither credential set manually — `am init` already wired that up.
+
+## Security reporting
+
+Report vulnerabilities per the [AtomicMemory Cloud API SECURITY policy](https://github.com/atomicstrata/am-cloud-api/blob/main/SECURITY.md).
+
+## Advanced deployment details
+
+The rest of this page is for operators running or customizing a deployment, not for evaluating or day-to-day use.
 
 ### JWT audience (non-local deploys)
 
@@ -3434,38 +3487,21 @@ The `aud` claim must match `JWT_AUDIENCE` on the cloud API.
 
 ### Browser proxy pattern
 
-The developer console **never** calls the cloud API directly from the browser for dashboard operations. Next.js Route Handlers at `/api/proxy/*` obtain the session token server-side and forward the JWT to `AM_API_URL`.
+The developer console **never** calls the cloud API directly from the browser for dashboard operations. Next.js Route Handlers obtain the session token server-side and forward the JWT to `AM_API_URL`, which the browser bundle never sees directly.
 
-This keeps CORS strict - set `CORS_ALLOWED_ORIGINS` on the API to the console origin only (`https://memory.atomicstrata.ai`).
+This keeps CORS strict — set `CORS_ALLOWED_ORIGINS` on the API to the console origin only (`https://memory.atomicstrata.ai`).
 
-### Playground API key auth
+### Cloud → Core infrastructure credential
 
-The Playground posts to `/api/proxy/v1/memories/*` with the user's pasted API key. The key stays in browser memory only - it is not embedded in client bundles.
-
-## CLI auth modes
-
-The [Cloud CLI](/cloud/cli) supports two flows:
-
-| Command | Auth | Purpose |
-| --- | --- | --- |
-| `am auth login` | OAuth PKCE + browser | Dashboard commands (`am org list`, `am key create`, …) |
-| `ATOMICMEMORY_API_KEY` env | Project API key | Memory operations (`am memory ingest`, `am memory search`) |
-
-Memory ingest does **not** require `am auth login` when `ATOMICMEMORY_API_KEY` is set.
-
-## Local projects
-
-Projects with `type: local` are rejected by the cloud gateway (`400 bad_request`). Connect local projects directly to a self-hosted core instance - they bypass cloud entirely.
-
-## Security reporting
-
-Report vulnerabilities per the [AtomicMemory API SECURITY policy](https://github.com/atomicstrata/am-cloud-api/blob/main/SECURITY.md).
+For Cloud projects, the cloud gateway never forwards a user's API key to AtomicMemory Core. Outbound calls from the gateway to the managed Core fleet use a separate infrastructure credential (`AM_CORE_API_KEY`), set by the operator — it is not a credential end users ever see or configure.
 
 ## Related docs
 
--   [Cloud Quickstart](/cloud/quickstart) - create your first API key
--   [Developer Console](/cloud/console) - proxy and SSE architecture
--   [Cloud HTTP API](/cloud/how-to/dashboard) - route reference
+-   [Platform Quickstart](/quickstart) — Connected Local via `am init`
+-   [Add Hosted Cloud](/cloud/quickstart) — add Hosted Cloud and API keys
+-   [Developer Console](/cloud/console) — dashboard tour
+-   [Managing API Keys](/cloud/how-to/api-keys) — create, rotate, revoke
+-   [The Dashboard](/cloud/how-to/dashboard) - project landing page and activation path
 
 ---
 
@@ -3477,16 +3513,19 @@ Source: https://docs.atomicstrata.ai/cloud/cli
 
 > Agent index: [llms.txt](/llms.txt)
 
-The **AtomicMemory CLI** (`atomicmemory` / **`am`**) is a Rust binary for browser login, org/project/API-key management, and memory operations against the hosted cloud API.
+The **AtomicMemory Cloud CLI** (`atomicmemory` / **`am`**) is the primary CLI for Open Source activation and Cloud operations: browser login, Connected Local setup, org/project management, API keys, and memory commands.
+
+Install from `get.atomicstrata.ai`. Defaults to `https://api.atomicstrata.ai`.
 
 Not the npm CLI
 
-This is **not** the Node.js [`@atomicmemory/cli`](/cli) package. The npm CLI targets local/self-hosted core workflows with an Ink terminal UI. The Cloud CLI ships from [`am-cloud-api`](https://github.com/atomicstrata/am-cloud-api) and defaults to `https://api.atomicstrata.ai`.
+This is **not** the Node.js [`@atomicmemory/cli`](/cli) package. The npm CLI is an advanced tool for direct self-hosted core workflows with an Ink terminal UI.
 
 ## Install
 
 ```bash
 curl -fsSL https://get.atomicstrata.ai/install.sh | sh
+source "$HOME/.atomicmemory/env"
 ```
 
 Prebuilt binaries for macOS and Linux (x86\_64 + arm64). Installs to `~/.local/bin` by default and adds the **`am`** symlink.
@@ -3494,7 +3533,7 @@ Prebuilt binaries for macOS and Linux (x86\_64 + arm64). Installs to `~/.local/b
 Pin a version:
 
 ```bash
-curl -fsSL https://get.atomicstrata.ai/install.sh | sh -s -- --version 0.1.0
+curl -fsSL https://get.atomicstrata.ai/install.sh | sh -s -- --version <x.y.z>
 ```
 
 Skip PATH modification:
@@ -3503,18 +3542,53 @@ Skip PATH modification:
 curl -fsSL https://get.atomicstrata.ai/install.sh | sh -s -- --no-modify-path
 ```
 
-## Quick start
+## Connected Local — am init
 
-### Dashboard commands (OAuth)
+The fastest Open Source path. One command signs you in, starts Core in Docker, links your console project, and verifies the memory pipeline.
+
+```bash
+export OPENAI_API_KEY="sk-..."
+am init
+```
+
+Full walkthrough: [Platform Quickstart](/quickstart). Re-check anytime with `am doctor --smoke`. Something not working? See [Troubleshooting](/cloud/troubleshooting).
+
+Already created a project in the console? Run `am init --project <slug>` instead.
+
+## Instance status
+
+Check what `am init` connected and configured, without re-running the whole setup flow:
+
+```bash
+am instance status
+am instance status --show-secrets
+```
+
+`--show-secrets` is how you find the `CORE_API_KEY` `am init` configured for your Core, if you need it for a direct SDK, MCP, or `curl` call — see [Authentication → Local: Core token or `CORE_API_KEY`](/cloud/authentication#local-core-token-or-core_api_key).
+
+## Migration
+
+Move memories from a Local project into a Cloud project after upgrading to Free:
+
+```bash
+am migrate export --project <local-project-slug>
+am migrate import --file <path-to-export.jsonl> --target-project <cloud-project-slug>
+```
+
+Memory-only — trace history doesn't move. Full walkthrough, prerequisites, and console verification: [Migrate to Hosted Cloud](/cloud/how-to/migrate).
+
+## Dashboard commands (OAuth)
 
 ```bash
 am auth login
 am overview
 ```
 
-Uses PKCE + browser - no config file required. The public OAuth `client_id` is baked into the binary.
+Uses PKCE + browser — no config file required. The public OAuth `client_id` is baked into the binary.
 
-### Memory commands (API key)
+## Hosted Cloud memory commands (API key)
+
+For managed hosting after upgrading to Free:
 
 ```bash
 export ATOMICMEMORY_API_URL=https://api.atomicstrata.ai
@@ -3525,7 +3599,7 @@ am memory search "seat preference"
 am memory list
 ```
 
-Get your API key from the [developer console](https://memory.atomicstrata.ai) during onboarding or under **API Keys**.
+Get your API key from the [developer console](https://memory.atomicstrata.ai) during onboarding or under **API Keys**. See [Add Hosted Cloud](/cloud/quickstart) for the Hosted Cloud add-on path.
 
 ## Defaults
 
@@ -3538,16 +3612,48 @@ Override with environment variables or `~/.atomicmemory/` credentials after `am 
 
 ## Common commands
 
+Grouped by job, not alphabetically — each group links back to the section above with the full walkthrough.
+
+### Init & doctor
+
 | Command | Description |
 | --- | --- |
-| `am auth login` | Browser OAuth login for dashboard API |
-| `am org list` | List organizations |
-| `am project list` | List projects |
-| `am key create` | Create an API key |
+| `am init` | Connected Local activation (sign-in, Core, verify) |
+| `am init --project <slug>` | Connect to an existing console project instead of creating one |
+| `am doctor --smoke` | Re-check memory pipeline |
+
+### Connect & instance
+
+| Command | Description |
+| --- | --- |
+| `am auth login` | Browser OAuth login for dashboard commands |
+| `am instance status` | Show what `am init` connected |
+| `am instance status --show-secrets` | Same, including the local `CORE_API_KEY` |
+
+### Memory
+
+| Command | Description |
+| --- | --- |
 | `am memory ingest <text>` | Ingest a memory claim |
 | `am memory ingest --file ./memories.jsonl` | Batch ingest |
 | `am memory search <query>` | Search memories |
 | `am memory list` | List stored memories |
+
+### Migration commands
+
+| Command | Description |
+| --- | --- |
+| `am migrate export --project <slug>` | Export a Local project's memories |
+| `am migrate import --file <path> --target-project <slug>` | Import exported memories into a Cloud project |
+
+### Cloud administration
+
+| Command | Description |
+| --- | --- |
+| `am overview` | Dashboard overview via your browser session — run `am overview --help` for exact scope |
+| `am org list` | List organizations |
+| `am project list` | List projects |
+| `am key create` | Create an API key |
 
 ## Uninstall
 
@@ -3559,9 +3665,12 @@ Removes binaries and PATH block. Credentials under `~/.atomicmemory/` are left i
 
 ## Related docs
 
--   [Cloud Quickstart](/cloud/quickstart) - first ingest happy path
--   [Authentication](/cloud/authentication) - API key vs OAuth
--   [npm CLI (local core)](/cli) - self-hosted Docker workflows
+-   [Platform Quickstart](/quickstart) — Connected Local activation
+-   [Add Hosted Cloud](/cloud/quickstart) — add Hosted Cloud after local setup
+-   [Migrate to Hosted Cloud](/cloud/how-to/migrate) — move memories with `am migrate`
+-   [Troubleshooting](/cloud/troubleshooting) — recover from a failed `am init` or `am doctor --smoke`
+-   [Authentication](/cloud/authentication) — API key vs OAuth
+-   [npm CLI (advanced)](/cli) — self-hosted core workflows without Cloud
 
 ---
 
@@ -3581,15 +3690,15 @@ All `/app/*` routes require sign-in. The marketing landing page and `/share/*` p
 
 New users follow a guided path:
 
-1.  Sign up at `/signup`
-2.  Gateway at `/app` redirects to `/app/onboarding` when no project exists or a cloud project has zero API keys
-3.  Default org + `default-project` are auto-provisioned
-4.  First API key is revealed exactly once with copy-to-clipboard and CLI commands
-5.  Redirect to project **Overview** after acknowledgment
+1.  Sign up at [memory.atomicstrata.ai/signup](https://memory.atomicstrata.ai/signup) and select or create an Organization.
+2.  The console provisions a default **Local** project (slug `default`) — Open Source starts with one Connected Local project and no Hosted Cloud project.
+3.  **Connect Core**: run `am init` in your terminal. It signs you in, starts Core, connects this project, and verifies the memory pipeline end to end.
+4.  Once the runtime reports **Online**, the console hands off to the project **Overview** — no key to create or redeem first.
+5.  Optional: upgrade to **Free** (self-serve, $0) from **Billing** to unlock one Hosted Cloud project.
 
-See [Cloud Quickstart](/cloud/quickstart) for the full happy path.
+See [Platform Quickstart](/quickstart) for the full `am init` walkthrough, then [Add Hosted Cloud](/cloud/quickstart) when you want managed hosting.
 
-## Project workspace
+## Inside a project
 
 Each project includes:
 
@@ -3597,37 +3706,20 @@ Each project includes:
 | --- | --- |
 | **Overview** | Stats, integration snippets, setup checklist |
 | **Memories** | Memory Explorer with filters, inline evidence, trace deep-links |
-| **Traces** | AUDN mutation and retrieval trace viewer (live SSE updates) |
+| **Traces** | AUDN mutation and retrieval trace viewer, updates live |
 | **API Keys** | Create, list, and revoke project keys |
 | **Usage** | Usage events and stored memory counts |
-| **Playground** | Interactive ingest and search (managed or local core) |
+| **Playground** | Interactive ingest and search (Hosted Cloud key or Connected Local Core) |
 | **Settings** | Project configuration |
 | **Audit** | Project-scoped admin audit log |
 
-## How the console reaches the API
-
-| Data plane | Auth |
-| --- | --- |
-| Browser → Next.js `/api/proxy/*` → cloud API | Session JWT (console) or pasted API key (Playground) |
-
-The console never exposes `AM_API_URL` to the browser bundle.
-
-## Real-time updates
-
-The console uses Server-Sent Events (SSE) proxied same-origin:
-
-| Stream | Route | Events |
-| --- | --- | --- |
-| Memories | `/api/proxy/projects/{id}/memories/stream` | `ready`, `memory` |
-| Traces | `/api/proxy/projects/{id}/traces/stream` | `ready`, `trace` |
-
-Live updates appear in the Memory Explorer and trace views without polling.
+Memory and trace views update live as new activity happens — no manual refresh needed. Session and proxy details behind that live update behavior are covered in [Authentication → Advanced deployment details](/cloud/authentication#advanced-deployment-details), not repeated here.
 
 ## Setup checklist
 
 The sidebar **SetupGuide** tracks activation milestones:
 
--   First API key created
+-   First API key created (Hosted Cloud projects only)
 -   First ingest completed
 -   First search completed
 
@@ -3642,7 +3734,7 @@ The project Overview surfaces copy-paste snippets for:
 -   Claude Code plugin
 -   Cloud CLI (`am memory ingest`)
 
-Snippets use your project's API base URL automatically for managed projects.
+Snippets use your project's API base URL automatically for Hosted Cloud projects.
 
 ## Public memory sharing
 
@@ -3651,7 +3743,7 @@ Snippets use your project's API base URL automatically for managed projects.
 ## Related docs
 
 -   [Authentication](/cloud/authentication) - how the console authenticates to the API
--   [Cloud HTTP API](/cloud/how-to/dashboard) - dashboard and memory routes
+-   [The Dashboard](/cloud/how-to/dashboard) - project landing page and activation path
 -   [Platform Observability](/platform/observability) - trace schema on the engine side
 
 ---
@@ -3664,21 +3756,31 @@ Source: https://docs.atomicstrata.ai/cloud/how-to/api-keys
 
 > Agent index: [llms.txt](/llms.txt)
 
-The **API Keys** page is where a cloud project's credentials live. Every request your application makes to the memory API is authenticated by a key issued here. Keys are per project; local projects don't use them - the browser reaches your local proxy directly, so this page shows an empty state instead.
+The **API Keys** page issues and manages **Hosted Cloud** credentials. Every request your application makes to the Hosted Cloud memory API is authenticated by a key issued here. Before you rotate or revoke one, make sure you're looking at the right kind of credential — see the table below.
+
+## Three credentials, three jobs
+
+| Credential | Project type | Used for | Managed here? |
+| --- | --- | --- | --- |
+| Hosted Cloud API key (`amc_…`) | Cloud | Memory API calls (ingest, search) from anywhere | Yes — this page |
+| Local project's Cloud key | Local | Heartbeat and trace sync back to the console — never memory calls | No — issued automatically by `am init` if one doesn't already exist |
+| Core token / `CORE_API_KEY` | Local | Memory calls (ingest, search) against your own Core | No — lives in your Core environment |
+
+This page only covers the first row. See [Authentication](/cloud/authentication#which-credential-do-i-need) for the full decision guide across all three.
 
 ## What it does
 
--   Creates a key from a **name** and an **environment** (Development, Staging, or Production).
+-   Creates a Hosted Cloud key from a **name**.
 -   Reveals each new secret **exactly once**, then retains only its masked prefix.
--   Lists every key with its status, environment, prefix, creation time, and last use.
+-   Lists every key with its status, prefix, creation time, and last use.
 
 ## How it works
 
-The full secret is shown a single time in a reveal banner the moment a key is created or rotated - copy it then, because it is never displayed again. Your application supplies it as an environment variable alongside the API URL:
+The full secret is shown a single time in a reveal banner the moment a key is created or rotated — copy it then, because it is never displayed again. Your application supplies it as an environment variable alongside the API URL:
 
 ```bash
 export ATOMICMEMORY_API_KEY="<paste-your-secret>"
-export ATOMICMEMORY_API_URL="<your-api-url>"
+export ATOMICMEMORY_API_URL="https://api.atomicstrata.ai"
 ```
 
 **Rotating** a key issues a fresh secret and revokes the old one in the same step; the replacement records which key it superseded (`rotated from`), so the lineage stays auditable. **Revoking** permanently disables a key. Both actions invalidate a live credential, so each asks for inline confirmation before it fires - a misclick must not silently break a production integration.
@@ -3691,10 +3793,11 @@ A secret is shown only at creation or rotation and never again. If you lose it, 
 
 -   **One-time secrets** - the plaintext key is revealed once; only the prefix is stored afterward.
 -   **Rotate in place** - swap the secret while preserving the key's identity and its rotated-from history.
--   **Environment tags** - mark each key dev, staging, or prod to keep surfaces separated.
+-   **Hosted Cloud only** — Local projects authenticate memory calls against your own Core with a Core token / `CORE_API_KEY`, not a key from this page.
 
 ## Related
 
+-   [Authentication](/cloud/authentication) - which credential goes where
 -   [The Dashboard](/cloud/how-to/dashboard)
 -   [Usage & Limits](/cloud/how-to/usage)
 -   [Reading the Audit Log](/cloud/how-to/audit-log)
@@ -3709,7 +3812,7 @@ Source: https://docs.atomicstrata.ai/cloud/how-to/audit-log
 
 > Agent index: [llms.txt](/llms.txt)
 
-The **Audit Log** is the administrative record for a cloud project. It captures changes to the project's configuration - API keys, settings, and lifecycle events - so you can answer who did what, and when. It is scoped per project and, like other managed surfaces, applies to cloud projects only; local projects show an empty state.
+The **Audit Log** is the administrative record for a **Cloud** project. It captures changes to the project's configuration - API keys, settings, and lifecycle events - so you can answer who did what, and when. It is scoped per project and tracks **Cloud** administrative activity specifically - console actions like creating a key or changing settings. **Local** project memory operations run on your own Core rather than through the console, so check [Traces](/cloud/how-to/traces) for that activity instead.
 
 ## What it does
 
@@ -3725,7 +3828,7 @@ Keep the distinction with [Traces](/cloud/how-to/traces) clear: the Audit Log tr
 
 info
 
-An empty log simply means no administrative actions have been recorded for this project yet - it fills in as keys are created, settings change, and lifecycle events occur.
+An empty log means no **Cloud** administrative events have been recorded for this project yet - not a project-type entitlement state - and it fills in as keys are created, settings change, and lifecycle events occur.
 
 ## Key capabilities
 
@@ -3741,45 +3844,56 @@ An empty log simply means no administrative actions have been recorded for this 
 
 ---
 
-## Billing
+## Plans & Billing
 
 Source: https://docs.atomicstrata.ai/cloud/how-to/billing
 
-# Billing
+# Plans & Billing
 
 > Agent index: [llms.txt](/llms.txt)
 
-**Billing** manages your organization's subscription and shows how much of your plan you have used. It is scoped to the organization, so a single subscription covers every project the org owns.
+**Plans & Billing** shows your Organization's current plan and how much of it you've used. It's scoped to the Organization, so one plan covers every project the org owns.
 
-## What it does
+## Plans
 
--   Shows the current plan, its price, and subscription status - active, free trial, canceling, or not subscribed.
--   Tracks live usage against your plan's limits: projects, API keys, and monthly write tokens.
--   Starts or upgrades a subscription through hosted checkout, and opens the billing portal to update payment or cancel.
--   Surfaces renewal and trial-end dates so you know when the next charge lands.
+| Plan | Local projects | Cloud projects | How you get it |
+| --- | --- | --- | --- |
+| **Open Source** | 1 | 0 | Default on signup — free forever |
+| **Free** | 1 (kept) | 1 | Self-serve $0 upgrade, right here in Billing |
+| **Team** | Custom | Custom | Demo-led — talk to sales |
+| **Corporate** | Custom | Custom | Demo-led — talk to sales |
 
-## How it works
-
-Only writes are metered. Every `ingest` consumes processed tokens that count toward a monthly allowance and reset at the end of each billing period; retrieval and storage are unmetered within your plan's limits. When you reach the monthly token cap, writes pause until you upgrade - search and storage keep working.
-
-The **Developer** plan is $29/mo and includes 5M processed tokens per month, 3 projects, 5 organization API keys, and a 30-day activity log. Only organization admins can change the subscription; other members see billing read-only.
+Every Organization starts on **Open Source**: one Connected Local project, full console visibility, no Hosted Cloud project. **Upgrade to Free** in Billing to keep that Local project and unlock one Hosted Cloud project — it's a self-serve $0 checkout, no sales conversation required. **Team** and **Corporate** cover usage beyond Free's single Cloud project and are demo-led; request a demo rather than self-serve checkout.
 
 info
 
-Reaching the monthly write-token limit pauses ingestion only. Retrieval and storage stay available within your plan limits - upgrade to resume writes.
+**Developer** is a legacy plan. Existing subscribers keep their grandfathered limits and billing continues to work, but it is no longer offered to new Organizations — upgrade to **Free** instead.
+
+## How it works
+
+Only writes are metered. Every `ingest` consumes processed tokens that count toward your plan's monthly allowance and reset at the end of each billing period; retrieval and storage are unmetered. When you reach the monthly write-token cap, writes pause until you upgrade or the period resets — search and storage keep working the whole time.
+
+Exact write-token allowances can change per plan and aren't repeated here — see your Organization's current allowance and usage on [Usage & Limits](/cloud/how-to/usage), or in the plan details shown at checkout when you upgrade.
+
+Only Organization admins can change the subscription or upgrade to Free; other members see billing read-only.
+
+info
+
+Reaching the monthly write-token limit pauses ingestion only. Retrieval and storage stay available — upgrade, or wait for the next billing period, to resume writes.
 
 ## Key capabilities
 
--   **Organization-scoped** - one subscription covers all of the org's projects.
--   **Live usage** - projects, API keys, and write-token consumption against plan limits, with a reset date.
--   **Writes-only metering** - retrieval and storage are unmetered within limits.
--   **Self-serve management** - subscribe, upgrade, or manage payment and cancellation from the portal.
--   **Role-gated** - only org admins can change the plan.
+-   **Organization-scoped** — one plan covers all of the org's projects.
+-   **Type-aware limits** — Local and Cloud project counts are tracked and capped separately, matching what each plan unlocks.
+-   **Self-serve Free upgrade** — go from Open Source to Free without a sales call.
+-   **Writes-only metering** — retrieval and storage are unmetered within limits.
+-   **Demo-led Team/Corporate** — usage beyond Free is a sales conversation, not a self-serve checkout.
+-   **Role-gated** — only org admins can change the plan.
 
 ## Related
 
 -   [Usage](/cloud/how-to/usage)
--   [Projects & Workspaces](/cloud/how-to/projects)
+-   [Projects](/cloud/how-to/projects)
 -   [Project Settings](/cloud/how-to/settings)
 
 ---
@@ -3792,11 +3906,11 @@ Source: https://docs.atomicstrata.ai/cloud/how-to/conflicts
 
 > Agent index: [llms.txt](/llms.txt)
 
-The **Conflict queue** is where a project admin reviews competing beliefs the memory layer could not reconcile on its own, and applies a resolution. It is the human-in-the-loop backstop for the reconciliation that normally happens automatically.
+The **Conflict queue** is where a project admin reviews competing beliefs the memory layer could not reconcile on its own, and applies a resolution. Most contradictions are resolved automatically by AUDN reconciliation at ingest time; the queue exists for the smaller set that need a human call, not as the primary way you manage memory disagreements day to day.
 
 ## What it does
 
--   Lists the open conflicts for the project, each pairing two competing claims.
+-   Lists the open conflicts for the project, if there are any, each pairing two competing claims.
 -   Shows a selected conflict side by side as **Claim A** and **Claim B** for review.
 -   Applies an admin resolution action, with an optional reason attached to the decision.
 
@@ -3811,16 +3925,32 @@ Select a conflict from the list to see both claims. Enter an optional resolution
 -   **Promote** - accept the competing claim.
 -   **Escalate** - route it for further review.
 
+What "success" looks like depends on the action:
+
+-   **Reject** and **Promote** are terminal - the memory itself reflects the decision right away. Look it up in [Memory Explorer](/cloud/how-to/what-is-memories) or the [Playground](/cloud/how-to/playground), or open the resulting [mutation trace](/cloud/how-to/traces), and only the accepted claim remains.
+-   **Request evidence** and **Escalate** don't resolve the conflict yet - the competing claims stay exactly as they were. Success is the conflict's status reflecting that pending next step (awaiting evidence, or escalated for further review), not a final memory outcome.
+
+Either way, that's your confirmation of what actually happened - not whatever the queue's own UI happens to show next.
+
+## If you don't see a queue, or it's empty
+
+The conflict queue is scoped to **Cloud** projects with an admin role, and governance conflict resolution is still rolling out during the beta - an empty or unavailable queue is the normal state for most projects right now, not a sign anything is wrong.
+
+If you're trying to understand or fix a specific memory disagreement instead of waiting on the queue:
+
+-   **Inspect the trace** - open the relevant [mutation trace](/cloud/how-to/traces) to see the AUDN decision the memory layer already made (add, update, supersede, or no-op), its confidence, and the reason it gave.
+-   **Correct the memory directly** - ingest the corrected claim through the [Playground](/cloud/how-to/playground) or your application. Reconciliation treats it as an update or supersede against the existing memory - no manual queue action required.
+
 info
 
-The conflict queue is admin-only and available on managed (cloud) projects - local self-hosted projects do not expose it. Governance conflict resolution is still rolling out during the beta, so an empty queue is expected while it ships.
+The conflict queue is admin-only and scoped to Cloud projects - Local projects don't expose it. Governance conflict resolution is still rolling out during the beta, so treat an empty or unavailable queue as expected, not a bug.
 
 ## Key capabilities
 
--   **Human-in-the-loop** - nothing silently overwrites a competing belief; unresolved conflicts wait for an admin.
+-   **Automatic reconciliation first** - AUDN reconciliation resolves most competing claims automatically at ingest time, with no admin action needed; only the smaller set it can't confidently resolve reaches this queue for review, where it's available.
 -   **Side-by-side review** - compare Claim A and Claim B before deciding.
 -   **Documented decisions** - attach a reason to any resolution action.
--   **Scoped to admins** - only project admins can view or act on the queue.
+-   **Scoped to Cloud admins** - only Cloud project admins can view or act on the queue; Local projects route conflict handling through trace inspection and re-ingestion instead.
 
 ## Related
 
@@ -3838,18 +3968,18 @@ Source: https://docs.atomicstrata.ai/cloud/how-to/dashboard
 
 > Agent index: [llms.txt](/llms.txt)
 
-The **Dashboard** is the first thing you see when you open a project. It answers three questions at a glance: what is stored, how do I connect, and what happened recently. For a cloud project it doubles as the activation path - get a key, wire up a tool, then confirm the traffic lands.
+The **Dashboard** is the first thing you see when you open a project. It answers three questions at a glance: what is stored, how do I connect, and what happened recently. For a **Cloud** project it doubles as the activation path - get a key, wire up a tool, then confirm the traffic lands.
 
 ## What it does
 
 -   Shows headline **stats** - stored memories and ingest, search, and package request counts - each with a tooltip defining exactly what it counts.
 -   Provides **Connect your tools**: copy-ready snippets for Cursor, Claude Code, Claude Desktop, any MCP client, and the Node SDK, Python SDK, and CLI.
 -   Lists the **most recent traces** with a link through to the full history.
--   Nudges you to **create an API key** first when the project has none.
+-   Nudges you to **create an API key** first when a **Cloud** project has none.
 
 ## How it works
 
-Each stat maps to a concrete API surface - for example, ingest requests count successful `POST /v1/ingest` calls - so the numbers are auditable, not estimates. The tool snippets are pre-filled with this project's API URL; drop one into the tool you already use:
+Each stat maps to a concrete API surface - for example, ingest requests count successful `POST /v1/ingest` calls - so the numbers are auditable, not estimates. For a **Cloud** project, the tool snippets are pre-filled with this project's API URL and a Cloud project API key; drop one into the tool you already use:
 
 ```ts
 import { MemoryClient } from '@atomicmemory/sdk'
@@ -3859,7 +3989,7 @@ const memory = new MemoryClient({
 })
 ```
 
-**Local projects** render a different overview: a live connection pill that pings your proxy, `n/a` stat placeholders (local usage isn't reported to the cloud), and the same tool snippets pointed at your local URL instead of a hosted key.
+**Local projects** render a different overview: a live connection pill that pings your Core directly (not through the Cloud gateway), and the same tool snippets pointed at your local Core URL with your Core token / `CORE_API_KEY` instead of a Cloud API key. Connected Local sends a runtime heartbeat and operation traces to the console for visibility, but memory contents stay on your Core — so stats that would require reading memory content directly (like stored-memory counts) still show `n/a` placeholders.
 
 ## Key capabilities
 
@@ -3876,6 +4006,61 @@ const memory = new MemoryClient({
 
 ---
 
+## Migrate to Hosted Cloud
+
+Source: https://docs.atomicstrata.ai/cloud/how-to/migrate
+
+# Migrate to Hosted Cloud
+
+> Agent index: [llms.txt](/llms.txt)
+
+Already running a **Local** project? `am migrate export` and `am migrate import` move its memories into a **Cloud** project, so you can keep working against the same data from a managed, shared endpoint instead of your own Core.
+
+## Prerequisites
+
+-   Your Organization is on **Free** or higher. Cloud import requires Free or higher — Open Source doesn't unlock a Hosted Cloud project to import into. See [Plans & Billing](/cloud/how-to/billing).
+-   Your Local Core is running and connected (`am init` completed — see the [Platform Quickstart](/quickstart)). `am migrate export` reads directly from your live Core and creates the JSONL transfer file at export time — it's not a backup file you maintain yourself ahead of time.
+-   A **Cloud** project already exists to import into — create one from [Add Hosted Cloud](/cloud/quickstart) if you haven't yet.
+
+## Export from your Local project
+
+```bash
+am migrate export --project <local-project-slug>
+```
+
+This reads every memory your Local project's Core has stored (paginated automatically) and writes it to a local JSONL file — one manifest line (export time, project slug, record count) followed by one record per memory, each carrying its original content, scope, and a checksum. By default the file is written to `./migrate-<local-project-slug>.jsonl` in your current directory; pass `--out <path>` to choose a different location. Add `--user-id <id>` if you're exporting a Core namespace other than `default`. Run `am migrate export --help` for the full flag list.
+
+## Import into your Cloud project
+
+```bash
+am migrate import --file <path-to-export.jsonl> --target-project <cloud-project-slug>
+```
+
+This reads the exported JSONL file and sends its records to your Hosted Cloud project, where each one is written into that project's memory store with its original content intact — it isn't re-summarized or re-extracted on the way in. The command reports how many records were imported, skipped, and failed. `--mode merge` is the default and the only mode the current CLI supports (`--mode replace-scope` is rejected). Run `am migrate import --help` for the full flag list.
+
+## What actually moves
+
+Migration is **memory-only**. It moves the reconciled memories themselves — not the mutation and retrieval trace history that produced them. Your Cloud project starts a fresh trace history from the moment you begin sending it traffic; your Local project's trace history isn't copied or affected.
+
+## Safe to re-run
+
+`am migrate import` tracks which of a Cloud project's memories came from which imported record. If you run it again against the **same** Cloud project — with the same export file, a re-exported one, or after a prior run was interrupted — records that already landed are skipped rather than duplicated; only new or previously failed records are added. That makes a retry safe by default: re-running the same import against the same target project won't create duplicate memories.
+
+If you're unsure whether an interrupted run finished, the safest sequence is still to check before assuming: open your Cloud project's **Memories** page (or run `am memory search`/`am memory list` against it) to see what already landed, then retry the import — the skip behavior above means retrying doesn't cost you anything even if the first attempt fully succeeded.
+
+## Verify in the console
+
+Open your Cloud project in the console under **Memories** and confirm the migrated claims are there. Cross-check a few against your Local project's Memories page (or `am memory search`) to confirm the content matches. Because trace history doesn't migrate, don't expect to see historical Local traces under the Cloud project's **Traces** — only new activity against the Cloud project appears there going forward.
+
+## Related docs
+
+-   [Add Hosted Cloud](/cloud/quickstart) — create the Cloud project you're migrating into
+-   [Cloud CLI](/cloud/cli) — full command reference, including migration
+-   [Project Settings](/cloud/how-to/settings) — where a Cloud project's own data export lives
+-   [Troubleshooting](/cloud/troubleshooting) — Core and Cloud connection problems
+
+---
+
 ## Using the Playground
 
 Source: https://docs.atomicstrata.ai/cloud/how-to/playground
@@ -3889,28 +4074,35 @@ The **Playground** lets you ingest memories and run searches against your projec
 ## What it does
 
 -   **Ingest** - push a piece of conversation or a claim and watch the memory layer store, update, or skip it.
--   **Search** - run a semantic query and see the matching memories ranked by trust.
+-   **Search** - run a semantic query and see which memories match.
 -   Deep-links every stored or matched memory into the [Memory Explorer](/cloud/how-to/what-is-memories) so you can inspect exactly what was written or retrieved.
 
 ## How it works
 
-Paste a project API key (it starts with `amc_`) into the key field, then work in the **Ingest** or **Search** tab.
+### Authenticate
 
--   **Ingest** takes free-form content and a user ID. On success it reports how many memories were stored, updated, and skipped, and lists the resulting memory IDs as links.
--   **Search** takes a query and a user ID and returns up to ten hits, each showing its claim, trust score, type, and status.
+Authenticate with the credential for this project's type, then work in the **Ingest** or **Search** tab.
 
-For managed (cloud) projects the requests are proxied same-origin through the dashboard; for local self-hosted projects they go straight to your core instance. Either way, each call also writes a trace you can open from the [Traces](/cloud/how-to/traces) page.
+-   **Cloud project** - paste a Cloud project API key (starts with `amc_`) from [API Keys](/cloud/how-to/api-keys) into the key field. Requests proxy same-origin through the dashboard.
+-   **Local project** - paste your project's Local Core token, the same one `am init` configured on your Core (see [Authentication](/cloud/authentication#local-core-token-or-core_api_key)). Requests go straight to your Core instance, not through the Cloud gateway.
+
+### Run a call
+
+-   **Ingest** takes free-form content and a user ID. On success it reports how many memories were stored, updated, and skipped, and lists the resulting memory IDs as links straight into the Memory Explorer.
+-   **Search** takes a query and a user ID and returns up to ten hits, each showing its claim, type, and status - follow any hit's link to see the full memory record.
+
+Either way, each call also writes a trace you can open from the [Traces](/cloud/how-to/traces) page - that's your confirmation the credential worked and the request reached the memory layer.
 
 tip
 
-The API key lives in the page's memory only - it is never stored or persisted. Grab a project key from [API Keys](/cloud/how-to/api-keys) and paste it in each session.
+Whichever credential you use, it lives in the page's memory only - it is never stored or persisted. Grab a Cloud key from [API Keys](/cloud/how-to/api-keys), or find your Local Core token via [Authentication](/cloud/authentication#local-core-token-or-core_api_key), and paste it in each session.
 
 ## Key capabilities
 
 -   **No-code loop** - exercise ingest and search without leaving the dashboard.
--   **Trust-ranked results** - search hits are scored so you can see what your application would actually retrieve.
+-   **Type-aware auth** - paste a Cloud API key or your Local Core token; the Playground calls the right surface for this project's type.
 -   **Deep links** - jump from any stored or matched memory straight to its full record in the Memory Explorer.
--   **Managed or local** - works against cloud-managed projects and self-hosted core alike.
+-   **Cloud or Local** - works against Cloud projects and Local Core alike.
 
 ## Related
 
@@ -3920,45 +4112,44 @@ The API key lives in the page's memory only - it is never stored or persisted. G
 
 ---
 
-## Projects & Workspaces
+## Projects
 
 Source: https://docs.atomicstrata.ai/cloud/how-to/projects
 
-# Projects & Workspaces
+# Projects
 
 > Agent index: [llms.txt](/llms.txt)
 
-**Projects** are the workspaces that hold your memory layer. Every memory, API key, trace, and usage record belongs to exactly one project, and every project belongs to an organization. The Projects page is where you create them, group them by environment, and drop into a project's workspace.
+**Projects** hold your memory layer. Every memory, API key, trace, and usage record belongs to exactly one project, and every project belongs to an Organization. The Projects page is where you create them and open a project's Overview.
 
 ## What it does
 
--   Lists every project in the current organization, grouped by environment (`dev`, `staging`, `prod`) with a filter across all four buckets.
--   Shows each project's name, slug, environment, stored-memory count, and last activity, and links straight to its Overview.
--   Creates new projects from **New project** - you pick a type, **Cloud (managed)** or **Local (self-hosted)**, and, for cloud, an environment.
--   Enforces your plan's project limit: at the cap, creation is blocked and an upgrade prompt appears.
+-   Lists every project in the current Organization with its type (**Local** or **Cloud**), name, slug, and last activity, and links straight to its Overview. **Cloud** projects show a stored-memory count; **Local** projects may show `n/a` there since memory content stays on your Core.
+-   Creates new projects from **New project** — you pick a type, **Local** (Connected Local, backed by your own Core) or **Cloud** (Hosted Cloud, fully managed).
+-   Your plan determines how many of each type you can have: Open Source includes one Local project and zero Cloud projects; Free keeps your Local project and unlocks one Cloud project. See [Plans & Billing](/cloud/how-to/billing) for what's included.
 
 ## How it works
 
-A project is an isolated workspace - its memories, keys, traces, and usage never cross into another project. Where that memory data physically lives depends on the project **type** you choose at creation.
+Each project is isolated — its memories, keys, traces, and usage never cross into another project. New projects use the slug `default` (`default-project` is a legacy alias from earlier versions, not something you'll see created today). Where memory data physically lives depends on the project **type** you choose at creation:
 
-A **managed** project is hosted by AtomicMemory: you ingest and search with a project API key from anywhere. A **local** project runs against your own `atomicmemory-core` on your machine - the dashboard talks to it directly from the browser, and the cloud stores only the project's metadata (name, slug, type), never its memories.
+-   A **Local** project runs against your own Core — connected with `am init`. Memories stay on your machine; the console still receives a runtime heartbeat and operation traces from that Core, so you get inspectable console visibility without your memory content ever leaving your infrastructure.
+-   A **Cloud** project is fully managed by AtomicMemory: memories, traces, and heartbeat all live in Hosted Cloud, and you authenticate with a project API key from anywhere.
 
 info
 
-For a local project, your self-hosted core must serve `/v1/*` with CORS allowing this dashboard's origin. Managed projects need none of this - you just create an API key.
+A Local project's Core must be reachable from your browser (`am init` wires this up on `http://127.0.0.1:17350` by default). A Cloud project needs none of this — just an API key.
 
 ## Key capabilities
 
--   **Isolated workspaces** - memories, keys, traces, and usage stay scoped to a single project.
--   **Managed or self-hosted** - let AtomicMemory host the data, or point a project at a core you run yourself.
--   **Environment lanes** - keep `dev`, `staging`, and `prod` separate and filterable.
--   **Plan-aware limits** - project count is bounded by your plan, and the page shows your organization's usage against it.
+-   **Isolated projects** — memories, keys, traces, and usage stay scoped to a single project.
+-   **Local or Cloud** — run Core yourself, or let AtomicMemory host the data.
+-   **Type-aware limits** — Local and Cloud project counts are capped separately by your plan, and the page shows usage against each.
 
 ## Related
 
 -   [Project Settings](/cloud/how-to/settings)
 -   [API Keys](/cloud/how-to/api-keys)
--   [Billing](/cloud/how-to/billing)
+-   [Plans & Billing](/cloud/how-to/billing)
 -   [What is Memories](/cloud/how-to/what-is-memories)
 
 ---
@@ -3976,39 +4167,43 @@ Source: https://docs.atomicstrata.ai/cloud/how-to/settings
 ## What it does
 
 -   Renames the project; the new name shows in the dashboard and in API responses.
--   Displays the project type (managed or local) and, for a local project, the Local API URL the dashboard calls.
--   Shows memory- and trace-retention defaults (retention is not configurable yet).
+-   Displays the project type (**Local** or **Cloud**) and, for a Local project, the Local API URL the dashboard calls.
+-   Shows how retention works for this project's type: **Local** retention is managed by your own Core instance; **Cloud** retention uses managed defaults instead. Neither is configurable from this page.
 -   Bundles billing, organization management, data export, and project deletion into one place.
 
 ## How it works
 
-**General** - the project name is editable and saved on submit; the project type and local URL are fixed at creation and shown read-only. Retention appears as defaults - 90 days for memories, 30 days for traces - and is not adjustable today.
+**General** - the project name is editable and saved on submit; the project type and Local URL are fixed at creation and shown read-only. Retention is type-aware and not adjustable here: a **Local** project's memories and traces are retained by your own Core, on your own schedule; a **Cloud** project uses Cloud's managed retention defaults instead.
 
 **Billing** - a compact view of the same organization subscription you manage on the [Billing](/cloud/how-to/billing) page.
 
 **Organization** - opens your organization profile to manage members and roles.
 
-**Data** (managed projects only) - export every memory and trace for the project as JSONL.
+**Data** (Cloud projects only) - export every memory and trace for the project as JSONL. This is a one-way backup/download of that Cloud project's own data - it's different from the `am migrate export`/`am migrate import` CLI workflow, which moves memories *from* a Local project *into* a Cloud project. See [Migrate to Hosted Cloud](/cloud/how-to/migrate) if you're looking for that instead.
 
-**Danger zone** - delete the project, which permanently removes it along with all of its memories and traces.
+**Danger zone** - delete the project. For a **Cloud** project this permanently removes its managed memories and traces along with the project itself. For a **Local** project, deletion removes the project from the console only - it does not stop your independently running Core or delete anything stored there.
 
 warning
 
-Deleting a project is permanent. It removes the project along with every memory and trace it contains, and cannot be undone.
+Deleting a **Cloud** project is permanent - it removes the project along with every memory and trace it contains, and cannot be undone. Deleting a **Local** project only removes it from the console; your Core keeps running and your local data stays exactly as it was.
+
+Success looks like: after you rename a project, the new name shows up in the dashboard and in subsequent API responses. After an export, you get a downloadable `.jsonl` file containing the memories and traces you requested. After a deletion, the project is gone from your project list either way. For a **Cloud** project, its managed memories and traces are deleted and its API keys stop working. For a **Local** project, deletion only ends the console's tracking of that project - your Core keeps running and calls straight to it keep working exactly as before.
 
 ## Key capabilities
 
 -   **Rename** - update the display name used across the dashboard and API.
--   **Data residency at a glance** - see whether memory data is managed or local, and the local URL when self-hosted.
+-   **Data residency at a glance** - see whether the project is Local or Cloud, and the Local API URL for a Local project.
+-   **Type-aware retention** - see who manages retention for this project: your own Core for Local, Cloud's managed defaults for Cloud.
 -   **Organization management** - jump to members and roles.
--   **Export** - download a managed project's memories and traces as JSONL.
--   **Delete** - permanently remove a project and all of its data.
+-   **Export** - download a Cloud project's memories and traces as JSONL.
+-   **Delete** - for a Cloud project, permanently removes it and all of its managed data; for a Local project, removes it from the console without touching your independently running Core or its data.
 
 ## Related
 
--   [Projects & Workspaces](/cloud/how-to/projects)
+-   [Projects](/cloud/how-to/projects)
 -   [Billing](/cloud/how-to/billing)
 -   [API Keys](/cloud/how-to/api-keys)
+-   [Migrate to Hosted Cloud](/cloud/how-to/migrate) — bring a Local project's memories into a Cloud project
 
 ---
 
@@ -4026,7 +4221,7 @@ The **Traces** page records what the memory layer did on every request your appl
 
 -   Streams traces live, newest first, as your application calls the memory layer - with a connection pill and a reconnect control if the stream drops.
 -   Filters by type - retrieval, mutation, or package - and mirrors the choice into the URL, so a filtered view is shareable and survives a refresh.
--   Opens a detail view for any trace: the memories it included and excluded, the reconciliation decision, and the final response.
+-   Opens a detail view for any trace: the memories it included and excluded, the reconciliation decision, and the final response - with content redacted for Local projects (see below).
 
 ## How it works
 
@@ -4039,15 +4234,20 @@ await memory.search({ query: "seat preferences", scope: { user: "user_001" } });
 // excluded, and the exact payload returned.
 ```
 
-Open a **retrieval** trace to see two columns - **Included** and **Excluded** memories, each with its trust score - plus the final response payload. Open a **mutation** trace to see the AUDN decision (such as add, update, supersede, or no-op) with its confidence and reason, the previous claim struck through against the new claim, the source evidence, and the incoming input. Package traces appear in the list and filter; opening one shows its summary card.
+**Local** and **Cloud** projects populate this page differently - this page calls them **Connected Local** (Core running on your machine, connected to the console) and **Hosted Cloud** (fully managed hosting) once, then uses the shorter **Local**/**Cloud** labels below, matching the console's own labels. A Local project's memory content never leaves your Core, so the trace row the console stores has its claim text and inputs redacted - you get the call type, timing, and outcome, not the underlying content. A Cloud project's content already lives in managed infrastructure, so its traces show full detail; content-level inspection is effectively Cloud-only today.
+
+Open a **retrieval** trace to see two columns - **Included** and **Excluded** memories - plus the final response payload (redacted for Local projects, as above). Open a **mutation** trace to see the AUDN decision (such as add, update, supersede, or no-op) with its confidence and reason, the previous claim struck through against the new claim, the source evidence, and the incoming input (also redacted for Local projects). Package traces appear in the list and filter; opening one shows its summary card.
 
 The list is a live, recent window - it prepends new traces as they stream in rather than paginating a full history.
+
+Success looks like: after your first `ingest` or `search` call, a matching trace appears in the list within moments - that's your confirmation the call reached the memory layer and was recorded.
 
 ## Key capabilities
 
 -   **Live stream** - traces appear the moment a request is served, with a reconnect control when the connection drops.
 -   **Type filter** - isolate retrieval, mutation, or package traces; the filter lives in the URL.
 -   **Decision transparency** - every mutation trace records the AUDN decision, its confidence, and the reason behind it.
+-   **Local redaction** - Local projects never send memory content to the console; their traces show call type and outcome, not claim text.
 -   **Traceable to memories** - jump from an included memory straight to its record in the [Memory Explorer](/cloud/how-to/what-is-memories).
 
 ## Related
@@ -4066,22 +4266,22 @@ Source: https://docs.atomicstrata.ai/cloud/how-to/usage
 
 > Agent index: [llms.txt](/llms.txt)
 
-The **Usage** page is the project's meter. It shows how much traffic the memory API has handled, how much you're storing, and where you stand against your organization's plan limits - the numbers that drive cost.
+The **Usage** page is the project's meter. It shows how much traffic the memory API has handled, how much you're storing, and where you stand against your Organization's plan limits - the numbers that drive cost.
 
 ## What it does
 
 -   Reports **request** counts: ingest, search, and package calls, plus total tokens processed.
 -   Reports **storage**: stored memories, stored traces, embedding operations, and bytes used.
 -   Charts **request volume over the last 30 days**, split by ingest, search, and package.
--   Surfaces your **plan limits** - projects, API keys, and monthly write tokens - with a link to manage the plan.
+-   Surfaces your **plan limits** - Local and Cloud project counts, tracked separately by type, and monthly write tokens - with a link to manage the plan.
 
 ## How it works
 
-Plan limits are **organization-scoped**: the projects, API keys, and monthly write-token allowances apply across your whole organization, and the write-token meter resets each billing period. The stat cards and the volume chart below them are **project-scoped** - they count only this project's traffic and storage. When a project has seen no traffic in the last 30 days, the chart is replaced by an empty state rather than a flat line.
+Plan limits are **Organization-scoped**: your Local and Cloud project counts (tracked separately by type) and monthly write-token allowance apply across your whole Organization, and the write-token meter resets each billing period. The stat cards and the volume chart below them are **project-scoped** - they count only this project's traffic and storage. When a project has seen no traffic in the last 30 days, the chart is replaced by an empty state rather than a flat line.
 
 info
 
-Because limits are shared across the organization, usage on one project counts toward the same caps as every other - manage the plan itself from the Billing page.
+Because limits are shared across the Organization, usage on one project counts toward the same caps as every other - manage the plan itself from the Billing page.
 
 ## Key capabilities
 
@@ -4091,7 +4291,7 @@ Because limits are shared across the organization, usage on one project counts t
 
 ## Related
 
--   [Billing & Plans](/cloud/how-to/billing)
+-   [Plans & Billing](/cloud/how-to/billing)
 -   [The Dashboard](/cloud/how-to/dashboard)
 -   [Managing API Keys](/cloud/how-to/api-keys)
 
@@ -4147,186 +4347,112 @@ Search reads from this same reconciled state, so what you see on the Memories pa
 
 Source: https://docs.atomicstrata.ai/cloud/overview
 
-# AtomicMemory
+# AtomicMemory Cloud
 
 > Agent index: [llms.txt](/llms.txt)
 
-**AtomicMemory** is hosted, multi-tenant memory infrastructure for AI agents. It provides orgs, projects, API keys, usage tracking, and a developer console - while the open-source **AtomicMemory Core** engine handles embeddings, vector storage, retrieval, fact extraction, and AUDN mutation.
+**Run memory on your own machine. See exactly what it's doing. Add managed hosting only when you need it.**
 
-Console: **[memory.atomicstrata.ai](https://memory.atomicstrata.ai)**  
-API: **`https://api.atomicstrata.ai`**
+AtomicMemory Cloud pairs the open-source **AtomicMemory Core** engine with a developer console: Core stores and retrieves memories, and the console gives you inspectable ingest, search, and mutation traces without requiring you to host anything. The console labels the two project types **Local** and **Cloud**; this page calls them **Connected Local** (Core running on your machine, connected to the console) and **Hosted Cloud** (fully managed hosting) before using the shorter labels.
 
-## Cloud vs Core
+**→ [Start the Quickstart](/quickstart)** — Connected Local in one command, free forever.  
+Ready for shared or hosted access later? [Add Hosted Cloud](/cloud/quickstart). Something not working? [Troubleshooting](/cloud/troubleshooting).
 
-| Layer | Owns | Where it runs |
+## Why teams start here
+
+-   **Local ownership** — memories live in Core, on your machine. Nothing leaves your infrastructure unless you choose to add hosting.
+-   **Console visibility** — every ingest, search, and mutation writes an inspectable trace with its call type, timing, and reconciliation decision; open Memory Explorer to see the actual stored content.
+-   **Portable integrations** — the same CLI, SDK, and MCP tools work whether Core runs on your laptop or behind a managed endpoint.
+
+## The Connected Local journey
+
+Three steps, one command to start:
+
+1.  **Install and run `am init`** — signs you in, starts Core in Docker, and connects your console project.
+2.  **Add a memory** — `am memory ingest` and `am memory search` round-trip through your local Core.
+3.  **Confirm it in the console** — the runtime shows **Online**, and your memory appears under **Memories** with a matching trace.
+
+Success looks like: the CLI prints **Verified**, and the console shows the runtime **Online** with your memory listed.
+
+Full walkthrough: [Platform Quickstart](/quickstart).
+
+## Local vs Cloud
+
+| Outcome | Local project | \+ Cloud project |
 | --- | --- | --- |
-| **Cloud gateway** | Tenancy, API keys, JWT dashboard auth, traces, usage, billing hooks | `am-cloud-api` (public) |
-| **Developer console** | Onboarding, Memory Explorer, traces, playground | [memory.atomicstrata.ai](https://memory.atomicstrata.ai) |
-| **Core engine** | pgvector index, fact extraction, retrieval, LLM repair loop | Private ECS service (not user-facing) |
+| Where memories live | Your machine, via Core | AtomicMemory-managed hosting — your existing Local project's memories stay on your machine, unaffected |
+| Console visibility | Runtime status, memories, traces | Same, plus a managed project space |
+| Setup | `am init` | Upgrade to Free, then create a Cloud project |
+| Good for | Evaluating, local dev, air-gapped work | Shared access without operating infrastructure |
 
-Use **Cloud** when you want a managed endpoint and dashboard with zero infrastructure. Use **Core** when you need full data residency, custom deployment, or to embed the engine in your own stack. The same SDK and MCP tools work against both - point `ATOMICMEMORY_API_URL` at Cloud or your self-hosted core.
+The console labels these **Local** and **Cloud** projects — the shorter names used in this table and for the rest of the page.
 
-Weighing hosted against self-hosted? See [Cloud vs Open Source](/cloud-vs-open-source).
+## Plans at a glance
 
-## Architecture
+-   **Open Source** — free forever. One Connected Local project, full console visibility, no Hosted Cloud project.
+-   **Free** — a self-serve $0 upgrade. Keeps your Local project and unlocks one Hosted Cloud project.
 
-Clients (untrusted)
+See [Plans & Billing](/cloud/how-to/billing) for details.
 
-CLI / SDK / Web
+## Explore the console
 
-Dashboard (web)
+-   [Developer Console](/cloud/console) — dashboard tour
+-   [Memories](/cloud/how-to/what-is-memories) — inspect everything stored
+-   [Traces](/cloud/how-to/traces) — ingest, search, and mutation history
+-   [Playground](/cloud/how-to/playground) — try ingest and search interactively
+-   [Integrations](/integrations/overview) — MCP, SDKs, and coding agents
 
-`amc_…` key or session JWT
+## Advanced
 
-am-cloud-api (gateway)
-
-API-key authn
-
-Tenancy mapping
-
-Trace + usage
-
-`AM_CORE_API_KEY` infra only
-
-AtomicMemory Core (private)
-
-pgvector index
-
-AUDN mutation
-
-retrieval + LLM
-
-## Trust boundaries
-
--   The **`amc_…` API key** is the only credential clients see. It is verified in the cloud gateway (argon2 hash + display prefix) and is **never** forwarded to core.
--   **`AM_CORE_API_KEY`** is an infrastructure credential that lives only in the cloud environment. It authenticates outbound calls to core.
--   **`ProjectType::Local`** projects are rejected with `400` before any core call. Local traffic should hit the project's own core URL directly and bypass the cloud gateway.
-
-## Multi-tenancy mapping
-
-Every cloud project maps to exactly one core `user_id`, guaranteeing no cross-project leakage at the storage layer.
-
-| Cloud concept | Core field | Notes |
-| --- | --- | --- |
-| `project_id` | `user_id = "project:{project_id}"` | Hard tenant boundary on every outbound request |
-| SDK `user_id` / `scope.user` | `session_id` | Per-user filtering on reads |
-| SDK `agent_id` / `scope.agent` | `agent_id` | Pass-through |
-| SDK `workspace_id` | `workspace_id` | Pass-through; core requires `agent_id` when set |
-
-## When to choose Cloud
-
-Choose **AtomicMemory** if you:
-
--   Want to ship agents with memory in minutes, not weeks
--   Need inspectable mutation and retrieval traces in a dashboard
--   Prefer managed Postgres, Redis, and scaling over operating core yourself
--   Plan to migrate to self-hosted core later with the same SDK surface
-
-Choose **self-hosted Core** if you:
-
--   Require on-prem or air-gapped deployment
--   Need full control over embedding providers and LLM routing
--   Want to embed `createCoreRuntime` in-process (TypeScript) without HTTP
-
-## Next steps
-
--   [Cloud Quickstart](/cloud/quickstart) - sign up, get an API key, first ingest
--   [Developer Console](/cloud/console) - dashboard tour
--   [Authentication](/cloud/authentication) - API keys vs dashboard session JWT
--   [Cloud CLI](/cloud/cli) - `am` / `atomicmemory` from `get.atomicstrata.ai`
+-   [Authentication](/cloud/authentication) — credential model and deployment details
+-   [Cloud CLI](/cloud/cli) — full command reference
+-   [Core architecture](/platform/architecture) — how the engine is composed
+-   [Core-only Docker](/core-only-docker) — run Core without a Cloud connection
 
 ---
 
-## Quickstart
+## Add Hosted Cloud
 
 Source: https://docs.atomicstrata.ai/cloud/quickstart
 
-# Cloud Quickstart
+# Add Hosted Cloud
 
 > Agent index: [llms.txt](/llms.txt)
 
-Get from zero to your first inspectable memory in under five minutes using the hosted console and CLI.
+Add **Hosted Cloud** — managed memory hosting — after your local Core is running. This page depends on the [Platform Quickstart](/quickstart): run `am init` first if you have not already.
 
 **Console:** [memory.atomicstrata.ai](https://memory.atomicstrata.ai)  
 **API:** `https://api.atomicstrata.ai`
 
-1.  1Sign up
-2.  2Onboarding
-3.  3Create API key
-4.  4Install CLI
-5.  5Configure + ingest
-6.  6Verify in console
+1.  1Upgrade to FreeConsole → Billing
+2.  2Create Cloud projectcopy the one-time `amc_…` key
+3.  3Ingest + search`am memory ingest`
+4.  4Verify in consoleMemories + Traces
 
 ## Prerequisites
 
--   A web browser
--   Terminal access for the CLI (optional but recommended)
+-   Completed [Platform Quickstart](/quickstart) — Connected Local via `am init`
+-   Upgrade to **Free** in the console (self-serve, $0): **Billing** → **Upgrade to Free**. Free keeps your Local project and unlocks one Hosted Cloud project.
 
-## Step 1 - Sign up
+## Add Hosted Cloud
 
-Open [memory.atomicstrata.ai](https://memory.atomicstrata.ai) and click **Get started**. Create an account at `/signup`.
-
-## Step 2 - Onboarding
-
-After sign-up, you land on `/app`. If you have no projects or no API keys on a cloud project, you are redirected to **`/app/onboarding`**.
-
-The console idempotently provisions:
-
-1.  A personal organization (named from your account display name)
-2.  A default project (`slug: default-project`, environment: `dev`)
-
-## Step 3 - Create your first API key
-
-Click **Create API key** in the onboarding modal. The backend returns the full secret **exactly once** - copy it before closing the modal.
-
-API keys use the format:
-
-```text
-Authorization: Bearer amc_<env>_<random>
-```
-
-## Step 4 - Install the CLI
-
-```bash
-curl -fsSL https://get.atomicstrata.ai/install.sh | sh
-```
-
-This installs `atomicmemory` and the short alias **`am`**. See [Cloud CLI](/cloud/cli) for full install options.
-
-## Step 5 - Configure and ingest
+1.  Console → **Billing** → **Upgrade to Free**
+2.  Create a **Hosted Cloud** project and copy the one-time API key (`amc_…`)
+3.  Ingest and search from anywhere:
 
 ```bash
 export ATOMICMEMORY_API_URL=https://api.atomicstrata.ai
 export ATOMICMEMORY_API_KEY=amc_dev_xxxxxxxxxxxxxxxx
 
 am memory ingest "I prefer aisle seats when flying."
+am memory search "seat preference"
 ```
 
-Under the hood this calls `POST /v1/memories/ingest` on the cloud gateway. Example wire body:
+## Success state
 
-```json
-{
-  "user_id": "default",
-  "source_site": "cli",
-  "conversation": "I prefer aisle seats when flying."
-}
-```
-
-Batch ingest from a file:
-
-```bash
-am memory ingest --file ./memories.jsonl
-```
-
-## Step 6 - Verify in the console
-
-Open **Memories** in the project sidebar. The ingested claim should appear with `status: active` and an inline evidence excerpt.
-
-If a mutation trace was recorded, click **View trace** to open the AUDN detail at `/app/projects/{id}/traces/{traceId}`.
+Open the console under **Memories**. Your ingested memory appears there, with a matching trace under **Traces**. That confirms the Hosted Cloud project is receiving traffic.
 
 ## SDK alternative
-
-Same flow with the TypeScript SDK:
 
 ```bash
 npm install @atomicmemory/sdk
@@ -4355,25 +4481,115 @@ const results = await memory.search({
 });
 ```
 
-## cURL alternative
+## Moving existing local memories
+
+Already have memories in your Connected Local project? `am migrate export` and `am migrate import` move them into your new Hosted Cloud project. See [Migrate to Hosted Cloud](/cloud/how-to/migrate) for prerequisites, the memory-only scope, safe re-run behavior, and how to verify the result in the console.
+
+## What's next
+
+-   [Developer Console](/cloud/console) — traces, usage, API keys
+-   [Migrate to Hosted Cloud](/cloud/how-to/migrate) — bring existing Local memories over
+-   [Authentication](/cloud/authentication) — which credential goes where
+-   [Integrations](/integrations/overview) — MCP and agent wiring
+
+Something not working? See [Troubleshooting](/cloud/troubleshooting).
+
+---
+
+## Troubleshooting
+
+Source: https://docs.atomicstrata.ai/cloud/troubleshooting
+
+# Troubleshooting
+
+> Agent index: [llms.txt](/llms.txt)
+
+Most activation problems fall into one of the checks below. Each one gives you a symptom to recognize, a way to confirm the cause, and the recovery step — usually followed by re-running [`am doctor --smoke`](/cloud/cli#init--doctor) to confirm the fix.
+
+## Docker isn't running
+
+**Symptom:** `am init` or `am doctor --smoke` stops before Core starts, or never reaches a **Verified** state.
+
+**Check:** Confirm Docker is actually running — `am init` starts Core in Docker for you, so it needs a live Docker daemon (Docker Desktop, or your Docker Engine install) before it can proceed.
+
+**Recovery:** Start Docker, then re-run `am init` (or `am doctor --smoke` if you already completed `am init` once). Success looks like the command continuing past Core startup instead of stopping there.
+
+## Missing OPENAI_API_KEY
+
+**Symptom:** `am init` fails early, before Core finishes starting.
+
+**Check:** The [Platform Quickstart](/quickstart) requires an OpenAI API key in the same shell you run `am init` from — Core uses it for embeddings and extraction. Confirm it's exported: `echo $OPENAI_API_KEY`.
+
+**Recovery:**
 
 ```bash
-curl -X POST https://api.atomicstrata.ai/v1/memories/ingest \
-  -H "Authorization: Bearer $ATOMICMEMORY_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "user_id": "default",
-    "source_site": "curl",
-    "conversation": "I prefer aisle seats when flying."
-  }'
+export OPENAI_API_KEY="sk-..."
+am init
 ```
 
-## What to do next
+Success looks like `am init` continuing past Core startup to sign-in and verification.
 
--   Try the **Playground** in the console - ingest and search without leaving the browser
--   Explore the [Developer Console](/cloud/console) - traces, usage, API keys
--   Read [Authentication](/cloud/authentication) - when to use API keys vs dashboard JWT
--   Point MCP or agent integrations at Cloud - see [Integrations](/integrations/overview)
+## Runtime shows Offline
+
+**Symptom:** The console shows your Local project's runtime as **Offline** instead of **Online** — on the project Dashboard's connection pill, or in the Overview status `am init` links you to.
+
+**Check:** Is the Core process or container `am init` started for you still running? If you or a teammate stopped it, restarted the machine, or the container exited, the console loses its heartbeat.
+
+**Recovery:** Restart Core — re-run `am init` (safe to run again; it reconnects your existing project instead of creating a new one), then confirm with `am doctor --smoke`. Success looks like the runtime flipping back to **Online** and a new heartbeat reaching the console within moments.
+
+## am doctor --smoke fails
+
+**Symptom:** `am doctor --smoke` reports a failure instead of confirming the pipeline.
+
+**Check:** It re-checks the memory pipeline — Core reachability and end-to-end memory verification — so the failure is one of the other items on this page (Docker, the OpenAI key, or the runtime being offline).
+
+**Recovery:** Resolve whichever check it's failing on using the matching section above, then re-run `am doctor --smoke`. Success looks like it completing without reporting a failure.
+
+## Console dashboard doesn't work in Safari
+
+**Symptom:** A **Local** project's console pages (Dashboard, Memories, Traces) don't fully load, or the runtime never confirms **Online**, in Safari.
+
+**Check:** Which browser you're using. A Local project's Core must be reachable directly from your browser at `http://127.0.0.1:17350` by default — the console (served over HTTPS) calls it directly rather than proxying through Cloud. Safari's stricter handling of that kind of local-network request is the most common cause of this symptom.
+
+**Recovery:** Use **Google Chrome** for Connected Local console views, as called out in the [Quickstart](/quickstart). This only affects Local projects — Cloud projects don't depend on a locally reachable Core and aren't affected.
+
+Success looks like: the same console pages load fully in Chrome and the runtime confirms **Online**.
+
+## Finding your CORE_API_KEY
+
+**Symptom:** You need the token that authenticates direct calls to your own Core (SDK, MCP, `curl`) — for example, to point [Playground](/cloud/how-to/playground) or another tool at your Local project — but you never set one yourself.
+
+**Check:** Did `am init` start Core for you (the common path), or are you running Core yourself via [Core-only Docker](/core-only-docker)?
+
+**Recovery:**
+
+-   If `am init` set up Core: run `am instance status --show-secrets` to print the `CORE_API_KEY` it configured.
+-   If you started Core yourself with the Core-only Docker default: it's `local-dev-key`, unless you set `CORE_API_KEY` explicitly on the container.
+
+See [Authentication → Local: Core token or `CORE_API_KEY`](/cloud/authentication#local-core-token-or-core_api_key) for how this credential is used. Never substitute a Cloud `amc_` key here — it isn't accepted by Core.
+
+Success looks like: a direct call to your Core using that value (`am doctor --smoke`, or a manual SDK/MCP/`curl` call) succeeds instead of returning `401`.
+
+## Is this a Core error or a Cloud console/API error?
+
+**Symptom:** A request fails and it's unclear whether your Local Core or the Cloud console/API rejected it.
+
+**Check:** Which surface the failing call actually targets — see [Authentication → Where do memory calls go?](/cloud/authentication#where-do-memory-calls-go) for the routing table:
+
+-   **Local** project memory calls (`ingest`, `search`) go straight to your own Core. They never touch the Cloud gateway, so a `401` here means your Core token / `CORE_API_KEY` is wrong — a Cloud `amc_` key will not work.
+-   **Cloud** project memory calls, and anything you do in the console itself (dashboard, Playground with a pasted Cloud key), go through Cloud. A `401` here means your Cloud project API key is wrong, missing, or revoked — check [API Keys](/cloud/how-to/api-keys).
+-   Anything about write caps or plan limits (writes pausing, upgrade prompts) is always a Cloud-side, plan-level response — see [Usage & Limits](/cloud/how-to/usage) and [Plans & Billing](/cloud/how-to/billing).
+
+**Recovery:** Fix the credential or limit on the surface you identified, then retry the call.
+
+Success looks like: the retried call succeeds (no `401`, no cap/limit response), and the matching trace or dashboard state reflects it.
+
+## Related docs
+
+-   [Platform Quickstart](/quickstart) — Connected Local activation with `am init`
+-   [Cloud CLI](/cloud/cli) — full command reference
+-   [Authentication](/cloud/authentication) — which credential goes where
+-   [Migrate to Hosted Cloud](/cloud/how-to/migrate) — moving memories from Local to Cloud
 
 ---
 
@@ -4385,7 +4601,7 @@ Source: https://docs.atomicstrata.ai/cloud/use-cases/audit-every-mutation
 
 > Agent index: [llms.txt](/llms.txt)
 
-Memory that changes silently is impossible to defend. When an auditor or an incident asks what your agent remembered - and when it changed - you need a record you can read, not a black box. AtomicMemory captures every change to memory as an inspectable mutation trace.
+Memory that changes silently is impossible to defend. When an auditor or an incident asks what your agent remembered - and when it changed - you need a record you can read, not a black box. AtomicMemory Cloud captures every change to memory as an inspectable mutation trace.
 
 ## The problem
 
@@ -4433,7 +4649,7 @@ Source: https://docs.atomicstrata.ai/cloud/use-cases/debug-retrieval
 
 > Agent index: [llms.txt](/llms.txt)
 
-When an assistant recalls the wrong thing, the bug is usually retrieval, not the model. AtomicMemory records a retrieval trace for every search and lets you replay any query in the Playground - so you can see exactly which memories came back for a query, and narrow down why.
+When an assistant recalls the wrong thing, the bug is usually retrieval, not the model. AtomicMemory Cloud records a retrieval trace for every search and lets you replay any query in the Playground - so you can see exactly which memories came back for a query, and narrow down why.
 
 ## The problem
 
@@ -4487,7 +4703,7 @@ Source: https://docs.atomicstrata.ai/cloud/use-cases/deletion-and-retention
 
 > Agent index: [llms.txt](/llms.txt)
 
-When someone asks to be forgotten, you need to remove their memory - and only theirs. AtomicMemory partitions memory by scope, so personal, user-scoped facts can be deleted without touching the shared context your team relies on.
+When someone asks to be forgotten, you need to remove their memory - and only theirs. AtomicMemory Cloud partitions memory by scope, so personal, user-scoped facts can be deleted without touching the shared context your team relies on.
 
 ## The problem
 
@@ -4539,7 +4755,7 @@ Source: https://docs.atomicstrata.ai/cloud/use-cases/long-term-memory
 
 > Agent index: [llms.txt](/llms.txt)
 
-Most assistants forget everything the moment a conversation ends. The next session starts cold - the user re-explains their preferences, their context, their history. AtomicMemory gives your app a memory that persists across sessions and is scoped to each user.
+Most assistants forget everything the moment a conversation ends. The next session starts cold - the user re-explains their preferences, their context, their history. AtomicMemory Cloud gives your app a memory that persists across sessions and is scoped to each user.
 
 ## The problem
 
@@ -4583,7 +4799,7 @@ Your assistant greets returning users already knowing their context, sessions st
 
 ## Get started
 
-Create a project, grab an API key from **API Keys**, and make your first `ingest` / `search` calls from the [Playground](/cloud/how-to/what-is-memories) or the SDK.
+Create a project, grab an API key from **API Keys**, and make your first `ingest` / `search` calls from the [Playground](/cloud/how-to/playground) or the SDK.
 
 ---
 
@@ -4629,35 +4845,33 @@ Open [Usage](/cloud/how-to/usage) from your project's sidebar, compare the stat 
 
 ---
 
-## One SDK, self-hosted or managed
+## One SDK, Local or Cloud
 
 Source: https://docs.atomicstrata.ai/cloud/use-cases/one-sdk-self-hosted-or-managed
 
-# One SDK, self-hosted or managed
+# One SDK, Local or Cloud
 
 > Agent index: [llms.txt](/llms.txt)
 
-The same `MemoryClient` talks to a self-hosted `atomicmemory-core` running on your machine or to the managed cloud API. You pick where memory lives per project - and change your mind later without touching a single call site.
+The same `MemoryClient` talks to your own `atomicmemory-core` running on your machine for a **Local** project, or to the Cloud API for a **Cloud** project. You pick where memory lives per project - and change your mind later without touching a single call site.
 
 ## The problem
 
-Infrastructure decisions tend to happen too early. Self-host for control and you own a datastore before you've validated the product; reach for a managed service and you worry about lock-in. Either way, betting wrong usually means rewriting your integration once the real requirements show up.
+Infrastructure decisions tend to happen too early. Choose **Local** for control and you own a datastore before you've validated the product; choose **Cloud** and you worry about lock-in. Either way, betting wrong usually means rewriting your integration once the real requirements show up.
 
 ## How the cloud helps
 
-The SDK contract is identical in both directions. A project is either `local`
-
--   your app talks straight to a self-hosted core - or `managed`, proxied through the cloud API. The console adapts its ingest and search wiring to match. Start against a local core, ship on the managed endpoint, or take the open-source core in-house later: the code that calls `ingest` and `search` never changes.
+The SDK contract is identical in both directions. A project is either **Local** - your app talks straight to your own Core - or **Cloud**, proxied through the Cloud API. The console adapts its ingest and search wiring to match. Start against a Local project, ship on the Cloud endpoint, or take the open-source Core in-house later: the code that calls `ingest` and `search` never changes.
 
 ## How it works
 
-Only the `apiUrl` differs between self-hosted and managed. Everything else - including every `ingest` and `search` call - stays the same:
+Only the `apiUrl` differs between Local and Cloud. Everything else - including every `ingest` and `search` call - stays the same:
 
 ```ts
 import { MemoryClient } from "@atomicmemory/sdk";
 
-// self-hosted core → http://localhost:8080
-// managed cloud    → https://api.atomicstrata.ai
+// Local project → http://localhost:8080
+// Cloud project  → https://api.atomicstrata.ai
 const memory = new MemoryClient({
   providers: {
     atomicmemory: {
@@ -4675,17 +4889,17 @@ await memory.ingest({
 
 ## Key capabilities
 
--   **One contract** - the same `ingest` / `search` calls run against local or managed, so integration code is portable by default.
--   **Local or managed projects** - the console adapts wiring per project; you choose where memory lives without changing your app.
--   **No lock-in** - the managed API and the open-source core (Postgres + pgvector) share the SDK contract, so you can migrate any time.
+-   **One contract** - the same `ingest` / `search` calls run against a Local or Cloud project, so integration code is portable by default.
+-   **Local or Cloud projects** - the console adapts wiring per project; you choose where memory lives without changing your app.
+-   **No lock-in** - the Cloud API and the open-source Core (Postgres + pgvector) share the SDK contract, so you can migrate any time.
 
 ## Outcomes
 
-You prototype against a local core, ship on the managed endpoint, and keep the door open to self-hosting later - all without a rewrite, because the SDK is the only surface your app ever sees.
+You prototype against a Local project, ship on the Cloud endpoint, and keep the door open to self-hosting later - all without a rewrite, because the SDK is the only surface your app ever sees.
 
 ## Get started
 
-Create a `local` or `managed` project on the [Projects](/cloud/how-to/projects) page, grab a key from [API Keys](/cloud/how-to/api-keys), and point `apiUrl` at your endpoint. Try both from the [Playground](/cloud/how-to/playground), or read [Prototype in the Playground](/cloud/use-cases/prototype-in-the-playground).
+Create a **Local** or **Cloud** project on the [Projects](/cloud/how-to/projects) page, grab a key from [API Keys](/cloud/how-to/api-keys), and point `apiUrl` at your endpoint. Try both from the [Playground](/cloud/how-to/playground), or read [Prototype in the Playground](/cloud/use-cases/prototype-in-the-playground).
 
 ---
 
@@ -4697,7 +4911,7 @@ Source: https://docs.atomicstrata.ai/cloud/use-cases/per-user-personalization
 
 > Agent index: [llms.txt](/llms.txt)
 
-One deployment of your assistant serves everyone who signs in. Each of those users needs a memory that reflects only their own history - never the person in the next session. AtomicMemory gives you that separation through **scope**: every write and every read is tagged, and the memory layer keeps each scope apart.
+One deployment of your assistant serves everyone who signs in. Each of those users needs a memory that reflects only their own history - never the person in the next session. AtomicMemory Cloud gives you that separation through **scope**: every write and every read is tagged, and the memory layer keeps each scope apart.
 
 ## The problem
 
@@ -4776,7 +4990,7 @@ Source: https://docs.atomicstrata.ai/cloud/use-cases/preferences-without-a-datab
 
 > Agent index: [llms.txt](/llms.txt)
 
-Preferences are the classic reason to reach for a database: a settings table, a preferences key-value store, a column for every toggle. But the preferences that make an assistant feel personal show up in conversation, change over time, and rarely fit a fixed schema. AtomicMemory lets you capture them through the same `ingest` and `search` you already use - no store to design.
+Preferences are the classic reason to reach for a database: a settings table, a preferences key-value store, a column for every toggle. But the preferences that make an assistant feel personal show up in conversation, change over time, and rarely fit a fixed schema. AtomicMemory Cloud lets you capture them through the same `ingest` and `search` you already use - no store to design.
 
 ## The problem
 
@@ -4852,7 +5066,7 @@ Validating memory behaviour by editing application code is a slow loop: write a 
 
 ## How the cloud helps
 
-The Playground runs ingest and search from inside the dashboard against the same project your code will use. Managed projects proxy through the cloud API; local projects hit your self-hosted core directly. Every result deep-links into the [Trace Viewer](/cloud/how-to/traces) and the [Memory Explorer](/cloud/how-to/what-is-memories), so you see not just what came back but the decision that produced it.
+The Playground runs ingest and search from inside the dashboard against the same project your code will use. **Cloud** projects proxy through the Cloud API; **Local** projects hit your self-hosted core directly. Every result deep-links into the [Trace Viewer](/cloud/how-to/traces) and the [Memory Explorer](/cloud/how-to/what-is-memories), so you see not just what came back but the decision that produced it.
 
 ## How it works
 
@@ -4864,12 +5078,12 @@ await memory.search({ query: "seat preference", scope: { user: "user_001" } });
 
 tip
 
-In managed mode you paste an API key to run requests; the key stays in your browser's memory only. Grab one from [API Keys](/cloud/how-to/api-keys).
+For a **Cloud** project you paste an API key to run requests; the key stays in your browser's memory only. Grab one from [API Keys](/cloud/how-to/api-keys).
 
 ## Key capabilities
 
 -   **Interactive ingest & search** - run the first query with no code at all.
--   **Managed or local** - the same Playground drives either project type.
+-   **Cloud or Local** - the same Playground drives either project type.
 -   **Traceable results** - every result links to its trace and its stored memory, so you can see why it matched.
 
 ## Outcomes
@@ -4878,7 +5092,7 @@ You confirm how memory behaves in minutes instead of build cycles, then copy the
 
 ## Get started
 
-Open the [Playground](/cloud/how-to/playground) on any project, run an ingest, then a search. When the results look right, wire the same calls with the SDK - see [One SDK, self-hosted or managed](/cloud/use-cases/one-sdk-self-hosted-or-managed).
+Open the [Playground](/cloud/how-to/playground) on any project, run an ingest, then a search. When the results look right, wire the same calls with the SDK - see [One SDK, Local or Cloud](/cloud/use-cases/one-sdk-self-hosted-or-managed).
 
 ---
 
@@ -4890,7 +5104,7 @@ Source: https://docs.atomicstrata.ai/cloud/use-cases/reconcile-facts
 
 > Agent index: [llms.txt](/llms.txt)
 
-Append-only memory rots. Every time a user restates something it becomes another row, contradictions pile up, and retrieval hands back three versions of the same fact. AtomicMemory reconciles each write against what it already knows, so memory stays consistent as facts change.
+Append-only memory rots. Every time a user restates something it becomes another row, contradictions pile up, and retrieval hands back three versions of the same fact. AtomicMemory Cloud reconciles each write against what it already knows, so memory stays consistent as facts change.
 
 ## The problem
 
@@ -4948,7 +5162,7 @@ Source: https://docs.atomicstrata.ai/cloud/use-cases/scoped-api-keys
 
 > Agent index: [llms.txt](/llms.txt)
 
-A single shared credential across every service is a blast radius waiting to happen. AtomicMemory issues API keys per project, so each service reaches only that project's memory - and you can revoke or rotate any key on its own.
+A single shared credential across every service is a blast radius waiting to happen. AtomicMemory Cloud issues API keys per project, so each service reaches only that project's memory - and you can revoke or rotate any key on its own.
 
 ## The problem
 
@@ -4960,7 +5174,7 @@ Keys are scoped to a project. A key created in one project cannot reach another 
 
 ## How it works
 
-Create a key on a project's **API Keys** page with a name and an environment label (development, staging, or production). The secret is shown once - store it in your service's configuration:
+Create a key on a project's **API Keys** page with a name. The secret is shown once - store it in your service's configuration:
 
 ```ts
 const memory = new MemoryClient({
@@ -4987,6 +5201,10 @@ That key reaches only its project. Within the project, pass `scope` on each call
 
 A leaked or retired service is contained by revoking one key, not re-credentialing your fleet. And because every write carries its key's prefix, you can always trace a memory back to the service that made it.
 
+## Plan considerations
+
+This pattern works best when each service gets its **own Cloud project** (a key is scoped to a project, not shared across projects). Free includes one Cloud project, so giving several services each their own project needs a plan with enough Cloud projects for that — Team or Corporate. See [Plans & Billing](/cloud/how-to/billing) for what each plan includes.
+
 ## Get started
 
 Open a project's [API Keys](/cloud/how-to/api-keys) page and create a key per service. Then see [Audit every memory mutation](/cloud/use-cases/audit-every-mutation) to follow each key's writes through the trace log.
@@ -5001,7 +5219,7 @@ Source: https://docs.atomicstrata.ai/cloud/use-cases/see-whats-stored
 
 > Agent index: [llms.txt](/llms.txt)
 
-Most memory systems are a black box: you put data in and hope the right thing comes back out. AtomicMemory is built to be inspected. Every stored fact is visible on the Memories page, and every fact links back to the trace that produced it - so "what does my assistant know, and why" is a page you open, not a question you guess at.
+Most memory systems are a black box: you put data in and hope the right thing comes back out. AtomicMemory Cloud is built to be inspected. Every stored fact is visible on the Memories page, and every fact links back to the trace that produced it - so "what does my assistant know, and why" is a page you open, not a question you guess at.
 
 ## The problem
 
@@ -5061,7 +5279,7 @@ Sometimes the people who most want to see what your assistant remembers are the 
 
 ## The problem
 
-A reviewer, a stakeholder, or a teammate wants to inspect what the memory layer has stored - but provisioning them a full console account is overkill, and you don't want them editing, deleting, or wandering into the rest of the workspace.
+A reviewer, a stakeholder, or a teammate wants to inspect what the memory layer has stored - but provisioning them a full console account is overkill, and you don't want them editing, deleting, or wandering into the rest of the console.
 
 ## How the cloud helps
 
@@ -5094,6 +5312,110 @@ Stakeholders see exactly what the assistant remembers - scoped and read-only - w
 ## Get started
 
 Point a `/share/memories` link at your memory endpoint, add `&userId=` to scope it, and send it. To understand what viewers will see, read [What is Memories](/cloud/how-to/what-is-memories); to choose which project's endpoint to expose, see [Projects](/cloud/how-to/projects).
+
+---
+
+## Core-only Docker
+
+Source: https://docs.atomicstrata.ai/core-only-docker
+
+# Core-only Docker
+
+> Agent index: [llms.txt](/llms.txt)
+
+Run AtomicMemory Core on your machine with Docker and HTTP — no Cloud account, no `am init`, no console visibility. Use this for air-gapped evaluation, CI, or when you want full control of the container yourself.
+
+For the recommended Open Source path with console visibility, start with the [Quickstart](/quickstart).
+
+**You need:** Docker · OpenAI API key
+
+## Start Core
+
+```bash
+export OPENAI_API_KEY="sk-..."
+
+docker run -d --pull always \
+  --name atomicmemory-core \
+  -p 127.0.0.1:17350:17350 \
+  -e OPENAI_API_KEY=$OPENAI_API_KEY \
+  -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
+  ghcr.io/atomicstrata/atomicmemory-core:latest
+```
+
+Core binds to `127.0.0.1:17350`. The volume mount persists Postgres data at `$HOME/.atomicstrata/atomicmemory-docker`.
+
+Local Docker runs use a default development bearer token:
+
+```text
+Authorization: Bearer local-dev-key
+```
+
+## Verify health
+
+```bash
+curl -H 'Authorization: Bearer local-dev-key' \
+  http://localhost:17350/v1/memories/health
+```
+
+Expect `"status": "ok"`.
+
+## First ingest and search
+
+```bash
+curl -X POST http://localhost:17350/v1/memories/ingest \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer local-dev-key' \
+  -d '{"user_id":"alice","conversation":"user: I ship Go backends and TypeScript frontends.","source_site":"quickstart"}'
+
+curl -X POST http://localhost:17350/v1/memories/search \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer local-dev-key' \
+  -d '{"user_id":"alice","query":"what stack does alice use?"}'
+```
+
+## Manage the container
+
+```bash
+docker logs -f atomicmemory-core
+docker stop atomicmemory-core && docker start atomicmemory-core
+```
+
+Recreate after env or image changes: `docker rm -f atomicmemory-core`, then run the `docker run` command again. Data on disk survives recreation.
+
+## Optional — npm CLI profile
+
+The Node.js [`@atomicmemory/cli`](/cli) package is separate from the Cloud `am` binary:
+
+```bash
+npm install -g @atomicmemory/cli
+
+printf '%s\n' 'local-dev-key' | \
+atomicmemory init \
+  --profile local \
+  --provider atomicmemory \
+  --api-url http://127.0.0.1:17350 \
+  --trust-surface local \
+  --user "$USER" \
+  --namespace quickstart \
+  --api-key-stdin \
+  --save-api-key
+```
+
+## Production notes
+
+Evaluation defaults are not production-ready. For production, use managed Postgres via `DATABASE_URL`, explicit `CORE_API_KEY` and `STORAGE_KEY_HMAC_SECRET`, hardened CORS, and disable runtime config mutation unless an operator intentionally enables it.
+
+## Contributor setup
+
+To hack on Core itself:
+
+```bash
+git clone https://github.com/atomicstrata/atomicmemory.git
+cd atomicmemory/packages/core
+cp .env.example .env
+# edit .env, set OPENAI_API_KEY
+docker compose up -d --build
+```
 
 ---
 
@@ -5150,6 +5472,10 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/claude-code/loca
 > Agent index: [llms.txt](/llms.txt)
 
 Give Claude Code persistent, cross-session memory backed by AtomicMemory. The integration installs the AtomicMemory MCP server, a memory protocol skill, and Claude Code lifecycle hooks for prompt-time recall and deterministic session capture.
+
+Already ran am init?
+
+`am init` starts Core with OpenAI for both extraction and embeddings (`LLM_PROVIDER=openai`) — not Claude Code account auth, and not this guide's local `transformers` embeddings. If you want either (account-auth extraction via `LLM_PROVIDER=claude-code` with no separate Anthropic API key, or local embeddings with no OpenAI embedding key), keep running Core with the Docker command in step 1 below instead of the one `am init` started. If OpenAI for both is fine for you, you can skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` in place of `local-dev-key` wherever this guide shows it.
 
 ## Quick start
 
@@ -5489,6 +5815,10 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/codex/local
 
 Give Codex persistent, cross-session memory backed by AtomicMemory. The public setup registers the AtomicMemory MCP server so Codex can recall prior work, store durable decisions, and create handoff snapshots. Teams that install the source-distributed Codex plugin can also add the AtomicMemory memory protocol skill.
 
+Already ran am init?
+
+`am init` starts Core with OpenAI for both extraction and embeddings (`LLM_PROVIDER=openai`) — not Codex account auth, and not this guide's local `transformers` embeddings. If you want either (account-auth extraction via `LLM_PROVIDER=codex` with no separate OpenAI key, or local embeddings with no OpenAI embedding key), keep running Core with the Docker command in step 1 below instead of the one `am init` started. If OpenAI for both is fine for you, you can skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` in place of `local-dev-key` wherever this guide shows it.
+
 ## Quick start
 
 ### 1. Start AtomicMemory core
@@ -5748,6 +6078,10 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/cursor/local
 
 Cursor support is available today as a manual local integration using the AtomicMemory MCP server and Cursor rules. The monorepo ships a source template for `.cursor/mcp.json` and an always-on memory rule. A packaged Cursor plugin and Cursor Cloud deployment are planned but not yet available.
 
+Already ran am init?
+
+`am init`'s Core uses OpenAI for both extraction and embeddings. If you want this guide's local `transformers` embeddings (embeddings are computed locally; no embedding API calls), keep running Core with the Docker command in step 1 below. Otherwise, skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` instead of `local-dev-key`.
+
 ## Quick start
 
 ### 1. Start AtomicMemory core
@@ -5978,6 +6312,10 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/hermes/local
 
 Give Hermes Agent persistent, cross-session memory backed by AtomicMemory. Unlike MCP-backed coding-agent plugins, Hermes uses a native Python memory provider that participates directly in prefetch, turn sync, and shutdown hooks. The published npm installer copies the provider into your Hermes profile; the provider then uses the published AtomicMemory Python SDK from the Hermes Python environment.
 
+Already ran am init?
+
+`am init`'s Core uses OpenAI for both extraction and embeddings. If you want this guide's local `transformers` embeddings (embeddings are computed locally; no embedding API calls), keep running Core with the Docker command in step 1 below. Otherwise, skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` instead of `local-dev-key`.
+
 ## Quick start
 
 ### 1. Start AtomicMemory core
@@ -6206,6 +6544,10 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/openclaw/local
 
 Give OpenClaw persistent, cross-channel memory backed by AtomicMemory. The plugin embeds the shared AtomicMemory MCP server in-process, registers four memory tools, and ships a skill bundle that teaches agents when to search, ingest, and write deterministic session snapshots.
 
+Already ran am init?
+
+`am init`'s Core uses OpenAI for both extraction and embeddings. If you want this guide's local `transformers` embeddings (embeddings are computed locally; no embedding API calls), keep running Core with the Docker command in step 1 below. Otherwise, skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` instead of `local-dev-key`.
+
 ## Quick start
 
 ### 1. Start AtomicMemory core
@@ -6422,6 +6764,10 @@ AtomicMemory support for LangChain JS exposes durable semantic memory through he
 -   **Helper functions.** `searchMemory()` and `ingestTurn()` for custom chains, callbacks, and LCEL steps.
 -   **Backend-agnostic SDK path.** The adapter uses the AtomicMemory SDK provider registry through your `MemoryClient`.
 
+Already ran am init?
+
+`am init`'s Core uses OpenAI for both extraction and embeddings. If you want this guide's local `transformers` embeddings (embeddings are computed locally; no embedding API calls), keep running Core with the Docker command in step 1 below. Otherwise, skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` instead of `local-dev-key`.
+
 ## Quick start
 
 ### 1. Start AtomicMemory core
@@ -6576,11 +6922,15 @@ Add durable, cross-session memory to Langflow flows with AtomicMemory custom com
 -   **Delete Memories in Scope.** Confirm-gated cleanup for test data or user-requested erasure.
 -   **SDK-backed integration.** Components call the Python `atomicmemory` SDK rather than hand-rolled HTTP.
 
+Already ran am init?
+
+`am init`'s Core uses OpenAI for both extraction and embeddings. If you want this guide's local `transformers` embeddings (embeddings are computed locally; no embedding API calls), keep running Core with the Docker command in step 1 below. Otherwise, skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` instead of `local-dev-key`.
+
 ## Quick start
 
 ### 1. Start AtomicMemory core
 
-Start local core before starting Langflow. The default local endpoint is `http://127.0.0.1:17350`, and the local quickstart key is `local-dev-key`.
+Start local core before starting Langflow. The default local endpoint is `http://127.0.0.1:17350`, and the [Core-only Docker](/core-only-docker) key is `local-dev-key` (or `CORE_API_KEY` after `am init`).
 
 ```bash
 export OPENAI_API_KEY="sk-..."
@@ -6787,6 +7137,10 @@ AtomicMemory support for LangGraph JS provides durable semantic memory next to L
 -   **Ingest node.** `createMemoryIngestNode()` persists the completed turn after the model step.
 -   **Backend-agnostic SDK path.** The adapter uses the AtomicMemory SDK provider registry through your `MemoryClient`.
 
+Already ran am init?
+
+`am init`'s Core uses OpenAI for both extraction and embeddings. If you want this guide's local `transformers` embeddings (embeddings are computed locally; no embedding API calls), keep running Core with the Docker command in step 1 below. Otherwise, skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` instead of `local-dev-key`.
+
 ## Quick start
 
 ### 1. Start AtomicMemory core
@@ -6905,6 +7259,10 @@ AtomicMemory support for Mastra exposes durable memory search and ingest as Mast
 -   **Helper functions.** `searchMemory()` and `ingestTurn()` for custom Mastra workflows.
 -   **Backend-agnostic SDK path.** The adapter uses the AtomicMemory SDK provider registry through your `MemoryClient`.
 
+Already ran am init?
+
+`am init`'s Core uses OpenAI for both extraction and embeddings. If you want this guide's local `transformers` embeddings (embeddings are computed locally; no embedding API calls), keep running Core with the Docker command in step 1 below. Otherwise, skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` instead of `local-dev-key`.
+
 ## Quick start
 
 ### 1. Start AtomicMemory core
@@ -7005,6 +7363,10 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/openai-agents/local
 > Agent index: [llms.txt](/llms.txt)
 
 Give OpenAI Agents SDK applications persistent memory backed by AtomicMemory. The adapter searches long-term memory before `run()`, injects retrieved context into model-visible input, and ingests the completed turn after the run finishes.
+
+Already ran am init?
+
+`am init`'s Core uses OpenAI for both extraction and embeddings. If you want this guide's local `transformers` embeddings (embeddings are computed locally; no embedding API calls), keep running Core with the Docker command in step 1 below. Otherwise, skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` instead of `local-dev-key`.
 
 ## Quick start
 
@@ -7218,6 +7580,10 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/vercel-ai-sdk/local
 > Agent index: [llms.txt](/llms.txt)
 
 Give Vercel AI SDK applications persistent memory backed by AtomicMemory. The adapter retrieves relevant memories before a model call, injects them as guarded context, and ingests the completed turn after the model returns.
+
+Already ran am init?
+
+`am init`'s Core uses OpenAI for both extraction and embeddings. If you want this guide's local `transformers` embeddings (embeddings are computed locally; no embedding API calls), keep running Core with the Docker command in step 1 below. Otherwise, skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` instead of `local-dev-key`.
 
 ## Quick start
 
@@ -7466,7 +7832,7 @@ Most coding-agent integrations use the shared MCP server from the [`packages/mcp
 
 Framework integrations use the TypeScript or Python SDK directly, but keep the same loop: retrieve before the agent acts, ingest after useful work completes, and scope memory by user, agent, namespace, or thread.
 
-Terminal users can use the [AtomicMemory CLI](/cli) for direct search, ingest, profile setup, and hook generation.
+Terminal users: use the [Cloud CLI](/cloud/cli) (`am init`, Connected Local) or the [npm CLI](/cli) for direct self-hosted core workflows — search, ingest, profile setup, and hook generation.
 
 ## Backend choice
 
@@ -7482,19 +7848,19 @@ Source lives in the public [`atomicstrata/atomicmemory`](https://github.com/atom
 
 ---
 
-## Open Source
+## Introduction
 
 Source: https://docs.atomicstrata.ai/introduction
 
-# Open Source
+# Introduction
 
 > Agent index: [llms.txt](/llms.txt)
 
-Not sure which to start with?
+Fastest path
 
-These pages cover the **self-hosted** engine you run yourself. Most developers should start with [**AtomicMemory**](/cloud/quickstart) — the same engine, hosted, with a console, traces, and scoped API keys. See [Cloud vs Open Source](/cloud-vs-open-source) to choose.
+Run memory locally in one command: the [**Quickstart**](/quickstart) installs the CLI, runs `am init`, and shows Core online in your console — free forever on the Open Source plan. See [Local vs Hosted Cloud](/cloud-vs-open-source) for how the modes compare.
 
-AtomicMemory is an open-source memory engine for AI applications, semantic retrieval, AUDN mutation (Add / Update / Delete / No-op), and contradiction-safe claim versioning, delivered as an HTTP service you can run from a published Docker image. It is pluggable at every seam: swap the embedding provider, the LLM, the artifact-storage backend, or the scope model without forking. The engine ships as a standardized platform layer, not a framework, not a SaaS, so your agents, assistants, and products can compose the memory stack they need.
+AtomicMemory is an open-source memory engine for AI applications — semantic retrieval, AUDN mutation (Add / Update / Delete / No-op), and contradiction-safe claim versioning. Run it locally with the CLI (`am init`), self-host Core via Docker or your own stack, or add managed hosting through AtomicMemory Cloud. It is pluggable at every seam: swap the embedding provider, the LLM, the artifact-storage backend, or the scope model without forking. The engine ships as a standardized platform layer, not a framework, so your agents, assistants, and products can compose the memory stack they need.
 
 ## Why AtomicMemory
 
@@ -7547,9 +7913,9 @@ Artifactspointer · FS · S3 · Filecoin
 -   **Observability as contract**, every search response carries a stable trace schema so dashboards and evals never break on a refactor ([observability](/platform/observability))
 -   **Domain separation**, Ingest, Search, CRUD, Lifecycle, and Trust are independent domains with their own routes and services ([architecture](/platform/architecture))
 
-## Try it in 2 minutes
+## Try it now
 
-The fastest path is the [Quickstart](/quickstart): set an API key, run `ghcr.io/atomicstrata/atomicmemory-core:latest`, and run your first ingest and search with two curl commands.
+The fastest path is the [Quickstart](/quickstart): install the CLI, run `am init`, and see your local Core **Online** in the console. For Core without Cloud, see [Core-only Docker](/core-only-docker).
 
 Core is HTTP-first, so any language works today. The [TypeScript SDK](/sdk/overview) gives TypeScript and JavaScript consumers typed request and response shapes, richer ergonomics, scope-aware helpers, and a pluggable provider model that decouples your app from any particular memory engine. The Python SDK serves Python-native integrations such as Hermes. Nothing about core requires either SDK.
 
@@ -8261,7 +8627,7 @@ Source: https://docs.atomicstrata.ai/platform/consuming-core
 | --- | --- | --- |
 | **HTTP** | `POST /v1/memories/ingest`, `POST /v1/memories/search`, etc. | Black-box integration, language-agnostic clients, extension/SDK |
 | **In-process** | `createCoreRuntime({ pool })` | TypeScript/Node code that wants no HTTP overhead |
-| **Docker** | `ghcr.io/atomicstrata/atomicmemory-core:latest` | Local evaluation, self-hosted service boundary, release validation |
+| **Docker** | `ghcr.io/atomicstrata/atomicmemory-core:latest` | Local evaluation, self-hosted service boundary, release validation — see [Platform Quickstart](/quickstart) or [Core-only Docker](/core-only-docker) |
 
 All three are designed to converge on the same composition root (`createCoreRuntime`). A parity test, [`research-consumption-seams.test.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/app/__tests__/research-consumption-seams.test.ts), guards the main ingest/search path across modes.
 
@@ -9893,164 +10259,72 @@ That's what we mean by "pluggable at every seam".
 
 ---
 
-## Open Source Quickstart
+## Quickstart
 
 Source: https://docs.atomicstrata.ai/quickstart
 
-# Open Source Quickstart
+# Quickstart
 
 > Agent index: [llms.txt](/llms.txt)
 
-Start a **self-hosted** memory service from the published Docker image, then run your first ingest and search.
+**Run memory locally. See it clearly.**
 
-Looking for the fastest path?
+AtomicMemory keeps your memories on your machine. The Cloud console shows what Core is doing — ingest, search, and traces — without hosting your data.
 
-This page self-hosts the engine on your own machine — you supply Docker, a storage volume, and an OpenAI API key. If you would rather not run infrastructure, [**AtomicMemory**](/cloud/quickstart) gets you to your first stored memory in under five minutes with just an API key. Same engine, same API. See [Cloud vs Open Source](/cloud-vs-open-source).
+**You need:** Docker · OpenAI API key · macOS or Linux
 
-1.  1Start core`docker run`
-2.  2Verify health`/v1/memories/health`
-3.  3First ingest`/v1/memories/ingest`
-4.  4First search`/v1/memories/search`
+1.  1Install + init`am init` — sign in, start Core, verify
+2.  2Add a memory`am memory ingest` / `search`
+3.  3Open your dashboardruntime **Online**, memories + traces
 
-## Prerequisites
-
--   **Docker**
--   **An OpenAI API key** for the shortest one-key quickstart. OpenAI serves both embeddings and extraction in the default image configuration.
-
-That is all. The image brings its own Postgres with pgvector and stores data in the mounted directory you provide.
-
-## Step 1, Start core
-
-Run the published image:
+## 1. Install and initialize
 
 ```bash
+curl -fsSL https://get.atomicstrata.ai/install.sh | sh
+source "$HOME/.atomicmemory/env"
+
 export OPENAI_API_KEY="sk-..."
-
-docker run -d --pull always \
-  --name atomicmemory-core \
-  -p 127.0.0.1:17350:17350 \
-  -e OPENAI_API_KEY=$OPENAI_API_KEY \
-  -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
-  ghcr.io/atomicstrata/atomicmemory-core:latest
+am init
 ```
 
-The container binds core to `127.0.0.1:17350`. The volume mount persists the embedded Postgres database on your host at `$HOME/.atomicstrata/atomicmemory-docker`, so your local memory data survives container restarts, image upgrades, and container recreation.
+`am init` opens a browser to sign you in, starts Core in Docker, connects your console, and verifies the memory pipeline. When it finishes, you'll see **Verified** and a link to your dashboard.
 
-For local Docker runs, core defaults `DATABASE_URL` to embedded Postgres and sets a local development API key:
+Sign-in creates a free **Open Source** organization with one Connected Local project. See [Billing & plans](/cloud/how-to/billing) when you want a Hosted Cloud project on the **Free** tier.
 
-```text
-Authorization: Bearer local-dev-key
-```
+Your memories stay on your machine. Connected Local sends the console a runtime heartbeat and operation traces (call type, timing, and the reconciliation decision) so the dashboard stays accurate — never your memory content.
 
-## Optional, Manage The Container
+Already created a project in the console? Run `am init --project <slug>` instead.
 
-Watch startup logs:
+### What am init handles for you
+
+-   Secure browser sign-in
+-   Local Core startup on `http://127.0.0.1:17350`
+-   Console connection — runtime shows **Online**
+-   End-to-end memory verification
+
+For a **Connected Local** project, use **Google Chrome** when viewing it in the console — your browser needs to reach Core directly, which is more reliable in Chrome. More detail: [Cloud CLI](/cloud/cli).
+
+## 2. Add your first memory
 
 ```bash
-docker logs -f atomicmemory-core
+am memory ingest "I ship Go backends and TypeScript frontends."
+am memory search "what stack do I use?"
 ```
 
-Stop and restart the same container:
+## 3. Open your dashboard
 
-```bash
-docker stop atomicmemory-core
-docker start atomicmemory-core
-```
+Open the dashboard link from the CLI output — or go to [memory.atomicstrata.ai](https://memory.atomicstrata.ai). Confirm the runtime is **Online**, then browse **Memories** and **Traces**.
 
-Recreate it after changing environment variables or pulling a newer image:
+Something didn't work? Run `am doctor --smoke` to re-check the pipeline, or see [Troubleshooting](/cloud/troubleshooting) for Docker, OpenAI key, and runtime-offline recovery steps.
 
-```bash
-docker rm -f atomicmemory-core
-```
+## What's next
 
-Then run the Step 1 command again. The database stays on disk at `$HOME/.atomicstrata/atomicmemory-docker`.
+-   [Integrations](/integrations/overview) — wire MCP, Claude Code, Cursor, and more
+-   [SDK Quickstart](/sdk/quickstart) — typed client for your app
+-   [Add Hosted Cloud](/cloud/quickstart) — add managed hosting when you're ready
+-   [Troubleshooting](/cloud/troubleshooting) — recover from a failed `am init` or `am doctor --smoke`
 
-## Optional, Configure The CLI
-
-Install the CLI if you want terminal commands on top of the running service:
-
-```bash
-npm install -g @atomicmemory/cli
-
-printf '%s\n' 'local-dev-key' | \
-atomicmemory init \
-  --profile local \
-  --provider atomicmemory \
-  --api-url http://127.0.0.1:17350 \
-  --trust-surface local \
-  --user "$USER" \
-  --namespace quickstart \
-  --api-key-stdin \
-  --save-api-key
-```
-
-## Step 2, Verify health
-
-Hit the memory subsystem health endpoint to confirm the server is live and see the active runtime config.
-
-```bash
-curl -H 'Authorization: Bearer local-dev-key' \
-  http://localhost:17350/v1/memories/health
-```
-
-You should get back a JSON object with `"status": "ok"` and a `config` snapshot showing the selected embedding and LLM providers.
-
-## Step 3, First ingest
-
-Send a conversation and let AtomicMemory extract structured facts, embed them, and run AUDN to decide what to store.
-
-```bash
-curl -X POST http://localhost:17350/v1/memories/ingest \
-  -H 'Content-Type: application/json' \
-  -H 'Authorization: Bearer local-dev-key' \
-  -d '{"user_id":"alice","conversation":"user: I ship Go backends and TypeScript frontends.","source_site":"quickstart"}'
-```
-
-The response reports `facts_extracted`, `memories_stored`, `stored_memory_ids`, and `updated_memory_ids`, that is AUDN telling you what survived dedup and contradiction checks.
-
-## Step 4, First search
-
-Query the memories you just created. AtomicMemory runs semantic retrieval, applies the active retrieval profile, and packages the result. Hybrid retrieval (vector + BM25/FTS with RRF fusion) is available through the `quality` profile or per-request config overrides, but the default `balanced` profile keeps it off.
-
-```bash
-curl -X POST http://localhost:17350/v1/memories/search \
-  -H 'Content-Type: application/json' \
-  -H 'Authorization: Bearer local-dev-key' \
-  -d '{"user_id":"alice","query":"what stack does alice use?"}'
-```
-
-The response carries three things worth noting:
-
--   **`memories`**, ranked results with `similarity`, composite `score`, and `importance`
--   **`injection_text`**, a pre-formatted markdown block, date-stamped and grouped by source, ready to paste directly into an LLM system prompt
--   **`observability`**, stable trace metadata (timing, retrieval mode, citations) so you can wire evals and dashboards without reverse-engineering internals
-
-## What next
-
--   **Swap to a local embedding model**, run entirely offline with `transformers` (WASM) or `ollama`. See [providers](/platform/providers).
--   **Register or upload artifacts**, pointer artifacts work by default; managed storage providers such as S3 or Filecoin are optional. See [artifact storage](/platform/artifact-storage).
--   **Workspace-scoped memory**, separate personal memory from team memory with first-class scope dispatch. See [scope](/platform/scope).
--   **Full API reference**, every endpoint, request, and response shape. Start with [ingest](/api-reference/http/ingest-memory).
-
-## Using the TypeScript SDK
-
-If you're building in TypeScript or JavaScript, the [SDK Quickstart](/sdk/quickstart) shows the same ingest-and-search round trip above, typed, with the SDK's policy layer (capture / injection gates) in front of the same core endpoints. The SDK is not required, everything above is just HTTP, but it handles the ergonomics, the scope helpers, and the backend-agnostic routing if you want to target more than one memory engine from the same code.
-
-## Contributor setup
-
-If you are changing core itself, clone the repo and run the source stack instead of the published image:
-
-```bash
-git clone https://github.com/atomicstrata/atomicmemory.git
-cd atomicmemory/packages/core
-cp .env.example .env
-# edit .env, set OPENAI_API_KEY
-docker compose up -d --build
-```
-
-## Running in production
-
-The local image defaults are intentionally optimized for one-command evaluation. For production, run the same image with managed Postgres via `DATABASE_URL`, explicit `CORE_API_KEY` and `STORAGE_KEY_HMAC_SECRET` secrets, hardened CORS, and the `CORE_RUNTIME_CONFIG_MUTATION_ENABLED` gate disabled unless an operator intentionally enables runtime config writes.
+Prefer Core without a Cloud connection? [Core-only Docker setup](/core-only-docker) runs the engine with curl — no account required.
 
 ---
 
@@ -10862,7 +11136,7 @@ console.log(status);
 
 For a deeper liveness check, hit the core `/v1/memories/health` endpoint directly, it returns the full config snapshot (embedding / LLM provider, thresholds).
 
-The local Docker quickstart uses `local-dev-key` as its default bearer token. Production deployments should set an explicit `CORE_API_KEY` on core and pass the same value as `apiKey` in the SDK config.
+The [Core-only Docker](/core-only-docker) path uses `local-dev-key` as its default bearer token. Connected Local setups started with `am init` use `CORE_API_KEY` from `am instance status --show-secrets`. Production deployments should set an explicit `CORE_API_KEY` on core and pass the same value as `apiKey` in the SDK config.
 
 ## One ingest, one search
 
@@ -11811,7 +12085,11 @@ Install, initialize, and make your first ingest and search, with `MemoryClient` 
 ## Prerequisites
 
 -   **Node.js 22+** (FOC/Filecoin storage paths require Node 24+)
--   **A memory endpoint** — either a hosted [AtomicMemory](/cloud/quickstart) project (point the client at `https://api.atomicstrata.ai` with your project key) or a self-hosted core via the [Open Source Quickstart](/quickstart); we assume a local `http://localhost:17350` below
+-   **A running `atomicmemory-core`** at `http://localhost:17350` — start with the [Platform Quickstart](/quickstart) (`am init`) or [Core-only Docker](/core-only-docker)
+
+Local API key
+
+Examples below use `local-dev-key`, the default bearer for [Core-only Docker](/core-only-docker). After `am init`, use the `CORE_API_KEY` from `am instance status --show-secrets`.
 
 ## Step 1, Install
 

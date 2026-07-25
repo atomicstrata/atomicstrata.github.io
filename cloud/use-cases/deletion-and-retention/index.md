@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-When someone asks to be forgotten, you need to remove their memory - and only theirs. AtomicMemory partitions memory by scope, so personal, user-scoped facts can be deleted without touching the shared context your team relies on.
+When someone asks to be forgotten, you need to remove their memory - and only theirs. AtomicMemory Cloud partitions memory by scope, so personal, user-scoped facts can be deleted without touching the shared context your team relies on.
 
 ## The problem
 

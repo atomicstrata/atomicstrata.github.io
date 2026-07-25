@@ -2,21 +2,31 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-The **API Keys** page is where a cloud project's credentials live. Every request your application makes to the memory API is authenticated by a key issued here. Keys are per project; local projects don't use them - the browser reaches your local proxy directly, so this page shows an empty state instead.
+The **API Keys** page issues and manages **Hosted Cloud** credentials. Every request your application makes to the Hosted Cloud memory API is authenticated by a key issued here. Before you rotate or revoke one, make sure you're looking at the right kind of credential — see the table below.
+
+## Three credentials, three jobs
+
+| Credential | Project type | Used for | Managed here? |
+| --- | --- | --- | --- |
+| Hosted Cloud API key (`amc_…`) | Cloud | Memory API calls (ingest, search) from anywhere | Yes — this page |
+| Local project's Cloud key | Local | Heartbeat and trace sync back to the console — never memory calls | No — issued automatically by `am init` if one doesn't already exist |
+| Core token / `CORE_API_KEY` | Local | Memory calls (ingest, search) against your own Core | No — lives in your Core environment |
+
+This page only covers the first row. See [Authentication](/cloud/authentication#which-credential-do-i-need) for the full decision guide across all three.
 
 ## What it does
 
--   Creates a key from a **name** and an **environment** (Development, Staging, or Production).
+-   Creates a Hosted Cloud key from a **name**.
 -   Reveals each new secret **exactly once**, then retains only its masked prefix.
--   Lists every key with its status, environment, prefix, creation time, and last use.
+-   Lists every key with its status, prefix, creation time, and last use.
 
 ## How it works
 
-The full secret is shown a single time in a reveal banner the moment a key is created or rotated - copy it then, because it is never displayed again. Your application supplies it as an environment variable alongside the API URL:
+The full secret is shown a single time in a reveal banner the moment a key is created or rotated — copy it then, because it is never displayed again. Your application supplies it as an environment variable alongside the API URL:
 
 ```bash
 export ATOMICMEMORY_API_KEY="<paste-your-secret>"
-export ATOMICMEMORY_API_URL="<your-api-url>"
+export ATOMICMEMORY_API_URL="https://api.atomicstrata.ai"
 ```
 
 **Rotating** a key issues a fresh secret and revokes the old one in the same step; the replacement records which key it superseded (`rotated from`), so the lineage stays auditable. **Revoking** permanently disables a key. Both actions invalidate a live credential, so each asks for inline confirmation before it fires - a misclick must not silently break a production integration.
@@ -29,10 +39,11 @@ A secret is shown only at creation or rotation and never again. If you lose it, 
 
 -   **One-time secrets** - the plaintext key is revealed once; only the prefix is stored afterward.
 -   **Rotate in place** - swap the secret while preserving the key's identity and its rotated-from history.
--   **Environment tags** - mark each key dev, staging, or prod to keep surfaces separated.
+-   **Hosted Cloud only** — Local projects authenticate memory calls against your own Core with a Core token / `CORE_API_KEY`, not a key from this page.
 
 ## Related
 
+-   [Authentication](/cloud/authentication) - which credential goes where
 -   [The Dashboard](/cloud/how-to/dashboard)
 -   [Usage & Limits](/cloud/how-to/usage)
 -   [Reading the Audit Log](/cloud/how-to/audit-log)

@@ -4,6 +4,10 @@
 
 Give Claude Code persistent, cross-session memory backed by AtomicMemory. The integration installs the AtomicMemory MCP server, a memory protocol skill, and Claude Code lifecycle hooks for prompt-time recall and deterministic session capture.
 
+Already ran am init?
+
+`am init` starts Core with OpenAI for both extraction and embeddings (`LLM_PROVIDER=openai`) — not Claude Code account auth, and not this guide's local `transformers` embeddings. If you want either (account-auth extraction via `LLM_PROVIDER=claude-code` with no separate Anthropic API key, or local embeddings with no OpenAI embedding key), keep running Core with the Docker command in step 1 below instead of the one `am init` started. If OpenAI for both is fine for you, you can skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` in place of `local-dev-key` wherever this guide shows it.
+
 ## Quick start
 
 ### 1. Start AtomicMemory core

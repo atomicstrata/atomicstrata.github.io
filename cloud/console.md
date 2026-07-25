@@ -10,15 +10,15 @@ All `/app/*` routes require sign-in. The marketing landing page and `/share/*` p
 
 New users follow a guided path:
 
-1.  Sign up at `/signup`
-2.  Gateway at `/app` redirects to `/app/onboarding` when no project exists or a cloud project has zero API keys
-3.  Default org + `default-project` are auto-provisioned
-4.  First API key is revealed exactly once with copy-to-clipboard and CLI commands
-5.  Redirect to project **Overview** after acknowledgment
+1.  Sign up at [memory.atomicstrata.ai/signup](https://memory.atomicstrata.ai/signup) and select or create an Organization.
+2.  The console provisions a default **Local** project (slug `default`) — Open Source starts with one Connected Local project and no Hosted Cloud project.
+3.  **Connect Core**: run `am init` in your terminal. It signs you in, starts Core, connects this project, and verifies the memory pipeline end to end.
+4.  Once the runtime reports **Online**, the console hands off to the project **Overview** — no key to create or redeem first.
+5.  Optional: upgrade to **Free** (self-serve, $0) from **Billing** to unlock one Hosted Cloud project.
 
-See [Cloud Quickstart](/cloud/quickstart) for the full happy path.
+See [Platform Quickstart](/quickstart) for the full `am init` walkthrough, then [Add Hosted Cloud](/cloud/quickstart) when you want managed hosting.
 
-## Project workspace
+## Inside a project
 
 Each project includes:
 
@@ -26,37 +26,20 @@ Each project includes:
 | --- | --- |
 | **Overview** | Stats, integration snippets, setup checklist |
 | **Memories** | Memory Explorer with filters, inline evidence, trace deep-links |
-| **Traces** | AUDN mutation and retrieval trace viewer (live SSE updates) |
+| **Traces** | AUDN mutation and retrieval trace viewer, updates live |
 | **API Keys** | Create, list, and revoke project keys |
 | **Usage** | Usage events and stored memory counts |
-| **Playground** | Interactive ingest and search (managed or local core) |
+| **Playground** | Interactive ingest and search (Hosted Cloud key or Connected Local Core) |
 | **Settings** | Project configuration |
 | **Audit** | Project-scoped admin audit log |
 
-## How the console reaches the API
-
-| Data plane | Auth |
-| --- | --- |
-| Browser → Next.js `/api/proxy/*` → cloud API | Session JWT (console) or pasted API key (Playground) |
-
-The console never exposes `AM_API_URL` to the browser bundle.
-
-## Real-time updates
-
-The console uses Server-Sent Events (SSE) proxied same-origin:
-
-| Stream | Route | Events |
-| --- | --- | --- |
-| Memories | `/api/proxy/projects/{id}/memories/stream` | `ready`, `memory` |
-| Traces | `/api/proxy/projects/{id}/traces/stream` | `ready`, `trace` |
-
-Live updates appear in the Memory Explorer and trace views without polling.
+Memory and trace views update live as new activity happens — no manual refresh needed. Session and proxy details behind that live update behavior are covered in [Authentication → Advanced deployment details](/cloud/authentication#advanced-deployment-details), not repeated here.
 
 ## Setup checklist
 
 The sidebar **SetupGuide** tracks activation milestones:
 
--   First API key created
+-   First API key created (Hosted Cloud projects only)
 -   First ingest completed
 -   First search completed
 
@@ -71,7 +54,7 @@ The project Overview surfaces copy-paste snippets for:
 -   Claude Code plugin
 -   Cloud CLI (`am memory ingest`)
 
-Snippets use your project's API base URL automatically for managed projects.
+Snippets use your project's API base URL automatically for Hosted Cloud projects.
 
 ## Public memory sharing
 
@@ -80,5 +63,5 @@ Snippets use your project's API base URL automatically for managed projects.
 ## Related docs
 
 -   [Authentication](/cloud/authentication) - how the console authenticates to the API
--   [Cloud HTTP API](/cloud/how-to/dashboard) - dashboard and memory routes
+-   [The Dashboard](/cloud/how-to/dashboard) - project landing page and activation path
 -   [Platform Observability](/platform/observability) - trace schema on the engine side

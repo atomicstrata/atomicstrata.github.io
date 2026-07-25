@@ -4,6 +4,10 @@
 
 Cursor support is available today as a manual local integration using the AtomicMemory MCP server and Cursor rules. The monorepo ships a source template for `.cursor/mcp.json` and an always-on memory rule. A packaged Cursor plugin and Cursor Cloud deployment are planned but not yet available.
 
+Already ran am init?
+
+`am init`'s Core uses OpenAI for both extraction and embeddings. If you want this guide's local `transformers` embeddings (embeddings are computed locally; no embedding API calls), keep running Core with the Docker command in step 1 below. Otherwise, skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` instead of `local-dev-key`.
+
 ## Quick start
 
 ### 1. Start AtomicMemory core

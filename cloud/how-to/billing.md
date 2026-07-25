@@ -1,36 +1,47 @@
-# Billing
+# Plans & Billing
 
 > Agent index: [llms.txt](/llms.txt)
 
-**Billing** manages your organization's subscription and shows how much of your plan you have used. It is scoped to the organization, so a single subscription covers every project the org owns.
+**Plans & Billing** shows your Organization's current plan and how much of it you've used. It's scoped to the Organization, so one plan covers every project the org owns.
 
-## What it does
+## Plans
 
--   Shows the current plan, its price, and subscription status - active, free trial, canceling, or not subscribed.
--   Tracks live usage against your plan's limits: projects, API keys, and monthly write tokens.
--   Starts or upgrades a subscription through hosted checkout, and opens the billing portal to update payment or cancel.
--   Surfaces renewal and trial-end dates so you know when the next charge lands.
+| Plan | Local projects | Cloud projects | How you get it |
+| --- | --- | --- | --- |
+| **Open Source** | 1 | 0 | Default on signup — free forever |
+| **Free** | 1 (kept) | 1 | Self-serve $0 upgrade, right here in Billing |
+| **Team** | Custom | Custom | Demo-led — talk to sales |
+| **Corporate** | Custom | Custom | Demo-led — talk to sales |
 
-## How it works
-
-Only writes are metered. Every `ingest` consumes processed tokens that count toward a monthly allowance and reset at the end of each billing period; retrieval and storage are unmetered within your plan's limits. When you reach the monthly token cap, writes pause until you upgrade - search and storage keep working.
-
-The **Developer** plan is $29/mo and includes 5M processed tokens per month, 3 projects, 5 organization API keys, and a 30-day activity log. Only organization admins can change the subscription; other members see billing read-only.
+Every Organization starts on **Open Source**: one Connected Local project, full console visibility, no Hosted Cloud project. **Upgrade to Free** in Billing to keep that Local project and unlock one Hosted Cloud project — it's a self-serve $0 checkout, no sales conversation required. **Team** and **Corporate** cover usage beyond Free's single Cloud project and are demo-led; request a demo rather than self-serve checkout.
 
 info
 
-Reaching the monthly write-token limit pauses ingestion only. Retrieval and storage stay available within your plan limits - upgrade to resume writes.
+**Developer** is a legacy plan. Existing subscribers keep their grandfathered limits and billing continues to work, but it is no longer offered to new Organizations — upgrade to **Free** instead.
+
+## How it works
+
+Only writes are metered. Every `ingest` consumes processed tokens that count toward your plan's monthly allowance and reset at the end of each billing period; retrieval and storage are unmetered. When you reach the monthly write-token cap, writes pause until you upgrade or the period resets — search and storage keep working the whole time.
+
+Exact write-token allowances can change per plan and aren't repeated here — see your Organization's current allowance and usage on [Usage & Limits](/cloud/how-to/usage), or in the plan details shown at checkout when you upgrade.
+
+Only Organization admins can change the subscription or upgrade to Free; other members see billing read-only.
+
+info
+
+Reaching the monthly write-token limit pauses ingestion only. Retrieval and storage stay available — upgrade, or wait for the next billing period, to resume writes.
 
 ## Key capabilities
 
--   **Organization-scoped** - one subscription covers all of the org's projects.
--   **Live usage** - projects, API keys, and write-token consumption against plan limits, with a reset date.
--   **Writes-only metering** - retrieval and storage are unmetered within limits.
--   **Self-serve management** - subscribe, upgrade, or manage payment and cancellation from the portal.
--   **Role-gated** - only org admins can change the plan.
+-   **Organization-scoped** — one plan covers all of the org's projects.
+-   **Type-aware limits** — Local and Cloud project counts are tracked and capped separately, matching what each plan unlocks.
+-   **Self-serve Free upgrade** — go from Open Source to Free without a sales call.
+-   **Writes-only metering** — retrieval and storage are unmetered within limits.
+-   **Demo-led Team/Corporate** — usage beyond Free is a sales conversation, not a self-serve checkout.
+-   **Role-gated** — only org admins can change the plan.
 
 ## Related
 
 -   [Usage](/cloud/how-to/usage)
--   [Projects & Workspaces](/cloud/how-to/projects)
+-   [Projects](/cloud/how-to/projects)
 -   [Project Settings](/cloud/how-to/settings)

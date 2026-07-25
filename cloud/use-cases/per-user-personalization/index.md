@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-One deployment of your assistant serves everyone who signs in. Each of those users needs a memory that reflects only their own history - never the person in the next session. AtomicMemory gives you that separation through **scope**: every write and every read is tagged, and the memory layer keeps each scope apart.
+One deployment of your assistant serves everyone who signs in. Each of those users needs a memory that reflects only their own history - never the person in the next session. AtomicMemory Cloud gives you that separation through **scope**: every write and every read is tagged, and the memory layer keeps each scope apart.
 
 ## The problem
 

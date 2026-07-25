@@ -10,7 +10,7 @@ Validating memory behaviour by editing application code is a slow loop: write a 
 
 ## How the cloud helps
 
-The Playground runs ingest and search from inside the dashboard against the same project your code will use. Managed projects proxy through the cloud API; local projects hit your self-hosted core directly. Every result deep-links into the [Trace Viewer](/cloud/how-to/traces) and the [Memory Explorer](/cloud/how-to/what-is-memories), so you see not just what came back but the decision that produced it.
+The Playground runs ingest and search from inside the dashboard against the same project your code will use. **Cloud** projects proxy through the Cloud API; **Local** projects hit your self-hosted core directly. Every result deep-links into the [Trace Viewer](/cloud/how-to/traces) and the [Memory Explorer](/cloud/how-to/what-is-memories), so you see not just what came back but the decision that produced it.
 
 ## How it works
 
@@ -22,12 +22,12 @@ await memory.search({ query: "seat preference", scope: { user: "user_001" } });
 
 tip
 
-In managed mode you paste an API key to run requests; the key stays in your browser's memory only. Grab one from [API Keys](/cloud/how-to/api-keys).
+For a **Cloud** project you paste an API key to run requests; the key stays in your browser's memory only. Grab one from [API Keys](/cloud/how-to/api-keys).
 
 ## Key capabilities
 
 -   **Interactive ingest & search** - run the first query with no code at all.
--   **Managed or local** - the same Playground drives either project type.
+-   **Cloud or Local** - the same Playground drives either project type.
 -   **Traceable results** - every result links to its trace and its stored memory, so you can see why it matched.
 
 ## Outcomes
@@ -36,4 +36,4 @@ You confirm how memory behaves in minutes instead of build cycles, then copy the
 
 ## Get started
 
-Open the [Playground](/cloud/how-to/playground) on any project, run an ingest, then a search. When the results look right, wire the same calls with the SDK - see [One SDK, self-hosted or managed](/cloud/use-cases/one-sdk-self-hosted-or-managed).
+Open the [Playground](/cloud/how-to/playground) on any project, run an ingest, then a search. When the results look right, wire the same calls with the SDK - see [One SDK, Local or Cloud](/cloud/use-cases/one-sdk-self-hosted-or-managed).

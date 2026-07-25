@@ -1,12 +1,12 @@
-# Open Source
+# Introduction
 
 > Agent index: [llms.txt](/llms.txt)
 
-Not sure which to start with?
+Fastest path
 
-These pages cover the **self-hosted** engine you run yourself. Most developers should start with [**AtomicMemory**](/cloud/quickstart) — the same engine, hosted, with a console, traces, and scoped API keys. See [Cloud vs Open Source](/cloud-vs-open-source) to choose.
+Run memory locally in one command: the [**Quickstart**](/quickstart) installs the CLI, runs `am init`, and shows Core online in your console — free forever on the Open Source plan. See [Local vs Hosted Cloud](/cloud-vs-open-source) for how the modes compare.
 
-AtomicMemory is an open-source memory engine for AI applications, semantic retrieval, AUDN mutation (Add / Update / Delete / No-op), and contradiction-safe claim versioning, delivered as an HTTP service you can run from a published Docker image. It is pluggable at every seam: swap the embedding provider, the LLM, the artifact-storage backend, or the scope model without forking. The engine ships as a standardized platform layer, not a framework, not a SaaS, so your agents, assistants, and products can compose the memory stack they need.
+AtomicMemory is an open-source memory engine for AI applications — semantic retrieval, AUDN mutation (Add / Update / Delete / No-op), and contradiction-safe claim versioning. Run it locally with the CLI (`am init`), self-host Core via Docker or your own stack, or add managed hosting through AtomicMemory Cloud. It is pluggable at every seam: swap the embedding provider, the LLM, the artifact-storage backend, or the scope model without forking. The engine ships as a standardized platform layer, not a framework, so your agents, assistants, and products can compose the memory stack they need.
 
 ## Why AtomicMemory
 
@@ -59,9 +59,9 @@ Artifactspointer · FS · S3 · Filecoin
 -   **Observability as contract**, every search response carries a stable trace schema so dashboards and evals never break on a refactor ([observability](/platform/observability))
 -   **Domain separation**, Ingest, Search, CRUD, Lifecycle, and Trust are independent domains with their own routes and services ([architecture](/platform/architecture))
 
-## Try it in 2 minutes
+## Try it now
 
-The fastest path is the [Quickstart](/quickstart): set an API key, run `ghcr.io/atomicstrata/atomicmemory-core:latest`, and run your first ingest and search with two curl commands.
+The fastest path is the [Quickstart](/quickstart): install the CLI, run `am init`, and see your local Core **Online** in the console. For Core without Cloud, see [Core-only Docker](/core-only-docker).
 
 Core is HTTP-first, so any language works today. The [TypeScript SDK](/sdk/overview) gives TypeScript and JavaScript consumers typed request and response shapes, richer ergonomics, scope-aware helpers, and a pluggable provider model that decouples your app from any particular memory engine. The Python SDK serves Python-native integrations such as Hermes. Nothing about core requires either SDK.
 

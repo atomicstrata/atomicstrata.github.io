@@ -1,62 +1,60 @@
-# Cloud vs Open Source
+# Local vs Hosted Cloud
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory ships in two consumption modes backed by the **same memory engine**. The API surface, the AUDN mutation model, the retrieval pipeline, and the observability envelope are identical. What differs is who runs the infrastructure.
+AtomicMemory runs in three modes backed by the **same engine**. The API surface, the AUDN mutation model, the retrieval pipeline, and the observability envelope are identical — what differs is where Core runs and what the console can see.
 
-Start with **AtomicMemory** unless you have a specific reason to self-host.
+Start with **Connected Local** unless you have a specific reason not to.
 
-Question
+Start here
 
-Must data stay on your own infrastructure?
+Connected Local`am init` — Core on your machine, console shows runtime + traces. Free forever.
 
-No
+upgrade to Free ($0)
 
-Hosted
+Add when needed
 
-AtomicMemoryconsole, traces, and keys managed for you
+Hosted Cloudmanaged hosting, shared access, one project on Free
 
-Yes
-
-Self-hosted
-
-AtomicMemory OSSyou run the engine and the database
-
-Either way you get the **same engine, the same API, and the same SDK**.
+Prefer the engine with no account at all? [Core-only Docker](/core-only-docker) runs Core with curl — no console, no sign-in.
 
 ## At a glance
 
-|  | **AtomicMemory** | **Open Source** |
-| --- | --- | --- |
-| **Setup** | Sign up, copy an API key | Docker, Postgres volume, provider keys |
-| **You provide** | Nothing | Host, database, OpenAI (or local) provider keys |
-| **Runs where** | `api.atomicstrata.ai` | Your machine, your VPC, your cluster |
-| **Console, traces, usage** | Included | Build your own on the observability envelope |
-| **Orgs, projects, scoped keys** | Included | Single-tenant; you model tenancy yourself |
-| **Data residency** | Managed by AtomicStrata | Entirely yours |
-| **License / cost** | Usage-based | Apache-2.0, free |
-| **Best for** | Shipping a product, prototypes, teams | Air-gapped, regulated, or infra-owning teams |
+|  | **Connected Local** | **Hosted Cloud** | **Core-only Docker** |
+| --- | --- | --- | --- |
+| **Setup** | `am init` — one command | Upgrade to Free, create a Cloud project | `docker run` + curl |
+| **Where memories live** | Your machine, in Core | AtomicMemory-managed hosting | Your machine |
+| **Console** | Runtime status, memories, operation traces | Same, for the managed project | None |
+| **Account** | Sign-in creates a free Open Source org | Free tier ($0 self-serve upgrade) | Not required |
+| **Good for** | Evaluating, local dev, day-to-day use | Shared access without operating infrastructure | Air-gapped work, CI, no-console automation |
+| **Plan** | Open Source — free forever, one Local project | Free — keeps your Local project, adds one Cloud project | n/a |
 
-## Choose AtomicMemory when
+Team and Corporate plans are demo-led — [book a demo](https://atomicstrata.ai/demo) for pooled usage, more projects, and governed deployments.
 
--   You want your first memory stored in under five minutes.
--   You want the developer console, traces, conflict inspection, and usage tracking without building them.
--   You need orgs, projects, environments, and scoped API keys out of the box.
--   Running and upgrading a Postgres + pgvector service is not where you want to spend time.
+## Choose Connected Local when
 
-→ [Cloud Quickstart](/cloud/quickstart)
+-   You want your first memory stored in minutes, with the console showing exactly what Core did.
+-   Memories should live on your machine while you still get inspectable ingest, search, and mutation traces.
+-   You are evaluating, developing locally, or running a single-developer workflow.
 
-## Choose Open Source when
+→ [Quickstart](/quickstart)
 
--   Memory data cannot leave your infrastructure for regulatory or contractual reasons.
--   You need to run air-gapped or fully offline, including local embedding models.
+## Add Hosted Cloud when
+
+-   You need shared access to the same memories from more than one place.
+-   You want a managed endpoint without operating Postgres and Core yourself.
+-   You are ready to point production traffic at `https://api.atomicstrata.ai` with a project API key.
+
+→ [Add Hosted Cloud](/cloud/quickstart)
+
+## Choose Core-only Docker when
+
+-   You need the engine with no account and no console — air-gapped, CI, or fully offline work.
+-   You are embedding Core in your own stack and bringing your own observability.
 -   You want to fork the engine, replace a store, or add a provider.
--   You are running deterministic tests or benchmarks against an ephemeral in-process engine.
 
-→ [Open Source Quickstart](/quickstart)
+→ [Core-only Docker](/core-only-docker)
 
 ## Moving between them
 
-The [TypeScript SDK](/sdk/overview) routes through `MemoryProvider`, so the same application code targets either mode. Switching is a configuration change — point at `https://api.atomicstrata.ai` with a Cloud project key, or at your own host with your own key. See [one SDK, self-hosted or managed](/cloud/use-cases/one-sdk-self-hosted-or-managed).
-
-The [HTTP API](/api-reference/http/conventions) is the same in both modes, so non-TypeScript consumers move by changing a base URL and a credential.
+The [TypeScript SDK](/sdk/overview) and the [CLI](/cloud/cli) work identically against a local Core and a Hosted Cloud project — switching is a base URL and credential change, not a code change. To copy existing local memories into a Cloud project, see [Migrate to Hosted Cloud](/cloud/how-to/migrate).

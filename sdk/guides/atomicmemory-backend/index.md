@@ -36,7 +36,7 @@ console.log(status);
 
 For a deeper liveness check, hit the core `/v1/memories/health` endpoint directly, it returns the full config snapshot (embedding / LLM provider, thresholds).
 
-The local Docker quickstart uses `local-dev-key` as its default bearer token. Production deployments should set an explicit `CORE_API_KEY` on core and pass the same value as `apiKey` in the SDK config.
+The [Core-only Docker](/core-only-docker) path uses `local-dev-key` as its default bearer token. Connected Local setups started with `am init` use `CORE_API_KEY` from `am instance status --show-secrets`. Production deployments should set an explicit `CORE_API_KEY` on core and pass the same value as `apiKey` in the SDK config.
 
 ## One ingest, one search
 

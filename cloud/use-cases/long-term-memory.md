@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Most assistants forget everything the moment a conversation ends. The next session starts cold - the user re-explains their preferences, their context, their history. AtomicMemory gives your app a memory that persists across sessions and is scoped to each user.
+Most assistants forget everything the moment a conversation ends. The next session starts cold - the user re-explains their preferences, their context, their history. AtomicMemory Cloud gives your app a memory that persists across sessions and is scoped to each user.
 
 ## The problem
 
@@ -46,4 +46,4 @@ Your assistant greets returning users already knowing their context, sessions st
 
 ## Get started
 
-Create a project, grab an API key from **API Keys**, and make your first `ingest` / `search` calls from the [Playground](/cloud/how-to/what-is-memories) or the SDK.
+Create a project, grab an API key from **API Keys**, and make your first `ingest` / `search` calls from the [Playground](/cloud/how-to/playground) or the SDK.

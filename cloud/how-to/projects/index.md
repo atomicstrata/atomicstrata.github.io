@@ -1,36 +1,35 @@
-# Projects & Workspaces
+# Projects
 
 > Agent index: [llms.txt](/llms.txt)
 
-**Projects** are the workspaces that hold your memory layer. Every memory, API key, trace, and usage record belongs to exactly one project, and every project belongs to an organization. The Projects page is where you create them, group them by environment, and drop into a project's workspace.
+**Projects** hold your memory layer. Every memory, API key, trace, and usage record belongs to exactly one project, and every project belongs to an Organization. The Projects page is where you create them and open a project's Overview.
 
 ## What it does
 
--   Lists every project in the current organization, grouped by environment (`dev`, `staging`, `prod`) with a filter across all four buckets.
--   Shows each project's name, slug, environment, stored-memory count, and last activity, and links straight to its Overview.
--   Creates new projects from **New project** - you pick a type, **Cloud (managed)** or **Local (self-hosted)**, and, for cloud, an environment.
--   Enforces your plan's project limit: at the cap, creation is blocked and an upgrade prompt appears.
+-   Lists every project in the current Organization with its type (**Local** or **Cloud**), name, slug, and last activity, and links straight to its Overview. **Cloud** projects show a stored-memory count; **Local** projects may show `n/a` there since memory content stays on your Core.
+-   Creates new projects from **New project** — you pick a type, **Local** (Connected Local, backed by your own Core) or **Cloud** (Hosted Cloud, fully managed).
+-   Your plan determines how many of each type you can have: Open Source includes one Local project and zero Cloud projects; Free keeps your Local project and unlocks one Cloud project. See [Plans & Billing](/cloud/how-to/billing) for what's included.
 
 ## How it works
 
-A project is an isolated workspace - its memories, keys, traces, and usage never cross into another project. Where that memory data physically lives depends on the project **type** you choose at creation.
+Each project is isolated — its memories, keys, traces, and usage never cross into another project. New projects use the slug `default` (`default-project` is a legacy alias from earlier versions, not something you'll see created today). Where memory data physically lives depends on the project **type** you choose at creation:
 
-A **managed** project is hosted by AtomicMemory: you ingest and search with a project API key from anywhere. A **local** project runs against your own `atomicmemory-core` on your machine - the dashboard talks to it directly from the browser, and the cloud stores only the project's metadata (name, slug, type), never its memories.
+-   A **Local** project runs against your own Core — connected with `am init`. Memories stay on your machine; the console still receives a runtime heartbeat and operation traces from that Core, so you get inspectable console visibility without your memory content ever leaving your infrastructure.
+-   A **Cloud** project is fully managed by AtomicMemory: memories, traces, and heartbeat all live in Hosted Cloud, and you authenticate with a project API key from anywhere.
 
 info
 
-For a local project, your self-hosted core must serve `/v1/*` with CORS allowing this dashboard's origin. Managed projects need none of this - you just create an API key.
+A Local project's Core must be reachable from your browser (`am init` wires this up on `http://127.0.0.1:17350` by default). A Cloud project needs none of this — just an API key.
 
 ## Key capabilities
 
--   **Isolated workspaces** - memories, keys, traces, and usage stay scoped to a single project.
--   **Managed or self-hosted** - let AtomicMemory host the data, or point a project at a core you run yourself.
--   **Environment lanes** - keep `dev`, `staging`, and `prod` separate and filterable.
--   **Plan-aware limits** - project count is bounded by your plan, and the page shows your organization's usage against it.
+-   **Isolated projects** — memories, keys, traces, and usage stay scoped to a single project.
+-   **Local or Cloud** — run Core yourself, or let AtomicMemory host the data.
+-   **Type-aware limits** — Local and Cloud project counts are capped separately by your plan, and the page shows usage against each.
 
 ## Related
 
 -   [Project Settings](/cloud/how-to/settings)
 -   [API Keys](/cloud/how-to/api-keys)
--   [Billing](/cloud/how-to/billing)
+-   [Plans & Billing](/cloud/how-to/billing)
 -   [What is Memories](/cloud/how-to/what-is-memories)

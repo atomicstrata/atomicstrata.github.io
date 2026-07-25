@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-A single shared credential across every service is a blast radius waiting to happen. AtomicMemory issues API keys per project, so each service reaches only that project's memory - and you can revoke or rotate any key on its own.
+A single shared credential across every service is a blast radius waiting to happen. AtomicMemory Cloud issues API keys per project, so each service reaches only that project's memory - and you can revoke or rotate any key on its own.
 
 ## The problem
 
@@ -14,7 +14,7 @@ Keys are scoped to a project. A key created in one project cannot reach another 
 
 ## How it works
 
-Create a key on a project's **API Keys** page with a name and an environment label (development, staging, or production). The secret is shown once - store it in your service's configuration:
+Create a key on a project's **API Keys** page with a name. The secret is shown once - store it in your service's configuration:
 
 ```ts
 const memory = new MemoryClient({
@@ -40,6 +40,10 @@ That key reaches only its project. Within the project, pass `scope` on each call
 ## Outcomes
 
 A leaked or retired service is contained by revoking one key, not re-credentialing your fleet. And because every write carries its key's prefix, you can always trace a memory back to the service that made it.
+
+## Plan considerations
+
+This pattern works best when each service gets its **own Cloud project** (a key is scoped to a project, not shared across projects). Free includes one Cloud project, so giving several services each their own project needs a plan with enough Cloud projects for that — Team or Corporate. See [Plans & Billing](/cloud/how-to/billing) for what each plan includes.
 
 ## Get started
 

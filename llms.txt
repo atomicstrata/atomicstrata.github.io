@@ -4,7 +4,7 @@
 
 ## Get started
 
-- [Open Source Quickstart](https://docs.atomicstrata.ai/quickstart.md): Start a self-hosted memory service from the published Docker image, then run
+- [Quickstart](https://docs.atomicstrata.ai/quickstart.md): Run memory locally.
 
 ## Platform
 
@@ -44,7 +44,7 @@
 
 ## CLI
 
-- [AtomicMemory CLI](https://docs.atomicstrata.ai/cli.md): atomicmemory is the human- and agent-facing command line for AtomicMemory.
+- [AtomicMemory CLI](https://docs.atomicstrata.ai/cli.md): @atomicmemory/cli is the Node.js command line for direct self-hosted core
 
 ## Integrations
 
@@ -149,29 +149,31 @@
 
 ## Other
 
-- [Cloud vs Open Source](https://docs.atomicstrata.ai/cloud-vs-open-source.md): AtomicMemory ships in two consumption modes backed by the same memory engine.
-- [Authentication](https://docs.atomicstrata.ai/cloud/authentication.md): AtomicMemory exposes two authentication surfaces.
-- [Cloud CLI](https://docs.atomicstrata.ai/cloud/cli.md): The AtomicMemory CLI (atomicmemory / am) is a Rust binary for browser login, org/project/API-key management, and memory operations against the hosted cloud API.
+- [Local vs Hosted Cloud](https://docs.atomicstrata.ai/cloud-vs-open-source.md): AtomicMemory runs in three modes backed by the same engine.
+- [Authentication](https://docs.atomicstrata.ai/cloud/authentication.md): AtomicMemory Cloud and Core each authenticate requests differently.
+- [Cloud CLI](https://docs.atomicstrata.ai/cloud/cli.md): The AtomicMemory Cloud CLI (atomicmemory / am) is the primary CLI
 - [Developer Console](https://docs.atomicstrata.ai/cloud/console.md): The AtomicMemory developer console at memory.atomicstrata.ai is a Next.js dashboard for provisioning projects, managing API keys, exploring memories, and inspecting AUDN mutation traces.
-- [Managing API Keys](https://docs.atomicstrata.ai/cloud/how-to/api-keys.md): The API Keys page issues and manages the credentials your application uses to authenticate against a cloud project's memory API.
-- [Reading the Audit Log](https://docs.atomicstrata.ai/cloud/how-to/audit-log.md): The Audit Log records the administrative actions taken on a cloud project - key, settings, and lifecycle changes - so you can see who changed what and when.
-- [Billing](https://docs.atomicstrata.ai/cloud/how-to/billing.md): Billing manages your organization's subscription and tracks project, API-key, and write-token usage against your plan limits.
+- [Managing API Keys](https://docs.atomicstrata.ai/cloud/how-to/api-keys.md): The API Keys page issues and manages the Hosted Cloud credentials your application uses to authenticate against a Cloud project's memory API.
+- [Reading the Audit Log](https://docs.atomicstrata.ai/cloud/how-to/audit-log.md): The Audit Log records the administrative actions taken on a Cloud project - key, settings, and lifecycle changes - so you can see who changed what and when.
+- [Plans & Billing](https://docs.atomicstrata.ai/cloud/how-to/billing.md): Plans & Billing shows your Organization's current plan and tracks project and write-token usage against it.
 - [Resolving Conflicts](https://docs.atomicstrata.ai/cloud/how-to/conflicts.md): The Conflict queue is where an admin reviews competing beliefs the memory layer could not reconcile on its own and applies a resolution.
 - [The Dashboard](https://docs.atomicstrata.ai/cloud/how-to/dashboard.md): The Dashboard is a project's landing page - headline stats, copy-ready tool snippets, and recent activity in one view.
+- [Migrate to Hosted Cloud](https://docs.atomicstrata.ai/cloud/how-to/migrate.md): Move memories from a Connected Local project into a Hosted Cloud project with am migrate export and am migrate import.
 - [Using the Playground](https://docs.atomicstrata.ai/cloud/how-to/playground.md): The Playground lets you ingest memories and run searches against your project straight from the dashboard - no terminal, no client code.
-- [Projects & Workspaces](https://docs.atomicstrata.ai/cloud/how-to/projects.md): Projects are the isolated workspaces that hold your memories, API keys, and traces - hosted by AtomicMemory or pointed at a core you run yourself.
+- [Projects](https://docs.atomicstrata.ai/cloud/how-to/projects.md): Projects are the isolated containers that hold your memories, API keys, and traces - Local (Connected Local, your own Core) or Cloud (Hosted Cloud, fully managed).
 - [Project Settings](https://docs.atomicstrata.ai/cloud/how-to/settings.md): Project Settings is where you rename a project, see where its memory data lives, export it, manage the organization, and delete the project.
 - [Understanding Traces](https://docs.atomicstrata.ai/cloud/how-to/traces.md): The Traces page records what your memory layer did on every request - each retrieval, mutation, and package call, inspectable down to the memories and reasoning involved.
-- [Usage & Limits](https://docs.atomicstrata.ai/cloud/how-to/usage.md): The Usage page reports a project's request volumes, storage metrics, and cost drivers alongside your organization's plan limits.
+- [Usage & Limits](https://docs.atomicstrata.ai/cloud/how-to/usage.md): The Usage page reports a project's request volumes, storage metrics, and cost drivers alongside your Organization's plan limits.
 - [What is Memories](https://docs.atomicstrata.ai/cloud/how-to/what-is-memories.md): The Memories page is where you inspect everything the memory layer has stored for a project - and why.
-- [Overview](https://docs.atomicstrata.ai/cloud/overview.md): AtomicMemory is hosted, multi-tenant memory infrastructure for AI agents.
-- [Quickstart](https://docs.atomicstrata.ai/cloud/quickstart.md): Get from zero to your first inspectable memory in under five minutes using the hosted console and CLI.
+- [Overview](https://docs.atomicstrata.ai/cloud/overview.md): Run memory on your own machine.
+- [Add Hosted Cloud](https://docs.atomicstrata.ai/cloud/quickstart.md): Add Hosted Cloud — managed memory hosting — after your local Core is
+- [Troubleshooting](https://docs.atomicstrata.ai/cloud/troubleshooting.md): Symptom, check, and recovery steps for the most common Connected Local activation and Cloud console problems.
 - [Audit every memory mutation](https://docs.atomicstrata.ai/cloud/use-cases/audit-every-mutation.md): Keep a complete, inspectable record of what changed in memory, when, and by which key - for compliance reviews and incident response.
 - [Debug retrieval with traces](https://docs.atomicstrata.ai/cloud/use-cases/debug-retrieval.md): When the model recalls the wrong thing, use retrieval traces and the Playground to see which memories a query returned and why.
 - [Deletion & retention by scope](https://docs.atomicstrata.ai/cloud/use-cases/deletion-and-retention.md): Honor deletion and right-to-be-forgotten requests precisely - remove one person's memory while shared team context stays intact.
 - [Long-term memory across sessions](https://docs.atomicstrata.ai/cloud/use-cases/long-term-memory.md): Give an AI assistant memory that persists across sessions, so it recalls each user without you standing up a datastore.
 - [Monitor usage & limits](https://docs.atomicstrata.ai/cloud/use-cases/monitor-usage-and-limits.md): See a project's consumption next to your plan limits in one view, so you catch growth before it turns into a surprise bill or a throttle.
-- [One SDK, self-hosted or managed](https://docs.atomicstrata.ai/cloud/use-cases/one-sdk-self-hosted-or-managed.md): Use the same SDK and console against a local self-hosted core or the managed cloud, so you can start local and move to managed with no rewrite.
+- [One SDK, Local or Cloud](https://docs.atomicstrata.ai/cloud/use-cases/one-sdk-self-hosted-or-managed.md): Use the same SDK and console whether your project is Local (your own Core) or Cloud (fully managed), so you can start Local and move to Cloud with no rewrite.
 - [Per-user personalization with scopes](https://docs.atomicstrata.ai/cloud/use-cases/per-user-personalization.md): Isolate every end-user's memory with a per-user scope, so one app serves many users without their context bleeding together.
 - [Store preferences without a database](https://docs.atomicstrata.ai/cloud/use-cases/preferences-without-a-database.md): Capture durable user preferences through ingest and search - reconciled writes keep one standing fact per preference, so you never design a schema or run a database.
 - [Prototype in the Playground](https://docs.atomicstrata.ai/cloud/use-cases/prototype-in-the-playground.md): Run ingest and search interactively from the dashboard and see the results - traces and stored memories - before you wire a single line of SDK code.
@@ -179,7 +181,8 @@
 - [Least-privilege scoped API keys](https://docs.atomicstrata.ai/cloud/use-cases/scoped-api-keys.md): Give each service a per-project, revocable API key so it reaches only the memory it needs - and every write stays attributable.
 - [See what's stored - and why](https://docs.atomicstrata.ai/cloud/use-cases/see-whats-stored.md): Inspect the reconciled memory state and the trace behind every fact, so you always know what your assistant has stored and why.
 - [Share a read-only memory view](https://docs.atomicstrata.ai/cloud/use-cases/share-a-read-only-view.md): Give a teammate or stakeholder a locked, read-only view of a project's memories - no account, no console access, and no way to change anything.
-- [Open Source](https://docs.atomicstrata.ai/introduction.md): These pages cover the self-hosted engine you run yourself.
+- [Core-only Docker](https://docs.atomicstrata.ai/core-only-docker.md): Run AtomicMemory Core on your machine with Docker and HTTP — no Cloud account,
+- [Introduction](https://docs.atomicstrata.ai/introduction.md): Run memory locally in one command: the Quickstart installs
 
 ## Optional
 

@@ -6,7 +6,7 @@ Sometimes the people who most want to see what your assistant remembers are the 
 
 ## The problem
 
-A reviewer, a stakeholder, or a teammate wants to inspect what the memory layer has stored - but provisioning them a full console account is overkill, and you don't want them editing, deleting, or wandering into the rest of the workspace.
+A reviewer, a stakeholder, or a teammate wants to inspect what the memory layer has stored - but provisioning them a full console account is overkill, and you don't want them editing, deleting, or wandering into the rest of the console.
 
 ## How the cloud helps
 

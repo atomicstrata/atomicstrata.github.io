@@ -45,7 +45,9 @@ The HTML form (without the `.md` suffix) is for human readers; cite that URL whe
 | HTTP API endpoints | `/api-reference/http/<operation-id>` (kebab-case of OpenAPI `operationId`) |
 | SDK overview, concepts, guides | `/sdk/...` |
 | SDK API reference | `/sdk/api-reference/...` |
-| CLI commands and hook generation | `/cli` |
+| Cloud CLI (`am init`, Connected Local, Hosted Cloud) | `/cloud/cli`, `/quickstart` |
+| npm CLI (advanced self-hosted workflows) | `/cli` |
+| Cloud console, auth, billing, how-to | `/cloud/...` |
 | Platform concepts (architecture, composition, stores, providers, scope, observability) | `/platform/<topic>` |
 | Coding-agent setup | `/integrations/coding-agents/<tool>` |
 | Framework adapters | `/integrations/frameworks/<framework>` |
@@ -68,5 +70,9 @@ The AtomicMemory MCP server (`@atomicmemory/mcp-server`) exposes `memory_search`
 ## Out of scope for these docs
 
 - Memory contents (what was previously saved) → use the `memory_search` MCP tool
-- Hosted SaaS configuration, AtomicMemory is self-hosted; there is no hosted dashboard
 - Frameworks not listed under `/integrations/frameworks/`, those are not officially supported yet
+
+For hosted console and managed memory, see `/cloud/overview` and
+[memory.atomicstrata.ai](https://memory.atomicstrata.ai). Open Source activation
+starts at `/quickstart` (`am init`); Core-only Docker without Cloud is at
+`/core-only-docker`.

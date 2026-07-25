@@ -56,7 +56,7 @@ Most coding-agent integrations use the shared MCP server from the [`packages/mcp
 
 Framework integrations use the TypeScript or Python SDK directly, but keep the same loop: retrieve before the agent acts, ingest after useful work completes, and scope memory by user, agent, namespace, or thread.
 
-Terminal users can use the [AtomicMemory CLI](/cli) for direct search, ingest, profile setup, and hook generation.
+Terminal users: use the [Cloud CLI](/cloud/cli) (`am init`, Connected Local) or the [npm CLI](/cli) for direct self-hosted core workflows — search, ingest, profile setup, and hook generation.
 
 ## Backend choice
 

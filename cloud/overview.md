@@ -1,87 +1,61 @@
-# AtomicMemory
+# AtomicMemory Cloud
 
 > Agent index: [llms.txt](/llms.txt)
 
-**AtomicMemory** is hosted, multi-tenant memory infrastructure for AI agents. It provides orgs, projects, API keys, usage tracking, and a developer console - while the open-source **AtomicMemory Core** engine handles embeddings, vector storage, retrieval, fact extraction, and AUDN mutation.
+**Run memory on your own machine. See exactly what it's doing. Add managed hosting only when you need it.**
 
-Console: **[memory.atomicstrata.ai](https://memory.atomicstrata.ai)**  
-API: **`https://api.atomicstrata.ai`**
+AtomicMemory Cloud pairs the open-source **AtomicMemory Core** engine with a developer console: Core stores and retrieves memories, and the console gives you inspectable ingest, search, and mutation traces without requiring you to host anything. The console labels the two project types **Local** and **Cloud**; this page calls them **Connected Local** (Core running on your machine, connected to the console) and **Hosted Cloud** (fully managed hosting) before using the shorter labels.
 
-## Cloud vs Core
+**→ [Start the Quickstart](/quickstart)** — Connected Local in one command, free forever.  
+Ready for shared or hosted access later? [Add Hosted Cloud](/cloud/quickstart). Something not working? [Troubleshooting](/cloud/troubleshooting).
 
-| Layer | Owns | Where it runs |
+## Why teams start here
+
+-   **Local ownership** — memories live in Core, on your machine. Nothing leaves your infrastructure unless you choose to add hosting.
+-   **Console visibility** — every ingest, search, and mutation writes an inspectable trace with its call type, timing, and reconciliation decision; open Memory Explorer to see the actual stored content.
+-   **Portable integrations** — the same CLI, SDK, and MCP tools work whether Core runs on your laptop or behind a managed endpoint.
+
+## The Connected Local journey
+
+Three steps, one command to start:
+
+1.  **Install and run `am init`** — signs you in, starts Core in Docker, and connects your console project.
+2.  **Add a memory** — `am memory ingest` and `am memory search` round-trip through your local Core.
+3.  **Confirm it in the console** — the runtime shows **Online**, and your memory appears under **Memories** with a matching trace.
+
+Success looks like: the CLI prints **Verified**, and the console shows the runtime **Online** with your memory listed.
+
+Full walkthrough: [Platform Quickstart](/quickstart).
+
+## Local vs Cloud
+
+| Outcome | Local project | \+ Cloud project |
 | --- | --- | --- |
-| **Cloud gateway** | Tenancy, API keys, JWT dashboard auth, traces, usage, billing hooks | `am-cloud-api` (public) |
-| **Developer console** | Onboarding, Memory Explorer, traces, playground | [memory.atomicstrata.ai](https://memory.atomicstrata.ai) |
-| **Core engine** | pgvector index, fact extraction, retrieval, LLM repair loop | Private ECS service (not user-facing) |
+| Where memories live | Your machine, via Core | AtomicMemory-managed hosting — your existing Local project's memories stay on your machine, unaffected |
+| Console visibility | Runtime status, memories, traces | Same, plus a managed project space |
+| Setup | `am init` | Upgrade to Free, then create a Cloud project |
+| Good for | Evaluating, local dev, air-gapped work | Shared access without operating infrastructure |
 
-Use **Cloud** when you want a managed endpoint and dashboard with zero infrastructure. Use **Core** when you need full data residency, custom deployment, or to embed the engine in your own stack. The same SDK and MCP tools work against both - point `ATOMICMEMORY_API_URL` at Cloud or your self-hosted core.
+The console labels these **Local** and **Cloud** projects — the shorter names used in this table and for the rest of the page.
 
-Weighing hosted against self-hosted? See [Cloud vs Open Source](/cloud-vs-open-source).
+## Plans at a glance
 
-## Architecture
+-   **Open Source** — free forever. One Connected Local project, full console visibility, no Hosted Cloud project.
+-   **Free** — a self-serve $0 upgrade. Keeps your Local project and unlocks one Hosted Cloud project.
 
-Clients (untrusted)
+See [Plans & Billing](/cloud/how-to/billing) for details.
 
-CLI / SDK / Web
+## Explore the console
 
-Dashboard (web)
+-   [Developer Console](/cloud/console) — dashboard tour
+-   [Memories](/cloud/how-to/what-is-memories) — inspect everything stored
+-   [Traces](/cloud/how-to/traces) — ingest, search, and mutation history
+-   [Playground](/cloud/how-to/playground) — try ingest and search interactively
+-   [Integrations](/integrations/overview) — MCP, SDKs, and coding agents
 
-`amc_…` key or session JWT
+## Advanced
 
-am-cloud-api (gateway)
-
-API-key authn
-
-Tenancy mapping
-
-Trace + usage
-
-`AM_CORE_API_KEY` infra only
-
-AtomicMemory Core (private)
-
-pgvector index
-
-AUDN mutation
-
-retrieval + LLM
-
-## Trust boundaries
-
--   The **`amc_…` API key** is the only credential clients see. It is verified in the cloud gateway (argon2 hash + display prefix) and is **never** forwarded to core.
--   **`AM_CORE_API_KEY`** is an infrastructure credential that lives only in the cloud environment. It authenticates outbound calls to core.
--   **`ProjectType::Local`** projects are rejected with `400` before any core call. Local traffic should hit the project's own core URL directly and bypass the cloud gateway.
-
-## Multi-tenancy mapping
-
-Every cloud project maps to exactly one core `user_id`, guaranteeing no cross-project leakage at the storage layer.
-
-| Cloud concept | Core field | Notes |
-| --- | --- | --- |
-| `project_id` | `user_id = "project:{project_id}"` | Hard tenant boundary on every outbound request |
-| SDK `user_id` / `scope.user` | `session_id` | Per-user filtering on reads |
-| SDK `agent_id` / `scope.agent` | `agent_id` | Pass-through |
-| SDK `workspace_id` | `workspace_id` | Pass-through; core requires `agent_id` when set |
-
-## When to choose Cloud
-
-Choose **AtomicMemory** if you:
-
--   Want to ship agents with memory in minutes, not weeks
--   Need inspectable mutation and retrieval traces in a dashboard
--   Prefer managed Postgres, Redis, and scaling over operating core yourself
--   Plan to migrate to self-hosted core later with the same SDK surface
-
-Choose **self-hosted Core** if you:
-
--   Require on-prem or air-gapped deployment
--   Need full control over embedding providers and LLM routing
--   Want to embed `createCoreRuntime` in-process (TypeScript) without HTTP
-
-## Next steps
-
--   [Cloud Quickstart](/cloud/quickstart) - sign up, get an API key, first ingest
--   [Developer Console](/cloud/console) - dashboard tour
--   [Authentication](/cloud/authentication) - API keys vs dashboard session JWT
--   [Cloud CLI](/cloud/cli) - `am` / `atomicmemory` from `get.atomicstrata.ai`
+-   [Authentication](/cloud/authentication) — credential model and deployment details
+-   [Cloud CLI](/cloud/cli) — full command reference
+-   [Core architecture](/platform/architecture) — how the engine is composed
+-   [Core-only Docker](/core-only-docker) — run Core without a Cloud connection
