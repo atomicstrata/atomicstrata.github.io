@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Give Hermes Agent persistent, cross-session memory backed by AtomicMemory. Unlike MCP-backed coding-agent plugins, Hermes uses a native Python memory provider that participates directly in prefetch, turn sync, and shutdown hooks. The published npm installer copies the provider into your Hermes profile; the provider then uses the published AtomicMemory Python SDK from the Hermes Python environment.
+Give Hermes Agent persistent, cross-session memory backed by Open Source. Unlike MCP-backed coding-agent plugins, Hermes uses a native Python memory provider that participates directly in prefetch, turn sync, and shutdown hooks. The published npm installer copies the provider into your Hermes profile; the provider then uses the published Atomic Memory Python SDK from the Hermes Python environment.
 
 Already ran am init?
 
@@ -10,7 +10,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Start local core first. It should be reachable at `http://127.0.0.1:17350`.
 
@@ -56,7 +56,7 @@ hermes memory status
 
 ## Features
 
--   **Native provider lifecycle.** Hermes calls the AtomicMemory provider during recall, ingest, and shutdown.
+-   **Native provider lifecycle.** Hermes calls the Open Source provider during recall, ingest, and shutdown.
 -   **Background recall.** Prefetch prepares memory for the next turn without blocking the chat loop.
 -   **Non-blocking ingest.** Completed turns sync in the background.
 -   **Shared or siloed memory.** Hermes can recall all user memories or only Hermes-ingested memories.
@@ -73,12 +73,12 @@ hermes memory status
 
 | Scope | Recall |
 | --- | --- |
-| `shared` | All AtomicMemory memories for the user. |
+| `shared` | All Open Source memories for the user. |
 | `siloed` | Only Hermes-ingested memories. |
 
 ## Configuration
 
-The local Docker service started above requires the development bearer key shown in the quickstart. For a remote AtomicMemory service, use that service's issued key:
+The local Docker service started above requires the development bearer key shown in the quickstart. For a remote Open Source service, use that service's issued key:
 
 ```bash
 export ATOMICMEMORY_API_URL="https://memory.yourco.com"
@@ -89,15 +89,15 @@ Hermes' setup wizard prompts for:
 
 | Field | Purpose |
 | --- | --- |
-| `scope_user` | User identity used for AtomicMemory scope. |
+| `scope_user` | User identity used for Open Source scope. |
 | `memory_scope` | `shared` or `siloed`. |
 
 Required environment:
 
 | Env var | Purpose |
 | --- | --- |
-| `ATOMICMEMORY_API_URL` | AtomicMemory core URL. Required; the Hermes provider intentionally has no default API URL. |
-| `ATOMICMEMORY_API_KEY` | Bearer credential for the local Docker service or any protected AtomicMemory service. |
+| `ATOMICMEMORY_API_URL` | Core URL. Required; the Hermes provider intentionally has no default API URL. |
+| `ATOMICMEMORY_API_KEY` | Bearer credential for the local Docker service or any protected Open Source service. |
 
 Optional environment:
 
@@ -144,7 +144,7 @@ The published npm package is the supported distribution path for the provider it
 
 | Tool | Maps to | Purpose |
 | --- | --- | --- |
-| `atomicmemory_search` | `MemoryClient.search` | Search AtomicMemory by meaning. |
+| `atomicmemory_search` | `MemoryClient.search` | Search Open Source by meaning. |
 | `atomicmemory_context` | `MemoryClient.package` | Build an injection-ready context package. |
 | `atomicmemory_conclude` | `MemoryClient.ingest` | Store one explicit durable fact verbatim. |
 | `atomicmemory_profile` | `MemoryClient.list` | List recent records for the current user. |
@@ -166,7 +166,7 @@ The published npm package is the supported distribution path for the provider it
 | Provider does not appear | Confirm the provider is installed under `$HERMES_HOME/plugins/atomicmemory`, or under `$HOME/.hermes/plugins/atomicmemory` when `HERMES_HOME` is unset. |
 | Provider unavailable | Confirm `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and that Hermes installed the `atomicmemory` Python SDK dependency from `plugin.yaml`. |
 | Siloed recall fails | Use `ATOMICMEMORY_PROVIDER=atomicmemory` or switch to `shared`. |
-| Calls pause after repeated backend failures | Hermes opens a circuit breaker after five SDK failures and resumes after roughly two minutes. Check the AtomicMemory service before retrying. |
+| Calls pause after repeated backend failures | Hermes opens a circuit breaker after five SDK failures and resumes after roughly two minutes. Check the Open Source service before retrying. |
 
 ## Update
 

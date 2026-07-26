@@ -2,13 +2,13 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory support for Mastra exposes durable memory search and ingest as Mastra tools around your SDK `MemoryClient`.
+Open Source support for Mastra exposes durable memory search and ingest as Mastra tools around your SDK `MemoryClient`.
 
 ## What you get
 
 -   **Agent tools.** `memory_search` and `memory_ingest` tools created with Mastra `createTool()`.
 -   **Helper functions.** `searchMemory()` and `ingestTurn()` for custom Mastra workflows.
--   **Backend-agnostic SDK path.** The adapter uses the AtomicMemory SDK provider registry through your `MemoryClient`.
+-   **Backend-agnostic SDK path.** The adapter uses the Atomic Memory SDK provider registry through your `MemoryClient`.
 
 Already ran am init?
 
@@ -16,7 +16,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Start local core first. It should be reachable at `http://127.0.0.1:17350`.
 

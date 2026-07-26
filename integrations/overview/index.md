@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory adds durable memory to coding agents, AI frameworks, and terminal workflows through the same provider-backed memory layer. Choose the host you use, install the local integration, and point it at your AtomicMemory backend.
+Atomic Memory adds durable memory to coding agents, AI frameworks, and terminal workflows through the same provider-backed memory layer. Choose the host you use, install the local integration, and point it at your Atomic Memory backend.
 
 Your host
 
@@ -20,7 +20,7 @@ SDK adapters
 
 Backend
 
-AtomicMemoryhosted or self-hosted
+Atomic Memoryhosted or self-hosted
 
 ## Coding agents
 
@@ -56,7 +56,7 @@ Most coding-agent integrations use the shared MCP server from the [`packages/mcp
 
 Framework integrations use the TypeScript or Python SDK directly, but keep the same loop: retrieve before the agent acts, ingest after useful work completes, and scope memory by user, agent, namespace, or thread.
 
-Terminal users: use the [AtomicMemory CLI](/cloud/cli) (`am init`, Connected Local) or the [npm CLI](/cli) for direct self-hosted core workflows — search, ingest, profile setup, and hook generation.
+Terminal users: use the [Atomic Memory CLI](/cloud/cli) (`am init`, Connected Local) or the [npm CLI](/cli) for direct self-hosted core workflows — search, ingest, profile setup, and hook generation.
 
 ## Backend choice
 

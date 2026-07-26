@@ -1,4 +1,4 @@
-# Atomic Strata
+# Atomic Memory
 
 > Standardized platform layer for AI memory, pluggable at every seam.
 
@@ -8,15 +8,15 @@
 
 ## Platform
 
-- [Architecture](https://docs.atomicstrata.ai/platform/architecture.md): AtomicMemory is a standardized platform layer for AI memory, not a monolithic service.
+- [Architecture](https://docs.atomicstrata.ai/platform/architecture.md): Open Source is a standardized platform layer for AI memory, not a monolithic service.
 - [Artifact Storage](https://docs.atomicstrata.ai/platform/artifact-storage.md): Artifact storage is the optional raw-byte layer behind documents and storage
-- [Composition](https://docs.atomicstrata.ai/platform/composition.md): AtomicMemory has an explicit composition root, a single function, createCoreRuntime, that owns every piece of wiring between config, the Postgres pool, repositories, stores, and services.
+- [Composition](https://docs.atomicstrata.ai/platform/composition.md): Open Source has an explicit composition root, a single function, createCoreRuntime, that owns every piece of wiring between config, the Postgres pool, repositories, stores, and services.
 - [Consuming core](https://docs.atomicstrata.ai/platform/consuming-core.md): atomicmemory-core can be used as a network service, embedded in a Node process, or booted as a containerized release target.
-- [Lessons](https://docs.atomicstrata.ai/platform/lessons.md): A lesson is a recorded failure pattern that AtomicMemory has seen for a
-- [Observability](https://docs.atomicstrata.ai/platform/observability.md): Every AtomicMemory retrieval emits a structured, stable observability
-- [Providers](https://docs.atomicstrata.ai/platform/providers.md): Embeddings and LLM calls in AtomicMemory are pluggable providers behind
-- [Scope](https://docs.atomicstrata.ai/platform/scope.md): MemoryScope is AtomicMemory's canonical read-path contract: a single tagged
-- [Stores](https://docs.atomicstrata.ai/platform/stores.md): AtomicMemory's storage layer is exposed as a family of narrow, domain-facing
+- [Lessons](https://docs.atomicstrata.ai/platform/lessons.md): A lesson is a recorded failure pattern that Open Source has seen for a
+- [Observability](https://docs.atomicstrata.ai/platform/observability.md): Every Open Source retrieval emits a structured, stable observability
+- [Providers](https://docs.atomicstrata.ai/platform/providers.md): Embeddings and LLM calls in Open Source are pluggable providers behind
+- [Scope](https://docs.atomicstrata.ai/platform/scope.md): MemoryScope is Open Source's canonical read-path contract: a single tagged
+- [Stores](https://docs.atomicstrata.ai/platform/stores.md): Open Source's storage layer is exposed as a family of narrow, domain-facing
 
 ## SDK
 
@@ -35,7 +35,7 @@
 - [Browser primitives](https://docs.atomicstrata.ai/sdk/guides/browser-primitives.md): This guide bypasses MemoryClient.
 - [Writing a custom provider](https://docs.atomicstrata.ai/sdk/guides/custom-provider.md): The provider interface is deliberately small.
 - [Using the Hindsight backend](https://docs.atomicstrata.ai/sdk/guides/hindsight-backend.md): HindsightProvider is the SDK's HTTP client for Hindsight, Vectorize's memory engine built around per-user memory banks with retain, recall, and reflect operations.
-- [Using the llmwiki backends](https://docs.atomicstrata.ai/sdk/guides/llmwiki-backend.md): @atomicmemory/llmwiki connects AtomicMemory to llm-wiki-compiler (llmwiki), which compiles raw sources into an interlinked markdown wiki.
+- [Using the llmwiki backends](https://docs.atomicstrata.ai/sdk/guides/llmwiki-backend.md): @atomicmemory/llmwiki connects Open Source to llm-wiki-compiler (llmwiki), which compiles raw sources into an interlinked markdown wiki.
 - [Using the Mem0 backend](https://docs.atomicstrata.ai/sdk/guides/mem0-backend.md): Mem0Provider is the SDK's HTTP client for Mem0.
 - [Node.js / server-side](https://docs.atomicstrata.ai/sdk/guides/nodejs-server.md): Using the SDK server-side is supported, the package is ESM + CJS, has no browser-only code on its critical path, and the subpath storage primitives run anywhere Node does.
 - [Swapping backends](https://docs.atomicstrata.ai/sdk/guides/swapping-backends.md): The SDK's provider architecture makes the capability of swapping backends real; this guide covers the operational story.
@@ -44,44 +44,44 @@
 
 ## CLI
 
-- [AtomicMemory CLI](https://docs.atomicstrata.ai/cli.md): @atomicmemory/cli is the Node.js command line for direct self-hosted core
+- [Open Source CLI (npm)](https://docs.atomicstrata.ai/cli.md): @atomicmemory/cli is the Node.js command line for direct self-hosted core
 
 ## Integrations
 
-- [Claude Code](https://docs.atomicstrata.ai/integrations/coding-agents/claude-code.md): The Claude Code plugin is discovered from the public AtomicMemory monorepo.
+- [Claude Code](https://docs.atomicstrata.ai/integrations/coding-agents/claude-code.md): The Claude Code plugin is discovered from the public Atomic Memory monorepo.
 - [Claude Code Cloud](https://docs.atomicstrata.ai/integrations/coding-agents/claude-code/cloud.md): Cloud deployment details for Claude Code are coming soon.
-- [Claude Code Local](https://docs.atomicstrata.ai/integrations/coding-agents/claude-code/local.md): Give Claude Code persistent, cross-session memory backed by AtomicMemory.
-- [Codex](https://docs.atomicstrata.ai/integrations/coding-agents/codex.md): AtomicMemory integrates with Codex through the shared MCP server and a memory protocol skill that handles retrieval, durable writes, and handoff snapshots.
+- [Claude Code Local](https://docs.atomicstrata.ai/integrations/coding-agents/claude-code/local.md): Give Claude Code persistent, cross-session memory backed by Open Source.
+- [Codex](https://docs.atomicstrata.ai/integrations/coding-agents/codex.md): Atomic Memory integrates with Codex through the shared MCP server and a memory protocol skill that handles retrieval, durable writes, and handoff snapshots.
 - [Codex Cloud](https://docs.atomicstrata.ai/integrations/coding-agents/codex/cloud.md): Cloud deployment details for Codex are coming soon.
-- [Codex Local](https://docs.atomicstrata.ai/integrations/coding-agents/codex/local.md): Give Codex persistent, cross-session memory backed by AtomicMemory.
-- [Cursor](https://docs.atomicstrata.ai/integrations/coding-agents/cursor.md): AtomicMemory supports Cursor today through a local MCP integration and Cursor
+- [Codex Local](https://docs.atomicstrata.ai/integrations/coding-agents/codex/local.md): Give Codex persistent, cross-session memory backed by Open Source.
+- [Cursor](https://docs.atomicstrata.ai/integrations/coding-agents/cursor.md): Atomic Memory supports Cursor today through a local MCP integration and Cursor
 - [Cursor Cloud](https://docs.atomicstrata.ai/integrations/coding-agents/cursor/cloud.md): Cursor Cloud deployment details are coming soon.
 - [Cursor Local](https://docs.atomicstrata.ai/integrations/coding-agents/cursor/local.md): Cursor support is available today as a manual local integration using the
-- [Hermes Agent](https://docs.atomicstrata.ai/integrations/coding-agents/hermes.md): AtomicMemory integrates with Hermes as a native Python memory provider.
+- [Hermes Agent](https://docs.atomicstrata.ai/integrations/coding-agents/hermes.md): Atomic Memory integrates with Hermes as a native Python memory provider.
 - [Hermes Cloud](https://docs.atomicstrata.ai/integrations/coding-agents/hermes/cloud.md): Cloud deployment details for Hermes are coming soon.
-- [Hermes Local](https://docs.atomicstrata.ai/integrations/coding-agents/hermes/local.md): Give Hermes Agent persistent, cross-session memory backed by AtomicMemory.
-- [OpenClaw](https://docs.atomicstrata.ai/integrations/coding-agents/openclaw.md): AtomicMemory integrates with OpenClaw as a plugin and skill bundle backed by the same MCP server and SDK primitives used elsewhere in the platform.
+- [Hermes Local](https://docs.atomicstrata.ai/integrations/coding-agents/hermes/local.md): Give Hermes Agent persistent, cross-session memory backed by Open Source.
+- [OpenClaw](https://docs.atomicstrata.ai/integrations/coding-agents/openclaw.md): Atomic Memory integrates with OpenClaw as a plugin and skill bundle backed by the same MCP server and SDK primitives used elsewhere in the platform.
 - [OpenClaw Cloud](https://docs.atomicstrata.ai/integrations/coding-agents/openclaw/cloud.md): Cloud deployment details for OpenClaw are coming soon.
-- [OpenClaw Local](https://docs.atomicstrata.ai/integrations/coding-agents/openclaw/local.md): Give OpenClaw persistent, cross-channel memory backed by AtomicMemory.
-- [LangChain (JS)](https://docs.atomicstrata.ai/integrations/frameworks/langchain-js.md): AtomicMemory provides LangChain JS helpers and agent tools around an injected AtomicMemory SDK client.
+- [OpenClaw Local](https://docs.atomicstrata.ai/integrations/coding-agents/openclaw/local.md): Give OpenClaw persistent, cross-channel memory backed by Open Source.
+- [LangChain (JS)](https://docs.atomicstrata.ai/integrations/frameworks/langchain-js.md): Atomic Memory provides LangChain JS helpers and agent tools around an injected Atomic Memory SDK client.
 - [LangChain (JS) Cloud](https://docs.atomicstrata.ai/integrations/frameworks/langchain-js/cloud.md): Cloud deployment details for the LangChain adapter are coming soon.
-- [LangChain (JS) Local](https://docs.atomicstrata.ai/integrations/frameworks/langchain-js/local.md): AtomicMemory support for LangChain JS exposes durable semantic memory through helper functions and LangChain-native tools.
-- [Langflow](https://docs.atomicstrata.ai/integrations/frameworks/langflow.md): AtomicMemory provides Langflow custom components that add durable semantic memory to visual AI workflows through the Python atomicmemory SDK.
+- [LangChain (JS) Local](https://docs.atomicstrata.ai/integrations/frameworks/langchain-js/local.md): Open Source support for LangChain JS exposes durable semantic memory through helper functions and LangChain-native tools.
+- [Langflow](https://docs.atomicstrata.ai/integrations/frameworks/langflow.md): Atomic Memory provides Langflow custom components that add durable semantic memory to visual AI workflows through the Python atomicmemory SDK.
 - [Langflow Cloud](https://docs.atomicstrata.ai/integrations/frameworks/langflow/cloud.md): Hosted Langflow setup is not documented yet.
-- [Langflow Local](https://docs.atomicstrata.ai/integrations/frameworks/langflow/local.md): Add durable, cross-session memory to Langflow flows with AtomicMemory custom components.
-- [LangGraph (JS)](https://docs.atomicstrata.ai/integrations/frameworks/langgraph-js.md): AtomicMemory provides LangGraph node factories that add durable retrieval and ingest beside graph-scoped checkpointers.
+- [Langflow Local](https://docs.atomicstrata.ai/integrations/frameworks/langflow/local.md): Add durable, cross-session memory to Langflow flows with Atomic Memory custom components.
+- [LangGraph (JS)](https://docs.atomicstrata.ai/integrations/frameworks/langgraph-js.md): Atomic Memory provides LangGraph node factories that add durable retrieval and ingest beside graph-scoped checkpointers.
 - [LangGraph (JS) Cloud](https://docs.atomicstrata.ai/integrations/frameworks/langgraph-js/cloud.md): Cloud deployment details for the LangGraph adapter are coming soon.
-- [LangGraph (JS) Local](https://docs.atomicstrata.ai/integrations/frameworks/langgraph-js/local.md): AtomicMemory support for LangGraph JS provides durable semantic memory next to LangGraph's run-scoped checkpointers.
-- [Mastra](https://docs.atomicstrata.ai/integrations/frameworks/mastra.md): AtomicMemory provides Mastra tools that map agent memory search and ingest onto AtomicMemory retrieval and ingest primitives.
+- [LangGraph (JS) Local](https://docs.atomicstrata.ai/integrations/frameworks/langgraph-js/local.md): Open Source support for LangGraph JS provides durable semantic memory next to LangGraph's run-scoped checkpointers.
+- [Mastra](https://docs.atomicstrata.ai/integrations/frameworks/mastra.md): Atomic Memory provides Mastra tools that map agent memory search and ingest onto Atomic Memory retrieval and ingest primitives.
 - [Mastra Cloud](https://docs.atomicstrata.ai/integrations/frameworks/mastra/cloud.md): Cloud deployment details for the Mastra adapter are coming soon.
-- [Mastra Local](https://docs.atomicstrata.ai/integrations/frameworks/mastra/local.md): AtomicMemory support for Mastra exposes durable memory search and ingest as Mastra tools around your SDK MemoryClient.
-- [OpenAI Agents SDK](https://docs.atomicstrata.ai/integrations/frameworks/openai-agents.md): AtomicMemory integrates with the OpenAI Agents SDK through an adapter that augments run input with memory and ingests completed turns back into durable storage.
+- [Mastra Local](https://docs.atomicstrata.ai/integrations/frameworks/mastra/local.md): Open Source support for Mastra exposes durable memory search and ingest as Mastra tools around your SDK MemoryClient.
+- [OpenAI Agents SDK](https://docs.atomicstrata.ai/integrations/frameworks/openai-agents.md): Atomic Memory integrates with the OpenAI Agents SDK through an adapter that augments run input with memory and ingests completed turns back into durable storage.
 - [OpenAI Agents SDK Cloud](https://docs.atomicstrata.ai/integrations/frameworks/openai-agents/cloud.md): Cloud deployment details for the OpenAI Agents SDK adapter are coming soon.
-- [OpenAI Agents SDK Local](https://docs.atomicstrata.ai/integrations/frameworks/openai-agents/local.md): Give OpenAI Agents SDK applications persistent memory backed by AtomicMemory.
-- [Vercel AI SDK](https://docs.atomicstrata.ai/integrations/frameworks/vercel-ai-sdk.md): AtomicMemory integrates with Vercel AI SDK through an adapter that handles retrieval before the model call and durable ingest after the turn completes.
+- [OpenAI Agents SDK Local](https://docs.atomicstrata.ai/integrations/frameworks/openai-agents/local.md): Give OpenAI Agents SDK applications persistent memory backed by Open Source.
+- [Vercel AI SDK](https://docs.atomicstrata.ai/integrations/frameworks/vercel-ai-sdk.md): Atomic Memory integrates with Vercel AI SDK through an adapter that handles retrieval before the model call and durable ingest after the turn completes.
 - [Vercel AI SDK Cloud](https://docs.atomicstrata.ai/integrations/frameworks/vercel-ai-sdk/cloud.md): Cloud deployment details for the Vercel AI SDK adapter are coming soon.
-- [Vercel AI SDK Local](https://docs.atomicstrata.ai/integrations/frameworks/vercel-ai-sdk/local.md): Give Vercel AI SDK applications persistent memory backed by AtomicMemory.
-- [Integrations](https://docs.atomicstrata.ai/integrations/overview.md): AtomicMemory adds durable memory to coding agents, AI frameworks, and terminal workflows through the same provider-backed memory layer.
+- [Vercel AI SDK Local](https://docs.atomicstrata.ai/integrations/frameworks/vercel-ai-sdk/local.md): Give Vercel AI SDK applications persistent memory backed by Open Source.
+- [Integrations](https://docs.atomicstrata.ai/integrations/overview.md): Atomic Memory adds durable memory to coding agents, AI frameworks, and terminal workflows through the same provider-backed memory layer.
 
 ## API Reference
 
@@ -132,7 +132,7 @@
 - [Mark the document as extraction-failed.](https://docs.atomicstrata.ai/api-reference/http/mark-extraction-failure.md): Service-owned status transition: callers declare *that* extraction failed and *what category* via a bounded `error_code`.
 - [Mark the document as index-failed.](https://docs.atomicstrata.ai/api-reference/http/mark-index-failure.md): Service-owned status transition.
 - [Merge a source entity into a target entity.](https://docs.atomicstrata.ai/api-reference/http/merge-entities.md): Re-scopes all memories, attributes, cards, and graph edges from `source` to `target` in a single transaction, then deletes the source entity.
-- [OpenAPI Spec](https://docs.atomicstrata.ai/api-reference/http/openapi-spec.md): Download the canonical AtomicMemory Core OpenAPI document:
+- [OpenAPI Spec](https://docs.atomicstrata.ai/api-reference/http/openapi-spec.md): Download the canonical Open Source Core OpenAPI document:
 - [Update per-entity extraction guidance and pipeline config.](https://docs.atomicstrata.ai/api-reference/http/patch-entity-settings.md): Stores an extraction prompt (up to 1,500 chars) and pipeline overrides for a specific entity.
 - [Register a pointer artifact or upload a managed artifact.](https://docs.atomicstrata.ai/api-reference/http/put-storage-artifact.md): Pointer mode sends a JSON body with `mode: 'pointer'` plus a caller-supplied `uri`; the server stores the reference but NEVER fetches the URI.
 - [Reconcile deferred mutations for a user (or all users when user_id is absent).](https://docs.atomicstrata.ai/api-reference/http/reconcile-deferred.md): Reconcile deferred mutations for a user (or all users when user_id is absent).
@@ -149,24 +149,24 @@
 
 ## Other
 
-- [Local vs Hosted Cloud](https://docs.atomicstrata.ai/cloud-vs-open-source.md): AtomicMemory runs in three modes backed by the same engine.
-- [Authentication](https://docs.atomicstrata.ai/cloud/authentication.md): AtomicMemory Cloud and Core each authenticate requests differently.
-- [CLI](https://docs.atomicstrata.ai/cloud/cli.md): The AtomicMemory CLI (atomicmemory / am) is the primary CLI for
-- [Developer Console](https://docs.atomicstrata.ai/cloud/console.md): The AtomicMemory developer console at memory.atomicstrata.ai is a Next.js dashboard for provisioning projects, managing API keys, exploring memories, and inspecting AUDN mutation traces.
-- [Managing API Keys](https://docs.atomicstrata.ai/cloud/how-to/api-keys.md): The API Keys page issues and manages the Hosted Cloud credentials your application uses to authenticate against a Cloud project's memory API.
+- [Open Source vs Atomic Memory](https://docs.atomicstrata.ai/cloud-vs-open-source.md): Atomic Memory runs in three modes backed by the same engine.
+- [Authentication](https://docs.atomicstrata.ai/cloud/authentication.md): Atomic Memory and Core each authenticate requests differently.
+- [CLI](https://docs.atomicstrata.ai/cloud/cli.md): The Atomic Memory CLI (atomicmemory / am) is the primary CLI for
+- [Developer Console](https://docs.atomicstrata.ai/cloud/console.md): The Atomic Memory developer console at memory.atomicstrata.ai is a Next.js dashboard for provisioning projects, managing API keys, exploring memories, and inspecting AUDN mutation traces.
+- [Managing API Keys](https://docs.atomicstrata.ai/cloud/how-to/api-keys.md): The API Keys page issues and manages the Atomic Memory credentials your application uses to authenticate against a Cloud project's memory API.
 - [Reading the Audit Log](https://docs.atomicstrata.ai/cloud/how-to/audit-log.md): The Audit Log records the administrative actions taken on a Cloud project - key, settings, and lifecycle changes - so you can see who changed what and when.
 - [Plans & Billing](https://docs.atomicstrata.ai/cloud/how-to/billing.md): Plans & Billing shows your Organization's current plan and tracks project and write-token usage against it.
 - [Resolving Conflicts](https://docs.atomicstrata.ai/cloud/how-to/conflicts.md): The Conflict queue is where an admin reviews competing beliefs the memory layer could not reconcile on its own and applies a resolution.
 - [The Dashboard](https://docs.atomicstrata.ai/cloud/how-to/dashboard.md): The Dashboard is a project's landing page - headline stats, copy-ready tool snippets, and recent activity in one view.
-- [Migrate to Hosted Cloud](https://docs.atomicstrata.ai/cloud/how-to/migrate.md): Move memories from a Connected Local project into a Hosted Cloud project with am migrate export and am migrate import.
+- [Migrate to Atomic Memory](https://docs.atomicstrata.ai/cloud/how-to/migrate.md): Move memories from a Connected Local project into an Atomic Memory project with am migrate export and am migrate import.
 - [Using the Playground](https://docs.atomicstrata.ai/cloud/how-to/playground.md): The Playground lets you ingest memories and run searches against your project straight from the dashboard - no terminal, no client code.
-- [Projects](https://docs.atomicstrata.ai/cloud/how-to/projects.md): Projects are the isolated containers that hold your memories, API keys, and traces - Local (Connected Local, your own Core) or Cloud (Hosted Cloud, fully managed).
+- [Projects](https://docs.atomicstrata.ai/cloud/how-to/projects.md): Projects are the isolated containers that hold your memories, API keys, and traces - Local (Connected Local, your own Core) or Cloud (Atomic Memory, fully managed).
 - [Project Settings](https://docs.atomicstrata.ai/cloud/how-to/settings.md): Project Settings is where you rename a project, see where its memory data lives, export it, manage the organization, and delete the project.
 - [Understanding Traces](https://docs.atomicstrata.ai/cloud/how-to/traces.md): The Traces page records what your memory layer did on every request - each retrieval, mutation, and package call, inspectable down to the memories and reasoning involved.
 - [Usage & Limits](https://docs.atomicstrata.ai/cloud/how-to/usage.md): The Usage page reports a project's request volumes, storage metrics, and cost drivers alongside your Organization's plan limits.
 - [What is Memories](https://docs.atomicstrata.ai/cloud/how-to/what-is-memories.md): The Memories page is where you inspect everything the memory layer has stored for a project - and why.
 - [Overview](https://docs.atomicstrata.ai/cloud/overview.md): Run memory on your own machine.
-- [Add Hosted Cloud](https://docs.atomicstrata.ai/cloud/quickstart.md): Add Hosted Cloud — managed memory hosting — after your local Core is
+- [Add Atomic Memory](https://docs.atomicstrata.ai/cloud/quickstart.md): Add Atomic Memory — managed memory hosting — after your local Core is
 - [Troubleshooting](https://docs.atomicstrata.ai/cloud/troubleshooting.md): Symptom, check, and recovery steps for the most common Connected Local activation and Cloud console problems.
 - [Audit every memory mutation](https://docs.atomicstrata.ai/cloud/use-cases/audit-every-mutation.md): Keep a complete, inspectable record of what changed in memory, when, and by which key - for compliance reviews and incident response.
 - [Debug retrieval with traces](https://docs.atomicstrata.ai/cloud/use-cases/debug-retrieval.md): When the model recalls the wrong thing, use retrieval traces and the Playground to see which memories a query returned and why.
@@ -181,7 +181,7 @@
 - [Least-privilege scoped API keys](https://docs.atomicstrata.ai/cloud/use-cases/scoped-api-keys.md): Give each service a per-project, revocable API key so it reaches only the memory it needs - and every write stays attributable.
 - [See what's stored - and why](https://docs.atomicstrata.ai/cloud/use-cases/see-whats-stored.md): Inspect the reconciled memory state and the trace behind every fact, so you always know what your assistant has stored and why.
 - [Share a read-only memory view](https://docs.atomicstrata.ai/cloud/use-cases/share-a-read-only-view.md): Give a teammate or stakeholder a locked, read-only view of a project's memories - no account, no console access, and no way to change anything.
-- [Core-only Docker](https://docs.atomicstrata.ai/core-only-docker.md): Run AtomicMemory Core on your machine with Docker and HTTP — no Cloud account,
+- [Core-only Docker](https://docs.atomicstrata.ai/core-only-docker.md): Run Core on your machine with Docker and HTTP — no Cloud account,
 - [Introduction](https://docs.atomicstrata.ai/introduction.md): Run memory locally in one command: the Quickstart installs
 
 ## Optional

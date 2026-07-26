@@ -2,13 +2,13 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory support for LangGraph JS provides durable semantic memory next to LangGraph's run-scoped checkpointers.
+Open Source support for LangGraph JS provides durable semantic memory next to LangGraph's run-scoped checkpointers.
 
 ## What you get
 
 -   **Retrieve node.** `createMemoryRetrieveNode()` searches memory before the model step.
 -   **Ingest node.** `createMemoryIngestNode()` persists the completed turn after the model step.
--   **Backend-agnostic SDK path.** The adapter uses the AtomicMemory SDK provider registry through your `MemoryClient`.
+-   **Backend-agnostic SDK path.** The adapter uses the Atomic Memory SDK provider registry through your `MemoryClient`.
 
 Already ran am init?
 
@@ -16,7 +16,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Start local core first. It should be reachable at `http://127.0.0.1:17350`.
 
@@ -65,7 +65,7 @@ const remember = createMemoryIngestNode(memoryClient, {
 });
 ```
 
-The factories emit plain async state-node functions, so they can be registered with your graph without adding runtime framework ownership to AtomicMemory.
+The factories emit plain async state-node functions, so they can be registered with your graph without adding runtime framework ownership to Open Source.
 
 ## See also
 

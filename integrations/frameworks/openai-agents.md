@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory integrates with the OpenAI Agents SDK through an adapter that augments run input with memory and ingests completed turns back into durable storage.
+Atomic Memory integrates with the OpenAI Agents SDK through an adapter that augments run input with memory and ingests completed turns back into durable storage.
 
 ## Deployment targets
 

@@ -2,13 +2,13 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-The **API Keys** page issues and manages **Hosted Cloud** credentials. Every request your application makes to the Hosted Cloud memory API is authenticated by a key issued here. Before you rotate or revoke one, make sure you're looking at the right kind of credential — see the table below.
+The **API Keys** page issues and manages **Atomic Memory** credentials. Every request your application makes to the Atomic Memory memory API is authenticated by a key issued here. Before you rotate or revoke one, make sure you're looking at the right kind of credential — see the table below.
 
 ## Three credentials, three jobs
 
 | Credential | Project type | Used for | Managed here? |
 | --- | --- | --- | --- |
-| Hosted Cloud API key (`amc_…`) | Cloud | Memory API calls (ingest, search) from anywhere | Yes — this page |
+| Atomic Memory API key (`amc_…`) | Cloud | Memory API calls (ingest, search) from anywhere | Yes — this page |
 | Local project's Cloud key | Local | Heartbeat and trace sync back to the console — never memory calls | No — issued automatically by `am init` if one doesn't already exist |
 | Core token / `CORE_API_KEY` | Local | Memory calls (ingest, search) against your own Core | No — lives in your Core environment |
 
@@ -16,7 +16,7 @@ This page only covers the first row. See [Authentication](/cloud/authentication#
 
 ## What it does
 
--   Creates a Hosted Cloud key from a **name**.
+-   Creates an Atomic Memory key from a **name**.
 -   Reveals each new secret **exactly once**, then retains only its masked prefix.
 -   Lists every key with its status, prefix, creation time, and last use.
 
@@ -39,7 +39,7 @@ A secret is shown only at creation or rotation and never again. If you lose it, 
 
 -   **One-time secrets** - the plaintext key is revealed once; only the prefix is stored afterward.
 -   **Rotate in place** - swap the secret while preserving the key's identity and its rotated-from history.
--   **Hosted Cloud only** — Local projects authenticate memory calls against your own Core with a Core token / `CORE_API_KEY`, not a key from this page.
+-   **Atomic Memory only** — Local projects authenticate memory calls against your own Core with a Core token / `CORE_API_KEY`, not a key from this page.
 
 ## Related
 

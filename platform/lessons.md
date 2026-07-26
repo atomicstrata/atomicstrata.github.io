@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-A **lesson** is a recorded failure pattern that AtomicMemory has seen for a specific user - a prompt-injection attempt that was blocked, a low-trust source that tried to write a fact, a high-confidence contradiction that forced a SUPERSEDE/DELETE, or a memory the user explicitly flagged as wrong. Each lesson is stored with a vector embedding of the offending text, a severity, and provenance. Before any future retrieval runs for that user, the search pipeline embeds the query and asks: *"have I been burned by something like this before?"* If a match crosses the similarity threshold, the retrieval either annotates the response with a warning or - for `critical` matches - refuses to return anything.
+A **lesson** is a recorded failure pattern that Open Source has seen for a specific user - a prompt-injection attempt that was blocked, a low-trust source that tried to write a fact, a high-confidence contradiction that forced a SUPERSEDE/DELETE, or a memory the user explicitly flagged as wrong. Each lesson is stored with a vector embedding of the offending text, a severity, and provenance. Before any future retrieval runs for that user, the search pipeline embeds the query and asks: *"have I been burned by something like this before?"* If a match crosses the similarity threshold, the retrieval either annotates the response with a warning or - for `critical` matches - refuses to return anything.
 
 In other words: **lessons are the engine's long-term immune system.** They turn one-off bad inputs into durable per-user filters, without operator intervention.
 

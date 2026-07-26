@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory provides LangChain JS helpers and agent tools around an injected AtomicMemory SDK client.
+Atomic Memory provides LangChain JS helpers and agent tools around an injected Atomic Memory SDK client.
 
 ## Deployment targets
 

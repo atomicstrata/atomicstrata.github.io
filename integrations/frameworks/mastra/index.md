@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory provides Mastra tools that map agent memory search and ingest onto AtomicMemory retrieval and ingest primitives.
+Atomic Memory provides Mastra tools that map agent memory search and ingest onto Atomic Memory retrieval and ingest primitives.
 
 ## Deployment targets
 

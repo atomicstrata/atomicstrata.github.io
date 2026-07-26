@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-A single shared credential across every service is a blast radius waiting to happen. AtomicMemory Cloud issues API keys per project, so each service reaches only that project's memory - and you can revoke or rotate any key on its own.
+A single shared credential across every service is a blast radius waiting to happen. Atomic Memory issues API keys per project, so each service reaches only that project's memory - and you can revoke or rotate any key on its own.
 
 ## The problem
 

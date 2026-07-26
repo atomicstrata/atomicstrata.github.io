@@ -4,7 +4,7 @@
 
 `HindsightProvider` is the SDK's HTTP client for [Hindsight](https://github.com/vectorize-io/hindsight), Vectorize's memory engine built around per-user memory *banks* with retain, recall, and reflect operations. It works with Hindsight Cloud or a self-hosted Hindsight server.
 
-> **Support status.** Hindsight compatibility is available for core operations plus packaging, reflection, and health. Prefer `atomicmemory-core` when you need AtomicMemory-specific capabilities such as temporal search, versioning, audit trails, lessons, and runtime config.
+> **Support status.** Hindsight compatibility is available for core operations plus packaging, reflection, and health. Prefer `atomicmemory-core` when you need Open Source-specific capabilities such as temporal search, versioning, audit trails, lessons, and runtime config.
 
 ## Wire it up
 

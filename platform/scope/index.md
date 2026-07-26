@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-`MemoryScope` is AtomicMemory's canonical read-path contract: a single tagged union that dispatches every search, expand, get, list, and delete between a **user-scoped** world (single human, personal memory) and a **workspace-scoped** world (multiple agents collaborating over shared and private memories, with SQL-enforced visibility).
+`MemoryScope` is Open Source's canonical read-path contract: a single tagged union that dispatches every search, expand, get, list, and delete between a **user-scoped** world (single human, personal memory) and a **workspace-scoped** world (multiple agents collaborating over shared and private memories, with SQL-enforced visibility).
 
 The scope is the security boundary. Routes parse it, the service layer dispatches on it, and the repository layer enforces it in SQL. There is no path that skips it.
 

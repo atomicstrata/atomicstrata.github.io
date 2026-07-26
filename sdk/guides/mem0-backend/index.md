@@ -4,7 +4,7 @@
 
 `Mem0Provider` is the SDK's HTTP client for [Mem0](https://mem0.ai). It demonstrates the backend-agnostic design in practice: the same client, the same methods, a different engine behind the interface.
 
-> **Support status.** Mem0 compatibility is available for core operations. Prefer `atomicmemory-core` when you need AtomicMemory-specific capabilities such as packaging, temporal search, versioning, audit trails, lessons, and runtime config.
+> **Support status.** Mem0 compatibility is available for core operations. Prefer `atomicmemory-core` when you need Open Source-specific capabilities such as packaging, temporal search, versioning, audit trails, lessons, and runtime config.
 
 ## Wire it up
 

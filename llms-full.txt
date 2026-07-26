@@ -1,4 +1,4 @@
-# Atomic Strata, full corpus
+# Atomic Memory, full corpus
 
 > Generated snapshot of every page on https://docs.atomicstrata.ai/, in stable URL order. Use llms.txt for the index.
 
@@ -1949,7 +1949,7 @@ Source: https://docs.atomicstrata.ai/api-reference/http/openapi-spec
 
 > Agent index: [llms.txt](/llms.txt)
 
-Download the canonical AtomicMemory Core OpenAPI document:
+Download the canonical Open Source Core OpenAPI document:
 
 [
 
@@ -2926,21 +2926,21 @@ Pointer-mode artifacts always return `kind: 'unsupported'` — the server never 
 
 ---
 
-## AtomicMemory CLI
+## Open Source CLI (npm)
 
 Source: https://docs.atomicstrata.ai/cli
 
-# AtomicMemory CLI (npm)
+# Open Source CLI (npm)
 
 > Agent index: [llms.txt](/llms.txt)
 
-`@atomicmemory/cli` is the Node.js command line for direct self-hosted core workflows. It is separate from the AtomicMemory CLI (`am` from [get.atomicstrata.ai](https://get.atomicstrata.ai)) — use [AtomicMemory CLI](/cloud/cli) and the [Quickstart](/quickstart) for Connected Local activation.
+`@atomicmemory/cli` is the Node.js command line for direct self-hosted core workflows. It is separate from the Atomic Memory CLI (`am` from [get.atomicstrata.ai](https://get.atomicstrata.ai)) — use [Atomic Memory CLI](/cloud/cli) and the [Quickstart](/quickstart) for Connected Local activation.
 
 `atomicmemory` is also separate from the MCP server: `atomicmemory-mcp` is a stdio process for agent hosts, while this package is a terminal tool for setup, diagnostics, memory operations, and stable script output.
 
-The CLI uses the same backend-agnostic SDK provider model as the rest of AtomicMemory. The current CLI surface supports `atomicmemory` and `mem0`. Additional SDK providers require a CLI adapter, spec, and config-schema update before they are selectable from command scripts.
+The CLI uses the same backend-agnostic SDK provider model as the rest of Open Source. The current CLI surface supports `atomicmemory` and `mem0`. Additional SDK providers require a CLI adapter, spec, and config-schema update before they are selectable from command scripts.
 
-The npm CLI does **not** start a memory backend by itself. Direct memory commands need a configured AtomicMemory service — usually Core from [Core-only Docker](/core-only-docker) or your own deployment. For Claude Code personal use, prefer the [Claude Code plugin](/integrations/coding-agents/claude-code/local): it installs the MCP server, skill, hooks, and auto-managed local runtime for you.
+The npm CLI does **not** start a memory backend by itself. Direct memory commands need a configured Open Source service — usually Core from [Core-only Docker](/core-only-docker) or your own deployment. For Claude Code personal use, prefer the [Claude Code plugin](/integrations/coding-agents/claude-code/local): it installs the MCP server, skill, hooks, and auto-managed local runtime for you.
 
 ## What you get
 
@@ -2959,7 +2959,7 @@ npm install -g @atomicmemory/cli
 atomicmemory
 ```
 
-Running `atomicmemory` opens the local dashboard. Memory operations will ask for a profile or provider flags until you connect the CLI to an AtomicMemory backend.
+Running `atomicmemory` opens the local dashboard. Memory operations will ask for a profile or provider flags until you connect the CLI to an Open Source backend.
 
 To try the published CLI without a global install, use:
 
@@ -2972,11 +2972,11 @@ npx -y @atomicmemory/cli
 | Path | Use when | Start here |
 | --- | --- | --- |
 | Claude Code plugin | You want personal Claude Code memory with local runtime management and no separate API key for extraction. | [Claude Code Local](/integrations/coding-agents/claude-code/local) |
-| Connected Local (recommended) | You want Core on your machine with console visibility. | [Quickstart](/quickstart) via [AtomicMemory CLI](/cloud/cli) (`am init`). |
+| Connected Local (recommended) | You want Core on your machine with console visibility. | [Quickstart](/quickstart) via [Atomic Memory CLI](/cloud/cli) (`am init`). |
 | Direct CLI against local core | You run `atomicmemory-core` yourself and want npm terminal commands. | [Core-only Docker](/core-only-docker), then configure a `local` profile below. |
-| Direct CLI against a self-hosted service | Your team operates AtomicMemory behind its own URL and token. | Configure a `self-hosted` profile below. |
-| Hosted Cloud | You want managed memory hosting. | [AtomicMemory CLI](/cloud/cli) and [Add Hosted Cloud](/cloud/quickstart). |
-| Mem0 adapter | You want the CLI shape against a Mem0 backend. | Use `--provider mem0`; AtomicMemory-only commands are capability-gated. |
+| Direct CLI against a self-hosted service | Your team operates Open Source behind its own URL and token. | Configure a `self-hosted` profile below. |
+| Atomic Memory | You want managed memory hosting. | [Atomic Memory CLI](/cloud/cli) and [Add Atomic Memory](/cloud/quickstart). |
+| Mem0 adapter | You want the CLI shape against a Mem0 backend. | Use `--provider mem0`; Open Source-only commands are capability-gated. |
 
 ## Configure
 
@@ -3171,7 +3171,7 @@ export LLM_PROVIDER=claude-code
 export EMBEDDING_PROVIDER=transformers
 ```
 
-That mode is for personal/local use. It requires Claude Code to be installed and logged in, consumes the user's Claude Code / Claude subscription limits, and is not the recommended path for hosted or team deployments. `LLM_PROVIDER` configures the local AtomicMemory core process; CLI profile variables such as `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and scope still configure how the CLI reaches that core process.
+That mode is for personal/local use. It requires Claude Code to be installed and logged in, consumes the user's Claude Code / Claude subscription limits, and is not the recommended path for hosted or team deployments. `LLM_PROVIDER` configures the local Open Source core process; CLI profile variables such as `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and scope still configure how the CLI reaches that core process.
 
 Codex local extraction defaults to account-auth:
 
@@ -3273,20 +3273,20 @@ Optional harness environment variables:
 ## See also
 
 -   [SDK provider model](/sdk/concepts/provider-model)
--   [Using the AtomicMemory backend](/sdk/guides/atomicmemory-backend)
+-   [Using the Open Source backend](/sdk/guides/atomicmemory-backend)
 -   [Integrations overview](/integrations/overview)
 
 ---
 
-## Local vs Hosted Cloud
+## Open Source vs Atomic Memory
 
 Source: https://docs.atomicstrata.ai/cloud-vs-open-source
 
-# Local vs Hosted Cloud
+# Open Source vs Atomic Memory
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory runs in three modes backed by the **same engine**. The API surface, the AUDN mutation model, the retrieval pipeline, and the observability envelope are identical — what differs is where Core runs and what the console can see.
+Atomic Memory runs in three modes backed by the **same engine**. The API surface, the AUDN mutation model, the retrieval pipeline, and the observability envelope are identical — what differs is where Core runs and what the console can see.
 
 Start with **Connected Local** unless you have a specific reason not to.
 
@@ -3298,16 +3298,16 @@ upgrade to Free ($0)
 
 Add when needed
 
-Hosted Cloudmanaged hosting, shared access, one project on Free
+Atomic Memorymanaged hosting, shared access, one project on Free
 
 Prefer the engine with no account at all? [Core-only Docker](/core-only-docker) runs Core with curl — no console, no sign-in.
 
 ## At a glance
 
-|  | **Connected Local** | **Hosted Cloud** | **Core-only Docker** |
+|  | **Connected Local** | **Atomic Memory** | **Core-only Docker** |
 | --- | --- | --- | --- |
 | **Setup** | `am init` — one command | Upgrade to Free, create a Cloud project | `docker run` + curl |
-| **Where memories live** | Your machine, in Core | AtomicMemory-managed hosting | Your machine |
+| **Where memories live** | Your machine, in Core | Atomic Memory-managed hosting | Your machine |
 | **Console** | Runtime status, memories, operation traces | Same, for the managed project | None |
 | **Account** | Sign-in creates a free Open Source org | Free tier ($0 self-serve upgrade) | Not required |
 | **Good for** | Evaluating, local dev, day-to-day use | Shared access without operating infrastructure | Air-gapped work, CI, no-console automation |
@@ -3323,13 +3323,13 @@ Team and Corporate plans are demo-led — [book a demo](https://atomicstrata.ai/
 
 → [Quickstart](/quickstart)
 
-## Add Hosted Cloud when
+## Add Atomic Memory when
 
 -   You need shared access to the same memories from more than one place.
 -   You want a managed endpoint without operating Postgres and Core yourself.
 -   You are ready to point production traffic at `https://api.atomicstrata.ai` with a project API key.
 
-→ [Add Hosted Cloud](/cloud/quickstart)
+→ [Add Atomic Memory](/cloud/quickstart)
 
 ## Choose Core-only Docker when
 
@@ -3341,7 +3341,7 @@ Team and Corporate plans are demo-led — [book a demo](https://atomicstrata.ai/
 
 ## Moving between them
 
-The [TypeScript SDK](/sdk/overview) and the [CLI](/cloud/cli) work identically against a local Core and a Hosted Cloud project — switching is a base URL and credential change, not a code change. To copy existing local memories into a Cloud project, see [Migrate to Hosted Cloud](/cloud/how-to/migrate).
+The [TypeScript SDK](/sdk/overview) and the [CLI](/cloud/cli) work identically against a local Core and an Atomic Memory project — switching is a base URL and credential change, not a code change. To copy existing local memories into a Cloud project, see [Migrate to Atomic Memory](/cloud/how-to/migrate).
 
 ---
 
@@ -3353,7 +3353,7 @@ Source: https://docs.atomicstrata.ai/cloud/authentication
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory Cloud and Core each authenticate requests differently. The console labels the two project types **Local** and **Cloud**; this page calls them **Connected Local** (Core running on your machine, connected to the console) and **Hosted Cloud** (fully managed hosting) once, then uses the shorter **Local**/**Cloud** labels below. Use the right credential for the surface you're calling — mixing them returns `401`.
+Atomic Memory and Core each authenticate requests differently. The console labels the two project types **Local** and **Cloud**; this page calls them **Connected Local** (Core running on your machine, connected to the console) and **Atomic Memory** (fully managed hosting) once, then uses the shorter **Local**/**Cloud** labels below. Use the right credential for the surface you're calling — mixing them returns `401`.
 
 Callers
 
@@ -3371,7 +3371,7 @@ user keys never forwarded
 
 Engine
 
-AtomicMemory Core`AM_CORE_API_KEY` only
+Open Source Core`AM_CORE_API_KEY` only
 
 ## Which credential do I need?
 
@@ -3456,7 +3456,7 @@ Console routes require a signed-in session. You never handle this credential dir
 
 ## CLI auth modes
 
-The [AtomicMemory CLI](/cloud/cli) supports two flows:
+The [Atomic Memory CLI](/cloud/cli) supports two flows:
 
 | Command | Auth | Purpose |
 | --- | --- | --- |
@@ -3467,7 +3467,7 @@ The [AtomicMemory CLI](/cloud/cli) supports two flows:
 
 ## Security reporting
 
-Report vulnerabilities per the [AtomicMemory Cloud API SECURITY policy](https://github.com/atomicstrata/am-cloud-api/blob/main/SECURITY.md).
+Report vulnerabilities per the [Atomic Memory Cloud API SECURITY policy](https://github.com/atomicstrata/am-cloud-api/blob/main/SECURITY.md).
 
 ## Advanced deployment details
 
@@ -3493,12 +3493,12 @@ This keeps CORS strict — set `CORS_ALLOWED_ORIGINS` on the API to the console 
 
 ### Cloud → Core infrastructure credential
 
-For Cloud projects, the cloud gateway never forwards a user's API key to AtomicMemory Core. Outbound calls from the gateway to the managed Core fleet use a separate infrastructure credential (`AM_CORE_API_KEY`), set by the operator — it is not a credential end users ever see or configure.
+For Cloud projects, the cloud gateway never forwards a user's API key to Open Source Core. Outbound calls from the gateway to the managed Core fleet use a separate infrastructure credential (`AM_CORE_API_KEY`), set by the operator — it is not a credential end users ever see or configure.
 
 ## Related docs
 
 -   [Platform Quickstart](/quickstart) — Connected Local via `am init`
--   [Add Hosted Cloud](/cloud/quickstart) — add Hosted Cloud and API keys
+-   [Add Atomic Memory](/cloud/quickstart) — add Atomic Memory and API keys
 -   [Developer Console](/cloud/console) — dashboard tour
 -   [Managing API Keys](/cloud/how-to/api-keys) — create, rotate, revoke
 -   [The Dashboard](/cloud/how-to/dashboard) - project landing page and activation path
@@ -3509,11 +3509,11 @@ For Cloud projects, the cloud gateway never forwards a user's API key to AtomicM
 
 Source: https://docs.atomicstrata.ai/cloud/cli
 
-# AtomicMemory CLI
+# Atomic Memory CLI
 
 > Agent index: [llms.txt](/llms.txt)
 
-The **AtomicMemory CLI** (`atomicmemory` / **`am`**) is the primary CLI for both Open Source activation and Cloud operations: browser login, Connected Local setup, org/project management, API keys, and memory commands.
+The **Atomic Memory CLI** (`atomicmemory` / **`am`**) is the primary CLI for both Open Source activation and Cloud operations: browser login, Connected Local setup, org/project management, API keys, and memory commands.
 
 Install from `get.atomicstrata.ai`. Defaults to `https://api.atomicstrata.ai`.
 
@@ -3575,7 +3575,7 @@ am migrate export --project <local-project-slug>
 am migrate import --file <path-to-export.jsonl> --target-project <cloud-project-slug>
 ```
 
-Memory-only — trace history doesn't move. Full walkthrough, prerequisites, and console verification: [Migrate to Hosted Cloud](/cloud/how-to/migrate).
+Memory-only — trace history doesn't move. Full walkthrough, prerequisites, and console verification: [Migrate to Atomic Memory](/cloud/how-to/migrate).
 
 ## Dashboard commands (OAuth)
 
@@ -3586,7 +3586,7 @@ am overview
 
 Uses PKCE + browser — no config file required. The public OAuth `client_id` is baked into the binary.
 
-## Hosted Cloud memory commands (API key)
+## Atomic Memory memory commands (API key)
 
 For managed hosting after upgrading to Free:
 
@@ -3599,7 +3599,7 @@ am memory search "seat preference"
 am memory list
 ```
 
-Get your API key from the [developer console](https://memory.atomicstrata.ai) during onboarding or under **API Keys**. See [Add Hosted Cloud](/cloud/quickstart) for the Hosted Cloud add-on path.
+Get your API key from the [developer console](https://memory.atomicstrata.ai) during onboarding or under **API Keys**. See [Add Atomic Memory](/cloud/quickstart) for the Atomic Memory add-on path.
 
 ## Defaults
 
@@ -3666,8 +3666,8 @@ Removes binaries and PATH block. Credentials under `~/.atomicmemory/` are left i
 ## Related docs
 
 -   [Platform Quickstart](/quickstart) — Connected Local activation
--   [Add Hosted Cloud](/cloud/quickstart) — add Hosted Cloud after local setup
--   [Migrate to Hosted Cloud](/cloud/how-to/migrate) — move memories with `am migrate`
+-   [Add Atomic Memory](/cloud/quickstart) — add Atomic Memory after local setup
+-   [Migrate to Atomic Memory](/cloud/how-to/migrate) — move memories with `am migrate`
 -   [Troubleshooting](/cloud/troubleshooting) — recover from a failed `am init` or `am doctor --smoke`
 -   [Authentication](/cloud/authentication) — API key vs OAuth
 -   [npm CLI (advanced)](/cli) — self-hosted core workflows without Cloud
@@ -3682,7 +3682,7 @@ Source: https://docs.atomicstrata.ai/cloud/console
 
 > Agent index: [llms.txt](/llms.txt)
 
-The AtomicMemory developer console at **[memory.atomicstrata.ai](https://memory.atomicstrata.ai)** is a Next.js dashboard for provisioning projects, managing API keys, exploring memories, and inspecting AUDN mutation traces.
+The Atomic Memory developer console at **[memory.atomicstrata.ai](https://memory.atomicstrata.ai)** is a Next.js dashboard for provisioning projects, managing API keys, exploring memories, and inspecting AUDN mutation traces.
 
 All `/app/*` routes require sign-in. The marketing landing page and `/share/*` public memory viewer stay open without an account.
 
@@ -3691,12 +3691,12 @@ All `/app/*` routes require sign-in. The marketing landing page and `/share/*` p
 New users follow a guided path:
 
 1.  Sign up at [memory.atomicstrata.ai/signup](https://memory.atomicstrata.ai/signup) and select or create an Organization.
-2.  The console provisions a default **Local** project (slug `default`) — Open Source starts with one Connected Local project and no Hosted Cloud project.
+2.  The console provisions a default **Local** project (slug `default`) — Open Source starts with one Connected Local project and no Atomic Memory project.
 3.  **Connect Core**: run `am init` in your terminal. It signs you in, starts Core, connects this project, and verifies the memory pipeline end to end.
 4.  Once the runtime reports **Online**, the console hands off to the project **Overview** — no key to create or redeem first.
-5.  Optional: upgrade to **Free** (self-serve, $0) from **Billing** to unlock one Hosted Cloud project.
+5.  Optional: upgrade to **Free** (self-serve, $0) from **Billing** to unlock one Atomic Memory project.
 
-See [Platform Quickstart](/quickstart) for the full `am init` walkthrough, then [Add Hosted Cloud](/cloud/quickstart) when you want managed hosting.
+See [Platform Quickstart](/quickstart) for the full `am init` walkthrough, then [Add Atomic Memory](/cloud/quickstart) when you want managed hosting.
 
 ## Inside a project
 
@@ -3709,7 +3709,7 @@ Each project includes:
 | **Traces** | AUDN mutation and retrieval trace viewer, updates live |
 | **API Keys** | Create, list, and revoke project keys |
 | **Usage** | Usage events and stored memory counts |
-| **Playground** | Interactive ingest and search (Hosted Cloud key or Connected Local Core) |
+| **Playground** | Interactive ingest and search (Atomic Memory key or Connected Local Core) |
 | **Settings** | Project configuration |
 | **Audit** | Project-scoped admin audit log |
 
@@ -3719,7 +3719,7 @@ Memory and trace views update live as new activity happens — no manual refresh
 
 The sidebar **SetupGuide** tracks activation milestones:
 
--   First API key created (Hosted Cloud projects only)
+-   First API key created (Atomic Memory projects only)
 -   First ingest completed
 -   First search completed
 
@@ -3732,9 +3732,9 @@ The project Overview surfaces copy-paste snippets for:
 -   MCP (`@atomicmemory/mcp`)
 -   TypeScript and Python SDKs
 -   Claude Code plugin
--   AtomicMemory CLI (`am memory ingest`)
+-   Atomic Memory CLI (`am memory ingest`)
 
-Snippets use your project's API base URL automatically for Hosted Cloud projects.
+Snippets use your project's API base URL automatically for Atomic Memory projects.
 
 ## Public memory sharing
 
@@ -3756,13 +3756,13 @@ Source: https://docs.atomicstrata.ai/cloud/how-to/api-keys
 
 > Agent index: [llms.txt](/llms.txt)
 
-The **API Keys** page issues and manages **Hosted Cloud** credentials. Every request your application makes to the Hosted Cloud memory API is authenticated by a key issued here. Before you rotate or revoke one, make sure you're looking at the right kind of credential — see the table below.
+The **API Keys** page issues and manages **Atomic Memory** credentials. Every request your application makes to the Atomic Memory memory API is authenticated by a key issued here. Before you rotate or revoke one, make sure you're looking at the right kind of credential — see the table below.
 
 ## Three credentials, three jobs
 
 | Credential | Project type | Used for | Managed here? |
 | --- | --- | --- | --- |
-| Hosted Cloud API key (`amc_…`) | Cloud | Memory API calls (ingest, search) from anywhere | Yes — this page |
+| Atomic Memory API key (`amc_…`) | Cloud | Memory API calls (ingest, search) from anywhere | Yes — this page |
 | Local project's Cloud key | Local | Heartbeat and trace sync back to the console — never memory calls | No — issued automatically by `am init` if one doesn't already exist |
 | Core token / `CORE_API_KEY` | Local | Memory calls (ingest, search) against your own Core | No — lives in your Core environment |
 
@@ -3770,7 +3770,7 @@ This page only covers the first row. See [Authentication](/cloud/authentication#
 
 ## What it does
 
--   Creates a Hosted Cloud key from a **name**.
+-   Creates an Atomic Memory key from a **name**.
 -   Reveals each new secret **exactly once**, then retains only its masked prefix.
 -   Lists every key with its status, prefix, creation time, and last use.
 
@@ -3793,7 +3793,7 @@ A secret is shown only at creation or rotation and never again. If you lose it, 
 
 -   **One-time secrets** - the plaintext key is revealed once; only the prefix is stored afterward.
 -   **Rotate in place** - swap the secret while preserving the key's identity and its rotated-from history.
--   **Hosted Cloud only** — Local projects authenticate memory calls against your own Core with a Core token / `CORE_API_KEY`, not a key from this page.
+-   **Atomic Memory only** — Local projects authenticate memory calls against your own Core with a Core token / `CORE_API_KEY`, not a key from this page.
 
 ## Related
 
@@ -3863,7 +3863,7 @@ Source: https://docs.atomicstrata.ai/cloud/how-to/billing
 | **Team** | Custom | Custom | Demo-led — talk to sales |
 | **Corporate** | Custom | Custom | Demo-led — talk to sales |
 
-Every Organization starts on **Open Source**: one Connected Local project, full console visibility, no Hosted Cloud project. **Upgrade to Free** in Billing to keep that Local project and unlock one Hosted Cloud project — it's a self-serve $0 checkout, no sales conversation required. **Team** and **Corporate** cover usage beyond Free's single Cloud project and are demo-led; request a demo rather than self-serve checkout.
+Every Organization starts on **Open Source**: one Connected Local project, full console visibility, no Atomic Memory project. **Upgrade to Free** in Billing to keep that Local project and unlock one Atomic Memory project — it's a self-serve $0 checkout, no sales conversation required. **Team** and **Corporate** cover usage beyond Free's single Cloud project and are demo-led; request a demo rather than self-serve checkout.
 
 info
 
@@ -4006,11 +4006,11 @@ const memory = new MemoryClient({
 
 ---
 
-## Migrate to Hosted Cloud
+## Migrate to Atomic Memory
 
 Source: https://docs.atomicstrata.ai/cloud/how-to/migrate
 
-# Migrate to Hosted Cloud
+# Migrate to Atomic Memory
 
 > Agent index: [llms.txt](/llms.txt)
 
@@ -4018,9 +4018,9 @@ Already running a **Local** project? `am migrate export` and `am migrate import`
 
 ## Prerequisites
 
--   Your Organization is on **Free** or higher. Cloud import requires Free or higher — Open Source doesn't unlock a Hosted Cloud project to import into. See [Plans & Billing](/cloud/how-to/billing).
+-   Your Organization is on **Free** or higher. Cloud import requires Free or higher — Open Source doesn't unlock an Atomic Memory project to import into. See [Plans & Billing](/cloud/how-to/billing).
 -   Your Local Core is running and connected (`am init` completed — see the [Platform Quickstart](/quickstart)). `am migrate export` reads directly from your live Core and creates the JSONL transfer file at export time — it's not a backup file you maintain yourself ahead of time.
--   A **Cloud** project already exists to import into — create one from [Add Hosted Cloud](/cloud/quickstart) if you haven't yet.
+-   A **Cloud** project already exists to import into — create one from [Add Atomic Memory](/cloud/quickstart) if you haven't yet.
 
 ## Export from your Local project
 
@@ -4036,7 +4036,7 @@ This reads every memory your Local project's Core has stored (paginated automati
 am migrate import --file <path-to-export.jsonl> --target-project <cloud-project-slug>
 ```
 
-This reads the exported JSONL file and sends its records to your Hosted Cloud project, where each one is written into that project's memory store with its original content intact — it isn't re-summarized or re-extracted on the way in. The command reports how many records were imported, skipped, and failed. `--mode merge` is the default and the only mode the current CLI supports (`--mode replace-scope` is rejected). Run `am migrate import --help` for the full flag list.
+This reads the exported JSONL file and sends its records to your Atomic Memory project, where each one is written into that project's memory store with its original content intact — it isn't re-summarized or re-extracted on the way in. The command reports how many records were imported, skipped, and failed. `--mode merge` is the default and the only mode the current CLI supports (`--mode replace-scope` is rejected). Run `am migrate import --help` for the full flag list.
 
 ## What actually moves
 
@@ -4054,8 +4054,8 @@ Open your Cloud project in the console under **Memories** and confirm the migrat
 
 ## Related docs
 
--   [Add Hosted Cloud](/cloud/quickstart) — create the Cloud project you're migrating into
--   [AtomicMemory CLI](/cloud/cli) — full command reference, including migration
+-   [Add Atomic Memory](/cloud/quickstart) — create the Cloud project you're migrating into
+-   [Atomic Memory CLI](/cloud/cli) — full command reference, including migration
 -   [Project Settings](/cloud/how-to/settings) — where a Cloud project's own data export lives
 -   [Troubleshooting](/cloud/troubleshooting) — Core and Cloud connection problems
 
@@ -4125,7 +4125,7 @@ Source: https://docs.atomicstrata.ai/cloud/how-to/projects
 ## What it does
 
 -   Lists every project in the current Organization with its type (**Local** or **Cloud**), name, slug, and last activity, and links straight to its Overview. **Cloud** projects show a stored-memory count; **Local** projects may show `n/a` there since memory content stays on your Core.
--   Creates new projects from **New project** — you pick a type, **Local** (Connected Local, backed by your own Core) or **Cloud** (Hosted Cloud, fully managed).
+-   Creates new projects from **New project** — you pick a type, **Local** (Connected Local, backed by your own Core) or **Cloud** (Atomic Memory, fully managed).
 -   Your plan determines how many of each type you can have: Open Source includes one Local project and zero Cloud projects; Free keeps your Local project and unlocks one Cloud project. See [Plans & Billing](/cloud/how-to/billing) for what's included.
 
 ## How it works
@@ -4133,7 +4133,7 @@ Source: https://docs.atomicstrata.ai/cloud/how-to/projects
 Each project is isolated — its memories, keys, traces, and usage never cross into another project. New projects use the slug `default` (`default-project` is a legacy alias from earlier versions, not something you'll see created today). Where memory data physically lives depends on the project **type** you choose at creation:
 
 -   A **Local** project runs against your own Core — connected with `am init`. Memories stay on your machine; the console still receives a runtime heartbeat and operation traces from that Core, so you get inspectable console visibility without your memory content ever leaving your infrastructure.
--   A **Cloud** project is fully managed by AtomicMemory: memories, traces, and heartbeat all live in Hosted Cloud, and you authenticate with a project API key from anywhere.
+-   A **Cloud** project is fully managed by Atomic Memory: memories, traces, and heartbeat all live in Atomic Memory, and you authenticate with a project API key from anywhere.
 
 info
 
@@ -4142,7 +4142,7 @@ A Local project's Core must be reachable from your browser (`am init` wires this
 ## Key capabilities
 
 -   **Isolated projects** — memories, keys, traces, and usage stay scoped to a single project.
--   **Local or Cloud** — run Core yourself, or let AtomicMemory host the data.
+-   **Local or Cloud** — run Core yourself, or let Atomic Memory host the data.
 -   **Type-aware limits** — Local and Cloud project counts are capped separately by your plan, and the page shows usage against each.
 
 ## Related
@@ -4179,7 +4179,7 @@ Source: https://docs.atomicstrata.ai/cloud/how-to/settings
 
 **Organization** - opens your organization profile to manage members and roles.
 
-**Data** (Cloud projects only) - export every memory and trace for the project as JSONL. This is a one-way backup/download of that Cloud project's own data - it's different from the `am migrate export`/`am migrate import` CLI workflow, which moves memories *from* a Local project *into* a Cloud project. See [Migrate to Hosted Cloud](/cloud/how-to/migrate) if you're looking for that instead.
+**Data** (Cloud projects only) - export every memory and trace for the project as JSONL. This is a one-way backup/download of that Cloud project's own data - it's different from the `am migrate export`/`am migrate import` CLI workflow, which moves memories *from* a Local project *into* a Cloud project. See [Migrate to Atomic Memory](/cloud/how-to/migrate) if you're looking for that instead.
 
 **Danger zone** - delete the project. For a **Cloud** project this permanently removes its managed memories and traces along with the project itself. For a **Local** project, deletion removes the project from the console only - it does not stop your independently running Core or delete anything stored there.
 
@@ -4203,7 +4203,7 @@ Success looks like: after you rename a project, the new name shows up in the das
 -   [Projects](/cloud/how-to/projects)
 -   [Billing](/cloud/how-to/billing)
 -   [API Keys](/cloud/how-to/api-keys)
--   [Migrate to Hosted Cloud](/cloud/how-to/migrate) — bring a Local project's memories into a Cloud project
+-   [Migrate to Atomic Memory](/cloud/how-to/migrate) — bring a Local project's memories into a Cloud project
 
 ---
 
@@ -4234,7 +4234,7 @@ await memory.search({ query: "seat preferences", scope: { user: "user_001" } });
 // excluded, and the exact payload returned.
 ```
 
-**Local** and **Cloud** projects populate this page differently - this page calls them **Connected Local** (Core running on your machine, connected to the console) and **Hosted Cloud** (fully managed hosting) once, then uses the shorter **Local**/**Cloud** labels below, matching the console's own labels. A Local project's memory content never leaves your Core, so the trace row the console stores has its claim text and inputs redacted - you get the call type, timing, and outcome, not the underlying content. A Cloud project's content already lives in managed infrastructure, so its traces show full detail; content-level inspection is effectively Cloud-only today.
+**Local** and **Cloud** projects populate this page differently - this page calls them **Connected Local** (Core running on your machine, connected to the console) and **Atomic Memory** (fully managed hosting) once, then uses the shorter **Local**/**Cloud** labels below, matching the console's own labels. A Local project's memory content never leaves your Core, so the trace row the console stores has its claim text and inputs redacted - you get the call type, timing, and outcome, not the underlying content. A Cloud project's content already lives in managed infrastructure, so its traces show full detail; content-level inspection is effectively Cloud-only today.
 
 Open a **retrieval** trace to see two columns - **Included** and **Excluded** memories - plus the final response payload (redacted for Local projects, as above). Open a **mutation** trace to see the AUDN decision (such as add, update, supersede, or no-op) with its confidence and reason, the previous claim struck through against the new claim, the source evidence, and the incoming input (also redacted for Local projects). Package traces appear in the list and filter; opening one shows its summary card.
 
@@ -4347,16 +4347,16 @@ Search reads from this same reconciled state, so what you see on the Memories pa
 
 Source: https://docs.atomicstrata.ai/cloud/overview
 
-# AtomicMemory Cloud
+# Atomic Memory
 
 > Agent index: [llms.txt](/llms.txt)
 
 **Run memory on your own machine. See exactly what it's doing. Add managed hosting only when you need it.**
 
-AtomicMemory Cloud pairs the open-source **AtomicMemory Core** engine with a developer console: Core stores and retrieves memories, and the console gives you inspectable ingest, search, and mutation traces without requiring you to host anything. The console labels the two project types **Local** and **Cloud**; this page calls them **Connected Local** (Core running on your machine, connected to the console) and **Hosted Cloud** (fully managed hosting) before using the shorter labels.
+Atomic Memory pairs the **Open Source Core** engine with a developer console: Core stores and retrieves memories, and the console gives you inspectable ingest, search, and mutation traces without requiring you to host anything. The console labels the two project types **Local** and **Cloud**; this page calls them **Connected Local** (Core running on your machine, connected to the console) and **Atomic Memory** (fully managed hosting) before using the shorter labels.
 
 **→ [Start the Quickstart](/quickstart)** — Connected Local in one command, free forever.  
-Ready for shared or hosted access later? [Add Hosted Cloud](/cloud/quickstart). Something not working? [Troubleshooting](/cloud/troubleshooting).
+Ready for shared or hosted access later? [Add Atomic Memory](/cloud/quickstart). Something not working? [Troubleshooting](/cloud/troubleshooting).
 
 ## Why teams start here
 
@@ -4380,7 +4380,7 @@ Full walkthrough: [Platform Quickstart](/quickstart).
 
 | Outcome | Local project | \+ Cloud project |
 | --- | --- | --- |
-| Where memories live | Your machine, via Core | AtomicMemory-managed hosting — your existing Local project's memories stay on your machine, unaffected |
+| Where memories live | Your machine, via Core | Atomic Memory-managed hosting — your existing Local project's memories stay on your machine, unaffected |
 | Console visibility | Runtime status, memories, traces | Same, plus a managed project space |
 | Setup | `am init` | Upgrade to Free, then create a Cloud project |
 | Good for | Evaluating, local dev, air-gapped work | Shared access without operating infrastructure |
@@ -4389,8 +4389,8 @@ The console labels these **Local** and **Cloud** projects — the shorter names 
 
 ## Plans at a glance
 
--   **Open Source** — free forever. One Connected Local project, full console visibility, no Hosted Cloud project.
--   **Free** — a self-serve $0 upgrade. Keeps your Local project and unlocks one Hosted Cloud project.
+-   **Open Source** — free forever. One Connected Local project, full console visibility, no Atomic Memory project.
+-   **Free** — a self-serve $0 upgrade. Keeps your Local project and unlocks one Atomic Memory project.
 
 See [Plans & Billing](/cloud/how-to/billing) for details.
 
@@ -4405,21 +4405,21 @@ See [Plans & Billing](/cloud/how-to/billing) for details.
 ## Advanced
 
 -   [Authentication](/cloud/authentication) — credential model and deployment details
--   [AtomicMemory CLI](/cloud/cli) — full command reference
+-   [Atomic Memory CLI](/cloud/cli) — full command reference
 -   [Core architecture](/platform/architecture) — how the engine is composed
 -   [Core-only Docker](/core-only-docker) — run Core without a Cloud connection
 
 ---
 
-## Add Hosted Cloud
+## Add Atomic Memory
 
 Source: https://docs.atomicstrata.ai/cloud/quickstart
 
-# Add Hosted Cloud
+# Add Atomic Memory
 
 > Agent index: [llms.txt](/llms.txt)
 
-Add **Hosted Cloud** — managed memory hosting — after your local Core is running. This page depends on the [Platform Quickstart](/quickstart): run `am init` first if you have not already.
+Add **Atomic Memory** — managed memory hosting — after your local Core is running. This page depends on the [Platform Quickstart](/quickstart): run `am init` first if you have not already.
 
 **Console:** [memory.atomicstrata.ai](https://memory.atomicstrata.ai)  
 **API:** `https://api.atomicstrata.ai`
@@ -4432,12 +4432,12 @@ Add **Hosted Cloud** — managed memory hosting — after your local Core is run
 ## Prerequisites
 
 -   Completed [Platform Quickstart](/quickstart) — Connected Local via `am init`
--   Upgrade to **Free** in the console (self-serve, $0): **Billing** → **Upgrade to Free**. Free keeps your Local project and unlocks one Hosted Cloud project.
+-   Upgrade to **Free** in the console (self-serve, $0): **Billing** → **Upgrade to Free**. Free keeps your Local project and unlocks one Atomic Memory project.
 
-## Add Hosted Cloud
+## Add Atomic Memory
 
 1.  Console → **Billing** → **Upgrade to Free**
-2.  Create a **Hosted Cloud** project and copy the one-time API key (`amc_…`)
+2.  Create an **Atomic Memory** project and copy the one-time API key (`amc_…`)
 3.  Ingest and search from anywhere:
 
 ```bash
@@ -4450,7 +4450,7 @@ am memory search "seat preference"
 
 ## Success state
 
-Open the console under **Memories**. Your ingested memory appears there, with a matching trace under **Traces**. That confirms the Hosted Cloud project is receiving traffic.
+Open the console under **Memories**. Your ingested memory appears there, with a matching trace under **Traces**. That confirms the Atomic Memory project is receiving traffic.
 
 ## SDK alternative
 
@@ -4483,12 +4483,12 @@ const results = await memory.search({
 
 ## Moving existing local memories
 
-Already have memories in your Connected Local project? `am migrate export` and `am migrate import` move them into your new Hosted Cloud project. See [Migrate to Hosted Cloud](/cloud/how-to/migrate) for prerequisites, the memory-only scope, safe re-run behavior, and how to verify the result in the console.
+Already have memories in your Connected Local project? `am migrate export` and `am migrate import` move them into your new Atomic Memory project. See [Migrate to Atomic Memory](/cloud/how-to/migrate) for prerequisites, the memory-only scope, safe re-run behavior, and how to verify the result in the console.
 
 ## What's next
 
 -   [Developer Console](/cloud/console) — traces, usage, API keys
--   [Migrate to Hosted Cloud](/cloud/how-to/migrate) — bring existing Local memories over
+-   [Migrate to Atomic Memory](/cloud/how-to/migrate) — bring existing Local memories over
 -   [Authentication](/cloud/authentication) — which credential goes where
 -   [Integrations](/integrations/overview) — MCP and agent wiring
 
@@ -4587,9 +4587,9 @@ Success looks like: the retried call succeeds (no `401`, no cap/limit response),
 ## Related docs
 
 -   [Platform Quickstart](/quickstart) — Connected Local activation with `am init`
--   [AtomicMemory CLI](/cloud/cli) — full command reference
+-   [Atomic Memory CLI](/cloud/cli) — full command reference
 -   [Authentication](/cloud/authentication) — which credential goes where
--   [Migrate to Hosted Cloud](/cloud/how-to/migrate) — moving memories from Local to Cloud
+-   [Migrate to Atomic Memory](/cloud/how-to/migrate) — moving memories from Local to Cloud
 
 ---
 
@@ -4601,7 +4601,7 @@ Source: https://docs.atomicstrata.ai/cloud/use-cases/audit-every-mutation
 
 > Agent index: [llms.txt](/llms.txt)
 
-Memory that changes silently is impossible to defend. When an auditor or an incident asks what your agent remembered - and when it changed - you need a record you can read, not a black box. AtomicMemory Cloud captures every change to memory as an inspectable mutation trace.
+Memory that changes silently is impossible to defend. When an auditor or an incident asks what your agent remembered - and when it changed - you need a record you can read, not a black box. Atomic Memory captures every change to memory as an inspectable mutation trace.
 
 ## The problem
 
@@ -4649,7 +4649,7 @@ Source: https://docs.atomicstrata.ai/cloud/use-cases/debug-retrieval
 
 > Agent index: [llms.txt](/llms.txt)
 
-When an assistant recalls the wrong thing, the bug is usually retrieval, not the model. AtomicMemory Cloud records a retrieval trace for every search and lets you replay any query in the Playground - so you can see exactly which memories came back for a query, and narrow down why.
+When an assistant recalls the wrong thing, the bug is usually retrieval, not the model. Atomic Memory records a retrieval trace for every search and lets you replay any query in the Playground - so you can see exactly which memories came back for a query, and narrow down why.
 
 ## The problem
 
@@ -4703,7 +4703,7 @@ Source: https://docs.atomicstrata.ai/cloud/use-cases/deletion-and-retention
 
 > Agent index: [llms.txt](/llms.txt)
 
-When someone asks to be forgotten, you need to remove their memory - and only theirs. AtomicMemory Cloud partitions memory by scope, so personal, user-scoped facts can be deleted without touching the shared context your team relies on.
+When someone asks to be forgotten, you need to remove their memory - and only theirs. Atomic Memory partitions memory by scope, so personal, user-scoped facts can be deleted without touching the shared context your team relies on.
 
 ## The problem
 
@@ -4755,7 +4755,7 @@ Source: https://docs.atomicstrata.ai/cloud/use-cases/long-term-memory
 
 > Agent index: [llms.txt](/llms.txt)
 
-Most assistants forget everything the moment a conversation ends. The next session starts cold - the user re-explains their preferences, their context, their history. AtomicMemory Cloud gives your app a memory that persists across sessions and is scoped to each user.
+Most assistants forget everything the moment a conversation ends. The next session starts cold - the user re-explains their preferences, their context, their history. Atomic Memory gives your app a memory that persists across sessions and is scoped to each user.
 
 ## The problem
 
@@ -4911,7 +4911,7 @@ Source: https://docs.atomicstrata.ai/cloud/use-cases/per-user-personalization
 
 > Agent index: [llms.txt](/llms.txt)
 
-One deployment of your assistant serves everyone who signs in. Each of those users needs a memory that reflects only their own history - never the person in the next session. AtomicMemory Cloud gives you that separation through **scope**: every write and every read is tagged, and the memory layer keeps each scope apart.
+One deployment of your assistant serves everyone who signs in. Each of those users needs a memory that reflects only their own history - never the person in the next session. Atomic Memory gives you that separation through **scope**: every write and every read is tagged, and the memory layer keeps each scope apart.
 
 ## The problem
 
@@ -4990,7 +4990,7 @@ Source: https://docs.atomicstrata.ai/cloud/use-cases/preferences-without-a-datab
 
 > Agent index: [llms.txt](/llms.txt)
 
-Preferences are the classic reason to reach for a database: a settings table, a preferences key-value store, a column for every toggle. But the preferences that make an assistant feel personal show up in conversation, change over time, and rarely fit a fixed schema. AtomicMemory Cloud lets you capture them through the same `ingest` and `search` you already use - no store to design.
+Preferences are the classic reason to reach for a database: a settings table, a preferences key-value store, a column for every toggle. But the preferences that make an assistant feel personal show up in conversation, change over time, and rarely fit a fixed schema. Atomic Memory lets you capture them through the same `ingest` and `search` you already use - no store to design.
 
 ## The problem
 
@@ -5104,7 +5104,7 @@ Source: https://docs.atomicstrata.ai/cloud/use-cases/reconcile-facts
 
 > Agent index: [llms.txt](/llms.txt)
 
-Append-only memory rots. Every time a user restates something it becomes another row, contradictions pile up, and retrieval hands back three versions of the same fact. AtomicMemory Cloud reconciles each write against what it already knows, so memory stays consistent as facts change.
+Append-only memory rots. Every time a user restates something it becomes another row, contradictions pile up, and retrieval hands back three versions of the same fact. Atomic Memory reconciles each write against what it already knows, so memory stays consistent as facts change.
 
 ## The problem
 
@@ -5162,7 +5162,7 @@ Source: https://docs.atomicstrata.ai/cloud/use-cases/scoped-api-keys
 
 > Agent index: [llms.txt](/llms.txt)
 
-A single shared credential across every service is a blast radius waiting to happen. AtomicMemory Cloud issues API keys per project, so each service reaches only that project's memory - and you can revoke or rotate any key on its own.
+A single shared credential across every service is a blast radius waiting to happen. Atomic Memory issues API keys per project, so each service reaches only that project's memory - and you can revoke or rotate any key on its own.
 
 ## The problem
 
@@ -5219,7 +5219,7 @@ Source: https://docs.atomicstrata.ai/cloud/use-cases/see-whats-stored
 
 > Agent index: [llms.txt](/llms.txt)
 
-Most memory systems are a black box: you put data in and hope the right thing comes back out. AtomicMemory Cloud is built to be inspected. Every stored fact is visible on the Memories page, and every fact links back to the trace that produced it - so "what does my assistant know, and why" is a page you open, not a question you guess at.
+Most memory systems are a black box: you put data in and hope the right thing comes back out. Atomic Memory is built to be inspected. Every stored fact is visible on the Memories page, and every fact links back to the trace that produced it - so "what does my assistant know, and why" is a page you open, not a question you guess at.
 
 ## The problem
 
@@ -5323,7 +5323,7 @@ Source: https://docs.atomicstrata.ai/core-only-docker
 
 > Agent index: [llms.txt](/llms.txt)
 
-Run AtomicMemory Core on your machine with Docker and HTTP — no Cloud account, no `am init`, no console visibility. Use this for air-gapped evaluation, CI, or when you want full control of the container yourself.
+Run Core on your machine with Docker and HTTP — no Cloud account, no `am init`, no console visibility. Use this for air-gapped evaluation, CI, or when you want full control of the container yourself.
 
 For the recommended Open Source path with console visibility, start with the [Quickstart](/quickstart).
 
@@ -5427,9 +5427,9 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/claude-code
 
 > Agent index: [llms.txt](/llms.txt)
 
-The Claude Code plugin is discovered from the public AtomicMemory monorepo. Source and development live in [`plugins/claude-code`](https://github.com/atomicstrata/atomicmemory/tree/main/plugins/claude-code).
+The Claude Code plugin is discovered from the public Atomic Memory monorepo. Source and development live in [`plugins/claude-code`](https://github.com/atomicstrata/atomicmemory/tree/main/plugins/claude-code).
 
-AtomicMemory integrates with Claude Code through the shared MCP server, a memory protocol skill, and Claude-specific lifecycle hooks.
+Atomic Memory integrates with Claude Code through the shared MCP server, a memory protocol skill, and Claude-specific lifecycle hooks.
 
 ## Deployment targets
 
@@ -5471,7 +5471,7 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/claude-code/loca
 
 > Agent index: [llms.txt](/llms.txt)
 
-Give Claude Code persistent, cross-session memory backed by AtomicMemory. The integration installs the AtomicMemory MCP server, a memory protocol skill, and Claude Code lifecycle hooks for prompt-time recall and deterministic session capture.
+Give Claude Code persistent, cross-session memory backed by Open Source. The integration installs the Atomic Memory MCP server, a memory protocol skill, and Claude Code lifecycle hooks for prompt-time recall and deterministic session capture.
 
 Already ran am init?
 
@@ -5479,7 +5479,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Log in to Claude Code, then start local core with Claude Code account auth and local embeddings:
 
@@ -5507,7 +5507,7 @@ claude plugin marketplace add atomicstrata/atomicmemory --sparse .claude-plugin 
 claude plugin install claude-code@atomicmemory
 ```
 
-The Claude Code plugin is discovered from the public AtomicMemory monorepo. Source and development live in the [`plugins/claude-code`](https://github.com/atomicstrata/atomicmemory/tree/main/plugins/claude-code) package.
+The Claude Code plugin is discovered from the public Atomic Memory monorepo. Source and development live in the [`plugins/claude-code`](https://github.com/atomicstrata/atomicmemory/tree/main/plugins/claude-code) package.
 
 ### 3. Start Claude Code
 
@@ -5515,7 +5515,7 @@ The Claude Code plugin is discovered from the public AtomicMemory monorepo. Sour
 claude
 ```
 
-The plugin connects to the configured AtomicMemory service and exposes memory tools.
+The plugin connects to the configured Open Source service and exposes memory tools.
 
 ### 4. Verify memory tools
 
@@ -5535,16 +5535,16 @@ This quickstart uses the free local `transformers` embedding model so it can run
 -   **Cross-session recall.** Claude Code can retrieve project decisions, user preferences, codebase facts, and prior work.
 -   **Prompt-time retrieval.** `UserPromptSubmit` searches memory before the model turn and injects matching memories as untrusted reference context.
 -   **Deterministic capture.** `PostCompact`, `Stop`, and `TaskCompleted` store compact session records without asking the model to reconstruct everything.
--   **Local or external core.** For local use, start AtomicMemory core with the quickstart first. For team deployments, point `ATOMICMEMORY_API_URL` and `ATOMICMEMORY_API_KEY` at the service your team manages.
+-   **Local or external core.** For local use, start Core with the quickstart first. For team deployments, point `ATOMICMEMORY_API_URL` and `ATOMICMEMORY_API_KEY` at the service your team manages.
 -   **Memory protocol skill.** The installed skill teaches Claude when to search, when to ingest, and when to create handoff snapshots.
 -   **Scoped memory.** `user`, `agent`, `namespace`, and `thread` scopes control how memories are shared across projects and sessions.
--   **Backend-agnostic SDK path.** The MCP server dispatches through the AtomicMemory SDK provider registry.
+-   **Backend-agnostic SDK path.** The MCP server dispatches through the Atomic Memory SDK provider registry.
 
 ## Modes of operation
 
 ### Local core mode
 
-Use local core mode for personal Claude Code memory. Start AtomicMemory core with Claude Code account auth, then install the plugin so Claude Code can call the MCP server and lifecycle hooks. The core process uses `LLM_PROVIDER=claude-code` for extraction without a separate Anthropic API key.
+Use local core mode for personal Claude Code memory. Start Core with Claude Code account auth, then install the plugin so Claude Code can call the MCP server and lifecycle hooks. The core process uses `LLM_PROVIDER=claude-code` for extraction without a separate Anthropic API key.
 
 | Capability | Included |
 | --- | --- |
@@ -5554,13 +5554,13 @@ Use local core mode for personal Claude Code memory. Start AtomicMemory core wit
 | Session capture hooks | Yes |
 | Local runtime management | No; start core separately |
 
-### External AtomicMemory mode
+### External Open Source mode
 
-Hosted AtomicMemory coming soon
+Hosted Atomic Memory coming soon
 
-Hosted AtomicMemory for Claude Code is planned but not yet available. For now, use this mode with your own self-hosted AtomicMemory deployment.
+Hosted Atomic Memory for Claude Code is planned but not yet available. For now, use this mode with your own self-hosted Open Source deployment.
 
-Use external mode when a team or production deployment runs AtomicMemory for you. Configure the service URL and token, and let the hosted service own LLM credentials, storage, backups, and policy.
+Use external mode when a team or production deployment runs Open Source for you. Configure the service URL and token, and let the hosted service own LLM credentials, storage, backups, and policy.
 
 ```bash
 export ATOMICMEMORY_API_URL="https://memory.yourco.com"
@@ -5588,7 +5588,7 @@ Register the published MCP server directly:
 }
 ```
 
-After creating the project `.mcp.json`, [approve/trust the project MCP server and verify it with `claude mcp list`](#claude-code-does-not-show-atomicmemory-mcp-tools) before starting a Claude Code session that needs AtomicMemory tools.
+After creating the project `.mcp.json`, [approve/trust the project MCP server and verify it with `claude mcp list`](#claude-code-does-not-show-atomic-memory-mcp-tools) before starting a Claude Code session that needs Atomic Memory tools.
 
 | Capability | Included |
 | --- | --- |
@@ -5599,7 +5599,7 @@ After creating the project `.mcp.json`, [approve/trust the project MCP server an
 
 ### CLI-generated hooks
 
-The plugin ships hooks by default. If you maintain your own Claude Code config, the AtomicMemory CLI can generate equivalent hook snippets:
+The plugin ships hooks by default. If you maintain your own Claude Code config, the Atomic Memory CLI can generate equivalent hook snippets:
 
 ```bash
 atomicmemory hooks install --host claude-code --runtime node
@@ -5615,12 +5615,12 @@ Default behavior:
 
 | Setting | Default |
 | --- | --- |
-| Runtime | User-managed AtomicMemory core |
+| Runtime | User-managed Core |
 | Service URL | `http://127.0.0.1:17350` unless `ATOMICMEMORY_API_URL` is set |
 | User scope | Claude Code user/session context, then local fallback |
 | Agent scope | `claude-code` |
 | Capture level | `balanced` |
-| Memory extraction provider | Configured on the AtomicMemory core process |
+| Memory extraction provider | Configured on the Core process |
 
 Common overrides:
 
@@ -5641,7 +5641,7 @@ export EMBEDDING_DIMENSIONS=384
 
 The `claude-code` provider routes through Anthropic's Agent SDK, consumes the user's Claude Code / Claude account limits according to Anthropic policy, and is for personal local use.
 
-When you are running your own shared AtomicMemory runtime instead of using Claude Code's local authenticated session, configure an API-backed extraction provider:
+When you are running your own shared Open Source runtime instead of using Claude Code's local authenticated session, configure an API-backed extraction provider:
 
 ```bash
 export LLM_PROVIDER=anthropic
@@ -5660,8 +5660,8 @@ Advanced values:
 | `EMBEDDING_PROVIDER` | core process | Embedding provider. Use `transformers` or `ollama` to avoid an OpenAI embedding key. |
 | `ANTHROPIC_API_KEY` | core process | Anthropic provider key for production or team usage. |
 | `OPENAI_API_KEY` | core process | OpenAI provider key. |
-| `ATOMICMEMORY_API_URL` | MCP + hooks | AtomicMemory service URL. Defaults to local core at `http://127.0.0.1:17350` when omitted. |
-| `ATOMICMEMORY_API_KEY` | MCP + hooks | API key for an external AtomicMemory service. |
+| `ATOMICMEMORY_API_URL` | MCP + hooks | Open Source service URL. Defaults to local core at `http://127.0.0.1:17350` when omitted. |
+| `ATOMICMEMORY_API_KEY` | MCP + hooks | API key for an external Open Source service. |
 | `ATOMICMEMORY_SCOPE_USER` | MCP + hooks | User identity override. |
 | `ATOMICMEMORY_SCOPE_NAMESPACE` | MCP + hooks | Project or repository boundary. |
 | `ATOMICMEMORY_SCOPE_AGENT` | MCP + hooks | Optional agent identity override. |
@@ -5715,9 +5715,9 @@ The installed skill guides Claude Code to:
 
 ## Troubleshooting
 
-### Claude Code does not show AtomicMemory MCP tools
+### Claude Code does not show Atomic Memory MCP tools
 
-If you configured AtomicMemory through a project `.mcp.json`, Claude Code may require the project MCP server to be approved/trusted before the tools are available.
+If you configured Open Source through a project `.mcp.json`, Claude Code may require the project MCP server to be approved/trusted before the tools are available.
 
 From the project root, run:
 
@@ -5744,7 +5744,7 @@ Do not use `enableAllProjectMcpServers` casually in normal projects. It trusts a
 | Symptom | Fix |
 | --- | --- |
 | No memory tools appear | Restart Claude Code after installing the plugin or changing MCP config. For MCP-only `.mcp.json` setups, verify project trust with `claude mcp list`. |
-| Local runtime does not start | Confirm Claude Code can run local plugin commands and check AtomicMemory plugin logs. |
+| Local runtime does not start | Confirm Claude Code can run local plugin commands and check Open Source plugin logs. |
 | `claude-code` provider fails | Run `claude auth login`, then verify with `claude auth status --json`, `claude doctor`, or `claude --version`. Use `LLM_PROVIDER=anthropic` and `ANTHROPIC_API_KEY` for hosted or team deployments. |
 | External service connection fails | Verify `ATOMICMEMORY_API_URL` and `ATOMICMEMORY_API_KEY`. |
 | Unexpected memory sharing | Add `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or `ATOMICMEMORY_SCOPE_THREAD`. |
@@ -5771,7 +5771,7 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/codex
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory integrates with Codex through the shared MCP server and a memory protocol skill that handles retrieval, durable writes, and handoff snapshots.
+Atomic Memory integrates with Codex through the shared MCP server and a memory protocol skill that handles retrieval, durable writes, and handoff snapshots.
 
 ## Deployment targets
 
@@ -5813,7 +5813,7 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/codex/local
 
 > Agent index: [llms.txt](/llms.txt)
 
-Give Codex persistent, cross-session memory backed by AtomicMemory. The public setup registers the AtomicMemory MCP server so Codex can recall prior work, store durable decisions, and create handoff snapshots. Teams that install the source-distributed Codex plugin can also add the AtomicMemory memory protocol skill.
+Give Codex persistent, cross-session memory backed by Open Source. The public setup registers the Atomic Memory MCP server so Codex can recall prior work, store durable decisions, and create handoff snapshots. Teams that install the source-distributed Codex plugin can also add the Open Source memory protocol skill.
 
 Already ran am init?
 
@@ -5821,7 +5821,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Log in to Codex, then start local core with Codex account auth and local embeddings:
 
@@ -5879,11 +5879,11 @@ This quickstart uses the free local `transformers` embedding model so it can run
 -   **Cross-session recall.** Codex can retrieve project decisions, user preferences, codebase facts, and prior work.
 -   **MCP memory tools.** The public setup exposes `memory_search`, `memory_ingest`, `memory_package`, and `memory_list`.
 -   **Account-auth local extraction.** Local core can use the logged-in Codex account for extraction with `LLM_PROVIDER=codex`, so no OpenAI API key is required for the quickstart.
--   **Local or external core.** For local use, start AtomicMemory core with the quickstart first. For team deployments, point `ATOMICMEMORY_API_URL` and `ATOMICMEMORY_API_KEY` at the service your team manages.
+-   **Local or external core.** For local use, start Core with the quickstart first. For team deployments, point `ATOMICMEMORY_API_URL` and `ATOMICMEMORY_API_KEY` at the service your team manages.
 -   **Optional memory protocol skill.** The source-distributed plugin teaches Codex when to search, when to ingest, and when to create handoff snapshots.
 -   **Optional lifecycle hooks.** Codex hooks can add prompt-time retrieval and deterministic lifecycle capture when `features.codex_hooks = true`.
 -   **Scoped memory.** `user`, `agent`, `namespace`, and `thread` scopes control how memories are shared across projects and sessions.
--   **Backend-agnostic SDK path.** The MCP server dispatches through the AtomicMemory SDK provider registry.
+-   **Backend-agnostic SDK path.** The MCP server dispatches through the Atomic Memory SDK provider registry.
 
 ## Modes of operation
 
@@ -5922,7 +5922,7 @@ Codex stop responses are often shorter than Claude Code responses. Start with `A
 
 ## Configuration
 
-For `provider=atomicmemory`, the MCP server defaults to local AtomicMemory core at `http://127.0.0.1:17350` with the local quickstart key `local-dev-key`. Use provider connection variables when Codex should connect to a different AtomicMemory service or another provider such as Mem0:
+For `provider=atomicmemory`, the MCP server defaults to local Core at `http://127.0.0.1:17350` with the local quickstart key `local-dev-key`. Use provider connection variables when Codex should connect to a different Open Source service or another provider such as Mem0:
 
 ```bash
 export ATOMICMEMORY_PROVIDER="atomicmemory"
@@ -5961,7 +5961,7 @@ export EMBEDDING_PROVIDER=transformers
 export EMBEDDING_DIMENSIONS=384
 ```
 
-Set those variables on the AtomicMemory core process before starting it. The MCP setup above is unchanged: Codex still connects to core through the MCP server's local defaults or explicit provider connection variables. `LLM_PROVIDER=codex` reads the auth file created by `codex login` and calls the Codex backend directly. No OpenAI API key is required in this mode. It is for personal local development, consumes the logged-in Codex account's limits, and is not recommended for hosted or team deployments.
+Set those variables on the Core process before starting it. The MCP setup above is unchanged: Codex still connects to core through the MCP server's local defaults or explicit provider connection variables. `LLM_PROVIDER=codex` reads the auth file created by `codex login` and calls the Codex backend directly. No OpenAI API key is required in this mode. It is for personal local development, consumes the logged-in Codex account's limits, and is not recommended for hosted or team deployments.
 
 Core resolves the Codex auth file from `CODEX_AUTH_PATH` when set, otherwise from `CODEX_HOME/auth.json`, otherwise from `$HOME/.codex/auth.json`. The quickstart sets `CODEX_AUTH_PATH` explicitly because Docker runs core as its own container user.
 
@@ -5977,7 +5977,7 @@ Optional:
 | Env var | Purpose |
 | --- | --- |
 | `ATOMICMEMORY_PROVIDER` | Provider name, usually `atomicmemory`. Defaults to `atomicmemory`. |
-| `ATOMICMEMORY_API_URL` | Provider base URL. Defaults to local AtomicMemory core for `provider=atomicmemory`; required for `provider=mem0` or remote services. |
+| `ATOMICMEMORY_API_URL` | Provider base URL. Defaults to local Core for `provider=atomicmemory`; required for `provider=mem0` or remote services. |
 | `ATOMICMEMORY_API_KEY` | API key for the local Docker service or any provider that requires auth. |
 | `ATOMICMEMORY_SCOPE_USER` | Stable user identity for memory scope. Defaults to the local machine user when omitted. |
 | `ATOMICMEMORY_SCOPE_AGENT` | Optional agent identity override. |
@@ -6012,7 +6012,7 @@ The installed skill guides Codex to:
 | No memory tools appear | Run `codex mcp list`, restart Codex after changing MCP config, and confirm `npx -y --package=@atomicmemory/mcp-server atomicmemory-mcp` works in the same environment. |
 | Local core is not running | Start it with the Docker command in the quickstart above, then retry the MCP tool call. |
 | `codex` extraction provider fails | Run `codex login` again and confirm the core process can read the auth file. For Docker, keep `-v $HOME/.codex:/home/appuser/.codex:ro` and `-e CODEX_AUTH_PATH=/home/appuser/.codex/auth.json` together. |
-| Connection failed | Verify local AtomicMemory core is running at `http://127.0.0.1:17350`, or verify `ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, and `ATOMICMEMORY_API_KEY` for remote/provider-specific setups. |
+| Connection failed | Verify local Core is running at `http://127.0.0.1:17350`, or verify `ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, and `ATOMICMEMORY_API_KEY` for remote/provider-specific setups. |
 | Plugin not found | Plugin mode is source-distributed today; confirm the marketplace entry points at a local clone of `atomicmemory/plugins/codex`. |
 | Unexpected memory sharing | Add `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or `ATOMICMEMORY_SCOPE_THREAD`. |
 
@@ -6036,7 +6036,7 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/cursor
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory supports Cursor today through a local MCP integration and Cursor rules.
+Atomic Memory supports Cursor today through a local MCP integration and Cursor rules.
 
 ## Available today: Local
 
@@ -6062,7 +6062,7 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/cursor/cloud
 
 Coming Soon
 
-Cursor Cloud deployment details are coming soon. Local Cursor support is available today through the AtomicMemory MCP server and Cursor rules.
+Cursor Cloud deployment details are coming soon. Local Cursor support is available today through the Atomic Memory MCP server and Cursor rules.
 
 For the current local workflow, see [Cursor Local](/integrations/coding-agents/cursor/local).
 
@@ -6076,7 +6076,7 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/cursor/local
 
 > Agent index: [llms.txt](/llms.txt)
 
-Cursor support is available today as a manual local integration using the AtomicMemory MCP server and Cursor rules. The monorepo ships a source template for `.cursor/mcp.json` and an always-on memory rule. A packaged Cursor plugin and Cursor Cloud deployment are planned but not yet available.
+Cursor support is available today as a manual local integration using the Atomic Memory MCP server and Cursor rules. The monorepo ships a source template for `.cursor/mcp.json` and an always-on memory rule. A packaged Cursor plugin and Cursor Cloud deployment are planned but not yet available.
 
 Already ran am init?
 
@@ -6084,7 +6084,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Start local core first. It should be reachable at `http://127.0.0.1:17350`.
 
@@ -6161,7 +6161,7 @@ cursor-agent mcp list-tools atomicmemory
 -   **MCP memory tools.** Cursor can search, ingest, package, and list scoped memories.
 -   **Project rule guidance.** The rule gives Cursor the same memory behavior as the Claude Code and Codex skills.
 -   **Local defaults.** Local core URL, quickstart auth, and user scope are inferred when omitted.
--   **Backend-agnostic SDK path.** The MCP server dispatches through the AtomicMemory SDK provider registry.
+-   **Backend-agnostic SDK path.** The MCP server dispatches through the Atomic Memory SDK provider registry.
 
 ## Modes of operation
 
@@ -6186,7 +6186,7 @@ Use MCP-only mode when you want explicit memory tools without project rules.
 
 ## Configuration
 
-For `provider=atomicmemory`, the MCP server defaults to local AtomicMemory core at `http://127.0.0.1:17350` and uses the local quickstart key for that default URL. Add environment forwarding only when Cursor should use a remote AtomicMemory service, another provider such as Mem0, or explicit scope values:
+For `provider=atomicmemory`, the MCP server defaults to local Core at `http://127.0.0.1:17350` and uses the local quickstart key for that default URL. Add environment forwarding only when Cursor should use a remote Open Source service, another provider such as Mem0, or explicit scope values:
 
 ```json
 {
@@ -6212,7 +6212,7 @@ Optional:
 | Env var | Purpose |
 | --- | --- |
 | `ATOMICMEMORY_PROVIDER` | Provider name, usually `atomicmemory`. Defaults to `atomicmemory`. |
-| `ATOMICMEMORY_API_URL` | Provider base URL. Defaults to local AtomicMemory core for `provider=atomicmemory`; required for `provider=mem0` or remote services. |
+| `ATOMICMEMORY_API_URL` | Provider base URL. Defaults to local Core for `provider=atomicmemory`; required for `provider=mem0` or remote services. |
 | `ATOMICMEMORY_API_KEY` | API key for remote services or providers that require auth. Omit it for the default local core. |
 | `ATOMICMEMORY_SCOPE_USER` | Stable user identity for memory scope. Defaults to the local machine user when omitted. |
 | `ATOMICMEMORY_SCOPE_AGENT` | Agent identity. |
@@ -6266,7 +6266,7 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/hermes
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory integrates with Hermes as a native Python memory provider. Unlike the MCP-backed coding-agent plugins, Hermes exposes lifecycle hooks directly to memory providers, so the AtomicMemory integration can participate in prefetch, turn sync, and session shutdown without routing through an MCP stdio process.
+Atomic Memory integrates with Hermes as a native Python memory provider. Unlike the MCP-backed coding-agent plugins, Hermes exposes lifecycle hooks directly to memory providers, so the Atomic Memory integration can participate in prefetch, turn sync, and session shutdown without routing through an MCP stdio process.
 
 The provider is backed by the published `atomicmemory` Python SDK, keeping Hermes-specific code focused on registration, lifecycle hooks, and tool schemas while memory semantics stay in the SDK.
 
@@ -6310,7 +6310,7 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/hermes/local
 
 > Agent index: [llms.txt](/llms.txt)
 
-Give Hermes Agent persistent, cross-session memory backed by AtomicMemory. Unlike MCP-backed coding-agent plugins, Hermes uses a native Python memory provider that participates directly in prefetch, turn sync, and shutdown hooks. The published npm installer copies the provider into your Hermes profile; the provider then uses the published AtomicMemory Python SDK from the Hermes Python environment.
+Give Hermes Agent persistent, cross-session memory backed by Open Source. Unlike MCP-backed coding-agent plugins, Hermes uses a native Python memory provider that participates directly in prefetch, turn sync, and shutdown hooks. The published npm installer copies the provider into your Hermes profile; the provider then uses the published Atomic Memory Python SDK from the Hermes Python environment.
 
 Already ran am init?
 
@@ -6318,7 +6318,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Start local core first. It should be reachable at `http://127.0.0.1:17350`.
 
@@ -6364,7 +6364,7 @@ hermes memory status
 
 ## Features
 
--   **Native provider lifecycle.** Hermes calls the AtomicMemory provider during recall, ingest, and shutdown.
+-   **Native provider lifecycle.** Hermes calls the Open Source provider during recall, ingest, and shutdown.
 -   **Background recall.** Prefetch prepares memory for the next turn without blocking the chat loop.
 -   **Non-blocking ingest.** Completed turns sync in the background.
 -   **Shared or siloed memory.** Hermes can recall all user memories or only Hermes-ingested memories.
@@ -6381,12 +6381,12 @@ hermes memory status
 
 | Scope | Recall |
 | --- | --- |
-| `shared` | All AtomicMemory memories for the user. |
+| `shared` | All Open Source memories for the user. |
 | `siloed` | Only Hermes-ingested memories. |
 
 ## Configuration
 
-The local Docker service started above requires the development bearer key shown in the quickstart. For a remote AtomicMemory service, use that service's issued key:
+The local Docker service started above requires the development bearer key shown in the quickstart. For a remote Open Source service, use that service's issued key:
 
 ```bash
 export ATOMICMEMORY_API_URL="https://memory.yourco.com"
@@ -6397,15 +6397,15 @@ Hermes' setup wizard prompts for:
 
 | Field | Purpose |
 | --- | --- |
-| `scope_user` | User identity used for AtomicMemory scope. |
+| `scope_user` | User identity used for Open Source scope. |
 | `memory_scope` | `shared` or `siloed`. |
 
 Required environment:
 
 | Env var | Purpose |
 | --- | --- |
-| `ATOMICMEMORY_API_URL` | AtomicMemory core URL. Required; the Hermes provider intentionally has no default API URL. |
-| `ATOMICMEMORY_API_KEY` | Bearer credential for the local Docker service or any protected AtomicMemory service. |
+| `ATOMICMEMORY_API_URL` | Core URL. Required; the Hermes provider intentionally has no default API URL. |
+| `ATOMICMEMORY_API_KEY` | Bearer credential for the local Docker service or any protected Open Source service. |
 
 Optional environment:
 
@@ -6452,7 +6452,7 @@ The published npm package is the supported distribution path for the provider it
 
 | Tool | Maps to | Purpose |
 | --- | --- | --- |
-| `atomicmemory_search` | `MemoryClient.search` | Search AtomicMemory by meaning. |
+| `atomicmemory_search` | `MemoryClient.search` | Search Open Source by meaning. |
 | `atomicmemory_context` | `MemoryClient.package` | Build an injection-ready context package. |
 | `atomicmemory_conclude` | `MemoryClient.ingest` | Store one explicit durable fact verbatim. |
 | `atomicmemory_profile` | `MemoryClient.list` | List recent records for the current user. |
@@ -6474,7 +6474,7 @@ The published npm package is the supported distribution path for the provider it
 | Provider does not appear | Confirm the provider is installed under `$HERMES_HOME/plugins/atomicmemory`, or under `$HOME/.hermes/plugins/atomicmemory` when `HERMES_HOME` is unset. |
 | Provider unavailable | Confirm `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and that Hermes installed the `atomicmemory` Python SDK dependency from `plugin.yaml`. |
 | Siloed recall fails | Use `ATOMICMEMORY_PROVIDER=atomicmemory` or switch to `shared`. |
-| Calls pause after repeated backend failures | Hermes opens a circuit breaker after five SDK failures and resumes after roughly two minutes. Check the AtomicMemory service before retrying. |
+| Calls pause after repeated backend failures | Hermes opens a circuit breaker after five SDK failures and resumes after roughly two minutes. Check the Open Source service before retrying. |
 
 ## Update
 
@@ -6500,7 +6500,7 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/openclaw
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory integrates with OpenClaw as a plugin and skill bundle backed by the same MCP server and SDK primitives used elsewhere in the platform.
+Atomic Memory integrates with OpenClaw as a plugin and skill bundle backed by the same MCP server and SDK primitives used elsewhere in the platform.
 
 ## Deployment targets
 
@@ -6542,7 +6542,7 @@ Source: https://docs.atomicstrata.ai/integrations/coding-agents/openclaw/local
 
 > Agent index: [llms.txt](/llms.txt)
 
-Give OpenClaw persistent, cross-channel memory backed by AtomicMemory. The plugin embeds the shared AtomicMemory MCP server in-process, registers four memory tools, and ships a skill bundle that teaches agents when to search, ingest, and write deterministic session snapshots.
+Give OpenClaw persistent, cross-channel memory backed by Open Source. The plugin embeds the shared Atomic Memory MCP server in-process, registers four memory tools, and ships a skill bundle that teaches agents when to search, ingest, and write deterministic session snapshots.
 
 Already ran am init?
 
@@ -6550,7 +6550,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Start local core first. It should be reachable at `http://127.0.0.1:17350`.
 
@@ -6594,7 +6594,7 @@ openclaw gateway restart
 -   **Permission-aware skill.** The skill declares network and credential permissions without filesystem or shell access.
 -   **Four memory tools.** The plugin exposes `memory_search`, `memory_ingest`, `memory_package`, and `memory_list`, backed by the shared MCP server embedded in-process.
 -   **Local defaults.** Local `apiUrl`, local quickstart auth, and user scope are inferred when omitted.
--   **Backend-agnostic SDK path.** Provider selection uses the AtomicMemory SDK provider registry.
+-   **Backend-agnostic SDK path.** Provider selection uses the Atomic Memory SDK provider registry.
 
 ## Modes of operation
 
@@ -6615,7 +6615,7 @@ OpenClaw memory capture is prompt/tool driven. Agents search before answering wh
 
 ## Configuration
 
-For local AtomicMemory core, plugin config is optional. The embedded MCP server defaults to `http://127.0.0.1:17350`, uses the local quickstart key for that URL, and derives `scope.user` from the local machine user.
+For local Core, plugin config is optional. The embedded MCP server defaults to `http://127.0.0.1:17350`, uses the local quickstart key for that URL, and derives `scope.user` from the local machine user.
 
 Add config only when you need explicit scoping or a non-default provider:
 
@@ -6633,7 +6633,7 @@ Add config only when you need explicit scoping or a non-default provider:
 
 OpenClaw passes optional plugin config from `openclaw.plugin.json` into the provider. Set `scope.user` only when the local machine user is not the right channel-agnostic memory identity. Set `apiKey` only when your allowed local service uses a non-default bearer key.
 
-The shipped skill manifest allows only the local AtomicMemory core origins listed below. Do not point this plugin at a remote service unless your OpenClaw administrator also updates and revalidates the plugin skill permissions.
+The shipped skill manifest allows only the local Core origins listed below. Do not point this plugin at a remote service unless your OpenClaw administrator also updates and revalidates the plugin skill permissions.
 
 For local plugin development, install from a checkout instead:
 
@@ -6647,8 +6647,8 @@ openclaw plugins install -l ./plugins/openclaw
 
 | Field | Purpose |
 | --- | --- |
-| `provider` | AtomicMemory SDK provider name. |
-| `apiUrl` | Optional provider base URL. Defaults to local AtomicMemory core for `provider: "atomicmemory"`. The shipped skill manifest allows `http://127.0.0.1:17350` and `http://localhost:17350`. |
+| `provider` | Atomic Memory SDK provider name. |
+| `apiUrl` | Optional provider base URL. Defaults to local Core for `provider: "atomicmemory"`. The shipped skill manifest allows `http://127.0.0.1:17350` and `http://localhost:17350`. |
 | `apiKey` | Optional bearer credential. Omit it for the default local core; provide it for an allowed local service with a non-default key. |
 | `scope.user` | Stable user identity shared across OpenClaw channels. Defaults to the local machine user. |
 | `scope.agent` | Agent identity. |
@@ -6666,7 +6666,7 @@ openclaw plugins install -l ./plugins/openclaw
 
 ## Memory Protocol Skill
 
-OpenClaw's AtomicMemory skill guides agents to:
+OpenClaw's Open Source skill guides agents to:
 
 -   Search before answering when prior context may matter.
 -   Store durable facts, preferences, decisions, and conventions.
@@ -6714,7 +6714,7 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/langchain-js
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory provides LangChain JS helpers and agent tools around an injected AtomicMemory SDK client.
+Atomic Memory provides LangChain JS helpers and agent tools around an injected Atomic Memory SDK client.
 
 ## Deployment targets
 
@@ -6756,13 +6756,13 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/langchain-js/local
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory support for LangChain JS exposes durable semantic memory through helper functions and LangChain-native tools.
+Open Source support for LangChain JS exposes durable semantic memory through helper functions and LangChain-native tools.
 
 ## What you get
 
 -   **Agent tools.** `memory_search` and `memory_ingest` tools built with `@langchain/core/tools`.
 -   **Helper functions.** `searchMemory()` and `ingestTurn()` for custom chains, callbacks, and LCEL steps.
--   **Backend-agnostic SDK path.** The adapter uses the AtomicMemory SDK provider registry through your `MemoryClient`.
+-   **Backend-agnostic SDK path.** The adapter uses the Atomic Memory SDK provider registry through your `MemoryClient`.
 
 Already ran am init?
 
@@ -6770,7 +6770,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Start local core first. It should be reachable at `http://127.0.0.1:17350`.
 
@@ -6840,13 +6840,13 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/langflow
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory provides Langflow custom components that add durable semantic memory to visual AI workflows through the Python `atomicmemory` SDK.
+Atomic Memory provides Langflow custom components that add durable semantic memory to visual AI workflows through the Python `atomicmemory` SDK.
 
 ## Deployment targets
 
 ### Local
 
-Use the local setup when Langflow runs on your laptop, workstation, or self-hosted server and connects to a local AtomicMemory core.
+Use the local setup when Langflow runs on your laptop, workstation, or self-hosted server and connects to a local Core.
 
 See [Langflow Local](/integrations/frameworks/langflow/local).
 
@@ -6864,13 +6864,13 @@ See [Langflow Cloud](/integrations/frameworks/langflow/cloud).
 | --- | --- |
 | Chat Memory | Read-only message history backend for a user/session scope. |
 | Search Context | Query-driven memory recall that returns prompt-ready context. |
-| Store Message | Explicitly persists a message or turn into AtomicMemory. |
+| Store Message | Explicitly persists a message or turn into Atomic Memory. |
 | Delete Memories in Scope | Confirm-gated best-effort deletion for a selected scope. |
 
 ## Common patterns
 
 -   **Cross-session chatbot memory.** Store important user turns, then retrieve user-scoped context in a later Langflow session.
--   **Personalized RAG.** Combine document retrieval with AtomicMemory recall for preferences, prior questions, and durable user context.
+-   **Personalized RAG.** Combine document retrieval with Atomic Memory recall for preferences, prior questions, and durable user context.
 -   **Support and research workflows.** Persist facts, decisions, and follow-up items across repeated runs of the same flow.
 
 ## Trust model
@@ -6891,13 +6891,13 @@ Coming Soon
 
 Hosted Langflow setup is not documented yet.
 
-For self-hosted Langflow connected to local or private AtomicMemory core, use [Langflow Local](/integrations/frameworks/langflow/local).
+For self-hosted Langflow connected to local or private Core, use [Langflow Local](/integrations/frameworks/langflow/local).
 
 ## Remote core checklist
 
-When you run Langflow separately from AtomicMemory core:
+When you run Langflow separately from Core:
 
--   Use HTTPS for the AtomicMemory API URL.
+-   Use HTTPS for the Open Source API URL.
 -   Store the API key in the Langflow component secret field, not in Provider Config.
 -   Configure `ATOMICMEMORY_LANGFLOW_ALLOWED_HOSTS` or `ATOMICMEMORY_LANGFLOW_ALLOW_REMOTE=1` in the Langflow operator environment.
 -   Restrict who can edit and run flows, because flow inputs define memory scope.
@@ -6912,11 +6912,11 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/langflow/local
 
 > Agent index: [llms.txt](/llms.txt)
 
-Add durable, cross-session memory to Langflow flows with AtomicMemory custom components.
+Add durable, cross-session memory to Langflow flows with Atomic Memory custom components.
 
 ## What you get
 
--   **Chat Memory.** Read-only LangChain message history backed by AtomicMemory list operations.
+-   **Chat Memory.** Read-only LangChain message history backed by Atomic Memory list operations.
 -   **Search Context.** Query-driven recall that can return packaged prompt context or search-only results.
 -   **Store Message.** Explicit writes from a flow into durable memory.
 -   **Delete Memories in Scope.** Confirm-gated cleanup for test data or user-requested erasure.
@@ -6928,7 +6928,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Start local core before starting Langflow. The default local endpoint is `http://127.0.0.1:17350`, and the [Core-only Docker](/core-only-docker) key is `local-dev-key` (or `CORE_API_KEY` after `am init`).
 
@@ -6952,7 +6952,7 @@ This quickstart uses the free local `transformers` embedding model so it can run
 
 ### 2. Install the Python package
 
-Install the AtomicMemory Langflow package into the same Python environment that runs Langflow:
+Install the Atomic Memory Langflow package into the same Python environment that runs Langflow:
 
 ```bash
 pip install atomicmemory-langflow
@@ -6966,7 +6966,7 @@ pip install "atomicmemory-langflow[langflow]"
 
 ### 3. Install the Langflow component entry files
 
-Copy the AtomicMemory component entry files into your Langflow components root:
+Copy the Atomic Memory component entry files into your Langflow components root:
 
 ```bash
 npx -y @atomicmemory/langflow-plugin \
@@ -7033,13 +7033,13 @@ What should you keep in mind about me?
 
 Use **Chat Memory** when a Langflow component expects a message-history backend. It is read-only by design and does not auto-ingest every turn.
 
-By default, Chat Memory fails closed if AtomicMemory is unreachable. Turn on `Fail open on error` only for flows where an empty history is safer than stopping the run.
+By default, Chat Memory fails closed if Open Source is unreachable. Turn on `Fail open on error` only for flows where an empty history is safer than stopping the run.
 
 ### Search Context
 
 Use **Search Context** before a prompt or agent step. It retrieves relevant memory for the current input and can return either packaged prompt context or search-only results.
 
-Packaged context requires a backend that supports AtomicMemory's package extension. If packaging is unavailable, the component fails closed rather than silently degrading.
+Packaged context requires a backend that supports Open Source's package extension. If packaging is unavailable, the component fails closed rather than silently degrading.
 
 ### Store Message
 
@@ -7087,7 +7087,7 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/langgraph-js
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory provides LangGraph node factories that add durable retrieval and ingest beside graph-scoped checkpointers.
+Atomic Memory provides LangGraph node factories that add durable retrieval and ingest beside graph-scoped checkpointers.
 
 ## Deployment targets
 
@@ -7129,13 +7129,13 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/langgraph-js/local
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory support for LangGraph JS provides durable semantic memory next to LangGraph's run-scoped checkpointers.
+Open Source support for LangGraph JS provides durable semantic memory next to LangGraph's run-scoped checkpointers.
 
 ## What you get
 
 -   **Retrieve node.** `createMemoryRetrieveNode()` searches memory before the model step.
 -   **Ingest node.** `createMemoryIngestNode()` persists the completed turn after the model step.
--   **Backend-agnostic SDK path.** The adapter uses the AtomicMemory SDK provider registry through your `MemoryClient`.
+-   **Backend-agnostic SDK path.** The adapter uses the Atomic Memory SDK provider registry through your `MemoryClient`.
 
 Already ran am init?
 
@@ -7143,7 +7143,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Start local core first. It should be reachable at `http://127.0.0.1:17350`.
 
@@ -7192,7 +7192,7 @@ const remember = createMemoryIngestNode(memoryClient, {
 });
 ```
 
-The factories emit plain async state-node functions, so they can be registered with your graph without adding runtime framework ownership to AtomicMemory.
+The factories emit plain async state-node functions, so they can be registered with your graph without adding runtime framework ownership to Open Source.
 
 ## See also
 
@@ -7209,7 +7209,7 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/mastra
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory provides Mastra tools that map agent memory search and ingest onto AtomicMemory retrieval and ingest primitives.
+Atomic Memory provides Mastra tools that map agent memory search and ingest onto Atomic Memory retrieval and ingest primitives.
 
 ## Deployment targets
 
@@ -7251,13 +7251,13 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/mastra/local
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory support for Mastra exposes durable memory search and ingest as Mastra tools around your SDK `MemoryClient`.
+Open Source support for Mastra exposes durable memory search and ingest as Mastra tools around your SDK `MemoryClient`.
 
 ## What you get
 
 -   **Agent tools.** `memory_search` and `memory_ingest` tools created with Mastra `createTool()`.
 -   **Helper functions.** `searchMemory()` and `ingestTurn()` for custom Mastra workflows.
--   **Backend-agnostic SDK path.** The adapter uses the AtomicMemory SDK provider registry through your `MemoryClient`.
+-   **Backend-agnostic SDK path.** The adapter uses the Atomic Memory SDK provider registry through your `MemoryClient`.
 
 Already ran am init?
 
@@ -7265,7 +7265,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Start local core first. It should be reachable at `http://127.0.0.1:17350`.
 
@@ -7320,7 +7320,7 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/openai-agents
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory integrates with the OpenAI Agents SDK through an adapter that augments run input with memory and ingests completed turns back into durable storage.
+Atomic Memory integrates with the OpenAI Agents SDK through an adapter that augments run input with memory and ingests completed turns back into durable storage.
 
 ## Deployment targets
 
@@ -7362,7 +7362,7 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/openai-agents/local
 
 > Agent index: [llms.txt](/llms.txt)
 
-Give OpenAI Agents SDK applications persistent memory backed by AtomicMemory. The adapter searches long-term memory before `run()`, injects retrieved context into model-visible input, and ingests the completed turn after the run finishes.
+Give OpenAI Agents SDK applications persistent memory backed by Open Source. The adapter searches long-term memory before `run()`, injects retrieved context into model-visible input, and ingests the completed turn after the run finishes.
 
 Already ran am init?
 
@@ -7370,7 +7370,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Start local core first. It should be reachable at `http://127.0.0.1:17350`.
 
@@ -7441,7 +7441,7 @@ const { result, retrieved } = await runWithMemory({
 
 ## Features
 
--   **Pre-run recall.** Search AtomicMemory before calling `run()`.
+-   **Pre-run recall.** Search Open Source before calling `run()`.
 -   **Guarded input injection.** Retrieved memories are added to model-visible input because SDK local `context` is not shown to the model.
 -   **Post-run ingest.** Completed runs are stored with `mode: "messages"` for extracted memory updates.
 -   **Optional function tools.** Agents can call `memory_search` and `memory_ingest` during a run.
@@ -7537,7 +7537,7 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/vercel-ai-sdk
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory integrates with Vercel AI SDK through an adapter that handles retrieval before the model call and durable ingest after the turn completes.
+Atomic Memory integrates with Vercel AI SDK through an adapter that handles retrieval before the model call and durable ingest after the turn completes.
 
 ## Deployment targets
 
@@ -7579,7 +7579,7 @@ Source: https://docs.atomicstrata.ai/integrations/frameworks/vercel-ai-sdk/local
 
 > Agent index: [llms.txt](/llms.txt)
 
-Give Vercel AI SDK applications persistent memory backed by AtomicMemory. The adapter retrieves relevant memories before a model call, injects them as guarded context, and ingests the completed turn after the model returns.
+Give Vercel AI SDK applications persistent memory backed by Open Source. The adapter retrieves relevant memories before a model call, injects them as guarded context, and ingests the completed turn after the model returns.
 
 Already ran am init?
 
@@ -7587,7 +7587,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Start local core first. It should be reachable at `http://127.0.0.1:17350`.
 
@@ -7656,10 +7656,10 @@ const result = await withMemory({
 
 ## Features
 
--   **Pre-call recall.** Search AtomicMemory before `generateText`, `streamText`, or your own AI SDK runner.
+-   **Pre-call recall.** Search Open Source before `generateText`, `streamText`, or your own AI SDK runner.
 -   **Guarded context injection.** Retrieved memories are added as context, not treated as application instructions.
--   **Post-call ingest.** Completed turns are stored with `mode: "messages"` so AtomicMemory can add, update, delete, or no-op extracted facts.
--   **Version isolation.** The adapter accepts AtomicMemory SDK message shapes and does not import from `ai`.
+-   **Post-call ingest.** Completed turns are stored with `mode: "messages"` so Open Source can add, update, delete, or no-op extracted facts.
+-   **Version isolation.** The adapter accepts Atomic Memory SDK message shapes and does not import from `ai`.
 
 ## Modes of operation
 
@@ -7778,7 +7778,7 @@ Source: https://docs.atomicstrata.ai/integrations/overview
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory adds durable memory to coding agents, AI frameworks, and terminal workflows through the same provider-backed memory layer. Choose the host you use, install the local integration, and point it at your AtomicMemory backend.
+Atomic Memory adds durable memory to coding agents, AI frameworks, and terminal workflows through the same provider-backed memory layer. Choose the host you use, install the local integration, and point it at your Atomic Memory backend.
 
 Your host
 
@@ -7796,7 +7796,7 @@ SDK adapters
 
 Backend
 
-AtomicMemoryhosted or self-hosted
+Atomic Memoryhosted or self-hosted
 
 ## Coding agents
 
@@ -7832,7 +7832,7 @@ Most coding-agent integrations use the shared MCP server from the [`packages/mcp
 
 Framework integrations use the TypeScript or Python SDK directly, but keep the same loop: retrieve before the agent acts, ingest after useful work completes, and scope memory by user, agent, namespace, or thread.
 
-Terminal users: use the [AtomicMemory CLI](/cloud/cli) (`am init`, Connected Local) or the [npm CLI](/cli) for direct self-hosted core workflows — search, ingest, profile setup, and hook generation.
+Terminal users: use the [Atomic Memory CLI](/cloud/cli) (`am init`, Connected Local) or the [npm CLI](/cli) for direct self-hosted core workflows — search, ingest, profile setup, and hook generation.
 
 ## Backend choice
 
@@ -7858,17 +7858,17 @@ Source: https://docs.atomicstrata.ai/introduction
 
 Fastest path
 
-Run memory locally in one command: the [**Quickstart**](/quickstart) installs the CLI, runs `am init`, and shows Core online in your console — free forever on the Open Source plan. See [Local vs Hosted Cloud](/cloud-vs-open-source) for how the modes compare.
+Run memory locally in one command: the [**Quickstart**](/quickstart) installs the CLI, runs `am init`, and shows Core online in your console — free forever on the Open Source plan. See [Open Source vs Atomic Memory](/cloud-vs-open-source) for how the modes compare.
 
-AtomicMemory is an open-source memory engine for AI applications — semantic retrieval, AUDN mutation (Add / Update / Delete / No-op), and contradiction-safe claim versioning. Run it locally with the CLI (`am init`), self-host Core via Docker or your own stack, or add managed hosting through AtomicMemory Cloud. It is pluggable at every seam: swap the embedding provider, the LLM, the artifact-storage backend, or the scope model without forking. The engine ships as a standardized platform layer, not a framework, so your agents, assistants, and products can compose the memory stack they need.
+Open Source is an open-source memory engine for AI applications — semantic retrieval, AUDN mutation (Add / Update / Delete / No-op), and contradiction-safe claim versioning. Run it locally with the CLI (`am init`), self-host Core via Docker or your own stack, or add managed hosting through Atomic Memory. It is pluggable at every seam: swap the embedding provider, the LLM, the artifact-storage backend, or the scope model without forking. The engine ships as a standardized platform layer, not a framework, so your agents, assistants, and products can compose the memory stack they need.
 
-## Why AtomicMemory
+## Why Open Source
 
-AI memory is becoming a platform concern, not a product feature. Most existing options force a hosted runtime, a specific agent framework, or a proprietary query language. AtomicMemory is designed around the opposite defaults.
+AI memory is becoming a platform concern, not a product feature. Most existing options force a hosted runtime, a specific agent framework, or a proprietary query language. Open Source is designed around the opposite defaults.
 
-Memory is also production state. If remembered facts can change agent behavior, engineers need to inspect them, correct them, audit where they came from, and replace the parts of the system they disagree with. Most memory products optimize for recall first and expose operational control later. AtomicMemory is built for memory you can own.
+Memory is also production state. If remembered facts can change agent behavior, engineers need to inspect them, correct them, audit where they came from, and replace the parts of the system they disagree with. Most memory products optimize for recall first and expose operational control later. Open Source is built for memory you can own.
 
-| Production requirement | AtomicMemory | mem0 | Letta | Zep |
+| Production requirement | Open Source | mem0 | Letta | Zep |
 | --- | --- | --- | --- | --- |
 | Own the memory layer, not rent a hosted opinion | **Best fit.** Apache-2.0 engine, self-hosted by default, Postgres-backed, no required hosted control plane. | OSS plus hosted platform orientation. | Self-hosted agent runtime. | OSS plus commercial / hosted platform orientation. |
 | Inspect memory during an incident | **Best fit.** Stored content, trust, source, timestamps, mutation lineage, and audit surfaces live in inspectable engine state and ordinary Postgres. | Inspection depends on Mem0's exposed APIs and platform surfaces. | Inspection happens through the Letta agent/runtime model. | Inspection depends on the server and hosted / platform surfaces. |
@@ -7876,9 +7876,9 @@ Memory is also production state. If remembered facts can change agent behavior, 
 | Debug why retrieval behaved a certain way | **Best fit.** Search responses separate retrieval, packaging, and final context assembly in a structured observability envelope. | Logs and integrations. | Framework-dependent tracing. | Hosted / server observability. |
 | Swap internals without rewriting the product | **Best fit.** Ingest, Search, CRUD, Lifecycle, Trust, stores, embeddings, LLMs, and SDK backends are explicit typed seams. | Provider and storage choices exist, but the core pipeline is not exposed as five replaceable domains. | Customize by adopting or extending the Letta agent runtime. | Customize mostly through server configuration and supported APIs. |
 | Run deterministic local tests and benchmarks | **Best fit.** The same engine boots as production HTTP, in-process TypeScript, or ephemeral test server from `createCoreRuntime`. | Possible, but not the primary product shape. | Possible inside the Letta framework. | Server-oriented; less suited to per-test composition. |
-| Keep app code portable across memory engines | **Best fit.** The TypeScript SDK routes through `MemoryProvider`, so apps can compare AtomicMemory, Mem0, or custom backends behind one interface. | You integrate with Mem0's SDK/API. | You integrate with Letta's agent/runtime abstractions. | You integrate with Zep's server/API model. |
+| Keep app code portable across memory engines | **Best fit.** The TypeScript SDK routes through `MemoryProvider`, so apps can compare Open Source, Mem0, or custom backends behind one interface. | You integrate with Mem0's SDK/API. | You integrate with Letta's agent/runtime abstractions. | You integrate with Zep's server/API model. |
 
-Sources for third-party positioning: [Mem0 OSS overview](https://docs.mem0.ai/open-source/overview), [Letta intro](https://docs.letta.com/guides/get-started/intro), [Zep overview](https://help.getzep.com/overview). AtomicMemory architecture details: [Architecture](/platform/architecture), [Composition](/platform/composition), [Scope](/platform/scope), [Observability](/platform/observability).
+Sources for third-party positioning: [Mem0 OSS overview](https://docs.mem0.ai/open-source/overview), [Letta intro](https://docs.letta.com/guides/get-started/intro), [Zep overview](https://help.getzep.com/overview). Open Source architecture details: [Architecture](/platform/architecture), [Composition](/platform/composition), [Scope](/platform/scope), [Observability](/platform/observability).
 
 The pitch is not "we do more." It is: the seams are explicit, the contracts are stable, and you compose your own stack.
 
@@ -7919,7 +7919,7 @@ The fastest path is the [Quickstart](/quickstart): install the CLI, run `am init
 
 Core is HTTP-first, so any language works today. The [TypeScript SDK](/sdk/overview) gives TypeScript and JavaScript consumers typed request and response shapes, richer ergonomics, scope-aware helpers, and a pluggable provider model that decouples your app from any particular memory engine. The Python SDK serves Python-native integrations such as Hermes. Nothing about core requires either SDK.
 
-AtomicMemory is [Apache-2.0 licensed](https://github.com/atomicstrata/atomicmemory-core/blob/main/LICENSE). Self-host it, fork it, run it behind your own gateway, the platform is yours.
+Open Source is [Apache-2.0 licensed](https://github.com/atomicstrata/atomicmemory-core/blob/main/LICENSE). Self-host it, fork it, run it behind your own gateway, the platform is yours.
 
 ---
 
@@ -7931,9 +7931,9 @@ Source: https://docs.atomicstrata.ai/platform/architecture
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory is a **standardized platform layer for AI memory**, not a monolithic service. The engine is split into five independently replaceable domains (Ingest, Search, CRUD, Lifecycle, Trust) that sit behind explicit TypeScript contracts. You can swap any one of them without touching the others, because each is reachable through a plain function signature over a shared `MemoryServiceDeps` bundle.
+Open Source is a **standardized platform layer for AI memory**, not a monolithic service. The engine is split into five independently replaceable domains (Ingest, Search, CRUD, Lifecycle, Trust) that sit behind explicit TypeScript contracts. You can swap any one of them without touching the others, because each is reachable through a plain function signature over a shared `MemoryServiceDeps` bundle.
 
-This page walks through the five domains, shows where each lives in the real source, and explains why this split matters when you're choosing between AtomicMemory and the single-binary alternatives.
+This page walks through the five domains, shows where each lives in the real source, and explains why this split matters when you're choosing between Open Source and the single-binary alternatives.
 
 ## The five domains
 
@@ -8183,13 +8183,13 @@ See the [stores](/platform/stores) page for the full store contracts and how to 
 
 ## Why this matters vs the alternatives
 
-**vs. mem0.** Mem0 is SaaS-first and Python-centric. The open-source tier is a thin wrapper around their hosted API; the "platform" is hosted, not composed. AtomicMemory's engine runs on your Postgres, is addressable via both HTTP and in-process TypeScript, and lets you replace any of the five domains with your own implementation. There is no hosted dependency on the critical path.
+**vs. mem0.** Mem0 is SaaS-first and Python-centric. The open-source tier is a thin wrapper around their hosted API; the "platform" is hosted, not composed. Open Source's engine runs on your Postgres, is addressable via both HTTP and in-process TypeScript, and lets you replace any of the five domains with your own implementation. There is no hosted dependency on the critical path.
 
-**vs. Letta (formerly MemGPT).** Letta is tightly coupled to an agent framework, memory is a feature of the agent runtime, not a standalone service. If you're not using Letta's agents, you inherit a lot of framework you don't want. AtomicMemory's five-domain split is agent-framework-agnostic: the Ingest domain does not know what called it, the Search domain returns a `RetrievalResult`, and you wire it into whatever agent layer you already have.
+**vs. Letta (formerly MemGPT).** Letta is tightly coupled to an agent framework, memory is a feature of the agent runtime, not a standalone service. If you're not using Letta's agents, you inherit a lot of framework you don't want. Open Source's five-domain split is agent-framework-agnostic: the Ingest domain does not know what called it, the Search domain returns a `RetrievalResult`, and you wire it into whatever agent layer you already have.
 
-**vs. Zep.** Zep is a Go-based commercial server with a fixed internal architecture. Extending it means forking Go code or waiting for upstream features. AtomicMemory is TypeScript-native with explicit domain boundaries and typed store contracts, so extending it means writing a TypeScript module that satisfies an existing interface. The cost-of-customization curve is fundamentally different.
+**vs. Zep.** Zep is a Go-based commercial server with a fixed internal architecture. Extending it means forking Go code or waiting for upstream features. Open Source is TypeScript-native with explicit domain boundaries and typed store contracts, so extending it means writing a TypeScript module that satisfies an existing interface. The cost-of-customization curve is fundamentally different.
 
-The common theme: AtomicMemory treats memory as a **pluggable platform layer**, not a product. Every seam is explicit, typed, and individually replaceable, which is what makes the engine suitable as a foundation for teams who intend to customize, not just consume.
+The common theme: Open Source treats memory as a **pluggable platform layer**, not a product. Every seam is explicit, typed, and individually replaceable, which is what makes the engine suitable as a foundation for teams who intend to customize, not just consume.
 
 ## Next steps
 
@@ -8208,9 +8208,9 @@ Source: https://docs.atomicstrata.ai/platform/artifact-storage
 
 > Agent index: [llms.txt](/llms.txt)
 
-Artifact storage is the optional raw-byte layer behind documents and storage artifacts. Memories, claims, embeddings, and search indexes still live in core's normal stores. Artifact storage is only about external files or raw bytes that a deployment wants to register, upload, verify, retrieve, or delete through AtomicMemory.
+Artifact storage is the optional raw-byte layer behind documents and storage artifacts. Memories, claims, embeddings, and search indexes still live in core's normal stores. Artifact storage is only about external files or raw bytes that a deployment wants to register, upload, verify, retrieve, or delete through Open Source.
 
-By default, core runs in **pointer-only** mode. That means AtomicMemory can record artifact metadata and external URIs without storing the bytes itself. Managed storage providers such as `local_fs`, `s3`, and `filecoin` are enabled only when the operator opts in.
+By default, core runs in **pointer-only** mode. That means Open Source can record artifact metadata and external URIs without storing the bytes itself. Managed storage providers such as `local_fs`, `s3`, and `filecoin` are enabled only when the operator opts in.
 
 ## Storage Modes
 
@@ -8271,7 +8271,7 @@ The direct storage API supports managed upload for location-addressed providers.
 
 Filecoin is optional and only participates when managed storage is enabled with `RAW_STORAGE_PROVIDER=filecoin`.
 
-Filecoin data should be treated as publicly retrievable by CID unless it is encrypted before upload. For Filecoin managed document uploads, AtomicMemory requires the raw-content codec in staging and production:
+Filecoin data should be treated as publicly retrievable by CID unless it is encrypted before upload. For Filecoin managed document uploads, Open Source requires the raw-content codec in staging and production:
 
 ```bash
 RAW_CONTENT_CODEC=aes_gcm
@@ -8306,7 +8306,7 @@ Filecoin differs from local disk and S3 in three important ways:
 
 -   **Content addressing.** The provider URI is a content-addressed commitment such as an IPFS/Filecoin CID.
 -   **Eventual availability.** A successful provider acceptance can still require later reconciliation before retrieval is confirmed.
--   **Tombstone semantics.** AtomicMemory can stop managing its own reference, but decentralized storage does not imply universal byte erasure.
+-   **Tombstone semantics.** Open Source can stop managing its own reference, but decentralized storage does not imply universal byte erasure.
 
 Core projects Filecoin metadata through a public allowlist before returning it to clients. Internal sidecars, provider hints, proofs, credentials, and recovery details stay server-side.
 
@@ -8355,13 +8355,13 @@ Source: https://docs.atomicstrata.ai/platform/composition
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory has an **explicit composition root**, a single function, `createCoreRuntime`, that owns every piece of wiring between config, the Postgres pool, repositories, stores, and services. On top of that root, a three-seam design (`createCoreRuntime` → `createApp` → `bindEphemeral`) lets the same engine boot into production HTTP, in-process TypeScript, and ephemeral test harnesses **without forking code paths**. This is the property that makes AtomicMemory usable as a platform layer and not just a server.
+Open Source has an **explicit composition root**, a single function, `createCoreRuntime`, that owns every piece of wiring between config, the Postgres pool, repositories, stores, and services. On top of that root, a three-seam design (`createCoreRuntime` → `createApp` → `bindEphemeral`) lets the same engine boot into production HTTP, in-process TypeScript, and ephemeral test harnesses **without forking code paths**. This is the property that makes Open Source usable as a platform layer and not just a server.
 
 This page shows what each seam does, how they compose, and why this shape is a differentiator when you look at the alternatives.
 
 ## The three seams
 
-Every consumer of AtomicMemory, the production server, the test suite, a research benchmark, an embedded agent harness, boots through some subset of these three calls:
+Every consumer of Open Source, the production server, the test suite, a research benchmark, an embedded agent harness, boots through some subset of these three calls:
 
 ```typescript
 const runtime = createCoreRuntime({ pool });  // seam 1: compose deps into a runtime
@@ -8586,11 +8586,11 @@ This test does two useful things at once. It documents the canonical in-process 
 
 ## Why this matters vs the alternatives
 
-**vs. mem0.** Mem0's OSS library is a client wrapping a hosted service, or a single-process Python runtime with implicit global state. There is no "bind an ephemeral app to a test pool" story, running an integration test against mem0 means either talking to their cloud or fighting their module-level singletons. AtomicMemory's three-seam design makes local, parallel, and test boots trivial.
+**vs. mem0.** Mem0's OSS library is a client wrapping a hosted service, or a single-process Python runtime with implicit global state. There is no "bind an ephemeral app to a test pool" story, running an integration test against mem0 means either talking to their cloud or fighting their module-level singletons. Open Source's three-seam design makes local, parallel, and test boots trivial.
 
-**vs. Letta.** Letta's architecture assumes you're running the Letta agent server. Its memory layer is reachable primarily *through* that server. AtomicMemory's `createCoreRuntime` gives you the memory engine as a pure TypeScript object with typed services, you can embed it in a Next.js API route, a long-running worker, a Cloudflare Worker, or a Vitest test with exactly the same code.
+**vs. Letta.** Letta's architecture assumes you're running the Letta agent server. Its memory layer is reachable primarily *through* that server. Open Source's `createCoreRuntime` gives you the memory engine as a pure TypeScript object with typed services, you can embed it in a Next.js API route, a long-running worker, a Cloudflare Worker, or a Vitest test with exactly the same code.
 
-**vs. Zep.** Zep is a Go binary. Composition is whatever the binary does; the only customization surface is config flags. AtomicMemory is a TypeScript library that happens to also run an Express server. The composition root is source code you can read, fork, and adapt, not a deploy artifact.
+**vs. Zep.** Zep is a Go binary. Composition is whatever the binary does; the only customization surface is config flags. Open Source is a TypeScript library that happens to also run an Express server. The composition root is source code you can read, fork, and adapt, not a deploy artifact.
 
 The deeper point: **every boundary is a plain function with a typed argument and a typed return**. `createCoreRuntime({ pool })` returns a `CoreRuntime`. `createApp(runtime)` returns an Express app. `bindEphemeral(app)` returns a `BootedApp`. There is no hidden state between them, which means there is no hidden cost to replacing any one of them.
 
@@ -8863,7 +8863,7 @@ Source: https://docs.atomicstrata.ai/platform/lessons
 
 > Agent index: [llms.txt](/llms.txt)
 
-A **lesson** is a recorded failure pattern that AtomicMemory has seen for a specific user - a prompt-injection attempt that was blocked, a low-trust source that tried to write a fact, a high-confidence contradiction that forced a SUPERSEDE/DELETE, or a memory the user explicitly flagged as wrong. Each lesson is stored with a vector embedding of the offending text, a severity, and provenance. Before any future retrieval runs for that user, the search pipeline embeds the query and asks: *"have I been burned by something like this before?"* If a match crosses the similarity threshold, the retrieval either annotates the response with a warning or - for `critical` matches - refuses to return anything.
+A **lesson** is a recorded failure pattern that Open Source has seen for a specific user - a prompt-injection attempt that was blocked, a low-trust source that tried to write a fact, a high-confidence contradiction that forced a SUPERSEDE/DELETE, or a memory the user explicitly flagged as wrong. Each lesson is stored with a vector embedding of the offending text, a severity, and provenance. Before any future retrieval runs for that user, the search pipeline embeds the query and asks: *"have I been burned by something like this before?"* If a match crosses the similarity threshold, the retrieval either annotates the response with a warning or - for `critical` matches - refuses to return anything.
 
 In other words: **lessons are the engine's long-term immune system.** They turn one-off bad inputs into durable per-user filters, without operator intervention.
 
@@ -9040,7 +9040,7 @@ Source: https://docs.atomicstrata.ai/platform/observability
 
 > Agent index: [llms.txt](/llms.txt)
 
-Every AtomicMemory retrieval emits a structured, stable observability payload describing *what happened*: which candidates came back from the index, which ones were packaged into the final context, and how the assembled block fit inside the token budget. This is not a debug log, it is a contract surface on the search response, safe to build dashboards, evals, and regression tests against.
+Every Open Source retrieval emits a structured, stable observability payload describing *what happened*: which candidates came back from the index, which ones were packaged into the final context, and how the assembled block fit inside the token budget. This is not a debug log, it is a contract surface on the search response, safe to build dashboards, evals, and regression tests against.
 
 Three summaries, each with a single job:
 
@@ -9353,7 +9353,7 @@ Source: https://docs.atomicstrata.ai/platform/providers
 
 > Agent index: [llms.txt](/llms.txt)
 
-Embeddings and LLM calls in AtomicMemory are **pluggable providers behind single-method interfaces**. You pick OpenAI, Anthropic, Claude Code local auth, Google, Groq, Ollama, a local WASM model, or any OpenAI-compatible endpoint at deploy time via environment variables. Nothing above the provider boundary changes, no code, no imports, no service wiring.
+Embeddings and LLM calls in Open Source are **pluggable providers behind single-method interfaces**. You pick OpenAI, Anthropic, Claude Code local auth, Google, Groq, Ollama, a local WASM model, or any OpenAI-compatible endpoint at deploy time via environment variables. Nothing above the provider boundary changes, no code, no imports, no service wiring.
 
 That is the second pillar of the platform layer: the services that call `embedText()` and `chat()` don't know, and can't know, which provider is serving the call. The selection is made once at composition-root time and erased behind an interface.
 
@@ -9756,7 +9756,7 @@ Source: https://docs.atomicstrata.ai/platform/scope
 
 > Agent index: [llms.txt](/llms.txt)
 
-`MemoryScope` is AtomicMemory's canonical read-path contract: a single tagged union that dispatches every search, expand, get, list, and delete between a **user-scoped** world (single human, personal memory) and a **workspace-scoped** world (multiple agents collaborating over shared and private memories, with SQL-enforced visibility).
+`MemoryScope` is Open Source's canonical read-path contract: a single tagged union that dispatches every search, expand, get, list, and delete between a **user-scoped** world (single human, personal memory) and a **workspace-scoped** world (multiple agents collaborating over shared and private memories, with SQL-enforced visibility).
 
 The scope is the security boundary. Routes parse it, the service layer dispatches on it, and the repository layer enforces it in SQL. There is no path that skips it.
 
@@ -9988,7 +9988,7 @@ Source: https://docs.atomicstrata.ai/platform/stores
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory's storage layer is exposed as a family of **narrow, domain-facing store interfaces**, not a monolithic "repository" that every service has to import. Each consumer sees only the methods it actually uses, and every seam is a plain TypeScript interface you can re-implement against your own backend.
+Open Source's storage layer is exposed as a family of **narrow, domain-facing store interfaces**, not a monolithic "repository" that every service has to import. Each consumer sees only the methods it actually uses, and every seam is a plain TypeScript interface you can re-implement against your own backend.
 
 That is the point of the platform layer: the engine's business logic depends on `MemoryStore`, `SearchStore`, `ClaimStore`, `EntityStore`, `EpisodeStore`, and friends, never on a Postgres pool. If you want to run the same services on a different database, a different vector backend, or an in-memory mock for tests, you implement the interfaces. Nothing above the store layer changes.
 
@@ -10198,7 +10198,7 @@ export class PgMemoryStore implements MemoryStore {
 Because the store is an interface, **you can implement it any way you want**:
 
 -   An in-memory Map for tests.
--   An HTTP adapter that forwards calls to a remote Atomicmemory service.
+-   An HTTP adapter that forwards calls to a remote Open Source service.
 -   A SQLite-backed implementation for a single-user desktop install.
 -   A composed store that reads from one backend and writes to another (for migrations or replication).
 
@@ -10240,7 +10240,7 @@ Two details worth calling out:
 
 ## Compose-your-own-stack
 
-This is the AtomicMemory platform thesis. You should be able to:
+This is the Open Source platform thesis. You should be able to:
 
 -   Keep `PgMemoryStore` and replace `PgSearchStore` with one that talks to a managed vector DB.
 -   Keep the write path and swap `SearchStore` for a hybrid store that fans out to multiple backends.
@@ -10269,7 +10269,7 @@ Source: https://docs.atomicstrata.ai/quickstart
 
 **Run memory locally. See it clearly.**
 
-AtomicMemory keeps your memories on your machine. The Cloud console shows what Core is doing — ingest, search, and traces — without hosting your data.
+Open Source keeps your memories on your machine. The Cloud console shows what Core is doing — ingest, search, and traces — without hosting your data.
 
 **You need:** Docker · OpenAI API key · macOS or Linux
 
@@ -10289,7 +10289,7 @@ am init
 
 `am init` opens a browser to sign you in, starts Core in Docker, connects your console, and verifies the memory pipeline. When it finishes, you'll see **Verified** and a link to your dashboard.
 
-Sign-in creates a free **Open Source** organization with one Connected Local project. See [Billing & plans](/cloud/how-to/billing) when you want a Hosted Cloud project on the **Free** tier.
+Sign-in creates a free **Open Source** organization with one Connected Local project. See [Billing & plans](/cloud/how-to/billing) when you want an Atomic Memory project on the **Free** tier.
 
 Your memories stay on your machine. Connected Local sends the console a runtime heartbeat and operation traces (call type, timing, and the reconciliation decision) so the dashboard stays accurate — never your memory content.
 
@@ -10302,7 +10302,7 @@ Already created a project in the console? Run `am init --project <slug>` instead
 -   Console connection — runtime shows **Online**
 -   End-to-end memory verification
 
-For a **Connected Local** project, use **Google Chrome** when viewing it in the console — your browser needs to reach Core directly, which is more reliable in Chrome. More detail: [AtomicMemory CLI](/cloud/cli).
+For a **Connected Local** project, use **Google Chrome** when viewing it in the console — your browser needs to reach Core directly, which is more reliable in Chrome. More detail: [Atomic Memory CLI](/cloud/cli).
 
 ## 2. Add your first memory
 
@@ -10321,7 +10321,7 @@ Something didn't work? Run `am doctor --smoke` to re-check the pipeline, or see 
 
 -   [Integrations](/integrations/overview) — wire MCP, Claude Code, Cursor, and more
 -   [SDK Quickstart](/sdk/quickstart) — typed client for your app
--   [Add Hosted Cloud](/cloud/quickstart) — add managed hosting when you're ready
+-   [Add Atomic Memory](/cloud/quickstart) — add managed hosting when you're ready
 -   [Troubleshooting](/cloud/troubleshooting) — recover from a failed `am init` or `am doctor --smoke`
 
 Prefer Core without a Cloud connection? [Core-only Docker setup](/core-only-docker) runs the engine with curl — no account required.
@@ -11502,7 +11502,7 @@ Source: https://docs.atomicstrata.ai/sdk/guides/hindsight-backend
 
 `HindsightProvider` is the SDK's HTTP client for [Hindsight](https://github.com/vectorize-io/hindsight), Vectorize's memory engine built around per-user memory *banks* with retain, recall, and reflect operations. It works with Hindsight Cloud or a self-hosted Hindsight server.
 
-> **Support status.** Hindsight compatibility is available for core operations plus packaging, reflection, and health. Prefer `atomicmemory-core` when you need AtomicMemory-specific capabilities such as temporal search, versioning, audit trails, lessons, and runtime config.
+> **Support status.** Hindsight compatibility is available for core operations plus packaging, reflection, and health. Prefer `atomicmemory-core` when you need Open Source-specific capabilities such as temporal search, versioning, audit trails, lessons, and runtime config.
 
 ## Wire it up
 
@@ -11605,11 +11605,11 @@ Source: https://docs.atomicstrata.ai/sdk/guides/llmwiki-backend
 
 > Agent index: [llms.txt](/llms.txt)
 
-`@atomicmemory/llmwiki` connects AtomicMemory to [llm-wiki-compiler](https://github.com/atomicstrata/llm-wiki-compiler) (llmwiki), which compiles raw sources into an interlinked markdown wiki. Unlike the single-client Mem0 and Hindsight backends, the llmwiki integration is **three distinct paths** - pick by what you need:
+`@atomicmemory/llmwiki` connects Open Source to [llm-wiki-compiler](https://github.com/atomicstrata/llm-wiki-compiler) (llmwiki), which compiles raw sources into an interlinked markdown wiki. Unlike the single-client Mem0 and Hindsight backends, the llmwiki integration is **three distinct paths** - pick by what you need:
 
 | Path | What it does | Writable? |
 | --- | --- | --- |
-| **Import** (CLI bridge) | One-time import of a `wiki.json` export into your existing AtomicMemory backend as verbatim records | via your backend |
+| **Import** (CLI bridge) | One-time import of a `wiki.json` export into your existing Open Source backend as verbatim records | via your backend |
 | **`SnapshotLLMWikiProvider`** | Serve a `wiki.json` export directly as a read-only memory provider - no runtime store at all | No |
 | **`LiveLLMWikiProvider`** | Drive a live llmwiki project as a memory provider: ingest stores llmwiki *sources*, `compile()` rebuilds the wiki | Yes |
 
@@ -11729,7 +11729,7 @@ Source: https://docs.atomicstrata.ai/sdk/guides/mem0-backend
 
 `Mem0Provider` is the SDK's HTTP client for [Mem0](https://mem0.ai). It demonstrates the backend-agnostic design in practice: the same client, the same methods, a different engine behind the interface.
 
-> **Support status.** Mem0 compatibility is available for core operations. Prefer `atomicmemory-core` when you need AtomicMemory-specific capabilities such as packaging, temporal search, versioning, audit trails, lessons, and runtime config.
+> **Support status.** Mem0 compatibility is available for core operations. Prefer `atomicmemory-core` when you need Open Source-specific capabilities such as packaging, temporal search, versioning, audit trails, lessons, and runtime config.
 
 ## Wire it up
 
@@ -12023,7 +12023,7 @@ const results = await memory.search({
 });
 ```
 
-`MemoryClient` composes a `MemoryService` under the hood and exposes the pure memory API: `ingest`, `search`, `package`, `get`, `list`, `delete`, plus `capabilities` / `getExtension` / `getProviderStatus` for capability inspection, and an `atomicmemory` getter that returns the full [AtomicMemory namespace handle](/sdk/api/memory-provider) (lifecycle, audit, lessons, config, agents). The surface is intentionally small, application-layer concerns such as identity resolution, capture policy, or injection gating belong in consumer code, not in the SDK.
+`MemoryClient` composes a `MemoryService` under the hood and exposes the pure memory API: `ingest`, `search`, `package`, `get`, `list`, `delete`, plus `capabilities` / `getExtension` / `getProviderStatus` for capability inspection, and an `atomicmemory` getter that returns the full [Open Source namespace handle](/sdk/api/memory-provider) (lifecycle, audit, lessons, config, agents). The surface is intentionally small, application-layer concerns such as identity resolution, capture policy, or injection gating belong in consumer code, not in the SDK.
 
 Use `AtomicMemoryClient` when you also need storage artifacts:
 

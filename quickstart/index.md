@@ -4,7 +4,7 @@
 
 **Run memory locally. See it clearly.**
 
-AtomicMemory keeps your memories on your machine. The Cloud console shows what Core is doing — ingest, search, and traces — without hosting your data.
+Open Source keeps your memories on your machine. The Cloud console shows what Core is doing — ingest, search, and traces — without hosting your data.
 
 **You need:** Docker · OpenAI API key · macOS or Linux
 
@@ -24,7 +24,7 @@ am init
 
 `am init` opens a browser to sign you in, starts Core in Docker, connects your console, and verifies the memory pipeline. When it finishes, you'll see **Verified** and a link to your dashboard.
 
-Sign-in creates a free **Open Source** organization with one Connected Local project. See [Billing & plans](/cloud/how-to/billing) when you want a Hosted Cloud project on the **Free** tier.
+Sign-in creates a free **Open Source** organization with one Connected Local project. See [Billing & plans](/cloud/how-to/billing) when you want an Atomic Memory project on the **Free** tier.
 
 Your memories stay on your machine. Connected Local sends the console a runtime heartbeat and operation traces (call type, timing, and the reconciliation decision) so the dashboard stays accurate — never your memory content.
 
@@ -37,7 +37,7 @@ Already created a project in the console? Run `am init --project <slug>` instead
 -   Console connection — runtime shows **Online**
 -   End-to-end memory verification
 
-For a **Connected Local** project, use **Google Chrome** when viewing it in the console — your browser needs to reach Core directly, which is more reliable in Chrome. More detail: [AtomicMemory CLI](/cloud/cli).
+For a **Connected Local** project, use **Google Chrome** when viewing it in the console — your browser needs to reach Core directly, which is more reliable in Chrome. More detail: [Atomic Memory CLI](/cloud/cli).
 
 ## 2. Add your first memory
 
@@ -56,7 +56,7 @@ Something didn't work? Run `am doctor --smoke` to re-check the pipeline, or see 
 
 -   [Integrations](/integrations/overview) — wire MCP, Claude Code, Cursor, and more
 -   [SDK Quickstart](/sdk/quickstart) — typed client for your app
--   [Add Hosted Cloud](/cloud/quickstart) — add managed hosting when you're ready
+-   [Add Atomic Memory](/cloud/quickstart) — add managed hosting when you're ready
 -   [Troubleshooting](/cloud/troubleshooting) — recover from a failed `am init` or `am doctor --smoke`
 
 Prefer Core without a Cloud connection? [Core-only Docker setup](/core-only-docker) runs the engine with curl — no account required.

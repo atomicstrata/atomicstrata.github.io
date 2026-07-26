@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Embeddings and LLM calls in AtomicMemory are **pluggable providers behind single-method interfaces**. You pick OpenAI, Anthropic, Claude Code local auth, Google, Groq, Ollama, a local WASM model, or any OpenAI-compatible endpoint at deploy time via environment variables. Nothing above the provider boundary changes, no code, no imports, no service wiring.
+Embeddings and LLM calls in Open Source are **pluggable providers behind single-method interfaces**. You pick OpenAI, Anthropic, Claude Code local auth, Google, Groq, Ollama, a local WASM model, or any OpenAI-compatible endpoint at deploy time via environment variables. Nothing above the provider boundary changes, no code, no imports, no service wiring.
 
 That is the second pillar of the platform layer: the services that call `embedText()` and `chat()` don't know, and can't know, which provider is serving the call. The selection is made once at composition-root time and erased behind an interface.
 

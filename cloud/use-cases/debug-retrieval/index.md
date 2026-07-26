@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-When an assistant recalls the wrong thing, the bug is usually retrieval, not the model. AtomicMemory Cloud records a retrieval trace for every search and lets you replay any query in the Playground - so you can see exactly which memories came back for a query, and narrow down why.
+When an assistant recalls the wrong thing, the bug is usually retrieval, not the model. Atomic Memory records a retrieval trace for every search and lets you replay any query in the Playground - so you can see exactly which memories came back for a query, and narrow down why.
 
 ## The problem
 

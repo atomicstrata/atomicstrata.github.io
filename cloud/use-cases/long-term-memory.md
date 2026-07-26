@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Most assistants forget everything the moment a conversation ends. The next session starts cold - the user re-explains their preferences, their context, their history. AtomicMemory Cloud gives your app a memory that persists across sessions and is scoped to each user.
+Most assistants forget everything the moment a conversation ends. The next session starts cold - the user re-explains their preferences, their context, their history. Atomic Memory gives your app a memory that persists across sessions and is scoped to each user.
 
 ## The problem
 

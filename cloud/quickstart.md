@@ -1,8 +1,8 @@
-# Add Hosted Cloud
+# Add Atomic Memory
 
 > Agent index: [llms.txt](/llms.txt)
 
-Add **Hosted Cloud** — managed memory hosting — after your local Core is running. This page depends on the [Platform Quickstart](/quickstart): run `am init` first if you have not already.
+Add **Atomic Memory** — managed memory hosting — after your local Core is running. This page depends on the [Platform Quickstart](/quickstart): run `am init` first if you have not already.
 
 **Console:** [memory.atomicstrata.ai](https://memory.atomicstrata.ai)  
 **API:** `https://api.atomicstrata.ai`
@@ -15,12 +15,12 @@ Add **Hosted Cloud** — managed memory hosting — after your local Core is run
 ## Prerequisites
 
 -   Completed [Platform Quickstart](/quickstart) — Connected Local via `am init`
--   Upgrade to **Free** in the console (self-serve, $0): **Billing** → **Upgrade to Free**. Free keeps your Local project and unlocks one Hosted Cloud project.
+-   Upgrade to **Free** in the console (self-serve, $0): **Billing** → **Upgrade to Free**. Free keeps your Local project and unlocks one Atomic Memory project.
 
-## Add Hosted Cloud
+## Add Atomic Memory
 
 1.  Console → **Billing** → **Upgrade to Free**
-2.  Create a **Hosted Cloud** project and copy the one-time API key (`amc_…`)
+2.  Create an **Atomic Memory** project and copy the one-time API key (`amc_…`)
 3.  Ingest and search from anywhere:
 
 ```bash
@@ -33,7 +33,7 @@ am memory search "seat preference"
 
 ## Success state
 
-Open the console under **Memories**. Your ingested memory appears there, with a matching trace under **Traces**. That confirms the Hosted Cloud project is receiving traffic.
+Open the console under **Memories**. Your ingested memory appears there, with a matching trace under **Traces**. That confirms the Atomic Memory project is receiving traffic.
 
 ## SDK alternative
 
@@ -66,12 +66,12 @@ const results = await memory.search({
 
 ## Moving existing local memories
 
-Already have memories in your Connected Local project? `am migrate export` and `am migrate import` move them into your new Hosted Cloud project. See [Migrate to Hosted Cloud](/cloud/how-to/migrate) for prerequisites, the memory-only scope, safe re-run behavior, and how to verify the result in the console.
+Already have memories in your Connected Local project? `am migrate export` and `am migrate import` move them into your new Atomic Memory project. See [Migrate to Atomic Memory](/cloud/how-to/migrate) for prerequisites, the memory-only scope, safe re-run behavior, and how to verify the result in the console.
 
 ## What's next
 
 -   [Developer Console](/cloud/console) — traces, usage, API keys
--   [Migrate to Hosted Cloud](/cloud/how-to/migrate) — bring existing Local memories over
+-   [Migrate to Atomic Memory](/cloud/how-to/migrate) — bring existing Local memories over
 -   [Authentication](/cloud/authentication) — which credential goes where
 -   [Integrations](/integrations/overview) — MCP and agent wiring
 

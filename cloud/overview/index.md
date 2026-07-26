@@ -1,13 +1,13 @@
-# AtomicMemory Cloud
+# Atomic Memory
 
 > Agent index: [llms.txt](/llms.txt)
 
 **Run memory on your own machine. See exactly what it's doing. Add managed hosting only when you need it.**
 
-AtomicMemory Cloud pairs the open-source **AtomicMemory Core** engine with a developer console: Core stores and retrieves memories, and the console gives you inspectable ingest, search, and mutation traces without requiring you to host anything. The console labels the two project types **Local** and **Cloud**; this page calls them **Connected Local** (Core running on your machine, connected to the console) and **Hosted Cloud** (fully managed hosting) before using the shorter labels.
+Atomic Memory pairs the **Open Source Core** engine with a developer console: Core stores and retrieves memories, and the console gives you inspectable ingest, search, and mutation traces without requiring you to host anything. The console labels the two project types **Local** and **Cloud**; this page calls them **Connected Local** (Core running on your machine, connected to the console) and **Atomic Memory** (fully managed hosting) before using the shorter labels.
 
 **→ [Start the Quickstart](/quickstart)** — Connected Local in one command, free forever.  
-Ready for shared or hosted access later? [Add Hosted Cloud](/cloud/quickstart). Something not working? [Troubleshooting](/cloud/troubleshooting).
+Ready for shared or hosted access later? [Add Atomic Memory](/cloud/quickstart). Something not working? [Troubleshooting](/cloud/troubleshooting).
 
 ## Why teams start here
 
@@ -31,7 +31,7 @@ Full walkthrough: [Platform Quickstart](/quickstart).
 
 | Outcome | Local project | \+ Cloud project |
 | --- | --- | --- |
-| Where memories live | Your machine, via Core | AtomicMemory-managed hosting — your existing Local project's memories stay on your machine, unaffected |
+| Where memories live | Your machine, via Core | Atomic Memory-managed hosting — your existing Local project's memories stay on your machine, unaffected |
 | Console visibility | Runtime status, memories, traces | Same, plus a managed project space |
 | Setup | `am init` | Upgrade to Free, then create a Cloud project |
 | Good for | Evaluating, local dev, air-gapped work | Shared access without operating infrastructure |
@@ -40,8 +40,8 @@ The console labels these **Local** and **Cloud** projects — the shorter names 
 
 ## Plans at a glance
 
--   **Open Source** — free forever. One Connected Local project, full console visibility, no Hosted Cloud project.
--   **Free** — a self-serve $0 upgrade. Keeps your Local project and unlocks one Hosted Cloud project.
+-   **Open Source** — free forever. One Connected Local project, full console visibility, no Atomic Memory project.
+-   **Free** — a self-serve $0 upgrade. Keeps your Local project and unlocks one Atomic Memory project.
 
 See [Plans & Billing](/cloud/how-to/billing) for details.
 
@@ -56,6 +56,6 @@ See [Plans & Billing](/cloud/how-to/billing) for details.
 ## Advanced
 
 -   [Authentication](/cloud/authentication) — credential model and deployment details
--   [AtomicMemory CLI](/cloud/cli) — full command reference
+-   [Atomic Memory CLI](/cloud/cli) — full command reference
 -   [Core architecture](/platform/architecture) — how the engine is composed
 -   [Core-only Docker](/core-only-docker) — run Core without a Cloud connection

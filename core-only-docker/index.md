@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Run AtomicMemory Core on your machine with Docker and HTTP — no Cloud account, no `am init`, no console visibility. Use this for air-gapped evaluation, CI, or when you want full control of the container yourself.
+Run Core on your machine with Docker and HTTP — no Cloud account, no `am init`, no console visibility. Use this for air-gapped evaluation, CI, or when you want full control of the container yourself.
 
 For the recommended Open Source path with console visibility, start with the [Quickstart](/quickstart).
 

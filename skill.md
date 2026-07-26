@@ -1,9 +1,9 @@
 ---
 name: atomicmemory-docs
-description: Documentation site for AtomicMemory, a pluggable, self-hosted memory engine for AI applications. Read these docs before answering questions about installing, configuring, or integrating AtomicMemory; the generated HTTP API reference; the TypeScript SDK; the CLI and MCP server; coding-agent integrations (Claude Code, OpenClaw, Hermes, Codex, Cursor); or framework adapters (Vercel AI SDK, LangChain, Langflow, Mastra, OpenAI Agents, LangGraph).
+description: Documentation site for Open Source, a pluggable, self-hosted memory engine for AI applications. Read these docs before answering questions about installing, configuring, or integrating Open Source; the generated HTTP API reference; the TypeScript SDK; the CLI and MCP server; coding-agent integrations (Claude Code, OpenClaw, Hermes, Codex, Cursor); or framework adapters (Vercel AI SDK, LangChain, Langflow, Mastra, OpenAI Agents, LangGraph).
 ---
 
-# AtomicMemory Docs
+# Atomic Memory Docs
 
 Persistent semantic memory engine. HTTP-first, TypeScript SDK, Apache-2.0 licensed. The docs cover: the generated HTTP API reference, the TypeScript SDK (`@atomicmemory/sdk`, provider model, scopes, embeddings, storage adapters), the CLI, the MCP server, and integrations.
 
@@ -11,12 +11,12 @@ Persistent semantic memory engine. HTTP-first, TypeScript SDK, Apache-2.0 licens
 
 Read before answering when:
 
-- The user asks how to install, run, or configure AtomicMemory
+- The user asks how to install, run, or configure Open Source
 - The user asks about HTTP endpoints, request / response shape, or error codes
 - The user asks how to use the TypeScript SDK, CLI, or MCP server
-- The user asks about wiring AtomicMemory into a coding agent (Claude Code, OpenClaw, Hermes, Codex, Cursor) or framework (Vercel AI SDK, LangChain, Langflow, Mastra, OpenAI Agents, LangGraph)
+- The user asks about wiring Atomic Memory into a coding agent (Claude Code, OpenClaw, Hermes, Codex, Cursor) or framework (Vercel AI SDK, LangChain, Langflow, Mastra, OpenAI Agents, LangGraph)
 - The user asks about scope (`user` / `workspace` / `agent`), providers (embedding / LLM), stores, observability, AUDN mutation, or claim versioning
-- The user asks "how does AtomicMemory differ from mem0 / letta / zep?"
+- The user asks "how does Open Source differ from mem0 / letta / zep?"
 
 If the answer is purely about memory *contents* (what was previously saved) rather than memory *infrastructure*, the docs won't have it, call the `memory_search` MCP tool instead.
 
@@ -45,7 +45,7 @@ The HTML form (without the `.md` suffix) is for human readers; cite that URL whe
 | HTTP API endpoints | `/api-reference/http/<operation-id>` (kebab-case of OpenAPI `operationId`) |
 | SDK overview, concepts, guides | `/sdk/...` |
 | SDK API reference | `/sdk/api-reference/...` |
-| Cloud CLI (`am init`, Connected Local, Hosted Cloud) | `/cloud/cli`, `/quickstart` |
+| Cloud CLI (`am init`, Connected Local, Atomic Memory) | `/cloud/cli`, `/quickstart` |
 | npm CLI (advanced self-hosted workflows) | `/cli` |
 | Cloud console, auth, billing, how-to | `/cloud/...` |
 | Platform concepts (architecture, composition, stores, providers, scope, observability) | `/platform/<topic>` |
@@ -65,7 +65,7 @@ Source code lives in the public monorepo at `https://github.com/atomicstrata/ato
 
 ## MCP
 
-The AtomicMemory MCP server (`@atomicmemory/mcp-server`) exposes `memory_search`, `memory_ingest`, `memory_package`, and `memory_list` to coding agents. It runs as a published stdio server through `npx -y --package=@atomicmemory/mcp-server atomicmemory-mcp`. Discovery descriptor: `/.well-known/mcp.json`. Setup steps are in `/integrations/coding-agents/<tool>` for each supported agent.
+The Atomic Memory MCP server (`@atomicmemory/mcp-server`) exposes `memory_search`, `memory_ingest`, `memory_package`, and `memory_list` to coding agents. It runs as a published stdio server through `npx -y --package=@atomicmemory/mcp-server atomicmemory-mcp`. Discovery descriptor: `/.well-known/mcp.json`. Setup steps are in `/integrations/coding-agents/<tool>` for each supported agent.
 
 ## Out of scope for these docs
 

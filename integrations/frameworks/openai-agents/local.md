@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Give OpenAI Agents SDK applications persistent memory backed by AtomicMemory. The adapter searches long-term memory before `run()`, injects retrieved context into model-visible input, and ingests the completed turn after the run finishes.
+Give OpenAI Agents SDK applications persistent memory backed by Open Source. The adapter searches long-term memory before `run()`, injects retrieved context into model-visible input, and ingests the completed turn after the run finishes.
 
 Already ran am init?
 
@@ -10,7 +10,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Start local core first. It should be reachable at `http://127.0.0.1:17350`.
 
@@ -81,7 +81,7 @@ const { result, retrieved } = await runWithMemory({
 
 ## Features
 
--   **Pre-run recall.** Search AtomicMemory before calling `run()`.
+-   **Pre-run recall.** Search Open Source before calling `run()`.
 -   **Guarded input injection.** Retrieved memories are added to model-visible input because SDK local `context` is not shown to the model.
 -   **Post-run ingest.** Completed runs are stored with `mode: "messages"` for extracted memory updates.
 -   **Optional function tools.** Agents can call `memory_search` and `memory_ingest` during a run.

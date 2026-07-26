@@ -2,11 +2,11 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Add durable, cross-session memory to Langflow flows with AtomicMemory custom components.
+Add durable, cross-session memory to Langflow flows with Atomic Memory custom components.
 
 ## What you get
 
--   **Chat Memory.** Read-only LangChain message history backed by AtomicMemory list operations.
+-   **Chat Memory.** Read-only LangChain message history backed by Atomic Memory list operations.
 -   **Search Context.** Query-driven recall that can return packaged prompt context or search-only results.
 -   **Store Message.** Explicit writes from a flow into durable memory.
 -   **Delete Memories in Scope.** Confirm-gated cleanup for test data or user-requested erasure.
@@ -18,7 +18,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Start local core before starting Langflow. The default local endpoint is `http://127.0.0.1:17350`, and the [Core-only Docker](/core-only-docker) key is `local-dev-key` (or `CORE_API_KEY` after `am init`).
 
@@ -42,7 +42,7 @@ This quickstart uses the free local `transformers` embedding model so it can run
 
 ### 2. Install the Python package
 
-Install the AtomicMemory Langflow package into the same Python environment that runs Langflow:
+Install the Atomic Memory Langflow package into the same Python environment that runs Langflow:
 
 ```bash
 pip install atomicmemory-langflow
@@ -56,7 +56,7 @@ pip install "atomicmemory-langflow[langflow]"
 
 ### 3. Install the Langflow component entry files
 
-Copy the AtomicMemory component entry files into your Langflow components root:
+Copy the Atomic Memory component entry files into your Langflow components root:
 
 ```bash
 npx -y @atomicmemory/langflow-plugin \
@@ -123,13 +123,13 @@ What should you keep in mind about me?
 
 Use **Chat Memory** when a Langflow component expects a message-history backend. It is read-only by design and does not auto-ingest every turn.
 
-By default, Chat Memory fails closed if AtomicMemory is unreachable. Turn on `Fail open on error` only for flows where an empty history is safer than stopping the run.
+By default, Chat Memory fails closed if Open Source is unreachable. Turn on `Fail open on error` only for flows where an empty history is safer than stopping the run.
 
 ### Search Context
 
 Use **Search Context** before a prompt or agent step. It retrieves relevant memory for the current input and can return either packaged prompt context or search-only results.
 
-Packaged context requires a backend that supports AtomicMemory's package extension. If packaging is unavailable, the component fails closed rather than silently degrading.
+Packaged context requires a backend that supports Open Source's package extension. If packaging is unavailable, the component fails closed rather than silently degrading.
 
 ### Store Message
 

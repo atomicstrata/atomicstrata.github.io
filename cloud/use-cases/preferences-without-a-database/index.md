@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Preferences are the classic reason to reach for a database: a settings table, a preferences key-value store, a column for every toggle. But the preferences that make an assistant feel personal show up in conversation, change over time, and rarely fit a fixed schema. AtomicMemory Cloud lets you capture them through the same `ingest` and `search` you already use - no store to design.
+Preferences are the classic reason to reach for a database: a settings table, a preferences key-value store, a column for every toggle. But the preferences that make an assistant feel personal show up in conversation, change over time, and rarely fit a fixed schema. Atomic Memory lets you capture them through the same `ingest` and `search` you already use - no store to design.
 
 ## The problem
 

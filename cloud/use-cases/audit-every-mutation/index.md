@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Memory that changes silently is impossible to defend. When an auditor or an incident asks what your agent remembered - and when it changed - you need a record you can read, not a black box. AtomicMemory Cloud captures every change to memory as an inspectable mutation trace.
+Memory that changes silently is impossible to defend. When an auditor or an incident asks what your agent remembered - and when it changed - you need a record you can read, not a black box. Atomic Memory captures every change to memory as an inspectable mutation trace.
 
 ## The problem
 

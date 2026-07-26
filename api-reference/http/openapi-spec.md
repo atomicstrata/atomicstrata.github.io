@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Download the canonical AtomicMemory Core OpenAPI document:
+Download the canonical Open Source Core OpenAPI document:
 
 [
 

@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Append-only memory rots. Every time a user restates something it becomes another row, contradictions pile up, and retrieval hands back three versions of the same fact. AtomicMemory Cloud reconciles each write against what it already knows, so memory stays consistent as facts change.
+Append-only memory rots. Every time a user restates something it becomes another row, contradictions pile up, and retrieval hands back three versions of the same fact. Atomic Memory reconciles each write against what it already knows, so memory stays consistent as facts change.
 
 ## The problem
 

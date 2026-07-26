@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory integrates with Codex through the shared MCP server and a memory protocol skill that handles retrieval, durable writes, and handoff snapshots.
+Atomic Memory integrates with Codex through the shared MCP server and a memory protocol skill that handles retrieval, durable writes, and handoff snapshots.
 
 ## Deployment targets
 

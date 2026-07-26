@@ -13,7 +13,7 @@
 | **Team** | Custom | Custom | Demo-led — talk to sales |
 | **Corporate** | Custom | Custom | Demo-led — talk to sales |
 
-Every Organization starts on **Open Source**: one Connected Local project, full console visibility, no Hosted Cloud project. **Upgrade to Free** in Billing to keep that Local project and unlock one Hosted Cloud project — it's a self-serve $0 checkout, no sales conversation required. **Team** and **Corporate** cover usage beyond Free's single Cloud project and are demo-led; request a demo rather than self-serve checkout.
+Every Organization starts on **Open Source**: one Connected Local project, full console visibility, no Atomic Memory project. **Upgrade to Free** in Billing to keep that Local project and unlock one Atomic Memory project — it's a self-serve $0 checkout, no sales conversation required. **Team** and **Corporate** cover usage beyond Free's single Cloud project and are demo-led; request a demo rather than self-serve checkout.
 
 info
 

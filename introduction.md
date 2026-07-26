@@ -4,17 +4,17 @@
 
 Fastest path
 
-Run memory locally in one command: the [**Quickstart**](/quickstart) installs the CLI, runs `am init`, and shows Core online in your console — free forever on the Open Source plan. See [Local vs Hosted Cloud](/cloud-vs-open-source) for how the modes compare.
+Run memory locally in one command: the [**Quickstart**](/quickstart) installs the CLI, runs `am init`, and shows Core online in your console — free forever on the Open Source plan. See [Open Source vs Atomic Memory](/cloud-vs-open-source) for how the modes compare.
 
-AtomicMemory is an open-source memory engine for AI applications — semantic retrieval, AUDN mutation (Add / Update / Delete / No-op), and contradiction-safe claim versioning. Run it locally with the CLI (`am init`), self-host Core via Docker or your own stack, or add managed hosting through AtomicMemory Cloud. It is pluggable at every seam: swap the embedding provider, the LLM, the artifact-storage backend, or the scope model without forking. The engine ships as a standardized platform layer, not a framework, so your agents, assistants, and products can compose the memory stack they need.
+Open Source is an open-source memory engine for AI applications — semantic retrieval, AUDN mutation (Add / Update / Delete / No-op), and contradiction-safe claim versioning. Run it locally with the CLI (`am init`), self-host Core via Docker or your own stack, or add managed hosting through Atomic Memory. It is pluggable at every seam: swap the embedding provider, the LLM, the artifact-storage backend, or the scope model without forking. The engine ships as a standardized platform layer, not a framework, so your agents, assistants, and products can compose the memory stack they need.
 
-## Why AtomicMemory
+## Why Open Source
 
-AI memory is becoming a platform concern, not a product feature. Most existing options force a hosted runtime, a specific agent framework, or a proprietary query language. AtomicMemory is designed around the opposite defaults.
+AI memory is becoming a platform concern, not a product feature. Most existing options force a hosted runtime, a specific agent framework, or a proprietary query language. Open Source is designed around the opposite defaults.
 
-Memory is also production state. If remembered facts can change agent behavior, engineers need to inspect them, correct them, audit where they came from, and replace the parts of the system they disagree with. Most memory products optimize for recall first and expose operational control later. AtomicMemory is built for memory you can own.
+Memory is also production state. If remembered facts can change agent behavior, engineers need to inspect them, correct them, audit where they came from, and replace the parts of the system they disagree with. Most memory products optimize for recall first and expose operational control later. Open Source is built for memory you can own.
 
-| Production requirement | AtomicMemory | mem0 | Letta | Zep |
+| Production requirement | Open Source | mem0 | Letta | Zep |
 | --- | --- | --- | --- | --- |
 | Own the memory layer, not rent a hosted opinion | **Best fit.** Apache-2.0 engine, self-hosted by default, Postgres-backed, no required hosted control plane. | OSS plus hosted platform orientation. | Self-hosted agent runtime. | OSS plus commercial / hosted platform orientation. |
 | Inspect memory during an incident | **Best fit.** Stored content, trust, source, timestamps, mutation lineage, and audit surfaces live in inspectable engine state and ordinary Postgres. | Inspection depends on Mem0's exposed APIs and platform surfaces. | Inspection happens through the Letta agent/runtime model. | Inspection depends on the server and hosted / platform surfaces. |
@@ -22,9 +22,9 @@ Memory is also production state. If remembered facts can change agent behavior, 
 | Debug why retrieval behaved a certain way | **Best fit.** Search responses separate retrieval, packaging, and final context assembly in a structured observability envelope. | Logs and integrations. | Framework-dependent tracing. | Hosted / server observability. |
 | Swap internals without rewriting the product | **Best fit.** Ingest, Search, CRUD, Lifecycle, Trust, stores, embeddings, LLMs, and SDK backends are explicit typed seams. | Provider and storage choices exist, but the core pipeline is not exposed as five replaceable domains. | Customize by adopting or extending the Letta agent runtime. | Customize mostly through server configuration and supported APIs. |
 | Run deterministic local tests and benchmarks | **Best fit.** The same engine boots as production HTTP, in-process TypeScript, or ephemeral test server from `createCoreRuntime`. | Possible, but not the primary product shape. | Possible inside the Letta framework. | Server-oriented; less suited to per-test composition. |
-| Keep app code portable across memory engines | **Best fit.** The TypeScript SDK routes through `MemoryProvider`, so apps can compare AtomicMemory, Mem0, or custom backends behind one interface. | You integrate with Mem0's SDK/API. | You integrate with Letta's agent/runtime abstractions. | You integrate with Zep's server/API model. |
+| Keep app code portable across memory engines | **Best fit.** The TypeScript SDK routes through `MemoryProvider`, so apps can compare Open Source, Mem0, or custom backends behind one interface. | You integrate with Mem0's SDK/API. | You integrate with Letta's agent/runtime abstractions. | You integrate with Zep's server/API model. |
 
-Sources for third-party positioning: [Mem0 OSS overview](https://docs.mem0.ai/open-source/overview), [Letta intro](https://docs.letta.com/guides/get-started/intro), [Zep overview](https://help.getzep.com/overview). AtomicMemory architecture details: [Architecture](/platform/architecture), [Composition](/platform/composition), [Scope](/platform/scope), [Observability](/platform/observability).
+Sources for third-party positioning: [Mem0 OSS overview](https://docs.mem0.ai/open-source/overview), [Letta intro](https://docs.letta.com/guides/get-started/intro), [Zep overview](https://help.getzep.com/overview). Open Source architecture details: [Architecture](/platform/architecture), [Composition](/platform/composition), [Scope](/platform/scope), [Observability](/platform/observability).
 
 The pitch is not "we do more." It is: the seams are explicit, the contracts are stable, and you compose your own stack.
 
@@ -65,4 +65,4 @@ The fastest path is the [Quickstart](/quickstart): install the CLI, run `am init
 
 Core is HTTP-first, so any language works today. The [TypeScript SDK](/sdk/overview) gives TypeScript and JavaScript consumers typed request and response shapes, richer ergonomics, scope-aware helpers, and a pluggable provider model that decouples your app from any particular memory engine. The Python SDK serves Python-native integrations such as Hermes. Nothing about core requires either SDK.
 
-AtomicMemory is [Apache-2.0 licensed](https://github.com/atomicstrata/atomicmemory-core/blob/main/LICENSE). Self-host it, fork it, run it behind your own gateway, the platform is yours.
+Open Source is [Apache-2.0 licensed](https://github.com/atomicstrata/atomicmemory-core/blob/main/LICENSE). Self-host it, fork it, run it behind your own gateway, the platform is yours.

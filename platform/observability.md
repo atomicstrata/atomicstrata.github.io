@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Every AtomicMemory retrieval emits a structured, stable observability payload describing *what happened*: which candidates came back from the index, which ones were packaged into the final context, and how the assembled block fit inside the token budget. This is not a debug log, it is a contract surface on the search response, safe to build dashboards, evals, and regression tests against.
+Every Open Source retrieval emits a structured, stable observability payload describing *what happened*: which candidates came back from the index, which ones were packaged into the final context, and how the assembled block fit inside the token budget. This is not a debug log, it is a contract surface on the search response, safe to build dashboards, evals, and regression tests against.
 
 Three summaries, each with a single job:
 

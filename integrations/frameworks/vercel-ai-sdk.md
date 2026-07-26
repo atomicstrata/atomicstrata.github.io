@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory integrates with Vercel AI SDK through an adapter that handles retrieval before the model call and durable ingest after the turn completes.
+Atomic Memory integrates with Vercel AI SDK through an adapter that handles retrieval before the model call and durable ingest after the turn completes.
 
 ## Deployment targets
 

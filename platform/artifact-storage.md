@@ -2,9 +2,9 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Artifact storage is the optional raw-byte layer behind documents and storage artifacts. Memories, claims, embeddings, and search indexes still live in core's normal stores. Artifact storage is only about external files or raw bytes that a deployment wants to register, upload, verify, retrieve, or delete through AtomicMemory.
+Artifact storage is the optional raw-byte layer behind documents and storage artifacts. Memories, claims, embeddings, and search indexes still live in core's normal stores. Artifact storage is only about external files or raw bytes that a deployment wants to register, upload, verify, retrieve, or delete through Open Source.
 
-By default, core runs in **pointer-only** mode. That means AtomicMemory can record artifact metadata and external URIs without storing the bytes itself. Managed storage providers such as `local_fs`, `s3`, and `filecoin` are enabled only when the operator opts in.
+By default, core runs in **pointer-only** mode. That means Open Source can record artifact metadata and external URIs without storing the bytes itself. Managed storage providers such as `local_fs`, `s3`, and `filecoin` are enabled only when the operator opts in.
 
 ## Storage Modes
 
@@ -65,7 +65,7 @@ The direct storage API supports managed upload for location-addressed providers.
 
 Filecoin is optional and only participates when managed storage is enabled with `RAW_STORAGE_PROVIDER=filecoin`.
 
-Filecoin data should be treated as publicly retrievable by CID unless it is encrypted before upload. For Filecoin managed document uploads, AtomicMemory requires the raw-content codec in staging and production:
+Filecoin data should be treated as publicly retrievable by CID unless it is encrypted before upload. For Filecoin managed document uploads, Open Source requires the raw-content codec in staging and production:
 
 ```bash
 RAW_CONTENT_CODEC=aes_gcm
@@ -100,7 +100,7 @@ Filecoin differs from local disk and S3 in three important ways:
 
 -   **Content addressing.** The provider URI is a content-addressed commitment such as an IPFS/Filecoin CID.
 -   **Eventual availability.** A successful provider acceptance can still require later reconciliation before retrieval is confirmed.
--   **Tombstone semantics.** AtomicMemory can stop managing its own reference, but decentralized storage does not imply universal byte erasure.
+-   **Tombstone semantics.** Open Source can stop managing its own reference, but decentralized storage does not imply universal byte erasure.
 
 Core projects Filecoin metadata through a public allowlist before returning it to clients. Internal sidecars, provider hints, proofs, credentials, and recovery details stay server-side.
 

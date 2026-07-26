@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory Cloud and Core each authenticate requests differently. The console labels the two project types **Local** and **Cloud**; this page calls them **Connected Local** (Core running on your machine, connected to the console) and **Hosted Cloud** (fully managed hosting) once, then uses the shorter **Local**/**Cloud** labels below. Use the right credential for the surface you're calling — mixing them returns `401`.
+Atomic Memory and Core each authenticate requests differently. The console labels the two project types **Local** and **Cloud**; this page calls them **Connected Local** (Core running on your machine, connected to the console) and **Atomic Memory** (fully managed hosting) once, then uses the shorter **Local**/**Cloud** labels below. Use the right credential for the surface you're calling — mixing them returns `401`.
 
 Callers
 
@@ -20,7 +20,7 @@ user keys never forwarded
 
 Engine
 
-AtomicMemory Core`AM_CORE_API_KEY` only
+Open Source Core`AM_CORE_API_KEY` only
 
 ## Which credential do I need?
 
@@ -105,7 +105,7 @@ Console routes require a signed-in session. You never handle this credential dir
 
 ## CLI auth modes
 
-The [AtomicMemory CLI](/cloud/cli) supports two flows:
+The [Atomic Memory CLI](/cloud/cli) supports two flows:
 
 | Command | Auth | Purpose |
 | --- | --- | --- |
@@ -116,7 +116,7 @@ The [AtomicMemory CLI](/cloud/cli) supports two flows:
 
 ## Security reporting
 
-Report vulnerabilities per the [AtomicMemory Cloud API SECURITY policy](https://github.com/atomicstrata/am-cloud-api/blob/main/SECURITY.md).
+Report vulnerabilities per the [Atomic Memory Cloud API SECURITY policy](https://github.com/atomicstrata/am-cloud-api/blob/main/SECURITY.md).
 
 ## Advanced deployment details
 
@@ -142,12 +142,12 @@ This keeps CORS strict — set `CORS_ALLOWED_ORIGINS` on the API to the console 
 
 ### Cloud → Core infrastructure credential
 
-For Cloud projects, the cloud gateway never forwards a user's API key to AtomicMemory Core. Outbound calls from the gateway to the managed Core fleet use a separate infrastructure credential (`AM_CORE_API_KEY`), set by the operator — it is not a credential end users ever see or configure.
+For Cloud projects, the cloud gateway never forwards a user's API key to Open Source Core. Outbound calls from the gateway to the managed Core fleet use a separate infrastructure credential (`AM_CORE_API_KEY`), set by the operator — it is not a credential end users ever see or configure.
 
 ## Related docs
 
 -   [Platform Quickstart](/quickstart) — Connected Local via `am init`
--   [Add Hosted Cloud](/cloud/quickstart) — add Hosted Cloud and API keys
+-   [Add Atomic Memory](/cloud/quickstart) — add Atomic Memory and API keys
 -   [Developer Console](/cloud/console) — dashboard tour
 -   [Managing API Keys](/cloud/how-to/api-keys) — create, rotate, revoke
 -   [The Dashboard](/cloud/how-to/dashboard) - project landing page and activation path

@@ -2,13 +2,13 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory support for LangChain JS exposes durable semantic memory through helper functions and LangChain-native tools.
+Open Source support for LangChain JS exposes durable semantic memory through helper functions and LangChain-native tools.
 
 ## What you get
 
 -   **Agent tools.** `memory_search` and `memory_ingest` tools built with `@langchain/core/tools`.
 -   **Helper functions.** `searchMemory()` and `ingestTurn()` for custom chains, callbacks, and LCEL steps.
--   **Backend-agnostic SDK path.** The adapter uses the AtomicMemory SDK provider registry through your `MemoryClient`.
+-   **Backend-agnostic SDK path.** The adapter uses the Atomic Memory SDK provider registry through your `MemoryClient`.
 
 Already ran am init?
 
@@ -16,7 +16,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Start local core first. It should be reachable at `http://127.0.0.1:17350`.
 

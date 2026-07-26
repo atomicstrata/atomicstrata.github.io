@@ -2,13 +2,13 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory provides Langflow custom components that add durable semantic memory to visual AI workflows through the Python `atomicmemory` SDK.
+Atomic Memory provides Langflow custom components that add durable semantic memory to visual AI workflows through the Python `atomicmemory` SDK.
 
 ## Deployment targets
 
 ### Local
 
-Use the local setup when Langflow runs on your laptop, workstation, or self-hosted server and connects to a local AtomicMemory core.
+Use the local setup when Langflow runs on your laptop, workstation, or self-hosted server and connects to a local Core.
 
 See [Langflow Local](/integrations/frameworks/langflow/local).
 
@@ -26,13 +26,13 @@ See [Langflow Cloud](/integrations/frameworks/langflow/cloud).
 | --- | --- |
 | Chat Memory | Read-only message history backend for a user/session scope. |
 | Search Context | Query-driven memory recall that returns prompt-ready context. |
-| Store Message | Explicitly persists a message or turn into AtomicMemory. |
+| Store Message | Explicitly persists a message or turn into Atomic Memory. |
 | Delete Memories in Scope | Confirm-gated best-effort deletion for a selected scope. |
 
 ## Common patterns
 
 -   **Cross-session chatbot memory.** Store important user turns, then retrieve user-scoped context in a later Langflow session.
--   **Personalized RAG.** Combine document retrieval with AtomicMemory recall for preferences, prior questions, and durable user context.
+-   **Personalized RAG.** Combine document retrieval with Atomic Memory recall for preferences, prior questions, and durable user context.
 -   **Support and research workflows.** Persist facts, decisions, and follow-up items across repeated runs of the same flow.
 
 ## Trust model

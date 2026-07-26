@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Give Vercel AI SDK applications persistent memory backed by AtomicMemory. The adapter retrieves relevant memories before a model call, injects them as guarded context, and ingests the completed turn after the model returns.
+Give Vercel AI SDK applications persistent memory backed by Open Source. The adapter retrieves relevant memories before a model call, injects them as guarded context, and ingests the completed turn after the model returns.
 
 Already ran am init?
 
@@ -10,7 +10,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Start local core first. It should be reachable at `http://127.0.0.1:17350`.
 
@@ -79,10 +79,10 @@ const result = await withMemory({
 
 ## Features
 
--   **Pre-call recall.** Search AtomicMemory before `generateText`, `streamText`, or your own AI SDK runner.
+-   **Pre-call recall.** Search Open Source before `generateText`, `streamText`, or your own AI SDK runner.
 -   **Guarded context injection.** Retrieved memories are added as context, not treated as application instructions.
--   **Post-call ingest.** Completed turns are stored with `mode: "messages"` so AtomicMemory can add, update, delete, or no-op extracted facts.
--   **Version isolation.** The adapter accepts AtomicMemory SDK message shapes and does not import from `ai`.
+-   **Post-call ingest.** Completed turns are stored with `mode: "messages"` so Open Source can add, update, delete, or no-op extracted facts.
+-   **Version isolation.** The adapter accepts Atomic Memory SDK message shapes and does not import from `ai`.
 
 ## Modes of operation
 

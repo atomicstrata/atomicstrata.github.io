@@ -2,13 +2,13 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory has an **explicit composition root**, a single function, `createCoreRuntime`, that owns every piece of wiring between config, the Postgres pool, repositories, stores, and services. On top of that root, a three-seam design (`createCoreRuntime` → `createApp` → `bindEphemeral`) lets the same engine boot into production HTTP, in-process TypeScript, and ephemeral test harnesses **without forking code paths**. This is the property that makes AtomicMemory usable as a platform layer and not just a server.
+Open Source has an **explicit composition root**, a single function, `createCoreRuntime`, that owns every piece of wiring between config, the Postgres pool, repositories, stores, and services. On top of that root, a three-seam design (`createCoreRuntime` → `createApp` → `bindEphemeral`) lets the same engine boot into production HTTP, in-process TypeScript, and ephemeral test harnesses **without forking code paths**. This is the property that makes Open Source usable as a platform layer and not just a server.
 
 This page shows what each seam does, how they compose, and why this shape is a differentiator when you look at the alternatives.
 
 ## The three seams
 
-Every consumer of AtomicMemory, the production server, the test suite, a research benchmark, an embedded agent harness, boots through some subset of these three calls:
+Every consumer of Open Source, the production server, the test suite, a research benchmark, an embedded agent harness, boots through some subset of these three calls:
 
 ```typescript
 const runtime = createCoreRuntime({ pool });  // seam 1: compose deps into a runtime
@@ -233,11 +233,11 @@ This test does two useful things at once. It documents the canonical in-process 
 
 ## Why this matters vs the alternatives
 
-**vs. mem0.** Mem0's OSS library is a client wrapping a hosted service, or a single-process Python runtime with implicit global state. There is no "bind an ephemeral app to a test pool" story, running an integration test against mem0 means either talking to their cloud or fighting their module-level singletons. AtomicMemory's three-seam design makes local, parallel, and test boots trivial.
+**vs. mem0.** Mem0's OSS library is a client wrapping a hosted service, or a single-process Python runtime with implicit global state. There is no "bind an ephemeral app to a test pool" story, running an integration test against mem0 means either talking to their cloud or fighting their module-level singletons. Open Source's three-seam design makes local, parallel, and test boots trivial.
 
-**vs. Letta.** Letta's architecture assumes you're running the Letta agent server. Its memory layer is reachable primarily *through* that server. AtomicMemory's `createCoreRuntime` gives you the memory engine as a pure TypeScript object with typed services, you can embed it in a Next.js API route, a long-running worker, a Cloudflare Worker, or a Vitest test with exactly the same code.
+**vs. Letta.** Letta's architecture assumes you're running the Letta agent server. Its memory layer is reachable primarily *through* that server. Open Source's `createCoreRuntime` gives you the memory engine as a pure TypeScript object with typed services, you can embed it in a Next.js API route, a long-running worker, a Cloudflare Worker, or a Vitest test with exactly the same code.
 
-**vs. Zep.** Zep is a Go binary. Composition is whatever the binary does; the only customization surface is config flags. AtomicMemory is a TypeScript library that happens to also run an Express server. The composition root is source code you can read, fork, and adapt, not a deploy artifact.
+**vs. Zep.** Zep is a Go binary. Composition is whatever the binary does; the only customization surface is config flags. Open Source is a TypeScript library that happens to also run an Express server. The composition root is source code you can read, fork, and adapt, not a deploy artifact.
 
 The deeper point: **every boundary is a plain function with a typed argument and a typed return**. `createCoreRuntime({ pool })` returns a `CoreRuntime`. `createApp(runtime)` returns an Express app. `bindEphemeral(app)` returns a `BootedApp`. There is no hidden state between them, which means there is no hidden cost to replacing any one of them.
 

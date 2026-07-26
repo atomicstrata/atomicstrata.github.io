@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Cursor support is available today as a manual local integration using the AtomicMemory MCP server and Cursor rules. The monorepo ships a source template for `.cursor/mcp.json` and an always-on memory rule. A packaged Cursor plugin and Cursor Cloud deployment are planned but not yet available.
+Cursor support is available today as a manual local integration using the Atomic Memory MCP server and Cursor rules. The monorepo ships a source template for `.cursor/mcp.json` and an always-on memory rule. A packaged Cursor plugin and Cursor Cloud deployment are planned but not yet available.
 
 Already ran am init?
 
@@ -10,7 +10,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Start local core first. It should be reachable at `http://127.0.0.1:17350`.
 
@@ -87,7 +87,7 @@ cursor-agent mcp list-tools atomicmemory
 -   **MCP memory tools.** Cursor can search, ingest, package, and list scoped memories.
 -   **Project rule guidance.** The rule gives Cursor the same memory behavior as the Claude Code and Codex skills.
 -   **Local defaults.** Local core URL, quickstart auth, and user scope are inferred when omitted.
--   **Backend-agnostic SDK path.** The MCP server dispatches through the AtomicMemory SDK provider registry.
+-   **Backend-agnostic SDK path.** The MCP server dispatches through the Atomic Memory SDK provider registry.
 
 ## Modes of operation
 
@@ -112,7 +112,7 @@ Use MCP-only mode when you want explicit memory tools without project rules.
 
 ## Configuration
 
-For `provider=atomicmemory`, the MCP server defaults to local AtomicMemory core at `http://127.0.0.1:17350` and uses the local quickstart key for that default URL. Add environment forwarding only when Cursor should use a remote AtomicMemory service, another provider such as Mem0, or explicit scope values:
+For `provider=atomicmemory`, the MCP server defaults to local Core at `http://127.0.0.1:17350` and uses the local quickstart key for that default URL. Add environment forwarding only when Cursor should use a remote Open Source service, another provider such as Mem0, or explicit scope values:
 
 ```json
 {
@@ -138,7 +138,7 @@ Optional:
 | Env var | Purpose |
 | --- | --- |
 | `ATOMICMEMORY_PROVIDER` | Provider name, usually `atomicmemory`. Defaults to `atomicmemory`. |
-| `ATOMICMEMORY_API_URL` | Provider base URL. Defaults to local AtomicMemory core for `provider=atomicmemory`; required for `provider=mem0` or remote services. |
+| `ATOMICMEMORY_API_URL` | Provider base URL. Defaults to local Core for `provider=atomicmemory`; required for `provider=mem0` or remote services. |
 | `ATOMICMEMORY_API_KEY` | API key for remote services or providers that require auth. Omit it for the default local core. |
 | `ATOMICMEMORY_SCOPE_USER` | Stable user identity for memory scope. Defaults to the local machine user when omitted. |
 | `ATOMICMEMORY_SCOPE_AGENT` | Agent identity. |

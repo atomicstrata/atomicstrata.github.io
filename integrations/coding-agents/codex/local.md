@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Give Codex persistent, cross-session memory backed by AtomicMemory. The public setup registers the AtomicMemory MCP server so Codex can recall prior work, store durable decisions, and create handoff snapshots. Teams that install the source-distributed Codex plugin can also add the AtomicMemory memory protocol skill.
+Give Codex persistent, cross-session memory backed by Open Source. The public setup registers the Atomic Memory MCP server so Codex can recall prior work, store durable decisions, and create handoff snapshots. Teams that install the source-distributed Codex plugin can also add the Open Source memory protocol skill.
 
 Already ran am init?
 
@@ -10,7 +10,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Log in to Codex, then start local core with Codex account auth and local embeddings:
 
@@ -68,11 +68,11 @@ This quickstart uses the free local `transformers` embedding model so it can run
 -   **Cross-session recall.** Codex can retrieve project decisions, user preferences, codebase facts, and prior work.
 -   **MCP memory tools.** The public setup exposes `memory_search`, `memory_ingest`, `memory_package`, and `memory_list`.
 -   **Account-auth local extraction.** Local core can use the logged-in Codex account for extraction with `LLM_PROVIDER=codex`, so no OpenAI API key is required for the quickstart.
--   **Local or external core.** For local use, start AtomicMemory core with the quickstart first. For team deployments, point `ATOMICMEMORY_API_URL` and `ATOMICMEMORY_API_KEY` at the service your team manages.
+-   **Local or external core.** For local use, start Core with the quickstart first. For team deployments, point `ATOMICMEMORY_API_URL` and `ATOMICMEMORY_API_KEY` at the service your team manages.
 -   **Optional memory protocol skill.** The source-distributed plugin teaches Codex when to search, when to ingest, and when to create handoff snapshots.
 -   **Optional lifecycle hooks.** Codex hooks can add prompt-time retrieval and deterministic lifecycle capture when `features.codex_hooks = true`.
 -   **Scoped memory.** `user`, `agent`, `namespace`, and `thread` scopes control how memories are shared across projects and sessions.
--   **Backend-agnostic SDK path.** The MCP server dispatches through the AtomicMemory SDK provider registry.
+-   **Backend-agnostic SDK path.** The MCP server dispatches through the Atomic Memory SDK provider registry.
 
 ## Modes of operation
 
@@ -111,7 +111,7 @@ Codex stop responses are often shorter than Claude Code responses. Start with `A
 
 ## Configuration
 
-For `provider=atomicmemory`, the MCP server defaults to local AtomicMemory core at `http://127.0.0.1:17350` with the local quickstart key `local-dev-key`. Use provider connection variables when Codex should connect to a different AtomicMemory service or another provider such as Mem0:
+For `provider=atomicmemory`, the MCP server defaults to local Core at `http://127.0.0.1:17350` with the local quickstart key `local-dev-key`. Use provider connection variables when Codex should connect to a different Open Source service or another provider such as Mem0:
 
 ```bash
 export ATOMICMEMORY_PROVIDER="atomicmemory"
@@ -150,7 +150,7 @@ export EMBEDDING_PROVIDER=transformers
 export EMBEDDING_DIMENSIONS=384
 ```
 
-Set those variables on the AtomicMemory core process before starting it. The MCP setup above is unchanged: Codex still connects to core through the MCP server's local defaults or explicit provider connection variables. `LLM_PROVIDER=codex` reads the auth file created by `codex login` and calls the Codex backend directly. No OpenAI API key is required in this mode. It is for personal local development, consumes the logged-in Codex account's limits, and is not recommended for hosted or team deployments.
+Set those variables on the Core process before starting it. The MCP setup above is unchanged: Codex still connects to core through the MCP server's local defaults or explicit provider connection variables. `LLM_PROVIDER=codex` reads the auth file created by `codex login` and calls the Codex backend directly. No OpenAI API key is required in this mode. It is for personal local development, consumes the logged-in Codex account's limits, and is not recommended for hosted or team deployments.
 
 Core resolves the Codex auth file from `CODEX_AUTH_PATH` when set, otherwise from `CODEX_HOME/auth.json`, otherwise from `$HOME/.codex/auth.json`. The quickstart sets `CODEX_AUTH_PATH` explicitly because Docker runs core as its own container user.
 
@@ -166,7 +166,7 @@ Optional:
 | Env var | Purpose |
 | --- | --- |
 | `ATOMICMEMORY_PROVIDER` | Provider name, usually `atomicmemory`. Defaults to `atomicmemory`. |
-| `ATOMICMEMORY_API_URL` | Provider base URL. Defaults to local AtomicMemory core for `provider=atomicmemory`; required for `provider=mem0` or remote services. |
+| `ATOMICMEMORY_API_URL` | Provider base URL. Defaults to local Core for `provider=atomicmemory`; required for `provider=mem0` or remote services. |
 | `ATOMICMEMORY_API_KEY` | API key for the local Docker service or any provider that requires auth. |
 | `ATOMICMEMORY_SCOPE_USER` | Stable user identity for memory scope. Defaults to the local machine user when omitted. |
 | `ATOMICMEMORY_SCOPE_AGENT` | Optional agent identity override. |
@@ -201,7 +201,7 @@ The installed skill guides Codex to:
 | No memory tools appear | Run `codex mcp list`, restart Codex after changing MCP config, and confirm `npx -y --package=@atomicmemory/mcp-server atomicmemory-mcp` works in the same environment. |
 | Local core is not running | Start it with the Docker command in the quickstart above, then retry the MCP tool call. |
 | `codex` extraction provider fails | Run `codex login` again and confirm the core process can read the auth file. For Docker, keep `-v $HOME/.codex:/home/appuser/.codex:ro` and `-e CODEX_AUTH_PATH=/home/appuser/.codex/auth.json` together. |
-| Connection failed | Verify local AtomicMemory core is running at `http://127.0.0.1:17350`, or verify `ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, and `ATOMICMEMORY_API_KEY` for remote/provider-specific setups. |
+| Connection failed | Verify local Core is running at `http://127.0.0.1:17350`, or verify `ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, and `ATOMICMEMORY_API_KEY` for remote/provider-specific setups. |
 | Plugin not found | Plugin mode is source-distributed today; confirm the marketplace entry points at a local clone of `atomicmemory/plugins/codex`. |
 | Unexpected memory sharing | Add `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or `ATOMICMEMORY_SCOPE_THREAD`. |
 

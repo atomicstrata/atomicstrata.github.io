@@ -2,9 +2,9 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory is a **standardized platform layer for AI memory**, not a monolithic service. The engine is split into five independently replaceable domains (Ingest, Search, CRUD, Lifecycle, Trust) that sit behind explicit TypeScript contracts. You can swap any one of them without touching the others, because each is reachable through a plain function signature over a shared `MemoryServiceDeps` bundle.
+Open Source is a **standardized platform layer for AI memory**, not a monolithic service. The engine is split into five independently replaceable domains (Ingest, Search, CRUD, Lifecycle, Trust) that sit behind explicit TypeScript contracts. You can swap any one of them without touching the others, because each is reachable through a plain function signature over a shared `MemoryServiceDeps` bundle.
 
-This page walks through the five domains, shows where each lives in the real source, and explains why this split matters when you're choosing between AtomicMemory and the single-binary alternatives.
+This page walks through the five domains, shows where each lives in the real source, and explains why this split matters when you're choosing between Open Source and the single-binary alternatives.
 
 ## The five domains
 
@@ -254,13 +254,13 @@ See the [stores](/platform/stores) page for the full store contracts and how to 
 
 ## Why this matters vs the alternatives
 
-**vs. mem0.** Mem0 is SaaS-first and Python-centric. The open-source tier is a thin wrapper around their hosted API; the "platform" is hosted, not composed. AtomicMemory's engine runs on your Postgres, is addressable via both HTTP and in-process TypeScript, and lets you replace any of the five domains with your own implementation. There is no hosted dependency on the critical path.
+**vs. mem0.** Mem0 is SaaS-first and Python-centric. The open-source tier is a thin wrapper around their hosted API; the "platform" is hosted, not composed. Open Source's engine runs on your Postgres, is addressable via both HTTP and in-process TypeScript, and lets you replace any of the five domains with your own implementation. There is no hosted dependency on the critical path.
 
-**vs. Letta (formerly MemGPT).** Letta is tightly coupled to an agent framework, memory is a feature of the agent runtime, not a standalone service. If you're not using Letta's agents, you inherit a lot of framework you don't want. AtomicMemory's five-domain split is agent-framework-agnostic: the Ingest domain does not know what called it, the Search domain returns a `RetrievalResult`, and you wire it into whatever agent layer you already have.
+**vs. Letta (formerly MemGPT).** Letta is tightly coupled to an agent framework, memory is a feature of the agent runtime, not a standalone service. If you're not using Letta's agents, you inherit a lot of framework you don't want. Open Source's five-domain split is agent-framework-agnostic: the Ingest domain does not know what called it, the Search domain returns a `RetrievalResult`, and you wire it into whatever agent layer you already have.
 
-**vs. Zep.** Zep is a Go-based commercial server with a fixed internal architecture. Extending it means forking Go code or waiting for upstream features. AtomicMemory is TypeScript-native with explicit domain boundaries and typed store contracts, so extending it means writing a TypeScript module that satisfies an existing interface. The cost-of-customization curve is fundamentally different.
+**vs. Zep.** Zep is a Go-based commercial server with a fixed internal architecture. Extending it means forking Go code or waiting for upstream features. Open Source is TypeScript-native with explicit domain boundaries and typed store contracts, so extending it means writing a TypeScript module that satisfies an existing interface. The cost-of-customization curve is fundamentally different.
 
-The common theme: AtomicMemory treats memory as a **pluggable platform layer**, not a product. Every seam is explicit, typed, and individually replaceable, which is what makes the engine suitable as a foundation for teams who intend to customize, not just consume.
+The common theme: Open Source treats memory as a **pluggable platform layer**, not a product. Every seam is explicit, typed, and individually replaceable, which is what makes the engine suitable as a foundation for teams who intend to customize, not just consume.
 
 ## Next steps
 

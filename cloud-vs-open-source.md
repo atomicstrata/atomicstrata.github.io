@@ -1,8 +1,8 @@
-# Local vs Hosted Cloud
+# Open Source vs Atomic Memory
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory runs in three modes backed by the **same engine**. The API surface, the AUDN mutation model, the retrieval pipeline, and the observability envelope are identical — what differs is where Core runs and what the console can see.
+Atomic Memory runs in three modes backed by the **same engine**. The API surface, the AUDN mutation model, the retrieval pipeline, and the observability envelope are identical — what differs is where Core runs and what the console can see.
 
 Start with **Connected Local** unless you have a specific reason not to.
 
@@ -14,16 +14,16 @@ upgrade to Free ($0)
 
 Add when needed
 
-Hosted Cloudmanaged hosting, shared access, one project on Free
+Atomic Memorymanaged hosting, shared access, one project on Free
 
 Prefer the engine with no account at all? [Core-only Docker](/core-only-docker) runs Core with curl — no console, no sign-in.
 
 ## At a glance
 
-|  | **Connected Local** | **Hosted Cloud** | **Core-only Docker** |
+|  | **Connected Local** | **Atomic Memory** | **Core-only Docker** |
 | --- | --- | --- | --- |
 | **Setup** | `am init` — one command | Upgrade to Free, create a Cloud project | `docker run` + curl |
-| **Where memories live** | Your machine, in Core | AtomicMemory-managed hosting | Your machine |
+| **Where memories live** | Your machine, in Core | Atomic Memory-managed hosting | Your machine |
 | **Console** | Runtime status, memories, operation traces | Same, for the managed project | None |
 | **Account** | Sign-in creates a free Open Source org | Free tier ($0 self-serve upgrade) | Not required |
 | **Good for** | Evaluating, local dev, day-to-day use | Shared access without operating infrastructure | Air-gapped work, CI, no-console automation |
@@ -39,13 +39,13 @@ Team and Corporate plans are demo-led — [book a demo](https://atomicstrata.ai/
 
 → [Quickstart](/quickstart)
 
-## Add Hosted Cloud when
+## Add Atomic Memory when
 
 -   You need shared access to the same memories from more than one place.
 -   You want a managed endpoint without operating Postgres and Core yourself.
 -   You are ready to point production traffic at `https://api.atomicstrata.ai` with a project API key.
 
-→ [Add Hosted Cloud](/cloud/quickstart)
+→ [Add Atomic Memory](/cloud/quickstart)
 
 ## Choose Core-only Docker when
 
@@ -57,4 +57,4 @@ Team and Corporate plans are demo-led — [book a demo](https://atomicstrata.ai/
 
 ## Moving between them
 
-The [TypeScript SDK](/sdk/overview) and the [CLI](/cloud/cli) work identically against a local Core and a Hosted Cloud project — switching is a base URL and credential change, not a code change. To copy existing local memories into a Cloud project, see [Migrate to Hosted Cloud](/cloud/how-to/migrate).
+The [TypeScript SDK](/sdk/overview) and the [CLI](/cloud/cli) work identically against a local Core and an Atomic Memory project — switching is a base URL and credential change, not a code change. To copy existing local memories into a Cloud project, see [Migrate to Atomic Memory](/cloud/how-to/migrate).

@@ -1,14 +1,14 @@
-# AtomicMemory CLI (npm)
+# Open Source CLI (npm)
 
 > Agent index: [llms.txt](/llms.txt)
 
-`@atomicmemory/cli` is the Node.js command line for direct self-hosted core workflows. It is separate from the AtomicMemory CLI (`am` from [get.atomicstrata.ai](https://get.atomicstrata.ai)) — use [AtomicMemory CLI](/cloud/cli) and the [Quickstart](/quickstart) for Connected Local activation.
+`@atomicmemory/cli` is the Node.js command line for direct self-hosted core workflows. It is separate from the Atomic Memory CLI (`am` from [get.atomicstrata.ai](https://get.atomicstrata.ai)) — use [Atomic Memory CLI](/cloud/cli) and the [Quickstart](/quickstart) for Connected Local activation.
 
 `atomicmemory` is also separate from the MCP server: `atomicmemory-mcp` is a stdio process for agent hosts, while this package is a terminal tool for setup, diagnostics, memory operations, and stable script output.
 
-The CLI uses the same backend-agnostic SDK provider model as the rest of AtomicMemory. The current CLI surface supports `atomicmemory` and `mem0`. Additional SDK providers require a CLI adapter, spec, and config-schema update before they are selectable from command scripts.
+The CLI uses the same backend-agnostic SDK provider model as the rest of Open Source. The current CLI surface supports `atomicmemory` and `mem0`. Additional SDK providers require a CLI adapter, spec, and config-schema update before they are selectable from command scripts.
 
-The npm CLI does **not** start a memory backend by itself. Direct memory commands need a configured AtomicMemory service — usually Core from [Core-only Docker](/core-only-docker) or your own deployment. For Claude Code personal use, prefer the [Claude Code plugin](/integrations/coding-agents/claude-code/local): it installs the MCP server, skill, hooks, and auto-managed local runtime for you.
+The npm CLI does **not** start a memory backend by itself. Direct memory commands need a configured Open Source service — usually Core from [Core-only Docker](/core-only-docker) or your own deployment. For Claude Code personal use, prefer the [Claude Code plugin](/integrations/coding-agents/claude-code/local): it installs the MCP server, skill, hooks, and auto-managed local runtime for you.
 
 ## What you get
 
@@ -27,7 +27,7 @@ npm install -g @atomicmemory/cli
 atomicmemory
 ```
 
-Running `atomicmemory` opens the local dashboard. Memory operations will ask for a profile or provider flags until you connect the CLI to an AtomicMemory backend.
+Running `atomicmemory` opens the local dashboard. Memory operations will ask for a profile or provider flags until you connect the CLI to an Open Source backend.
 
 To try the published CLI without a global install, use:
 
@@ -40,11 +40,11 @@ npx -y @atomicmemory/cli
 | Path | Use when | Start here |
 | --- | --- | --- |
 | Claude Code plugin | You want personal Claude Code memory with local runtime management and no separate API key for extraction. | [Claude Code Local](/integrations/coding-agents/claude-code/local) |
-| Connected Local (recommended) | You want Core on your machine with console visibility. | [Quickstart](/quickstart) via [AtomicMemory CLI](/cloud/cli) (`am init`). |
+| Connected Local (recommended) | You want Core on your machine with console visibility. | [Quickstart](/quickstart) via [Atomic Memory CLI](/cloud/cli) (`am init`). |
 | Direct CLI against local core | You run `atomicmemory-core` yourself and want npm terminal commands. | [Core-only Docker](/core-only-docker), then configure a `local` profile below. |
-| Direct CLI against a self-hosted service | Your team operates AtomicMemory behind its own URL and token. | Configure a `self-hosted` profile below. |
-| Hosted Cloud | You want managed memory hosting. | [AtomicMemory CLI](/cloud/cli) and [Add Hosted Cloud](/cloud/quickstart). |
-| Mem0 adapter | You want the CLI shape against a Mem0 backend. | Use `--provider mem0`; AtomicMemory-only commands are capability-gated. |
+| Direct CLI against a self-hosted service | Your team operates Open Source behind its own URL and token. | Configure a `self-hosted` profile below. |
+| Atomic Memory | You want managed memory hosting. | [Atomic Memory CLI](/cloud/cli) and [Add Atomic Memory](/cloud/quickstart). |
+| Mem0 adapter | You want the CLI shape against a Mem0 backend. | Use `--provider mem0`; Open Source-only commands are capability-gated. |
 
 ## Configure
 
@@ -239,7 +239,7 @@ export LLM_PROVIDER=claude-code
 export EMBEDDING_PROVIDER=transformers
 ```
 
-That mode is for personal/local use. It requires Claude Code to be installed and logged in, consumes the user's Claude Code / Claude subscription limits, and is not the recommended path for hosted or team deployments. `LLM_PROVIDER` configures the local AtomicMemory core process; CLI profile variables such as `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and scope still configure how the CLI reaches that core process.
+That mode is for personal/local use. It requires Claude Code to be installed and logged in, consumes the user's Claude Code / Claude subscription limits, and is not the recommended path for hosted or team deployments. `LLM_PROVIDER` configures the local Open Source core process; CLI profile variables such as `ATOMICMEMORY_API_URL`, `ATOMICMEMORY_API_KEY`, and scope still configure how the CLI reaches that core process.
 
 Codex local extraction defaults to account-auth:
 
@@ -341,5 +341,5 @@ Optional harness environment variables:
 ## See also
 
 -   [SDK provider model](/sdk/concepts/provider-model)
--   [Using the AtomicMemory backend](/sdk/guides/atomicmemory-backend)
+-   [Using the Open Source backend](/sdk/guides/atomicmemory-backend)
 -   [Integrations overview](/integrations/overview)

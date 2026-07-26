@@ -1,8 +1,8 @@
-# AtomicMemory CLI
+# Atomic Memory CLI
 
 > Agent index: [llms.txt](/llms.txt)
 
-The **AtomicMemory CLI** (`atomicmemory` / **`am`**) is the primary CLI for both Open Source activation and Cloud operations: browser login, Connected Local setup, org/project management, API keys, and memory commands.
+The **Atomic Memory CLI** (`atomicmemory` / **`am`**) is the primary CLI for both Open Source activation and Cloud operations: browser login, Connected Local setup, org/project management, API keys, and memory commands.
 
 Install from `get.atomicstrata.ai`. Defaults to `https://api.atomicstrata.ai`.
 
@@ -64,7 +64,7 @@ am migrate export --project <local-project-slug>
 am migrate import --file <path-to-export.jsonl> --target-project <cloud-project-slug>
 ```
 
-Memory-only — trace history doesn't move. Full walkthrough, prerequisites, and console verification: [Migrate to Hosted Cloud](/cloud/how-to/migrate).
+Memory-only — trace history doesn't move. Full walkthrough, prerequisites, and console verification: [Migrate to Atomic Memory](/cloud/how-to/migrate).
 
 ## Dashboard commands (OAuth)
 
@@ -75,7 +75,7 @@ am overview
 
 Uses PKCE + browser — no config file required. The public OAuth `client_id` is baked into the binary.
 
-## Hosted Cloud memory commands (API key)
+## Atomic Memory memory commands (API key)
 
 For managed hosting after upgrading to Free:
 
@@ -88,7 +88,7 @@ am memory search "seat preference"
 am memory list
 ```
 
-Get your API key from the [developer console](https://memory.atomicstrata.ai) during onboarding or under **API Keys**. See [Add Hosted Cloud](/cloud/quickstart) for the Hosted Cloud add-on path.
+Get your API key from the [developer console](https://memory.atomicstrata.ai) during onboarding or under **API Keys**. See [Add Atomic Memory](/cloud/quickstart) for the Atomic Memory add-on path.
 
 ## Defaults
 
@@ -155,8 +155,8 @@ Removes binaries and PATH block. Credentials under `~/.atomicmemory/` are left i
 ## Related docs
 
 -   [Platform Quickstart](/quickstart) — Connected Local activation
--   [Add Hosted Cloud](/cloud/quickstart) — add Hosted Cloud after local setup
--   [Migrate to Hosted Cloud](/cloud/how-to/migrate) — move memories with `am migrate`
+-   [Add Atomic Memory](/cloud/quickstart) — add Atomic Memory after local setup
+-   [Migrate to Atomic Memory](/cloud/how-to/migrate) — move memories with `am migrate`
 -   [Troubleshooting](/cloud/troubleshooting) — recover from a failed `am init` or `am doctor --smoke`
 -   [Authentication](/cloud/authentication) — API key vs OAuth
 -   [npm CLI (advanced)](/cli) — self-hosted core workflows without Cloud

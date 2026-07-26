@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-The AtomicMemory developer console at **[memory.atomicstrata.ai](https://memory.atomicstrata.ai)** is a Next.js dashboard for provisioning projects, managing API keys, exploring memories, and inspecting AUDN mutation traces.
+The Atomic Memory developer console at **[memory.atomicstrata.ai](https://memory.atomicstrata.ai)** is a Next.js dashboard for provisioning projects, managing API keys, exploring memories, and inspecting AUDN mutation traces.
 
 All `/app/*` routes require sign-in. The marketing landing page and `/share/*` public memory viewer stay open without an account.
 
@@ -11,12 +11,12 @@ All `/app/*` routes require sign-in. The marketing landing page and `/share/*` p
 New users follow a guided path:
 
 1.  Sign up at [memory.atomicstrata.ai/signup](https://memory.atomicstrata.ai/signup) and select or create an Organization.
-2.  The console provisions a default **Local** project (slug `default`) — Open Source starts with one Connected Local project and no Hosted Cloud project.
+2.  The console provisions a default **Local** project (slug `default`) — Open Source starts with one Connected Local project and no Atomic Memory project.
 3.  **Connect Core**: run `am init` in your terminal. It signs you in, starts Core, connects this project, and verifies the memory pipeline end to end.
 4.  Once the runtime reports **Online**, the console hands off to the project **Overview** — no key to create or redeem first.
-5.  Optional: upgrade to **Free** (self-serve, $0) from **Billing** to unlock one Hosted Cloud project.
+5.  Optional: upgrade to **Free** (self-serve, $0) from **Billing** to unlock one Atomic Memory project.
 
-See [Platform Quickstart](/quickstart) for the full `am init` walkthrough, then [Add Hosted Cloud](/cloud/quickstart) when you want managed hosting.
+See [Platform Quickstart](/quickstart) for the full `am init` walkthrough, then [Add Atomic Memory](/cloud/quickstart) when you want managed hosting.
 
 ## Inside a project
 
@@ -29,7 +29,7 @@ Each project includes:
 | **Traces** | AUDN mutation and retrieval trace viewer, updates live |
 | **API Keys** | Create, list, and revoke project keys |
 | **Usage** | Usage events and stored memory counts |
-| **Playground** | Interactive ingest and search (Hosted Cloud key or Connected Local Core) |
+| **Playground** | Interactive ingest and search (Atomic Memory key or Connected Local Core) |
 | **Settings** | Project configuration |
 | **Audit** | Project-scoped admin audit log |
 
@@ -39,7 +39,7 @@ Memory and trace views update live as new activity happens — no manual refresh
 
 The sidebar **SetupGuide** tracks activation milestones:
 
--   First API key created (Hosted Cloud projects only)
+-   First API key created (Atomic Memory projects only)
 -   First ingest completed
 -   First search completed
 
@@ -52,9 +52,9 @@ The project Overview surfaces copy-paste snippets for:
 -   MCP (`@atomicmemory/mcp`)
 -   TypeScript and Python SDKs
 -   Claude Code plugin
--   AtomicMemory CLI (`am memory ingest`)
+-   Atomic Memory CLI (`am memory ingest`)
 
-Snippets use your project's API base URL automatically for Hosted Cloud projects.
+Snippets use your project's API base URL automatically for Atomic Memory projects.
 
 ## Public memory sharing
 

@@ -1,4 +1,4 @@
-# Migrate to Hosted Cloud
+# Migrate to Atomic Memory
 
 > Agent index: [llms.txt](/llms.txt)
 
@@ -6,9 +6,9 @@ Already running a **Local** project? `am migrate export` and `am migrate import`
 
 ## Prerequisites
 
--   Your Organization is on **Free** or higher. Cloud import requires Free or higher — Open Source doesn't unlock a Hosted Cloud project to import into. See [Plans & Billing](/cloud/how-to/billing).
+-   Your Organization is on **Free** or higher. Cloud import requires Free or higher — Open Source doesn't unlock an Atomic Memory project to import into. See [Plans & Billing](/cloud/how-to/billing).
 -   Your Local Core is running and connected (`am init` completed — see the [Platform Quickstart](/quickstart)). `am migrate export` reads directly from your live Core and creates the JSONL transfer file at export time — it's not a backup file you maintain yourself ahead of time.
--   A **Cloud** project already exists to import into — create one from [Add Hosted Cloud](/cloud/quickstart) if you haven't yet.
+-   A **Cloud** project already exists to import into — create one from [Add Atomic Memory](/cloud/quickstart) if you haven't yet.
 
 ## Export from your Local project
 
@@ -24,7 +24,7 @@ This reads every memory your Local project's Core has stored (paginated automati
 am migrate import --file <path-to-export.jsonl> --target-project <cloud-project-slug>
 ```
 
-This reads the exported JSONL file and sends its records to your Hosted Cloud project, where each one is written into that project's memory store with its original content intact — it isn't re-summarized or re-extracted on the way in. The command reports how many records were imported, skipped, and failed. `--mode merge` is the default and the only mode the current CLI supports (`--mode replace-scope` is rejected). Run `am migrate import --help` for the full flag list.
+This reads the exported JSONL file and sends its records to your Atomic Memory project, where each one is written into that project's memory store with its original content intact — it isn't re-summarized or re-extracted on the way in. The command reports how many records were imported, skipped, and failed. `--mode merge` is the default and the only mode the current CLI supports (`--mode replace-scope` is rejected). Run `am migrate import --help` for the full flag list.
 
 ## What actually moves
 
@@ -42,7 +42,7 @@ Open your Cloud project in the console under **Memories** and confirm the migrat
 
 ## Related docs
 
--   [Add Hosted Cloud](/cloud/quickstart) — create the Cloud project you're migrating into
--   [AtomicMemory CLI](/cloud/cli) — full command reference, including migration
+-   [Add Atomic Memory](/cloud/quickstart) — create the Cloud project you're migrating into
+-   [Atomic Memory CLI](/cloud/cli) — full command reference, including migration
 -   [Project Settings](/cloud/how-to/settings) — where a Cloud project's own data export lives
 -   [Troubleshooting](/cloud/troubleshooting) — Core and Cloud connection problems

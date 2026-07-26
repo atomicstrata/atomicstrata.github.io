@@ -2,11 +2,11 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-`@atomicmemory/llmwiki` connects AtomicMemory to [llm-wiki-compiler](https://github.com/atomicstrata/llm-wiki-compiler) (llmwiki), which compiles raw sources into an interlinked markdown wiki. Unlike the single-client Mem0 and Hindsight backends, the llmwiki integration is **three distinct paths** - pick by what you need:
+`@atomicmemory/llmwiki` connects Open Source to [llm-wiki-compiler](https://github.com/atomicstrata/llm-wiki-compiler) (llmwiki), which compiles raw sources into an interlinked markdown wiki. Unlike the single-client Mem0 and Hindsight backends, the llmwiki integration is **three distinct paths** - pick by what you need:
 
 | Path | What it does | Writable? |
 | --- | --- | --- |
-| **Import** (CLI bridge) | One-time import of a `wiki.json` export into your existing AtomicMemory backend as verbatim records | via your backend |
+| **Import** (CLI bridge) | One-time import of a `wiki.json` export into your existing Open Source backend as verbatim records | via your backend |
 | **`SnapshotLLMWikiProvider`** | Serve a `wiki.json` export directly as a read-only memory provider - no runtime store at all | No |
 | **`LiveLLMWikiProvider`** | Drive a live llmwiki project as a memory provider: ingest stores llmwiki *sources*, `compile()` rebuilds the wiki | Yes |
 

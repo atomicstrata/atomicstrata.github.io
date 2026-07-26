@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory's storage layer is exposed as a family of **narrow, domain-facing store interfaces**, not a monolithic "repository" that every service has to import. Each consumer sees only the methods it actually uses, and every seam is a plain TypeScript interface you can re-implement against your own backend.
+Open Source's storage layer is exposed as a family of **narrow, domain-facing store interfaces**, not a monolithic "repository" that every service has to import. Each consumer sees only the methods it actually uses, and every seam is a plain TypeScript interface you can re-implement against your own backend.
 
 That is the point of the platform layer: the engine's business logic depends on `MemoryStore`, `SearchStore`, `ClaimStore`, `EntityStore`, `EpisodeStore`, and friends, never on a Postgres pool. If you want to run the same services on a different database, a different vector backend, or an in-memory mock for tests, you implement the interfaces. Nothing above the store layer changes.
 
@@ -212,7 +212,7 @@ export class PgMemoryStore implements MemoryStore {
 Because the store is an interface, **you can implement it any way you want**:
 
 -   An in-memory Map for tests.
--   An HTTP adapter that forwards calls to a remote Atomicmemory service.
+-   An HTTP adapter that forwards calls to a remote Open Source service.
 -   A SQLite-backed implementation for a single-user desktop install.
 -   A composed store that reads from one backend and writes to another (for migrations or replication).
 
@@ -254,7 +254,7 @@ Two details worth calling out:
 
 ## Compose-your-own-stack
 
-This is the AtomicMemory platform thesis. You should be able to:
+This is the Open Source platform thesis. You should be able to:
 
 -   Keep `PgMemoryStore` and replace `PgSearchStore` with one that talks to a managed vector DB.
 -   Keep the write path and swap `SearchStore` for a hybrid store that fans out to multiple backends.

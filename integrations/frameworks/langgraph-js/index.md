@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory provides LangGraph node factories that add durable retrieval and ingest beside graph-scoped checkpointers.
+Atomic Memory provides LangGraph node factories that add durable retrieval and ingest beside graph-scoped checkpointers.
 
 ## Deployment targets
 

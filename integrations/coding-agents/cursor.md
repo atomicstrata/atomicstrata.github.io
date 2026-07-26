@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-AtomicMemory supports Cursor today through a local MCP integration and Cursor rules.
+Atomic Memory supports Cursor today through a local MCP integration and Cursor rules.
 
 ## Available today: Local
 

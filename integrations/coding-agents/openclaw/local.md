@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Give OpenClaw persistent, cross-channel memory backed by AtomicMemory. The plugin embeds the shared AtomicMemory MCP server in-process, registers four memory tools, and ships a skill bundle that teaches agents when to search, ingest, and write deterministic session snapshots.
+Give OpenClaw persistent, cross-channel memory backed by Open Source. The plugin embeds the shared Atomic Memory MCP server in-process, registers four memory tools, and ships a skill bundle that teaches agents when to search, ingest, and write deterministic session snapshots.
 
 Already ran am init?
 
@@ -10,7 +10,7 @@ Already ran am init?
 
 ## Quick start
 
-### 1. Start AtomicMemory core
+### 1. Start Core
 
 Start local core first. It should be reachable at `http://127.0.0.1:17350`.
 
@@ -54,7 +54,7 @@ openclaw gateway restart
 -   **Permission-aware skill.** The skill declares network and credential permissions without filesystem or shell access.
 -   **Four memory tools.** The plugin exposes `memory_search`, `memory_ingest`, `memory_package`, and `memory_list`, backed by the shared MCP server embedded in-process.
 -   **Local defaults.** Local `apiUrl`, local quickstart auth, and user scope are inferred when omitted.
--   **Backend-agnostic SDK path.** Provider selection uses the AtomicMemory SDK provider registry.
+-   **Backend-agnostic SDK path.** Provider selection uses the Atomic Memory SDK provider registry.
 
 ## Modes of operation
 
@@ -75,7 +75,7 @@ OpenClaw memory capture is prompt/tool driven. Agents search before answering wh
 
 ## Configuration
 
-For local AtomicMemory core, plugin config is optional. The embedded MCP server defaults to `http://127.0.0.1:17350`, uses the local quickstart key for that URL, and derives `scope.user` from the local machine user.
+For local Core, plugin config is optional. The embedded MCP server defaults to `http://127.0.0.1:17350`, uses the local quickstart key for that URL, and derives `scope.user` from the local machine user.
 
 Add config only when you need explicit scoping or a non-default provider:
 
@@ -93,7 +93,7 @@ Add config only when you need explicit scoping or a non-default provider:
 
 OpenClaw passes optional plugin config from `openclaw.plugin.json` into the provider. Set `scope.user` only when the local machine user is not the right channel-agnostic memory identity. Set `apiKey` only when your allowed local service uses a non-default bearer key.
 
-The shipped skill manifest allows only the local AtomicMemory core origins listed below. Do not point this plugin at a remote service unless your OpenClaw administrator also updates and revalidates the plugin skill permissions.
+The shipped skill manifest allows only the local Core origins listed below. Do not point this plugin at a remote service unless your OpenClaw administrator also updates and revalidates the plugin skill permissions.
 
 For local plugin development, install from a checkout instead:
 
@@ -107,8 +107,8 @@ openclaw plugins install -l ./plugins/openclaw
 
 | Field | Purpose |
 | --- | --- |
-| `provider` | AtomicMemory SDK provider name. |
-| `apiUrl` | Optional provider base URL. Defaults to local AtomicMemory core for `provider: "atomicmemory"`. The shipped skill manifest allows `http://127.0.0.1:17350` and `http://localhost:17350`. |
+| `provider` | Atomic Memory SDK provider name. |
+| `apiUrl` | Optional provider base URL. Defaults to local Core for `provider: "atomicmemory"`. The shipped skill manifest allows `http://127.0.0.1:17350` and `http://localhost:17350`. |
 | `apiKey` | Optional bearer credential. Omit it for the default local core; provide it for an allowed local service with a non-default key. |
 | `scope.user` | Stable user identity shared across OpenClaw channels. Defaults to the local machine user. |
 | `scope.agent` | Agent identity. |
@@ -126,7 +126,7 @@ openclaw plugins install -l ./plugins/openclaw
 
 ## Memory Protocol Skill
 
-OpenClaw's AtomicMemory skill guides agents to:
+OpenClaw's Open Source skill guides agents to:
 
 -   Search before answering when prior context may matter.
 -   Store durable facts, preferences, decisions, and conventions.

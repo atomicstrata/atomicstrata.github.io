@@ -19,7 +19,7 @@
 
 **Organization** - opens your organization profile to manage members and roles.
 
-**Data** (Cloud projects only) - export every memory and trace for the project as JSONL. This is a one-way backup/download of that Cloud project's own data - it's different from the `am migrate export`/`am migrate import` CLI workflow, which moves memories *from* a Local project *into* a Cloud project. See [Migrate to Hosted Cloud](/cloud/how-to/migrate) if you're looking for that instead.
+**Data** (Cloud projects only) - export every memory and trace for the project as JSONL. This is a one-way backup/download of that Cloud project's own data - it's different from the `am migrate export`/`am migrate import` CLI workflow, which moves memories *from* a Local project *into* a Cloud project. See [Migrate to Atomic Memory](/cloud/how-to/migrate) if you're looking for that instead.
 
 **Danger zone** - delete the project. For a **Cloud** project this permanently removes its managed memories and traces along with the project itself. For a **Local** project, deletion removes the project from the console only - it does not stop your independently running Core or delete anything stored there.
 
@@ -43,4 +43,4 @@ Success looks like: after you rename a project, the new name shows up in the das
 -   [Projects](/cloud/how-to/projects)
 -   [Billing](/cloud/how-to/billing)
 -   [API Keys](/cloud/how-to/api-keys)
--   [Migrate to Hosted Cloud](/cloud/how-to/migrate) — bring a Local project's memories into a Cloud project
+-   [Migrate to Atomic Memory](/cloud/how-to/migrate) — bring a Local project's memories into a Cloud project
