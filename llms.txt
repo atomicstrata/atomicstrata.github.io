@@ -11,7 +11,6 @@
 ## Atomic Memory
 
 - [Authentication](https://docs.atomicstrata.ai/cloud/authentication.md): Atomic Memory and Core each authenticate requests differently.
-- [CLI](https://docs.atomicstrata.ai/cloud/cli.md): The Atomic Memory CLI (atomicmemory / am) is the primary CLI for
 - [Developer Console](https://docs.atomicstrata.ai/cloud/console.md): The Atomic Memory developer console at memory.atomicstrata.ai is a Next.js dashboard for provisioning projects, managing API keys, exploring memories, and inspecting AUDN mutation traces.
 - [Managing API Keys](https://docs.atomicstrata.ai/cloud/how-to/api-keys.md): The API Keys page issues and manages the Atomic Memory credentials your application uses to authenticate against a Cloud project's memory API.
 - [Reading the Audit Log](https://docs.atomicstrata.ai/cloud/how-to/audit-log.md): The Audit Log records the administrative actions taken on a Cloud project - key, settings, and lifecycle changes - so you can see who changed what and when.
@@ -42,7 +41,7 @@
 
 ## Open Source
 
-- [Open Source CLI (npm)](https://docs.atomicstrata.ai/cli.md): @atomicmemory/cli is the Node.js command line for direct self-hosted core
+- [CLI](https://docs.atomicstrata.ai/cli.md): Atomic Memory ships two command-line tools.
 - [Open Source vs Atomic Memory](https://docs.atomicstrata.ai/cloud-vs-open-source.md): Atomic Memory runs in three modes backed by the same engine.
 - [Core-only Docker](https://docs.atomicstrata.ai/core-only-docker.md): Run Core on your machine with Docker and HTTP — no Cloud account,
 - [Overview](https://docs.atomicstrata.ai/open-source/overview.md): Atomic Memory Open Source is the self-hosted alternative.

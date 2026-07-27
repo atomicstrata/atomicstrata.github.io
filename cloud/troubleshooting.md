@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Most activation problems fall into one of the checks below. Each one gives you a symptom to recognize, a way to confirm the cause, and the recovery step — usually followed by re-running [`am doctor --smoke`](/cloud/cli#init--doctor) to confirm the fix.
+Most activation problems fall into one of the checks below. Each one gives you a symptom to recognize, a way to confirm the cause, and the recovery step — usually followed by re-running [`am doctor --smoke`](/cli#init--doctor) to confirm the fix.
 
 ## Docker isn't running
 
@@ -85,6 +85,6 @@ Success looks like: the retried call succeeds (no `401`, no cap/limit response),
 ## Related docs
 
 -   [Open Source Quickstart](/open-source/quickstart) — Connected Local activation with `am init`
--   [Atomic Memory CLI](/cloud/cli) — full command reference
+-   [Atomic Memory CLI](/cli) — full command reference
 -   [Authentication](/cloud/authentication) — which credential goes where
 -   [Migrate to Atomic Memory](/cloud/how-to/migrate) — moving memories from Local to Cloud

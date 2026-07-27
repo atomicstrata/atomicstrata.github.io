@@ -57,4 +57,4 @@ Team and Corporate plans are demo-led — [book a demo](https://atomicstrata.ai/
 
 ## Moving between them
 
-The [TypeScript SDK](/sdk/overview) and the [CLI](/cloud/cli) work identically against a local Core and an Atomic Memory project — switching is a base URL and credential change, not a code change. To copy existing local memories into a Cloud project, see [Migrate to Atomic Memory](/cloud/how-to/migrate).
+The [TypeScript SDK](/sdk/overview) and the [CLI](/cli) work identically against a local Core and an Atomic Memory project — switching is a base URL and credential change, not a code change. To copy existing local memories into a Cloud project, see [Migrate to Atomic Memory](/cloud/how-to/migrate).
