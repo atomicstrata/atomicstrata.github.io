@@ -37,7 +37,7 @@ Team and Corporate plans are demo-led — [book a demo](https://atomicstrata.ai/
 -   Memories should live on your machine while you still get inspectable ingest, search, and mutation traces.
 -   You are evaluating, developing locally, or running a single-developer workflow.
 
-→ [Quickstart](/quickstart)
+→ [Open Source Quickstart](/open-source/quickstart)
 
 ## Add Atomic Memory when
 
@@ -45,7 +45,7 @@ Team and Corporate plans are demo-led — [book a demo](https://atomicstrata.ai/
 -   You want a managed endpoint without operating Postgres and Core yourself.
 -   You are ready to point production traffic at `https://api.atomicstrata.ai` with a project API key.
 
-→ [Add Atomic Memory](/cloud/quickstart)
+→ [Quickstart](/quickstart)
 
 ## Choose Core-only Docker when
 

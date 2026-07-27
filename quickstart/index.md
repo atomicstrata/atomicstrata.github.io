@@ -1,62 +1,82 @@
-# Quickstart
+# Quickstart: give an assistant memory
 
 > Agent index: [llms.txt](/llms.txt)
 
-**Run memory locally. See it clearly.**
+**Outcome:** store one travel preference, retrieve it in a later request, and confirm both operations in the console.
 
-Open Source keeps your memories on your machine. The Cloud console shows what Core is doing — ingest, search, and traces — without hosting your data.
+**You need:** a Node.js project and an account at [memory.atomicstrata.ai](https://memory.atomicstrata.ai). Nothing to install or operate beyond the client library.
 
-**You need:** Docker · OpenAI API key · macOS or Linux
+1.  1Create a projectGet an API key from the console.
+2.  2Remember a preferenceWrite one durable fact for a user.
+3.  3Use it laterRetrieve it and see the trace in the console.
 
-1.  1Install + init`am init` — sign in, start Core, verify
-2.  2Add a memory`am memory ingest` / `search`
-3.  3Open your dashboardruntime **Online**, memories + traces
+## 1. Create a project and get a key
 
-## 1. Install and initialize
-
-```bash
-curl -fsSL https://get.atomicstrata.ai/install.sh | sh
-source "$HOME/.atomicmemory/env"
-
-export OPENAI_API_KEY="sk-..."
-am init
-```
-
-`am init` opens a browser to sign you in, starts Core in Docker, connects your console, and verifies the memory pipeline. When it finishes, you'll see **Verified** and a link to your dashboard.
-
-Sign-in creates a free **Open Source** organization with one Connected Local project. See [Billing & plans](/cloud/how-to/billing) when you want an Atomic Memory project on the **Free** tier.
-
-Your memories stay on your machine. Connected Local sends the console a runtime heartbeat and operation traces (call type, timing, and the reconciliation decision) so the dashboard stays accurate — never your memory content.
-
-Already created a project in the console? Run `am init --project <slug>` instead.
-
-### What am init handles for you
-
--   Secure browser sign-in
--   Local Core startup on `http://127.0.0.1:17350`
--   Console connection — runtime shows **Online**
--   End-to-end memory verification
-
-For a **Connected Local** project, use **Google Chrome** when viewing it in the console — your browser needs to reach Core directly, which is more reliable in Chrome. More detail: [Atomic Memory CLI](/cloud/cli).
-
-## 2. Add your first memory
+1.  Sign in at [memory.atomicstrata.ai](https://memory.atomicstrata.ai).
+2.  Go to **Billing** → **Upgrade to Free**. Free is self-serve and costs $0.
+3.  Create a project and copy the API key (`amc_…`). It is shown once.
 
 ```bash
-am memory ingest "I ship Go backends and TypeScript frontends."
-am memory search "what stack do I use?"
+export ATOMICMEMORY_API_URL=https://api.atomicstrata.ai
+export ATOMICMEMORY_API_KEY=amc_dev_xxxxxxxxxxxxxxxx
 ```
 
-## 3. Open your dashboard
+## 2. Remember a travel preference
 
-Open the dashboard link from the CLI output — or go to [memory.atomicstrata.ai](https://memory.atomicstrata.ai). Confirm the runtime is **Online**, then browse **Memories** and **Traces**.
+Install the client:
 
-Something didn't work? Run `am doctor --smoke` to re-check the pipeline, or see [Troubleshooting](/cloud/troubleshooting) for Docker, OpenAI key, and runtime-offline recovery steps.
+```bash
+npm install @atomicmemory/sdk
+```
 
-## What's next
+Write something the assistant should know next time:
 
--   [Integrations](/integrations/overview) — wire MCP, Claude Code, Cursor, and more
--   [SDK Quickstart](/sdk/quickstart) — typed client for your app
--   [Add Atomic Memory](/cloud/quickstart) — add managed hosting when you're ready
--   [Troubleshooting](/cloud/troubleshooting) — recover from a failed `am init` or `am doctor --smoke`
+```typescript
+import { MemoryClient } from '@atomicmemory/sdk';
 
-Prefer Core without a Cloud connection? [Core-only Docker setup](/core-only-docker) runs the engine with curl — no account required.
+const memory = new MemoryClient({
+  providers: {
+    atomicmemory: {
+      apiUrl: process.env.ATOMICMEMORY_API_URL,
+      apiKey: process.env.ATOMICMEMORY_API_KEY,
+    },
+  },
+});
+
+await memory.ingest({
+  messages: [{ role: 'user', content: 'I prefer aisle seats when I fly.' }],
+  scope: { user: 'user_001' },
+});
+```
+
+The `scope` says who this memory belongs to. Every write and every read names a scope, so one user's context never leaks into another's.
+
+## 3. Retrieve it for the next task
+
+On a later request — a different conversation, a different day — ask the question that needs the preference:
+
+```typescript
+const results = await memory.search({
+  query: 'Which seat should I book?',
+  scope: { user: 'user_001' },
+});
+```
+
+Success looks like a result about the aisle-seat preference. That result is the context your application passes to a model before it answers the person.
+
+## 4. Inspect the result
+
+Open the console. Under **Memories** you see the stored content; under **Traces** you see the ingest and the search, each with its call type, timing, and reconciliation decision.
+
+Something not working? See [Troubleshooting](/cloud/troubleshooting).
+
+## What you just built
+
+You completed the smallest durable-memory loop: write a preference, retrieve it for a later request, and inspect the operations that made it happen. Next, see how scopes, corrections, and version history keep that loop safe in a real application: [How memory works](/how-memory-works).
+
+## Next steps
+
+-   [How memory works](/how-memory-works) — scopes, corrections, provenance, and lifecycle
+-   [Developer Console](/cloud/console) — traces, usage, and API keys
+-   [Authentication](/cloud/authentication) — which credential goes where
+-   [Integrations](/integrations/overview) — MCP and agent wiring

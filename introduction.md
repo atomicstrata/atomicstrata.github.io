@@ -1,68 +1,62 @@
-# Introduction
+# Atomic Memory, explained
 
 > Agent index: [llms.txt](/llms.txt)
 
-Fastest path
+An AI model can use the words in its current context window. **Memory** lets your application carry useful context into the next conversation — deliberately, within the right boundary, and with a record you can inspect later.
 
-Run memory locally in one command: the [**Quickstart**](/quickstart) installs the CLI, runs `am init`, and shows Core online in your console — free forever on the Open Source plan. See [Open Source vs Atomic Memory](/cloud-vs-open-source) for how the modes compare.
+Atomic Memory is managed memory for that job. Your application writes a fact in the right scope, retrieves it for the next task, corrects it when it changes, and can inspect every step. You call an API; there is no engine to operate.
 
-Open Source is an open-source memory engine for AI applications — semantic retrieval, AUDN mutation (Add / Update / Delete / No-op), and contradiction-safe claim versioning. Run it locally with the CLI (`am init`), self-host Core via Docker or your own stack, or add managed hosting through Atomic Memory. It is pluggable at every seam: swap the embedding provider, the LLM, the artifact-storage backend, or the scope model without forking. The engine ships as a standardized platform layer, not a framework, so your agents, assistants, and products can compose the memory stack they need.
+Start with a complete loop
 
-## Why Open Source
+The [Quickstart](/quickstart) writes a memory, retrieves it in a later request, and lets you confirm both operations in the console.
 
-AI memory is becoming a platform concern, not a product feature. Most existing options force a hosted runtime, a specific agent framework, or a proprietary query language. Open Source is designed around the opposite defaults.
+## What durable memory changes
 
-Memory is also production state. If remembered facts can change agent behavior, engineers need to inspect them, correct them, audit where they came from, and replace the parts of the system they disagree with. Most memory products optimize for recall first and expose operational control later. Open Source is built for memory you can own.
+Imagine a travel assistant. In one chat, a person says: “I prefer aisle seats when I fly.” On a later day, the person asks which seat to book. The assistant should not have to guess, or rely on an old chat still fitting in the model’s context window.
 
-| Production requirement | Open Source | mem0 | Letta | Zep |
-| --- | --- | --- | --- | --- |
-| Own the memory layer, not rent a hosted opinion | **Best fit.** Apache-2.0 engine, self-hosted by default, Postgres-backed, no required hosted control plane. | OSS plus hosted platform orientation. | Self-hosted agent runtime. | OSS plus commercial / hosted platform orientation. |
-| Inspect memory during an incident | **Best fit.** Stored content, trust, source, timestamps, mutation lineage, and audit surfaces live in inspectable engine state and ordinary Postgres. | Inspection depends on Mem0's exposed APIs and platform surfaces. | Inspection happens through the Letta agent/runtime model. | Inspection depends on the server and hosted / platform surfaces. |
-| Correct bad memory without wiping the user | **Best fit.** AUDN mutation, `SUPERSEDE`, `CLARIFY`, trust scoring, CRUD, consolidation, and decay are core domains. | Primarily memory add/search/update/delete abstraction. | Memory correction is coupled to agent state. | Memory correction is coupled to the server's memory model. |
-| Debug why retrieval behaved a certain way | **Best fit.** Search responses separate retrieval, packaging, and final context assembly in a structured observability envelope. | Logs and integrations. | Framework-dependent tracing. | Hosted / server observability. |
-| Swap internals without rewriting the product | **Best fit.** Ingest, Search, CRUD, Lifecycle, Trust, stores, embeddings, LLMs, and SDK backends are explicit typed seams. | Provider and storage choices exist, but the core pipeline is not exposed as five replaceable domains. | Customize by adopting or extending the Letta agent runtime. | Customize mostly through server configuration and supported APIs. |
-| Run deterministic local tests and benchmarks | **Best fit.** The same engine boots as production HTTP, in-process TypeScript, or ephemeral test server from `createCoreRuntime`. | Possible, but not the primary product shape. | Possible inside the Letta framework. | Server-oriented; less suited to per-test composition. |
-| Keep app code portable across memory engines | **Best fit.** The TypeScript SDK routes through `MemoryProvider`, so apps can compare Open Source, Mem0, or custom backends behind one interface. | You integrate with Mem0's SDK/API. | You integrate with Letta's agent/runtime abstractions. | You integrate with Zep's server/API model. |
+Memory gives the application a deliberate path between those moments:
 
-Sources for third-party positioning: [Mem0 OSS overview](https://docs.mem0.ai/open-source/overview), [Letta intro](https://docs.letta.com/guides/get-started/intro), [Zep overview](https://help.getzep.com/overview). Open Source architecture details: [Architecture](/platform/architecture), [Composition](/platform/composition), [Scope](/platform/scope), [Observability](/platform/observability).
+How one preference becomes durable memory — and changes safely over time.
 
-The pitch is not "we do more." It is: the seams are explicit, the contracts are stable, and you compose your own stack.
+1.  **1\. Conversation**“I prefer aisle seats when I fly.”
+2.  **2\. Scope**Keep it with the right person: user\_001.
+3.  **3\. Mutation decision**Add, update, delete, or leave the record unchanged.
+4.  **4\. Durable memory**Seat preference: aisle
+5.  **5\. Retrieve**“Which seat should I book?”
+6.  **6\. Assistant response**“I’ll look for an aisle seat.”
 
-## Platform at a glance
+Source: chatVersion: v2Changed: just now
 
-Your code
+Earlier record**v1 · Aisle seat**
 
-App / agent
+→
 
-HTTP API or TypeScript SDK
+Corrected record**v2 · Window seat**
 
-Engine
+A correction preserves the history instead of silently overwriting it.
 
-Five domainsIngest · Search · CRUD · Lifecycle · Trust
+The diagram is a mental model, not hidden magic. Your application chooses the scope, Atomic Memory records the memory and its lineage, and retrieval returns useful context for the next model call. If the preference changes, the new record can supersede the old one without erasing the reason it changed.
 
-swappable seams
+## Three ideas to carry with you
 
-Pluggable
+### Scope keeps memory in the right place
 
-StoresPostgres + pgvector
+A **scope** is the boundary a memory belongs to. Most applications begin with a user scope: one person’s preferences should not appear in another person’s conversation. Teams can add workspace or agent boundaries as their product needs them. Learn more in [Scopes and identity](/sdk/concepts/scopes-and-identity).
 
-EmbeddingsOpenAI · Ollama · WASM · Voyage
+### Retrieval brings back only what helps
 
-LLMOpenAI · Anthropic · Ollama · …
+**Retrieval** searches the relevant scope for context that can help answer the current request. It is not a transcript dump: the point is to give the model a small, relevant starting point for the next response.
 
-Artifactspointer · FS · S3 · Filecoin
+### Provenance keeps memory accountable
 
--   **Pluggable storage**, five domain-facing store interfaces so ingest, search, CRUD, lifecycle, and trust each see only the contract they need ([stores](/platform/stores))
--   **Pluggable providers**, embeddings via openai, openai-compatible, ollama, transformers (local WASM), or voyage; LLM via openai, openai-compatible, ollama, anthropic, google, groq, Claude Code, or Codex ([providers](/platform/providers)); optional artifact storage via pointer mode, local filesystem, S3, or Filecoin ([artifact storage](/platform/artifact-storage))
--   **Explicit composition**, a single composition root wires the runtime container; no hidden singletons, no global state ([composition](/platform/composition))
--   **First-class scope**, user, workspace, and agent scopes dispatched at the request boundary, not bolted on after ([scope](/platform/scope))
--   **Observability as contract**, every search response carries a stable trace schema so dashboards and evals never break on a refactor ([observability](/platform/observability))
--   **Domain separation**, Ingest, Search, CRUD, Lifecycle, and Trust are independent domains with their own routes and services ([architecture](/platform/architecture))
+**Provenance** is the trail back to where a memory came from and how it changed. It is what lets you inspect a surprising answer, correct a bad fact, and understand which version is active.
 
-## Try it now
+## What you get
 
-The fastest path is the [Quickstart](/quickstart): install the CLI, run `am init`, and see your local Core **Online** in the console. For Core without Cloud, see [Core-only Docker](/core-only-docker).
+-   **Console visibility** — every ingest, search, and mutation writes an inspectable trace with its call type, timing, and reconciliation decision. Memory Explorer shows the actual stored content.
+-   **Portable integrations** — the same SDK, MCP tools, and HTTP API back your agents and frameworks. See [Integrations](/integrations/overview).
+-   **Nothing to operate** — no database to run, no engine to upgrade.
 
-Core is HTTP-first, so any language works today. The [TypeScript SDK](/sdk/overview) gives TypeScript and JavaScript consumers typed request and response shapes, richer ergonomics, scope-aware helpers, and a pluggable provider model that decouples your app from any particular memory engine. The Python SDK serves Python-native integrations such as Hermes. Nothing about core requires either SDK.
+## Next step
 
-Open Source is [Apache-2.0 licensed](https://github.com/atomicstrata/atomicmemory-core/blob/main/LICENSE). Self-host it, fork it, run it behind your own gateway, the platform is yours.
+Run the [Quickstart](/quickstart). You will create one memory, retrieve it, and see where to inspect it before moving on to the full [memory lifecycle](/how-memory-works).

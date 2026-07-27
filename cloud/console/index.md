@@ -16,7 +16,7 @@ New users follow a guided path:
 4.  Once the runtime reports **Online**, the console hands off to the project **Overview** — no key to create or redeem first.
 5.  Optional: upgrade to **Free** (self-serve, $0) from **Billing** to unlock one Atomic Memory project.
 
-See [Platform Quickstart](/quickstart) for the full `am init` walkthrough, then [Add Atomic Memory](/cloud/quickstart) when you want managed hosting.
+See the [Quickstart](/quickstart) for the full walkthrough, from creating a project to verifying your first memory here.
 
 ## Inside a project
 

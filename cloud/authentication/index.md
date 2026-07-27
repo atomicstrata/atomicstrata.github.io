@@ -146,8 +146,8 @@ For Cloud projects, the cloud gateway never forwards a user's API key to Open So
 
 ## Related docs
 
--   [Platform Quickstart](/quickstart) — Connected Local via `am init`
--   [Add Atomic Memory](/cloud/quickstart) — add Atomic Memory and API keys
+-   [Open Source Quickstart](/open-source/quickstart) — Connected Local via `am init`
+-   [Quickstart](/quickstart) — create a project and your first memory
 -   [Developer Console](/cloud/console) — dashboard tour
 -   [Managing API Keys](/cloud/how-to/api-keys) — create, rotate, revoke
 -   [The Dashboard](/cloud/how-to/dashboard) - project landing page and activation path

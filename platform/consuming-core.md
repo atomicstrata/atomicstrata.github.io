@@ -16,7 +16,7 @@
 | --- | --- | --- |
 | **HTTP** | `POST /v1/memories/ingest`, `POST /v1/memories/search`, etc. | Black-box integration, language-agnostic clients, extension/SDK |
 | **In-process** | `createCoreRuntime({ pool })` | TypeScript/Node code that wants no HTTP overhead |
-| **Docker** | `ghcr.io/atomicstrata/atomicmemory-core:latest` | Local evaluation, self-hosted service boundary, release validation — see [Platform Quickstart](/quickstart) or [Core-only Docker](/core-only-docker) |
+| **Docker** | `ghcr.io/atomicstrata/atomicmemory-core:latest` | Local evaluation, self-hosted service boundary, release validation — see [Open Source Quickstart](/open-source/quickstart) or [Core-only Docker](/core-only-docker) |
 
 All three are designed to converge on the same composition root (`createCoreRuntime`). A parity test, [`research-consumption-seams.test.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/app/__tests__/research-consumption-seams.test.ts), guards the main ingest/search path across modes.
 

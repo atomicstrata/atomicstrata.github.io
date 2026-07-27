@@ -40,7 +40,7 @@ export OPENAI_API_KEY="sk-..."
 am init
 ```
 
-Full walkthrough: [Platform Quickstart](/quickstart). Re-check anytime with `am doctor --smoke`. Something not working? See [Troubleshooting](/cloud/troubleshooting).
+Full walkthrough: [Open Source Quickstart](/open-source/quickstart). Re-check anytime with `am doctor --smoke`. Something not working? See [Troubleshooting](/cloud/troubleshooting).
 
 Already created a project in the console? Run `am init --project <slug>` instead.
 
@@ -88,7 +88,7 @@ am memory search "seat preference"
 am memory list
 ```
 
-Get your API key from the [developer console](https://memory.atomicstrata.ai) during onboarding or under **API Keys**. See [Add Atomic Memory](/cloud/quickstart) for the Atomic Memory add-on path.
+Get your API key from the [developer console](https://memory.atomicstrata.ai) during onboarding or under **API Keys**. See the [Quickstart](/quickstart) for the full path.
 
 ## Defaults
 
@@ -154,8 +154,8 @@ Removes binaries and PATH block. Credentials under `~/.atomicmemory/` are left i
 
 ## Related docs
 
--   [Platform Quickstart](/quickstart) — Connected Local activation
--   [Add Atomic Memory](/cloud/quickstart) — add Atomic Memory after local setup
+-   [Open Source Quickstart](/open-source/quickstart) — Connected Local activation
+-   [Quickstart](/quickstart) — create a project and your first memory
 -   [Migrate to Atomic Memory](/cloud/how-to/migrate) — move memories with `am migrate`
 -   [Troubleshooting](/cloud/troubleshooting) — recover from a failed `am init` or `am doctor --smoke`
 -   [Authentication](/cloud/authentication) — API key vs OAuth

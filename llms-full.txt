@@ -2934,7 +2934,7 @@ Source: https://docs.atomicstrata.ai/cli
 
 > Agent index: [llms.txt](/llms.txt)
 
-`@atomicmemory/cli` is the Node.js command line for direct self-hosted core workflows. It is separate from the Atomic Memory CLI (`am` from [get.atomicstrata.ai](https://get.atomicstrata.ai)) — use [Atomic Memory CLI](/cloud/cli) and the [Quickstart](/quickstart) for Connected Local activation.
+`@atomicmemory/cli` is the Node.js command line for direct self-hosted core workflows. It is separate from the Atomic Memory CLI (`am` from [get.atomicstrata.ai](https://get.atomicstrata.ai)) — use [Atomic Memory CLI](/cloud/cli) and the [Open Source Quickstart](/open-source/quickstart) for Connected Local activation.
 
 `atomicmemory` is also separate from the MCP server: `atomicmemory-mcp` is a stdio process for agent hosts, while this package is a terminal tool for setup, diagnostics, memory operations, and stable script output.
 
@@ -2972,10 +2972,10 @@ npx -y @atomicmemory/cli
 | Path | Use when | Start here |
 | --- | --- | --- |
 | Claude Code plugin | You want personal Claude Code memory with local runtime management and no separate API key for extraction. | [Claude Code Local](/integrations/coding-agents/claude-code/local) |
-| Connected Local (recommended) | You want Core on your machine with console visibility. | [Quickstart](/quickstart) via [Atomic Memory CLI](/cloud/cli) (`am init`). |
+| Connected Local (recommended) | You want Core on your machine with console visibility. | [Open Source Quickstart](/open-source/quickstart) via [Atomic Memory CLI](/cloud/cli) (`am init`). |
 | Direct CLI against local core | You run `atomicmemory-core` yourself and want npm terminal commands. | [Core-only Docker](/core-only-docker), then configure a `local` profile below. |
 | Direct CLI against a self-hosted service | Your team operates Open Source behind its own URL and token. | Configure a `self-hosted` profile below. |
-| Atomic Memory | You want managed memory hosting. | [Atomic Memory CLI](/cloud/cli) and [Add Atomic Memory](/cloud/quickstart). |
+| Atomic Memory | You want managed memory hosting. | [Atomic Memory CLI](/cloud/cli) and [Quickstart](/quickstart). |
 | Mem0 adapter | You want the CLI shape against a Mem0 backend. | Use `--provider mem0`; Open Source-only commands are capability-gated. |
 
 ## Configure
@@ -3321,7 +3321,7 @@ Team and Corporate plans are demo-led — [book a demo](https://atomicstrata.ai/
 -   Memories should live on your machine while you still get inspectable ingest, search, and mutation traces.
 -   You are evaluating, developing locally, or running a single-developer workflow.
 
-→ [Quickstart](/quickstart)
+→ [Open Source Quickstart](/open-source/quickstart)
 
 ## Add Atomic Memory when
 
@@ -3329,7 +3329,7 @@ Team and Corporate plans are demo-led — [book a demo](https://atomicstrata.ai/
 -   You want a managed endpoint without operating Postgres and Core yourself.
 -   You are ready to point production traffic at `https://api.atomicstrata.ai` with a project API key.
 
-→ [Add Atomic Memory](/cloud/quickstart)
+→ [Quickstart](/quickstart)
 
 ## Choose Core-only Docker when
 
@@ -3497,8 +3497,8 @@ For Cloud projects, the cloud gateway never forwards a user's API key to Open So
 
 ## Related docs
 
--   [Platform Quickstart](/quickstart) — Connected Local via `am init`
--   [Add Atomic Memory](/cloud/quickstart) — add Atomic Memory and API keys
+-   [Open Source Quickstart](/open-source/quickstart) — Connected Local via `am init`
+-   [Quickstart](/quickstart) — create a project and your first memory
 -   [Developer Console](/cloud/console) — dashboard tour
 -   [Managing API Keys](/cloud/how-to/api-keys) — create, rotate, revoke
 -   [The Dashboard](/cloud/how-to/dashboard) - project landing page and activation path
@@ -3551,7 +3551,7 @@ export OPENAI_API_KEY="sk-..."
 am init
 ```
 
-Full walkthrough: [Platform Quickstart](/quickstart). Re-check anytime with `am doctor --smoke`. Something not working? See [Troubleshooting](/cloud/troubleshooting).
+Full walkthrough: [Open Source Quickstart](/open-source/quickstart). Re-check anytime with `am doctor --smoke`. Something not working? See [Troubleshooting](/cloud/troubleshooting).
 
 Already created a project in the console? Run `am init --project <slug>` instead.
 
@@ -3599,7 +3599,7 @@ am memory search "seat preference"
 am memory list
 ```
 
-Get your API key from the [developer console](https://memory.atomicstrata.ai) during onboarding or under **API Keys**. See [Add Atomic Memory](/cloud/quickstart) for the Atomic Memory add-on path.
+Get your API key from the [developer console](https://memory.atomicstrata.ai) during onboarding or under **API Keys**. See the [Quickstart](/quickstart) for the full path.
 
 ## Defaults
 
@@ -3665,8 +3665,8 @@ Removes binaries and PATH block. Credentials under `~/.atomicmemory/` are left i
 
 ## Related docs
 
--   [Platform Quickstart](/quickstart) — Connected Local activation
--   [Add Atomic Memory](/cloud/quickstart) — add Atomic Memory after local setup
+-   [Open Source Quickstart](/open-source/quickstart) — Connected Local activation
+-   [Quickstart](/quickstart) — create a project and your first memory
 -   [Migrate to Atomic Memory](/cloud/how-to/migrate) — move memories with `am migrate`
 -   [Troubleshooting](/cloud/troubleshooting) — recover from a failed `am init` or `am doctor --smoke`
 -   [Authentication](/cloud/authentication) — API key vs OAuth
@@ -3696,7 +3696,7 @@ New users follow a guided path:
 4.  Once the runtime reports **Online**, the console hands off to the project **Overview** — no key to create or redeem first.
 5.  Optional: upgrade to **Free** (self-serve, $0) from **Billing** to unlock one Atomic Memory project.
 
-See [Platform Quickstart](/quickstart) for the full `am init` walkthrough, then [Add Atomic Memory](/cloud/quickstart) when you want managed hosting.
+See the [Quickstart](/quickstart) for the full walkthrough, from creating a project to verifying your first memory here.
 
 ## Inside a project
 
@@ -4019,8 +4019,8 @@ Already running a **Local** project? `am migrate export` and `am migrate import`
 ## Prerequisites
 
 -   Your Organization is on **Free** or higher. Cloud import requires Free or higher — Open Source doesn't unlock an Atomic Memory project to import into. See [Plans & Billing](/cloud/how-to/billing).
--   Your Local Core is running and connected (`am init` completed — see the [Platform Quickstart](/quickstart)). `am migrate export` reads directly from your live Core and creates the JSONL transfer file at export time — it's not a backup file you maintain yourself ahead of time.
--   A **Cloud** project already exists to import into — create one from [Add Atomic Memory](/cloud/quickstart) if you haven't yet.
+-   Your Local Core is running and connected (`am init` completed — see the [Open Source Quickstart](/open-source/quickstart)). `am migrate export` reads directly from your live Core and creates the JSONL transfer file at export time — it's not a backup file you maintain yourself ahead of time.
+-   A **Cloud** project already exists to import into — create one from the [Quickstart](/quickstart) if you haven't yet.
 
 ## Export from your Local project
 
@@ -4054,7 +4054,7 @@ Open your Cloud project in the console under **Memories** and confirm the migrat
 
 ## Related docs
 
--   [Add Atomic Memory](/cloud/quickstart) — create the Cloud project you're migrating into
+-   [Quickstart](/quickstart) — create the managed project you're migrating into
 -   [Atomic Memory CLI](/cloud/cli) — full command reference, including migration
 -   [Project Settings](/cloud/how-to/settings) — where a Cloud project's own data export lives
 -   [Troubleshooting](/cloud/troubleshooting) — Core and Cloud connection problems
@@ -4343,159 +4343,6 @@ Search reads from this same reconciled state, so what you see on the Memories pa
 
 ---
 
-## Overview
-
-Source: https://docs.atomicstrata.ai/cloud/overview
-
-# Atomic Memory
-
-> Agent index: [llms.txt](/llms.txt)
-
-**Run memory on your own machine. See exactly what it's doing. Add managed hosting only when you need it.**
-
-Atomic Memory pairs the **Open Source Core** engine with a developer console: Core stores and retrieves memories, and the console gives you inspectable ingest, search, and mutation traces without requiring you to host anything. The console labels the two project types **Local** and **Cloud**; this page calls them **Connected Local** (Core running on your machine, connected to the console) and **Atomic Memory** (fully managed hosting) before using the shorter labels.
-
-**→ [Start the Quickstart](/quickstart)** — Connected Local in one command, free forever.  
-Ready for shared or hosted access later? [Add Atomic Memory](/cloud/quickstart). Something not working? [Troubleshooting](/cloud/troubleshooting).
-
-## Why teams start here
-
--   **Local ownership** — memories live in Core, on your machine. Nothing leaves your infrastructure unless you choose to add hosting.
--   **Console visibility** — every ingest, search, and mutation writes an inspectable trace with its call type, timing, and reconciliation decision; open Memory Explorer to see the actual stored content.
--   **Portable integrations** — the same CLI, SDK, and MCP tools work whether Core runs on your laptop or behind a managed endpoint.
-
-## The Connected Local journey
-
-Three steps, one command to start:
-
-1.  **Install and run `am init`** — signs you in, starts Core in Docker, and connects your console project.
-2.  **Add a memory** — `am memory ingest` and `am memory search` round-trip through your local Core.
-3.  **Confirm it in the console** — the runtime shows **Online**, and your memory appears under **Memories** with a matching trace.
-
-Success looks like: the CLI prints **Verified**, and the console shows the runtime **Online** with your memory listed.
-
-Full walkthrough: [Platform Quickstart](/quickstart).
-
-## Local vs Cloud
-
-| Outcome | Local project | \+ Cloud project |
-| --- | --- | --- |
-| Where memories live | Your machine, via Core | Atomic Memory-managed hosting — your existing Local project's memories stay on your machine, unaffected |
-| Console visibility | Runtime status, memories, traces | Same, plus a managed project space |
-| Setup | `am init` | Upgrade to Free, then create a Cloud project |
-| Good for | Evaluating, local dev, air-gapped work | Shared access without operating infrastructure |
-
-The console labels these **Local** and **Cloud** projects — the shorter names used in this table and for the rest of the page.
-
-## Plans at a glance
-
--   **Open Source** — free forever. One Connected Local project, full console visibility, no Atomic Memory project.
--   **Free** — a self-serve $0 upgrade. Keeps your Local project and unlocks one Atomic Memory project.
-
-See [Plans & Billing](/cloud/how-to/billing) for details.
-
-## Explore the console
-
--   [Developer Console](/cloud/console) — dashboard tour
--   [Memories](/cloud/how-to/what-is-memories) — inspect everything stored
--   [Traces](/cloud/how-to/traces) — ingest, search, and mutation history
--   [Playground](/cloud/how-to/playground) — try ingest and search interactively
--   [Integrations](/integrations/overview) — MCP, SDKs, and coding agents
-
-## Advanced
-
--   [Authentication](/cloud/authentication) — credential model and deployment details
--   [Atomic Memory CLI](/cloud/cli) — full command reference
--   [Core architecture](/platform/architecture) — how the engine is composed
--   [Core-only Docker](/core-only-docker) — run Core without a Cloud connection
-
----
-
-## Add Atomic Memory
-
-Source: https://docs.atomicstrata.ai/cloud/quickstart
-
-# Add Atomic Memory
-
-> Agent index: [llms.txt](/llms.txt)
-
-Add **Atomic Memory** — managed memory hosting — after your local Core is running. This page depends on the [Platform Quickstart](/quickstart): run `am init` first if you have not already.
-
-**Console:** [memory.atomicstrata.ai](https://memory.atomicstrata.ai)  
-**API:** `https://api.atomicstrata.ai`
-
-1.  1Upgrade to FreeConsole → Billing
-2.  2Create Cloud projectcopy the one-time `amc_…` key
-3.  3Ingest + search`am memory ingest`
-4.  4Verify in consoleMemories + Traces
-
-## Prerequisites
-
--   Completed [Platform Quickstart](/quickstart) — Connected Local via `am init`
--   Upgrade to **Free** in the console (self-serve, $0): **Billing** → **Upgrade to Free**. Free keeps your Local project and unlocks one Atomic Memory project.
-
-## Add Atomic Memory
-
-1.  Console → **Billing** → **Upgrade to Free**
-2.  Create an **Atomic Memory** project and copy the one-time API key (`amc_…`)
-3.  Ingest and search from anywhere:
-
-```bash
-export ATOMICMEMORY_API_URL=https://api.atomicstrata.ai
-export ATOMICMEMORY_API_KEY=amc_dev_xxxxxxxxxxxxxxxx
-
-am memory ingest "I prefer aisle seats when flying."
-am memory search "seat preference"
-```
-
-## Success state
-
-Open the console under **Memories**. Your ingested memory appears there, with a matching trace under **Traces**. That confirms the Atomic Memory project is receiving traffic.
-
-## SDK alternative
-
-```bash
-npm install @atomicmemory/sdk
-```
-
-```typescript
-import { MemoryClient } from '@atomicmemory/sdk';
-
-const memory = new MemoryClient({
-  providers: {
-    atomicmemory: {
-      apiUrl: 'https://api.atomicstrata.ai',
-      apiKey: process.env.ATOMICMEMORY_API_KEY,
-    },
-  },
-});
-
-await memory.ingest({
-  messages: [{ role: 'user', content: 'I prefer aisle seats when flying.' }],
-  scope: { user: 'user_001' },
-});
-
-const results = await memory.search({
-  query: 'seat preference',
-  scope: { user: 'user_001' },
-});
-```
-
-## Moving existing local memories
-
-Already have memories in your Connected Local project? `am migrate export` and `am migrate import` move them into your new Atomic Memory project. See [Migrate to Atomic Memory](/cloud/how-to/migrate) for prerequisites, the memory-only scope, safe re-run behavior, and how to verify the result in the console.
-
-## What's next
-
--   [Developer Console](/cloud/console) — traces, usage, API keys
--   [Migrate to Atomic Memory](/cloud/how-to/migrate) — bring existing Local memories over
--   [Authentication](/cloud/authentication) — which credential goes where
--   [Integrations](/integrations/overview) — MCP and agent wiring
-
-Something not working? See [Troubleshooting](/cloud/troubleshooting).
-
----
-
 ## Troubleshooting
 
 Source: https://docs.atomicstrata.ai/cloud/troubleshooting
@@ -4518,7 +4365,7 @@ Most activation problems fall into one of the checks below. Each one gives you a
 
 **Symptom:** `am init` fails early, before Core finishes starting.
 
-**Check:** The [Platform Quickstart](/quickstart) requires an OpenAI API key in the same shell you run `am init` from — Core uses it for embeddings and extraction. Confirm it's exported: `echo $OPENAI_API_KEY`.
+**Check:** The [Open Source Quickstart](/open-source/quickstart) requires an OpenAI API key in the same shell you run `am init` from — Core uses it for embeddings and extraction. Confirm it's exported: `echo $OPENAI_API_KEY`.
 
 **Recovery:**
 
@@ -4551,7 +4398,7 @@ Success looks like `am init` continuing past Core startup to sign-in and verific
 
 **Check:** Which browser you're using. A Local project's Core must be reachable directly from your browser at `http://127.0.0.1:17350` by default — the console (served over HTTPS) calls it directly rather than proxying through Cloud. Safari's stricter handling of that kind of local-network request is the most common cause of this symptom.
 
-**Recovery:** Use **Google Chrome** for Connected Local console views, as called out in the [Quickstart](/quickstart). This only affects Local projects — Cloud projects don't depend on a locally reachable Core and aren't affected.
+**Recovery:** Use **Google Chrome** for Connected Local console views, as called out in the [Open Source Quickstart](/open-source/quickstart). This only affects Local projects — Cloud projects don't depend on a locally reachable Core and aren't affected.
 
 Success looks like: the same console pages load fully in Chrome and the runtime confirms **Online**.
 
@@ -4586,7 +4433,7 @@ Success looks like: the retried call succeeds (no `401`, no cap/limit response),
 
 ## Related docs
 
--   [Platform Quickstart](/quickstart) — Connected Local activation with `am init`
+-   [Open Source Quickstart](/open-source/quickstart) — Connected Local activation with `am init`
 -   [Atomic Memory CLI](/cloud/cli) — full command reference
 -   [Authentication](/cloud/authentication) — which credential goes where
 -   [Migrate to Atomic Memory](/cloud/how-to/migrate) — moving memories from Local to Cloud
@@ -5325,7 +5172,7 @@ Source: https://docs.atomicstrata.ai/core-only-docker
 
 Run Core on your machine with Docker and HTTP — no Cloud account, no `am init`, no console visibility. Use this for air-gapped evaluation, CI, or when you want full control of the container yourself.
 
-For the recommended Open Source path with console visibility, start with the [Quickstart](/quickstart).
+For the recommended Open Source path with console visibility, start with the [Open Source Quickstart](/open-source/quickstart).
 
 **You need:** Docker · OpenAI API key
 
@@ -5416,6 +5263,105 @@ cp .env.example .env
 # edit .env, set OPENAI_API_KEY
 docker compose up -d --build
 ```
+
+---
+
+## How memory works
+
+Source: https://docs.atomicstrata.ai/how-memory-works
+
+# How memory works
+
+> Agent index: [llms.txt](/llms.txt)
+
+**Outcome:** understand what Atomic Memory stores, how it retrieves useful context, and how you correct a memory without losing its history.
+
+**Prerequisite:** finish the [Quickstart](/quickstart), or read its short write-and-retrieve loop first.
+
+## The lifecycle
+
+How one preference becomes durable memory — and changes safely over time.
+
+1.  **1\. Conversation**“I prefer aisle seats when I fly.”
+2.  **2\. Scope**Keep it with the right person: user\_001.
+3.  **3\. Mutation decision**Add, update, delete, or leave the record unchanged.
+4.  **4\. Durable memory**Seat preference: aisle
+5.  **5\. Retrieve**“Which seat should I book?”
+6.  **6\. Assistant response**“I’ll look for an aisle seat.”
+
+Source: chatVersion: v2Changed: just now
+
+Earlier record**v1 · Aisle seat**
+
+→
+
+Corrected record**v2 · Window seat**
+
+A correction preserves the history instead of silently overwriting it.
+
+Memory is a lifecycle, not a black box. Your application gives Atomic Memory an input and a boundary. The engine decides whether that input creates, changes, removes, or leaves a memory unchanged. Later, your application searches the same boundary and puts useful results into the next model interaction.
+
+## 1. Write within a scope
+
+Every memory operation belongs to a **scope**. A user scope is the common starting point: it prevents one person’s travel preference from turning up for someone else.
+
+With the TypeScript SDK, scope is part of the call:
+
+```ts
+await memory.ingest({
+  messages: [{role: 'user', content: 'I prefer aisle seats when I fly.'}],
+  scope: {user: 'user_001'},
+});
+```
+
+The scope is an application decision. Atomic Memory uses the value you provide; your authentication layer should ensure that it belongs to the signed-in person.
+
+## 2. Turn input into a durable record
+
+On ingest, Atomic Memory can make an **AUDN** decision:
+
+| Decision | Meaning |
+| --- | --- |
+| Add | Store a new useful fact. |
+| Update | Refine an existing memory. |
+| Delete | Remove a memory that should no longer participate in retrieval. |
+| No-op | Keep the current state because the new input adds nothing durable. |
+
+This prevents an application from treating every message as a permanent fact. The original input and the resulting memory can be inspected through the platform’s memory and trace surfaces.
+
+## 3. Retrieve the context that helps now
+
+Use the same scope when you search:
+
+```ts
+const results = await memory.search({
+  query: 'Which seat should I book?',
+  scope: {user: 'user_001'},
+});
+```
+
+Retrieval returns relevant memories, not an entire lifetime of conversation. Your application decides how to place those results into the model prompt or agent workflow. See the [SDK architecture](/sdk/concepts/architecture) for the client dispatch model.
+
+## 4. Correct what changed
+
+People change their minds. If the person now prefers a window seat, that new statement should replace the active preference while keeping an accountable history. Atomic Memory versions the change instead of making it impossible to answer “why did the assistant change its recommendation?”
+
+This also helps with contradictions. When two claims disagree, treat that as a memory decision to inspect and resolve, not as a reason to silently mix both facts into the next answer. The [memory history API](/api-reference/http/get-memory-history) shows the version chain for a record.
+
+## 5. Inspect and operate memory
+
+When an assistant behaves unexpectedly, follow the trail:
+
+1.  Open the stored memory and check its content, scope, and source.
+2.  Open the matching trace to see the ingest or search operation.
+3.  Correct, supersede, or delete the memory deliberately.
+4.  Search again in the same scope to verify the result.
+
+**Provenance** is that trail: where a memory came from, when it changed, and which version is active. It makes memory a piece of application state you can reason about — not a hidden prompt fragment.
+
+## Where to go next
+
+Put the lifecycle to work with the [SDK Quickstart](/sdk/quickstart), the [HTTP API](/api-reference/http/conventions), or an [integration](/integrations/overview). To watch it happen on real traffic, open the [Developer Console](/cloud/console).
 
 ---
 
@@ -7848,78 +7794,189 @@ Source lives in the public [`atomicstrata/atomicmemory`](https://github.com/atom
 
 ---
 
-## Introduction
+## Atomic Memory, explained
 
 Source: https://docs.atomicstrata.ai/introduction
 
-# Introduction
+# Atomic Memory, explained
 
 > Agent index: [llms.txt](/llms.txt)
 
-Fastest path
+An AI model can use the words in its current context window. **Memory** lets your application carry useful context into the next conversation — deliberately, within the right boundary, and with a record you can inspect later.
 
-Run memory locally in one command: the [**Quickstart**](/quickstart) installs the CLI, runs `am init`, and shows Core online in your console — free forever on the Open Source plan. See [Open Source vs Atomic Memory](/cloud-vs-open-source) for how the modes compare.
+Atomic Memory is managed memory for that job. Your application writes a fact in the right scope, retrieves it for the next task, corrects it when it changes, and can inspect every step. You call an API; there is no engine to operate.
 
-Open Source is an open-source memory engine for AI applications — semantic retrieval, AUDN mutation (Add / Update / Delete / No-op), and contradiction-safe claim versioning. Run it locally with the CLI (`am init`), self-host Core via Docker or your own stack, or add managed hosting through Atomic Memory. It is pluggable at every seam: swap the embedding provider, the LLM, the artifact-storage backend, or the scope model without forking. The engine ships as a standardized platform layer, not a framework, so your agents, assistants, and products can compose the memory stack they need.
+Start with a complete loop
 
-## Why Open Source
+The [Quickstart](/quickstart) writes a memory, retrieves it in a later request, and lets you confirm both operations in the console.
 
-AI memory is becoming a platform concern, not a product feature. Most existing options force a hosted runtime, a specific agent framework, or a proprietary query language. Open Source is designed around the opposite defaults.
+## What durable memory changes
 
-Memory is also production state. If remembered facts can change agent behavior, engineers need to inspect them, correct them, audit where they came from, and replace the parts of the system they disagree with. Most memory products optimize for recall first and expose operational control later. Open Source is built for memory you can own.
+Imagine a travel assistant. In one chat, a person says: “I prefer aisle seats when I fly.” On a later day, the person asks which seat to book. The assistant should not have to guess, or rely on an old chat still fitting in the model’s context window.
 
-| Production requirement | Open Source | mem0 | Letta | Zep |
-| --- | --- | --- | --- | --- |
-| Own the memory layer, not rent a hosted opinion | **Best fit.** Apache-2.0 engine, self-hosted by default, Postgres-backed, no required hosted control plane. | OSS plus hosted platform orientation. | Self-hosted agent runtime. | OSS plus commercial / hosted platform orientation. |
-| Inspect memory during an incident | **Best fit.** Stored content, trust, source, timestamps, mutation lineage, and audit surfaces live in inspectable engine state and ordinary Postgres. | Inspection depends on Mem0's exposed APIs and platform surfaces. | Inspection happens through the Letta agent/runtime model. | Inspection depends on the server and hosted / platform surfaces. |
-| Correct bad memory without wiping the user | **Best fit.** AUDN mutation, `SUPERSEDE`, `CLARIFY`, trust scoring, CRUD, consolidation, and decay are core domains. | Primarily memory add/search/update/delete abstraction. | Memory correction is coupled to agent state. | Memory correction is coupled to the server's memory model. |
-| Debug why retrieval behaved a certain way | **Best fit.** Search responses separate retrieval, packaging, and final context assembly in a structured observability envelope. | Logs and integrations. | Framework-dependent tracing. | Hosted / server observability. |
-| Swap internals without rewriting the product | **Best fit.** Ingest, Search, CRUD, Lifecycle, Trust, stores, embeddings, LLMs, and SDK backends are explicit typed seams. | Provider and storage choices exist, but the core pipeline is not exposed as five replaceable domains. | Customize by adopting or extending the Letta agent runtime. | Customize mostly through server configuration and supported APIs. |
-| Run deterministic local tests and benchmarks | **Best fit.** The same engine boots as production HTTP, in-process TypeScript, or ephemeral test server from `createCoreRuntime`. | Possible, but not the primary product shape. | Possible inside the Letta framework. | Server-oriented; less suited to per-test composition. |
-| Keep app code portable across memory engines | **Best fit.** The TypeScript SDK routes through `MemoryProvider`, so apps can compare Open Source, Mem0, or custom backends behind one interface. | You integrate with Mem0's SDK/API. | You integrate with Letta's agent/runtime abstractions. | You integrate with Zep's server/API model. |
+Memory gives the application a deliberate path between those moments:
 
-Sources for third-party positioning: [Mem0 OSS overview](https://docs.mem0.ai/open-source/overview), [Letta intro](https://docs.letta.com/guides/get-started/intro), [Zep overview](https://help.getzep.com/overview). Open Source architecture details: [Architecture](/platform/architecture), [Composition](/platform/composition), [Scope](/platform/scope), [Observability](/platform/observability).
+How one preference becomes durable memory — and changes safely over time.
 
-The pitch is not "we do more." It is: the seams are explicit, the contracts are stable, and you compose your own stack.
+1.  **1\. Conversation**“I prefer aisle seats when I fly.”
+2.  **2\. Scope**Keep it with the right person: user\_001.
+3.  **3\. Mutation decision**Add, update, delete, or leave the record unchanged.
+4.  **4\. Durable memory**Seat preference: aisle
+5.  **5\. Retrieve**“Which seat should I book?”
+6.  **6\. Assistant response**“I’ll look for an aisle seat.”
 
-## Platform at a glance
+Source: chatVersion: v2Changed: just now
 
-Your code
+Earlier record**v1 · Aisle seat**
 
-App / agent
+→
 
-HTTP API or TypeScript SDK
+Corrected record**v2 · Window seat**
 
-Engine
+A correction preserves the history instead of silently overwriting it.
 
-Five domainsIngest · Search · CRUD · Lifecycle · Trust
+The diagram is a mental model, not hidden magic. Your application chooses the scope, Atomic Memory records the memory and its lineage, and retrieval returns useful context for the next model call. If the preference changes, the new record can supersede the old one without erasing the reason it changed.
 
-swappable seams
+## Three ideas to carry with you
 
-Pluggable
+### Scope keeps memory in the right place
 
-StoresPostgres + pgvector
+A **scope** is the boundary a memory belongs to. Most applications begin with a user scope: one person’s preferences should not appear in another person’s conversation. Teams can add workspace or agent boundaries as their product needs them. Learn more in [Scopes and identity](/sdk/concepts/scopes-and-identity).
 
-EmbeddingsOpenAI · Ollama · WASM · Voyage
+### Retrieval brings back only what helps
 
-LLMOpenAI · Anthropic · Ollama · …
+**Retrieval** searches the relevant scope for context that can help answer the current request. It is not a transcript dump: the point is to give the model a small, relevant starting point for the next response.
 
-Artifactspointer · FS · S3 · Filecoin
+### Provenance keeps memory accountable
 
--   **Pluggable storage**, five domain-facing store interfaces so ingest, search, CRUD, lifecycle, and trust each see only the contract they need ([stores](/platform/stores))
--   **Pluggable providers**, embeddings via openai, openai-compatible, ollama, transformers (local WASM), or voyage; LLM via openai, openai-compatible, ollama, anthropic, google, groq, Claude Code, or Codex ([providers](/platform/providers)); optional artifact storage via pointer mode, local filesystem, S3, or Filecoin ([artifact storage](/platform/artifact-storage))
--   **Explicit composition**, a single composition root wires the runtime container; no hidden singletons, no global state ([composition](/platform/composition))
--   **First-class scope**, user, workspace, and agent scopes dispatched at the request boundary, not bolted on after ([scope](/platform/scope))
--   **Observability as contract**, every search response carries a stable trace schema so dashboards and evals never break on a refactor ([observability](/platform/observability))
--   **Domain separation**, Ingest, Search, CRUD, Lifecycle, and Trust are independent domains with their own routes and services ([architecture](/platform/architecture))
+**Provenance** is the trail back to where a memory came from and how it changed. It is what lets you inspect a surprising answer, correct a bad fact, and understand which version is active.
 
-## Try it now
+## What you get
 
-The fastest path is the [Quickstart](/quickstart): install the CLI, run `am init`, and see your local Core **Online** in the console. For Core without Cloud, see [Core-only Docker](/core-only-docker).
+-   **Console visibility** — every ingest, search, and mutation writes an inspectable trace with its call type, timing, and reconciliation decision. Memory Explorer shows the actual stored content.
+-   **Portable integrations** — the same SDK, MCP tools, and HTTP API back your agents and frameworks. See [Integrations](/integrations/overview).
+-   **Nothing to operate** — no database to run, no engine to upgrade.
 
-Core is HTTP-first, so any language works today. The [TypeScript SDK](/sdk/overview) gives TypeScript and JavaScript consumers typed request and response shapes, richer ergonomics, scope-aware helpers, and a pluggable provider model that decouples your app from any particular memory engine. The Python SDK serves Python-native integrations such as Hermes. Nothing about core requires either SDK.
+## Next step
 
-Open Source is [Apache-2.0 licensed](https://github.com/atomicstrata/atomicmemory-core/blob/main/LICENSE). Self-host it, fork it, run it behind your own gateway, the platform is yours.
+Run the [Quickstart](/quickstart). You will create one memory, retrieve it, and see where to inspect it before moving on to the full [memory lifecycle](/how-memory-works).
+
+---
+
+## Overview
+
+Source: https://docs.atomicstrata.ai/open-source/overview
+
+# Atomic Memory Open Source
+
+> Agent index: [llms.txt](/llms.txt)
+
+**Atomic Memory Open Source is the self-hosted alternative.** You run the Core engine yourself, on your own machine or your own infrastructure. You own the stack, the data, and every component, and you choose where each one runs.
+
+It implements the same memory model as the managed product: write a fact in the right scope, retrieve it for the next task, correct it when it changes, and inspect what happened. The difference is who operates it.
+
+Comparing hosting models?
+
+See [Cloud vs Open Source](/cloud-vs-open-source) for the side-by-side, or switch to the **Atomic Memory** tab for the managed documentation.
+
+## Start here
+
+1.  1Run the engine`am init` starts Core in Docker and verifies the pipeline.
+2.  2Write and retrieveStore one preference and search for it.
+3.  3Go deeperRead the architecture behind the engine.
+
+**→ [Open Source Quickstart](/open-source/quickstart)** — install the CLI, run `am init`, and complete the memory loop locally.
+
+## What you operate
+
+-   **Core** — the engine that stores and retrieves memories, backed by Postgres with pgvector. See [Architecture](/platform/architecture).
+-   **Stores and providers** — you choose the vector store, the embedding model, and the LLM. See [Stores](/platform/stores) and [Providers](/platform/providers).
+-   **Artifact storage** — where source material lives. See [Artifact storage](/platform/artifact-storage).
+
+## Ways to run it
+
+-   **Connected Local** — Core on your machine, connected to the console for runtime health and operation traces. Memory content stays local. This is what [the Quickstart](/open-source/quickstart) sets up.
+-   **Core-only Docker** — the engine alone, with no account and no console connection. See [Core-only Docker](/core-only-docker).
+
+## Next steps
+
+-   [Quickstart](/open-source/quickstart) — the fastest path to a working engine
+-   [How memory works](/how-memory-works) — scopes, corrections, provenance
+-   [CLI reference](/cli) — every `am` command
+-   [Cloud vs Open Source](/cloud-vs-open-source) — pick a hosting model
+
+---
+
+## Quickstart
+
+Source: https://docs.atomicstrata.ai/open-source/quickstart
+
+# Quickstart: run the engine yourself
+
+> Agent index: [llms.txt](/llms.txt)
+
+**Outcome:** run Atomic Memory Open Source locally, store one travel preference, retrieve it later, and inspect the activity in the console.
+
+**You need:** Docker, an OpenAI API key, and macOS or Linux.
+
+This guide uses the CLI’s default local scope. When your app uses the SDK or HTTP API, you provide the scope explicitly — see [How memory works](/how-memory-works).
+
+1.  1Run the engine`am init` signs in, starts Core, and verifies the pipeline.
+2.  2Remember a preference`am memory ingest` writes one durable fact.
+3.  3Use it later`am memory search` retrieves it; the console shows the trace.
+
+## 1. Install and initialize
+
+```bash
+curl -fsSL https://get.atomicstrata.ai/install.sh | sh
+source "$HOME/.atomicmemory/env"
+
+export OPENAI_API_KEY="sk-..."
+am init
+```
+
+`am init` opens a browser for secure sign-in, starts Core in Docker, connects your console, and verifies the memory pipeline. Success looks like **Verified** in the terminal and an **Online** runtime in the dashboard.
+
+Your memories remain on your machine. A Connected Local project sends runtime heartbeats and operation traces to the console so you can see that the pipeline is healthy; it does not send your memory content there.
+
+Already created a project in the console? Run `am init --project <slug>`.
+
+## 2. Remember a travel preference
+
+Tell the assistant something it should know next time:
+
+```bash
+am memory ingest "I prefer aisle seats when I fly."
+```
+
+The command writes a memory from that sentence. Keep the exact wording simple: in a real application, you would normally send a user turn or a short conversation instead.
+
+## 3. Retrieve it for the next task
+
+Ask the question that needs the preference:
+
+```bash
+am memory search "Which seat should I book?"
+```
+
+Success looks like a result about the aisle-seat preference. That result is the context your application can use before it asks a model to answer the person.
+
+## 4. Inspect the result
+
+Open the dashboard link from the CLI output, or visit [memory.atomicstrata.ai](https://memory.atomicstrata.ai). Confirm that the runtime is **Online**, then open **Memories** to see the stored content and **Traces** to see the ingest and search operations.
+
+If something fails, run `am doctor --smoke`, then use [Troubleshooting](/cloud/troubleshooting).
+
+## What you just built
+
+You completed the smallest durable-memory loop: write a preference, retrieve it for a later request, and inspect the operations that made it happen. Next, see how scopes, corrections, and version history make that loop safe in a real app: [How memory works](/how-memory-works).
+
+## Next steps
+
+-   [How memory works](/how-memory-works) — scopes, corrections, provenance, and lifecycle
+-   [SDK Quickstart](/sdk/quickstart) — add explicit scopes in TypeScript
+-   [Core-only Docker](/core-only-docker) — run the engine without a console connection
+-   [Cloud vs Open Source](/cloud-vs-open-source) — compare hosting models
 
 ---
 
@@ -8627,7 +8684,7 @@ Source: https://docs.atomicstrata.ai/platform/consuming-core
 | --- | --- | --- |
 | **HTTP** | `POST /v1/memories/ingest`, `POST /v1/memories/search`, etc. | Black-box integration, language-agnostic clients, extension/SDK |
 | **In-process** | `createCoreRuntime({ pool })` | TypeScript/Node code that wants no HTTP overhead |
-| **Docker** | `ghcr.io/atomicstrata/atomicmemory-core:latest` | Local evaluation, self-hosted service boundary, release validation — see [Platform Quickstart](/quickstart) or [Core-only Docker](/core-only-docker) |
+| **Docker** | `ghcr.io/atomicstrata/atomicmemory-core:latest` | Local evaluation, self-hosted service boundary, release validation — see [Open Source Quickstart](/open-source/quickstart) or [Core-only Docker](/core-only-docker) |
 
 All three are designed to converge on the same composition root (`createCoreRuntime`). A parity test, [`research-consumption-seams.test.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/app/__tests__/research-consumption-seams.test.ts), guards the main ingest/search path across modes.
 
@@ -10259,72 +10316,92 @@ That's what we mean by "pluggable at every seam".
 
 ---
 
-## Quickstart
+## Quickstart: give an assistant memory
 
 Source: https://docs.atomicstrata.ai/quickstart
 
-# Quickstart
+# Quickstart: give an assistant memory
 
 > Agent index: [llms.txt](/llms.txt)
 
-**Run memory locally. See it clearly.**
+**Outcome:** store one travel preference, retrieve it in a later request, and confirm both operations in the console.
 
-Open Source keeps your memories on your machine. The Cloud console shows what Core is doing — ingest, search, and traces — without hosting your data.
+**You need:** a Node.js project and an account at [memory.atomicstrata.ai](https://memory.atomicstrata.ai). Nothing to install or operate beyond the client library.
 
-**You need:** Docker · OpenAI API key · macOS or Linux
+1.  1Create a projectGet an API key from the console.
+2.  2Remember a preferenceWrite one durable fact for a user.
+3.  3Use it laterRetrieve it and see the trace in the console.
 
-1.  1Install + init`am init` — sign in, start Core, verify
-2.  2Add a memory`am memory ingest` / `search`
-3.  3Open your dashboardruntime **Online**, memories + traces
+## 1. Create a project and get a key
 
-## 1. Install and initialize
-
-```bash
-curl -fsSL https://get.atomicstrata.ai/install.sh | sh
-source "$HOME/.atomicmemory/env"
-
-export OPENAI_API_KEY="sk-..."
-am init
-```
-
-`am init` opens a browser to sign you in, starts Core in Docker, connects your console, and verifies the memory pipeline. When it finishes, you'll see **Verified** and a link to your dashboard.
-
-Sign-in creates a free **Open Source** organization with one Connected Local project. See [Billing & plans](/cloud/how-to/billing) when you want an Atomic Memory project on the **Free** tier.
-
-Your memories stay on your machine. Connected Local sends the console a runtime heartbeat and operation traces (call type, timing, and the reconciliation decision) so the dashboard stays accurate — never your memory content.
-
-Already created a project in the console? Run `am init --project <slug>` instead.
-
-### What am init handles for you
-
--   Secure browser sign-in
--   Local Core startup on `http://127.0.0.1:17350`
--   Console connection — runtime shows **Online**
--   End-to-end memory verification
-
-For a **Connected Local** project, use **Google Chrome** when viewing it in the console — your browser needs to reach Core directly, which is more reliable in Chrome. More detail: [Atomic Memory CLI](/cloud/cli).
-
-## 2. Add your first memory
+1.  Sign in at [memory.atomicstrata.ai](https://memory.atomicstrata.ai).
+2.  Go to **Billing** → **Upgrade to Free**. Free is self-serve and costs $0.
+3.  Create a project and copy the API key (`amc_…`). It is shown once.
 
 ```bash
-am memory ingest "I ship Go backends and TypeScript frontends."
-am memory search "what stack do I use?"
+export ATOMICMEMORY_API_URL=https://api.atomicstrata.ai
+export ATOMICMEMORY_API_KEY=amc_dev_xxxxxxxxxxxxxxxx
 ```
 
-## 3. Open your dashboard
+## 2. Remember a travel preference
 
-Open the dashboard link from the CLI output — or go to [memory.atomicstrata.ai](https://memory.atomicstrata.ai). Confirm the runtime is **Online**, then browse **Memories** and **Traces**.
+Install the client:
 
-Something didn't work? Run `am doctor --smoke` to re-check the pipeline, or see [Troubleshooting](/cloud/troubleshooting) for Docker, OpenAI key, and runtime-offline recovery steps.
+```bash
+npm install @atomicmemory/sdk
+```
 
-## What's next
+Write something the assistant should know next time:
 
--   [Integrations](/integrations/overview) — wire MCP, Claude Code, Cursor, and more
--   [SDK Quickstart](/sdk/quickstart) — typed client for your app
--   [Add Atomic Memory](/cloud/quickstart) — add managed hosting when you're ready
--   [Troubleshooting](/cloud/troubleshooting) — recover from a failed `am init` or `am doctor --smoke`
+```typescript
+import { MemoryClient } from '@atomicmemory/sdk';
 
-Prefer Core without a Cloud connection? [Core-only Docker setup](/core-only-docker) runs the engine with curl — no account required.
+const memory = new MemoryClient({
+  providers: {
+    atomicmemory: {
+      apiUrl: process.env.ATOMICMEMORY_API_URL,
+      apiKey: process.env.ATOMICMEMORY_API_KEY,
+    },
+  },
+});
+
+await memory.ingest({
+  messages: [{ role: 'user', content: 'I prefer aisle seats when I fly.' }],
+  scope: { user: 'user_001' },
+});
+```
+
+The `scope` says who this memory belongs to. Every write and every read names a scope, so one user's context never leaks into another's.
+
+## 3. Retrieve it for the next task
+
+On a later request — a different conversation, a different day — ask the question that needs the preference:
+
+```typescript
+const results = await memory.search({
+  query: 'Which seat should I book?',
+  scope: { user: 'user_001' },
+});
+```
+
+Success looks like a result about the aisle-seat preference. That result is the context your application passes to a model before it answers the person.
+
+## 4. Inspect the result
+
+Open the console. Under **Memories** you see the stored content; under **Traces** you see the ingest and the search, each with its call type, timing, and reconciliation decision.
+
+Something not working? See [Troubleshooting](/cloud/troubleshooting).
+
+## What you just built
+
+You completed the smallest durable-memory loop: write a preference, retrieve it for a later request, and inspect the operations that made it happen. Next, see how scopes, corrections, and version history keep that loop safe in a real application: [How memory works](/how-memory-works).
+
+## Next steps
+
+-   [How memory works](/how-memory-works) — scopes, corrections, provenance, and lifecycle
+-   [Developer Console](/cloud/console) — traces, usage, and API keys
+-   [Authentication](/cloud/authentication) — which credential goes where
+-   [Integrations](/integrations/overview) — MCP and agent wiring
 
 ---
 
@@ -12085,7 +12162,7 @@ Install, initialize, and make your first ingest and search, with `MemoryClient` 
 ## Prerequisites
 
 -   **Node.js 22+** (FOC/Filecoin storage paths require Node 24+)
--   **A running `atomicmemory-core`** at `http://localhost:17350` — start with the [Platform Quickstart](/quickstart) (`am init`) or [Core-only Docker](/core-only-docker)
+-   **A running `atomicmemory-core`** at `http://localhost:17350` — start with the [Open Source Quickstart](/open-source/quickstart) (`am init`) or [Core-only Docker](/core-only-docker)
 
 Local API key
 

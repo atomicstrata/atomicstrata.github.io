@@ -16,7 +16,7 @@ Most activation problems fall into one of the checks below. Each one gives you a
 
 **Symptom:** `am init` fails early, before Core finishes starting.
 
-**Check:** The [Platform Quickstart](/quickstart) requires an OpenAI API key in the same shell you run `am init` from — Core uses it for embeddings and extraction. Confirm it's exported: `echo $OPENAI_API_KEY`.
+**Check:** The [Open Source Quickstart](/open-source/quickstart) requires an OpenAI API key in the same shell you run `am init` from — Core uses it for embeddings and extraction. Confirm it's exported: `echo $OPENAI_API_KEY`.
 
 **Recovery:**
 
@@ -49,7 +49,7 @@ Success looks like `am init` continuing past Core startup to sign-in and verific
 
 **Check:** Which browser you're using. A Local project's Core must be reachable directly from your browser at `http://127.0.0.1:17350` by default — the console (served over HTTPS) calls it directly rather than proxying through Cloud. Safari's stricter handling of that kind of local-network request is the most common cause of this symptom.
 
-**Recovery:** Use **Google Chrome** for Connected Local console views, as called out in the [Quickstart](/quickstart). This only affects Local projects — Cloud projects don't depend on a locally reachable Core and aren't affected.
+**Recovery:** Use **Google Chrome** for Connected Local console views, as called out in the [Open Source Quickstart](/open-source/quickstart). This only affects Local projects — Cloud projects don't depend on a locally reachable Core and aren't affected.
 
 Success looks like: the same console pages load fully in Chrome and the runtime confirms **Online**.
 
@@ -84,7 +84,7 @@ Success looks like: the retried call succeeds (no `401`, no cap/limit response),
 
 ## Related docs
 
--   [Platform Quickstart](/quickstart) — Connected Local activation with `am init`
+-   [Open Source Quickstart](/open-source/quickstart) — Connected Local activation with `am init`
 -   [Atomic Memory CLI](/cloud/cli) — full command reference
 -   [Authentication](/cloud/authentication) — which credential goes where
 -   [Migrate to Atomic Memory](/cloud/how-to/migrate) — moving memories from Local to Cloud
