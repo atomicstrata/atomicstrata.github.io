@@ -57,12 +57,12 @@ Success looks like: the same console pages load fully in Chrome and the runtime 
 
 **Symptom:** You need the token that authenticates direct calls to your own Core (SDK, MCP, `curl`) — for example, to point [Playground](/cloud/how-to/playground) or another tool at your Local project — but you never set one yourself.
 
-**Check:** Did `am init` start Core for you (the common path), or are you running Core yourself via [Core-only Docker](/core-only-docker)?
+**Check:** Did `am init` start Core for you (the common path)?
 
 **Recovery:**
 
--   If `am init` set up Core: run `am instance status --show-secrets` to print the `CORE_API_KEY` it configured.
--   If you started Core yourself with the Core-only Docker default: it's `local-dev-key`, unless you set `CORE_API_KEY` explicitly on the container.
+-   Run `am instance status --show-secrets` to print the `CORE_API_KEY` it configured.
+-   If you started Core yourself and set `CORE_API_KEY` on the container, use that same value.
 
 See [Authentication → Local: Core token or `CORE_API_KEY`](/cloud/authentication#local-core-token-or-core_api_key) for how this credential is used. Never substitute a Cloud `amc_` key here — it isn't accepted by Core.
 

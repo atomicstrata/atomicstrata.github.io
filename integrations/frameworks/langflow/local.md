@@ -20,7 +20,7 @@ Already ran am init?
 
 ### 1. Start Core
 
-Start local core before starting Langflow. The default local endpoint is `http://127.0.0.1:17350`, and the [Core-only Docker](/core-only-docker) key is `local-dev-key` (or `CORE_API_KEY` after `am init`).
+Start local core before starting Langflow. The default local endpoint is `http://127.0.0.1:17350`. Prefer [Open Source Quickstart](/open-source/quickstart) (`am init`) and the `CORE_API_KEY` from `am instance status --show-secrets`. The inline `docker run` below is a minimal local alternative that uses `local-dev-key`.
 
 ```bash
 export OPENAI_API_KEY="sk-..."

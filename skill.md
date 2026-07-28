@@ -74,5 +74,4 @@ The Atomic Memory MCP server (`@atomicmemory/mcp-server`) exposes `memory_search
 
 For hosted console and managed memory, see `/cloud/overview` and
 [memory.atomicstrata.ai](https://memory.atomicstrata.ai). Open Source activation
-starts at `/quickstart` (`am init`); Core-only Docker without Cloud is at
-`/core-only-docker`.
+starts at `/open-source/quickstart` (`am init`).

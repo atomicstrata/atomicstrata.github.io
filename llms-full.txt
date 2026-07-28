@@ -3118,7 +3118,7 @@ Removes binaries and PATH block. Credentials under `~/.atomicmemory/` are left i
 
 The CLI uses the same backend-agnostic SDK provider model as the rest of Open Source. The current CLI surface supports `atomicmemory` and `mem0`. Additional SDK providers require a CLI adapter, spec, and config-schema update before they are selectable from command scripts.
 
-The npm CLI does **not** start a memory backend by itself. Direct memory commands need a configured Open Source service — usually Core from [Core-only Docker](/core-only-docker) or your own deployment. For Claude Code personal use, prefer the [Claude Code plugin](/integrations/coding-agents/claude-code/local): it installs the MCP server, skill, hooks, and auto-managed local runtime for you.
+The npm CLI does **not** start a memory backend by itself. Direct memory commands need a configured Open Source service — usually Core from the [Open Source Quickstart](/open-source/quickstart) or your own deployment. For Claude Code personal use, prefer the [Claude Code plugin](/integrations/coding-agents/claude-code/local): it installs the MCP server, skill, hooks, and auto-managed local runtime for you.
 
 ### What you get
 
@@ -3151,14 +3151,14 @@ npx -y @atomicmemory/cli
 | --- | --- | --- |
 | Claude Code plugin | You want personal Claude Code memory with local runtime management and no separate API key for extraction. | [Claude Code Local](/integrations/coding-agents/claude-code/local) |
 | Connected Local (recommended) | You want Core on your machine with console visibility. | [Open Source Quickstart](/open-source/quickstart) via the `am` section above (`am init`). |
-| Direct CLI against local core | You run `atomicmemory-core` yourself and want npm terminal commands. | [Core-only Docker](/core-only-docker), then configure a `local` profile below. |
+| Direct CLI against local core | You run `atomicmemory-core` yourself and want npm terminal commands. | [Open Source Quickstart](/open-source/quickstart), then configure a `local` profile below. |
 | Direct CLI against a self-hosted service | Your team operates Open Source behind its own URL and token. | Configure a `self-hosted` profile below. |
 | Atomic Memory | You want managed memory hosting. | the `am` section above and [Quickstart](/quickstart). |
 | Mem0 adapter | You want the CLI shape against a Mem0 backend. | Use `--provider mem0`; Open Source-only commands are capability-gated. |
 
 ### Configure
 
-Create a named local profile for a Core-only Docker deployment:
+Create a named local profile for a local Core deployment:
 
 ```bash
 printf '%s\n' 'local-dev-key' | \
@@ -3464,7 +3464,7 @@ Source: https://docs.atomicstrata.ai/cloud-vs-open-source
 
 > Agent index: [llms.txt](/llms.txt)
 
-Atomic Memory runs in three modes backed by the **same engine**. The API surface, the AUDN mutation model, the retrieval pipeline, and the observability envelope are identical — what differs is where Core runs and what the console can see.
+Atomic Memory runs in two modes backed by the **same engine**. The API surface, the AUDN mutation model, the retrieval pipeline, and the observability envelope are identical — what differs is where Core runs and what the console can see.
 
 Start with **Connected Local** unless you have a specific reason not to.
 
@@ -3478,18 +3478,16 @@ Add when needed
 
 Atomic Memorymanaged hosting, shared access, one project on Free
 
-Prefer the engine with no account at all? [Core-only Docker](/core-only-docker) runs Core with curl — no console, no sign-in.
-
 ## At a glance
 
-|  | **Connected Local** | **Atomic Memory** | **Core-only Docker** |
-| --- | --- | --- | --- |
-| **Setup** | `am init` — one command | Upgrade to Free, create a Cloud project | `docker run` + curl |
-| **Where memories live** | Your machine, in Core | Atomic Memory-managed hosting | Your machine |
-| **Console** | Runtime status, memories, operation traces | Same, for the managed project | None |
-| **Account** | Sign-in creates a free Open Source org | Free tier ($0 self-serve upgrade) | Not required |
-| **Good for** | Evaluating, local dev, day-to-day use | Shared access without operating infrastructure | Air-gapped work, CI, no-console automation |
-| **Plan** | Open Source — free forever, one Local project | Free — keeps your Local project, adds one Cloud project | n/a |
+|  | **Connected Local** | **Atomic Memory** |
+| --- | --- | --- |
+| **Setup** | `am init` — one command | Upgrade to Free, create a Cloud project |
+| **Where memories live** | Your machine, in Core | Atomic Memory-managed hosting |
+| **Console** | Runtime status, memories, operation traces | Same, for the managed project |
+| **Account** | Sign-in creates a free Open Source org | Free tier ($0 self-serve upgrade) |
+| **Good for** | Evaluating, local dev, day-to-day use | Shared access without operating infrastructure |
+| **Plan** | Open Source — free forever, one Local project | Free — keeps your Local project, adds one Cloud project |
 
 Team and Corporate plans are demo-led — [book a demo](https://atomicstrata.ai/demo) for pooled usage, more projects, and governed deployments.
 
@@ -3508,14 +3506,6 @@ Team and Corporate plans are demo-led — [book a demo](https://atomicstrata.ai/
 -   You are ready to point production traffic at `https://api.atomicstrata.ai` with a project API key.
 
 → [Quickstart](/quickstart)
-
-## Choose Core-only Docker when
-
--   You need the engine with no account and no console — air-gapped, CI, or fully offline work.
--   You are embedding Core in your own stack and bringing your own observability.
--   You want to fork the engine, replace a store, or add a provider.
-
-→ [Core-only Docker](/core-only-docker)
 
 ## Moving between them
 
@@ -3626,7 +3616,7 @@ That prints the `CORE_API_KEY` `am init` generated for your Core. Point any SDK,
 export CORE_API_KEY="<value from am instance status --show-secrets>"
 ```
 
-`local-dev-key` is a different, fixed default — it only applies to [Core-only Docker](/core-only-docker), where you run Core yourself without `am init`. It is not what `am init` configures.
+If you run Core yourself outside `am init`, set an explicit `CORE_API_KEY` on the process and use that same value in clients.
 
 ## Dashboard session
 
@@ -4415,12 +4405,12 @@ Success looks like: the same console pages load fully in Chrome and the runtime 
 
 **Symptom:** You need the token that authenticates direct calls to your own Core (SDK, MCP, `curl`) — for example, to point [Playground](/cloud/how-to/playground) or another tool at your Local project — but you never set one yourself.
 
-**Check:** Did `am init` start Core for you (the common path), or are you running Core yourself via [Core-only Docker](/core-only-docker)?
+**Check:** Did `am init` start Core for you (the common path)?
 
 **Recovery:**
 
--   If `am init` set up Core: run `am instance status --show-secrets` to print the `CORE_API_KEY` it configured.
--   If you started Core yourself with the Core-only Docker default: it's `local-dev-key`, unless you set `CORE_API_KEY` explicitly on the container.
+-   Run `am instance status --show-secrets` to print the `CORE_API_KEY` it configured.
+-   If you started Core yourself and set `CORE_API_KEY` on the container, use that same value.
 
 See [Authentication → Local: Core token or `CORE_API_KEY`](/cloud/authentication#local-core-token-or-core_api_key) for how this credential is used. Never substitute a Cloud `amc_` key here — it isn't accepted by Core.
 
@@ -5168,110 +5158,6 @@ Stakeholders see exactly what the assistant remembers - scoped and read-only - w
 ## Get started
 
 Point a `/share/memories` link at your memory endpoint, add `&userId=` to scope it, and send it. To understand what viewers will see, read [What is Memories](/cloud/how-to/what-is-memories); to choose which project's endpoint to expose, see [Projects](/cloud/how-to/projects).
-
----
-
-## Core-only Docker
-
-Source: https://docs.atomicstrata.ai/core-only-docker
-
-# Core-only Docker
-
-> Agent index: [llms.txt](/llms.txt)
-
-Run Core on your machine with Docker and HTTP — no Cloud account, no `am init`, no console visibility. Use this for air-gapped evaluation, CI, or when you want full control of the container yourself.
-
-For the recommended Open Source path with console visibility, start with the [Open Source Quickstart](/open-source/quickstart).
-
-**You need:** Docker · OpenAI API key
-
-## Start Core
-
-```bash
-export OPENAI_API_KEY="sk-..."
-
-docker run -d --pull always \
-  --name atomicmemory-core \
-  -p 127.0.0.1:17350:17350 \
-  -e OPENAI_API_KEY=$OPENAI_API_KEY \
-  -v $HOME/.atomicstrata/atomicmemory-docker:/var/lib/atomicmemory/postgres \
-  ghcr.io/atomicstrata/atomicmemory-core:latest
-```
-
-Core binds to `127.0.0.1:17350`. The volume mount persists Postgres data at `$HOME/.atomicstrata/atomicmemory-docker`.
-
-Local Docker runs use a default development bearer token:
-
-```text
-Authorization: Bearer local-dev-key
-```
-
-## Verify health
-
-```bash
-curl -H 'Authorization: Bearer local-dev-key' \
-  http://localhost:17350/v1/memories/health
-```
-
-Expect `"status": "ok"`.
-
-## First ingest and search
-
-```bash
-curl -X POST http://localhost:17350/v1/memories/ingest \
-  -H 'Content-Type: application/json' \
-  -H 'Authorization: Bearer local-dev-key' \
-  -d '{"user_id":"alice","conversation":"user: I ship Go backends and TypeScript frontends.","source_site":"quickstart"}'
-
-curl -X POST http://localhost:17350/v1/memories/search \
-  -H 'Content-Type: application/json' \
-  -H 'Authorization: Bearer local-dev-key' \
-  -d '{"user_id":"alice","query":"what stack does alice use?"}'
-```
-
-## Manage the container
-
-```bash
-docker logs -f atomicmemory-core
-docker stop atomicmemory-core && docker start atomicmemory-core
-```
-
-Recreate after env or image changes: `docker rm -f atomicmemory-core`, then run the `docker run` command again. Data on disk survives recreation.
-
-## Optional — npm CLI profile
-
-The Node.js [`@atomicmemory/cli`](/cli) package is separate from the Cloud `am` binary:
-
-```bash
-npm install -g @atomicmemory/cli
-
-printf '%s\n' 'local-dev-key' | \
-atomicmemory init \
-  --profile local \
-  --provider atomicmemory \
-  --api-url http://127.0.0.1:17350 \
-  --trust-surface local \
-  --user "$USER" \
-  --namespace quickstart \
-  --api-key-stdin \
-  --save-api-key
-```
-
-## Production notes
-
-Evaluation defaults are not production-ready. For production, use managed Postgres via `DATABASE_URL`, explicit `CORE_API_KEY` and `STORAGE_KEY_HMAC_SECRET`, hardened CORS, and disable runtime config mutation unless an operator intentionally enables it.
-
-## Contributor setup
-
-To hack on Core itself:
-
-```bash
-git clone https://github.com/atomicstrata/atomicmemory.git
-cd atomicmemory/packages/core
-cp .env.example .env
-# edit .env, set OPENAI_API_KEY
-docker compose up -d --build
-```
 
 ---
 
@@ -6885,7 +6771,7 @@ Already ran am init?
 
 ### 1. Start Core
 
-Start local core before starting Langflow. The default local endpoint is `http://127.0.0.1:17350`, and the [Core-only Docker](/core-only-docker) key is `local-dev-key` (or `CORE_API_KEY` after `am init`).
+Start local core before starting Langflow. The default local endpoint is `http://127.0.0.1:17350`. Prefer [Open Source Quickstart](/open-source/quickstart) (`am init`) and the `CORE_API_KEY` from `am instance status --show-secrets`. The inline `docker run` below is a minimal local alternative that uses `local-dev-key`.
 
 ```bash
 export OPENAI_API_KEY="sk-..."
@@ -7905,7 +7791,6 @@ See [Cloud vs Open Source](/cloud-vs-open-source) for the side-by-side, or switc
 ## Ways to run it
 
 -   **Connected Local** — Core on your machine, connected to the console for runtime health and operation traces. Memory content stays local. This is what [the Quickstart](/open-source/quickstart) sets up.
--   **Core-only Docker** — the engine alone, with no account and no console connection. See [Core-only Docker](/core-only-docker).
 
 ## Next steps
 
@@ -7984,7 +7869,6 @@ You completed the smallest durable-memory loop: write a preference, retrieve it 
 
 -   [How memory works](/how-memory-works) — scopes, corrections, provenance, and lifecycle
 -   [SDK Quickstart](/sdk/quickstart) — add explicit scopes in TypeScript
--   [Core-only Docker](/core-only-docker) — run the engine without a console connection
 -   [Cloud vs Open Source](/cloud-vs-open-source) — compare hosting models
 
 ---
@@ -8693,7 +8577,7 @@ Source: https://docs.atomicstrata.ai/platform/consuming-core
 | --- | --- | --- |
 | **HTTP** | `POST /v1/memories/ingest`, `POST /v1/memories/search`, etc. | Black-box integration, language-agnostic clients, extension/SDK |
 | **In-process** | `createCoreRuntime({ pool })` | TypeScript/Node code that wants no HTTP overhead |
-| **Docker** | `ghcr.io/atomicstrata/atomicmemory-core:latest` | Local evaluation, self-hosted service boundary, release validation — see [Open Source Quickstart](/open-source/quickstart) or [Core-only Docker](/core-only-docker) |
+| **Docker** | `ghcr.io/atomicstrata/atomicmemory-core:latest` | Local evaluation, self-hosted service boundary, release validation — see [Open Source Quickstart](/open-source/quickstart) |
 
 All three are designed to converge on the same composition root (`createCoreRuntime`). A parity test, [`research-consumption-seams.test.ts`](https://github.com/atomicstrata/atomicmemory-core/blob/main/src/app/__tests__/research-consumption-seams.test.ts), guards the main ingest/search path across modes.
 
@@ -11222,7 +11106,7 @@ console.log(status);
 
 For a deeper liveness check, hit the core `/v1/memories/health` endpoint directly, it returns the full config snapshot (embedding / LLM provider, thresholds).
 
-The [Core-only Docker](/core-only-docker) path uses `local-dev-key` as its default bearer token. Connected Local setups started with `am init` use `CORE_API_KEY` from `am instance status --show-secrets`. Production deployments should set an explicit `CORE_API_KEY` on core and pass the same value as `apiKey` in the SDK config.
+Connected Local setups started with `am init` use `CORE_API_KEY` from `am instance status --show-secrets`. Production deployments should set an explicit `CORE_API_KEY` on core and pass the same value as `apiKey` in the SDK config.
 
 ## One ingest, one search
 
@@ -12171,11 +12055,11 @@ Install, initialize, and make your first ingest and search, with `MemoryClient` 
 ## Prerequisites
 
 -   **Node.js 22+** (FOC/Filecoin storage paths require Node 24+)
--   **A running `atomicmemory-core`** at `http://localhost:17350` — start with the [Open Source Quickstart](/open-source/quickstart) (`am init`) or [Core-only Docker](/core-only-docker)
+-   **A running `atomicmemory-core`** at `http://localhost:17350` — start with the [Open Source Quickstart](/open-source/quickstart) (`am init`)
 
 Local API key
 
-Examples below use `local-dev-key`, the default bearer for [Core-only Docker](/core-only-docker). After `am init`, use the `CORE_API_KEY` from `am instance status --show-secrets`.
+Examples below use `local-dev-key` as a stand-in. After `am init`, use the `CORE_API_KEY` from `am instance status --show-secrets`.
 
 ## Step 1, Install
 

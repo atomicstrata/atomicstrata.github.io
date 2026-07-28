@@ -97,7 +97,7 @@ That prints the `CORE_API_KEY` `am init` generated for your Core. Point any SDK,
 export CORE_API_KEY="<value from am instance status --show-secrets>"
 ```
 
-`local-dev-key` is a different, fixed default — it only applies to [Core-only Docker](/core-only-docker), where you run Core yourself without `am init`. It is not what `am init` configures.
+If you run Core yourself outside `am init`, set an explicit `CORE_API_KEY` on the process and use that same value in clients.
 
 ## Dashboard session
 

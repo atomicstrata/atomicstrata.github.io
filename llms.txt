@@ -42,8 +42,7 @@
 ## Open Source
 
 - [CLI](https://docs.atomicstrata.ai/cli.md): Atomic Memory ships two command-line tools.
-- [Open Source vs Atomic Memory](https://docs.atomicstrata.ai/cloud-vs-open-source.md): Atomic Memory runs in three modes backed by the same engine.
-- [Core-only Docker](https://docs.atomicstrata.ai/core-only-docker.md): Run Core on your machine with Docker and HTTP — no Cloud account,
+- [Open Source vs Atomic Memory](https://docs.atomicstrata.ai/cloud-vs-open-source.md): Atomic Memory runs in two modes backed by the same engine.
 - [Overview](https://docs.atomicstrata.ai/open-source/overview.md): Atomic Memory Open Source is the self-hosted alternative.
 - [Quickstart](https://docs.atomicstrata.ai/open-source/quickstart.md): Outcome: run Atomic Memory Open Source locally, store one travel preference,
 - [Architecture](https://docs.atomicstrata.ai/platform/architecture.md): Open Source is a standardized platform layer for AI memory, not a monolithic service.

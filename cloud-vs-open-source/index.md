@@ -2,7 +2,7 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Atomic Memory runs in three modes backed by the **same engine**. The API surface, the AUDN mutation model, the retrieval pipeline, and the observability envelope are identical — what differs is where Core runs and what the console can see.
+Atomic Memory runs in two modes backed by the **same engine**. The API surface, the AUDN mutation model, the retrieval pipeline, and the observability envelope are identical — what differs is where Core runs and what the console can see.
 
 Start with **Connected Local** unless you have a specific reason not to.
 
@@ -16,18 +16,16 @@ Add when needed
 
 Atomic Memorymanaged hosting, shared access, one project on Free
 
-Prefer the engine with no account at all? [Core-only Docker](/core-only-docker) runs Core with curl — no console, no sign-in.
-
 ## At a glance
 
-|  | **Connected Local** | **Atomic Memory** | **Core-only Docker** |
-| --- | --- | --- | --- |
-| **Setup** | `am init` — one command | Upgrade to Free, create a Cloud project | `docker run` + curl |
-| **Where memories live** | Your machine, in Core | Atomic Memory-managed hosting | Your machine |
-| **Console** | Runtime status, memories, operation traces | Same, for the managed project | None |
-| **Account** | Sign-in creates a free Open Source org | Free tier ($0 self-serve upgrade) | Not required |
-| **Good for** | Evaluating, local dev, day-to-day use | Shared access without operating infrastructure | Air-gapped work, CI, no-console automation |
-| **Plan** | Open Source — free forever, one Local project | Free — keeps your Local project, adds one Cloud project | n/a |
+|  | **Connected Local** | **Atomic Memory** |
+| --- | --- | --- |
+| **Setup** | `am init` — one command | Upgrade to Free, create a Cloud project |
+| **Where memories live** | Your machine, in Core | Atomic Memory-managed hosting |
+| **Console** | Runtime status, memories, operation traces | Same, for the managed project |
+| **Account** | Sign-in creates a free Open Source org | Free tier ($0 self-serve upgrade) |
+| **Good for** | Evaluating, local dev, day-to-day use | Shared access without operating infrastructure |
+| **Plan** | Open Source — free forever, one Local project | Free — keeps your Local project, adds one Cloud project |
 
 Team and Corporate plans are demo-led — [book a demo](https://atomicstrata.ai/demo) for pooled usage, more projects, and governed deployments.
 
@@ -46,14 +44,6 @@ Team and Corporate plans are demo-led — [book a demo](https://atomicstrata.ai/
 -   You are ready to point production traffic at `https://api.atomicstrata.ai` with a project API key.
 
 → [Quickstart](/quickstart)
-
-## Choose Core-only Docker when
-
--   You need the engine with no account and no console — air-gapped, CI, or fully offline work.
--   You are embedding Core in your own stack and bringing your own observability.
--   You want to fork the engine, replace a store, or add a provider.
-
-→ [Core-only Docker](/core-only-docker)
 
 ## Moving between them
 

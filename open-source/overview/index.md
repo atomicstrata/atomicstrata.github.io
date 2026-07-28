@@ -27,7 +27,6 @@ See [Cloud vs Open Source](/cloud-vs-open-source) for the side-by-side, or switc
 ## Ways to run it
 
 -   **Connected Local** — Core on your machine, connected to the console for runtime health and operation traces. Memory content stays local. This is what [the Quickstart](/open-source/quickstart) sets up.
--   **Core-only Docker** — the engine alone, with no account and no console connection. See [Core-only Docker](/core-only-docker).
 
 ## Next steps
 

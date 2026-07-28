@@ -62,5 +62,4 @@ You completed the smallest durable-memory loop: write a preference, retrieve it 
 
 -   [How memory works](/how-memory-works) — scopes, corrections, provenance, and lifecycle
 -   [SDK Quickstart](/sdk/quickstart) — add explicit scopes in TypeScript
--   [Core-only Docker](/core-only-docker) — run the engine without a console connection
 -   [Cloud vs Open Source](/cloud-vs-open-source) — compare hosting models

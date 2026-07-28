@@ -186,7 +186,7 @@ Removes binaries and PATH block. Credentials under `~/.atomicmemory/` are left i
 
 The CLI uses the same backend-agnostic SDK provider model as the rest of Open Source. The current CLI surface supports `atomicmemory` and `mem0`. Additional SDK providers require a CLI adapter, spec, and config-schema update before they are selectable from command scripts.
 
-The npm CLI does **not** start a memory backend by itself. Direct memory commands need a configured Open Source service — usually Core from [Core-only Docker](/core-only-docker) or your own deployment. For Claude Code personal use, prefer the [Claude Code plugin](/integrations/coding-agents/claude-code/local): it installs the MCP server, skill, hooks, and auto-managed local runtime for you.
+The npm CLI does **not** start a memory backend by itself. Direct memory commands need a configured Open Source service — usually Core from the [Open Source Quickstart](/open-source/quickstart) or your own deployment. For Claude Code personal use, prefer the [Claude Code plugin](/integrations/coding-agents/claude-code/local): it installs the MCP server, skill, hooks, and auto-managed local runtime for you.
 
 ### What you get
 
@@ -219,14 +219,14 @@ npx -y @atomicmemory/cli
 | --- | --- | --- |
 | Claude Code plugin | You want personal Claude Code memory with local runtime management and no separate API key for extraction. | [Claude Code Local](/integrations/coding-agents/claude-code/local) |
 | Connected Local (recommended) | You want Core on your machine with console visibility. | [Open Source Quickstart](/open-source/quickstart) via the `am` section above (`am init`). |
-| Direct CLI against local core | You run `atomicmemory-core` yourself and want npm terminal commands. | [Core-only Docker](/core-only-docker), then configure a `local` profile below. |
+| Direct CLI against local core | You run `atomicmemory-core` yourself and want npm terminal commands. | [Open Source Quickstart](/open-source/quickstart), then configure a `local` profile below. |
 | Direct CLI against a self-hosted service | Your team operates Open Source behind its own URL and token. | Configure a `self-hosted` profile below. |
 | Atomic Memory | You want managed memory hosting. | the `am` section above and [Quickstart](/quickstart). |
 | Mem0 adapter | You want the CLI shape against a Mem0 backend. | Use `--provider mem0`; Open Source-only commands are capability-gated. |
 
 ### Configure
 
-Create a named local profile for a Core-only Docker deployment:
+Create a named local profile for a local Core deployment:
 
 ```bash
 printf '%s\n' 'local-dev-key' | \
