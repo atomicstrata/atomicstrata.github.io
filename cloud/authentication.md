@@ -27,14 +27,28 @@ Open Source Core`AM_CORE_API_KEY` only
 | I'm... | Use... | Get it from |
 | --- | --- | --- |
 | Running `am init` for the first time | Browser OAuth (PKCE) — handled automatically | The CLI opens your browser |
-| Calling the Cloud memory API (CLI, SDK, MCP, Playground) | A Cloud project API key (`amc_…`) | Console → **API Keys** |
-| Making Local memory calls against your own Core | A Core token / `CORE_API_KEY` | Your local Core instance (`am init` wires this up for you) |
+| Using `am memory *` after Hosted `am init` | Stored project API key (`amc_…`) — no export needed | Saved by `am init` in your profile |
+| Calling the Cloud memory API (SDK, MCP, Playground) | A Cloud project API key (`amc_…`) | Console → **API Keys**, or `am init` for CLI |
+| Making Local memory calls against your own Core | A Core token / `CORE_API_KEY` | Your local Core instance (`am init --local` wires this up) |
 | Signed into the console in a browser | Your dashboard session — no key needed | Automatic after sign-in |
 
 Two things trip people up:
 
 -   A Cloud `amc_` key is **never** sent to Core as the memory bearer, and a Core token is **never** valid against the Cloud memory API. They are different credentials for different surfaces.
--   Local projects still have a Cloud key, but it's used only for **heartbeat and trace sync** back to the console — never for memory calls. `am init` and `am doctor --smoke` manage it for you; you don't copy or paste it.
+-   Local projects still have a Cloud key, but it's used only for **heartbeat and trace sync** back to the console — never for memory calls. `am init --local` and `am doctor --smoke` manage it for you; you don't copy or paste it.
+-   Hosted Cloud profiles created by `am init` store the project API key locally. A stale `ATOMICMEMORY_API_KEY` in your shell is **ignored** for those init-managed profiles unless you set `ATOMICMEMORY_API_KEY_FORCE=1` for a one-off override. Hand-created Cloud profiles still honor explicit env exports.
+
+## Init-managed Hosted Cloud keys
+
+Plain `am init` (Hosted Cloud) provisions or reuses a per-installation API key named `am-cli-<12-hex>` and marks the profile `hosted_cloud_managed`. The CLI uses the stored `amc_` key for `am memory *` without requiring `export ATOMICMEMORY_API_KEY`.
+
+| Profile type | `ATOMICMEMORY_API_KEY` in shell |
+| --- | --- |
+| Init-managed Hosted (`am init` default path) | Ignored — stored key wins |
+| Hand-created Cloud profile | Honored when exported |
+| One-off override | Set `ATOMICMEMORY_API_KEY_FORCE=1` |
+
+Credentials live under the OS application support directory (macOS: `~/Library/Application Support/ai.atomicstrata.atomicmemory/`; Linux: `$XDG_CONFIG_HOME/atomicmemory/`). `~/.atomicmemory/env` is PATH activation only.
 
 ## Where do memory calls go?
 
@@ -85,19 +99,19 @@ The Playground routes to the credential for the project's type: a **Cloud** proj
 
 ## Local: Core token or CORE_API_KEY
 
-Local memory calls authenticate directly against your own Core, not the Cloud gateway. `am init` starts Core with a token already configured, so you rarely need to set this by hand — find it with:
+Local memory calls authenticate directly against your own Core, not the Cloud gateway. `am init --local` starts Core with a token already configured, so you rarely need to set this by hand — find it with:
 
 ```bash
 am instance status --show-secrets
 ```
 
-That prints the `CORE_API_KEY` `am init` generated for your Core. Point any SDK, MCP client, or curl call at your Core's URL (`http://127.0.0.1:17350` by default) with that token — not your Cloud `amc_` key.
+That prints the `CORE_API_KEY` `am init --local` generated for your Core. Point any SDK, MCP client, or curl call at your Core's URL (`http://127.0.0.1:17350` by default) with that token — not your Cloud `amc_` key.
 
 ```bash
 export CORE_API_KEY="<value from am instance status --show-secrets>"
 ```
 
-If you run Core yourself outside `am init`, set an explicit `CORE_API_KEY` on the process and use that same value in clients.
+If you run Core yourself outside `am init --local`, set an explicit `CORE_API_KEY` on the process and use that same value in clients.
 
 ## Dashboard session
 
@@ -109,10 +123,12 @@ The [Atomic Memory CLI](/cli) supports two flows:
 
 | Command | Auth | Purpose |
 | --- | --- | --- |
-| `am init` / `am auth login` | Browser OAuth (PKCE) | Sign-in, project connection, dashboard commands (`am org list`, `am key create`, …) |
-| `ATOMICMEMORY_API_KEY` env | Cloud project API key | Cloud memory operations (`am memory ingest`, `am memory search`) |
+| `am init` / `am auth login` | Browser OAuth (PKCE) | Sign-in, project connection, dashboard commands |
+| Stored profile key | Saved `amc_` key (init-managed Hosted) | `am memory ingest` / `search` after Hosted `am init` |
+| `ATOMICMEMORY_API_KEY` env | Cloud project API key | SDK, MCP, Playground, or hand-created profiles |
+| `ATOMICMEMORY_API_KEY_FORCE=1` | Forces env key over init-managed profile | One-off override |
 
-`am memory ingest`/`search` against a Cloud project don't require `am auth login` when `ATOMICMEMORY_API_KEY` is set. Against a Local project, the same commands use your local Core directly and need neither credential set manually — `am init` already wired that up.
+`am memory ingest`/`search` against a Hosted Cloud project after `am init` use the stored key — no export required. Against a Local project (`am init --local`), the same commands use your local Core directly and need neither Cloud credential set manually.
 
 ## Security reporting
 
@@ -146,7 +162,7 @@ For Cloud projects, the cloud gateway never forwards a user's API key to Open So
 
 ## Related docs
 
--   [Open Source Quickstart](/open-source/quickstart) — Connected Local via `am init`
+-   [Open Source Quickstart](/open-source/quickstart) — Connected Local via `am init --local`
 -   [Quickstart](/quickstart) — create a project and your first memory
 -   [Developer Console](/cloud/console) — dashboard tour
 -   [Managing API Keys](/cloud/how-to/api-keys) — create, rotate, revoke

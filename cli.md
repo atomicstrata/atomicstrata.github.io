@@ -2,14 +2,22 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
+Public CLI release timing
+
+These pages describe the **cloud-first** CLI (Hosted Cloud as plain `am init`, Connected Local as `am init --local`). The public installer at [get.atomicstrata.ai](https://get.atomicstrata.ai) must expose those flags before this docs revision ships.
+
+Check your binary with `am --version` and `am init --help`. If `--local` is missing (for example on public **`am` 0.2.0**), plain `am init` is still Connected Local. Follow the [Open Source Quickstart](/open-source/quickstart) using **`am init`** without `--local` until the matching release is published.
+
+Run `npm run check:public-cli` before production deploy. See [Public CLI release contract](#public-cli-release-contract). PR [CI](https://github.com/atomicstrata/am-docs-internal/actions/workflows/ci.yml) runs typecheck/build only; deploy and the [Public CLI contract](https://github.com/atomicstrata/am-docs-internal/actions/workflows/public-cli-contract.yml) workflow gate release sequencing.
+
 Atomic Memory ships two command-line tools. They are different programs for different jobs, and they are not interchangeable.
 
 | Tool | Install | Use it for |
 | --- | --- | --- |
-| **`am`** — Atomic Memory CLI | `get.atomicstrata.ai` | Sign-in, `am init`, projects, API keys, memory commands. The primary CLI. |
-| **`atomicmemory`** — Core CLI | `npm i -g @atomicmemory/cli` | Direct workflows against a self-hosted Core you run yourself. Advanced. |
+| **`am`** (Atomic Memory CLI) | `get.atomicstrata.ai` | Sign-in, `am init`, projects, API keys, memory commands, agent MCP install. The primary CLI. |
+| **`atomicmemory`** (Core CLI) | `npm i -g @atomicmemory/cli` | Legacy npm CLI. Deprecated for most workflows; still published for `import --type llmwiki` and Ink TUI power users. |
 
-Start with **`am`** unless you are driving a self-hosted Core directly and do not want an account.
+Start with **`am`**. Use the npm CLI only when you need a workflow that `am` does not cover yet.
 
 Neither is the MCP server: `atomicmemory-mcp` is a stdio process for agent hosts. See [Integrations](/integrations/overview).
 
@@ -17,22 +25,30 @@ Neither is the MCP server: `atomicmemory-mcp` is a stdio process for agent hosts
 
 ## Atomic Memory CLI (am)
 
-The **Atomic Memory CLI** (`atomicmemory` / **`am`**) is the primary CLI for both Open Source activation and Cloud operations: browser login, Connected Local setup, org/project management, API keys, and memory commands.
+The **Atomic Memory CLI** (**`am`**) is the primary CLI for Hosted Cloud and Connected Local: browser login, project management, API keys, memory commands, and agent host MCP wiring.
 
 Install from `get.atomicstrata.ai`. Defaults to `https://api.atomicstrata.ai`.
 
 Not the npm CLI
 
-This is **not** the Node.js the Core CLI section below package. The npm CLI is an advanced tool for direct self-hosted core workflows with an Ink terminal UI.
+This is **not** the Node.js `@atomicmemory/cli` package below. The npm CLI is deprecated for most workflows and remains published for legacy paths.
 
 ### Install
+
+Canonical one-liner (install + onboard):
+
+```bash
+curl --proto '=https' --tlsv1.2 -fsSL https://get.atomicstrata.ai/install.sh | sh -s -- --init
+```
+
+Install only (run `am init` yourself):
 
 ```bash
 curl -fsSL https://get.atomicstrata.ai/install.sh | sh
 source "$HOME/.atomicmemory/env"
 ```
 
-Prebuilt binaries for macOS and Linux (x86\_64 + arm64). Installs to `~/.local/bin` by default and adds the **`am`** symlink.
+Prebuilt binaries for macOS and Linux (x86\_64 + arm64). Installs to `~/.local/bin` by default and adds the **`am`** symlink. PATH activation lives in `~/.atomicmemory/env`. Credentials are stored separately (see [Defaults](#defaults) below).
 
 Pin a version:
 
@@ -46,29 +62,54 @@ Skip PATH modification:
 curl -fsSL https://get.atomicstrata.ai/install.sh | sh -s -- --no-modify-path
 ```
 
-### Connected Local — am init
+### Hosted Cloud: am init (default)
 
-The fastest Open Source path. One command signs you in, starts Core in Docker, links your console project, and verifies the memory pipeline.
+Plain `am init` defaults to **Hosted Cloud**: managed memory with no Docker or OpenAI key. The CLI signs you in, selects a Cloud project, provisions or reuses a per-installation API key (`am-cli-<12-hex>`), saves the active profile, and leaves you ready to run memory commands.
+
+```bash
+am init
+am memory ingest "I prefer aisle seats when flying."
+am memory search "seat preference"
+```
+
+Interactive `am init` offers:
+
+1.  **Hosted Cloud** (default): managed memory, no Docker
+2.  **Connected Local**: Core on this machine (`am init --local`)
+
+Non-interactive automation:
+
+```bash
+am init --yes --project <cloud-project-id>
+```
+
+With zero Cloud projects and `--yes` (or no TTY), init prints the onboarding URL and recovery command and exits nonzero. Complete onboarding in the browser, then run `am init` again.
+
+Full SDK walkthrough: [Quickstart](/quickstart). Something not working? See [Troubleshooting](/cloud/troubleshooting).
+
+### Connected Local — am init --local
+
+Run Core on your machine with console visibility. Requires Docker and an OpenAI API key:
 
 ```bash
 export OPENAI_API_KEY="sk-..."
-am init
+am init --local
 ```
 
-Full walkthrough: [Open Source Quickstart](/open-source/quickstart). Re-check anytime with `am doctor --smoke`. Something not working? See [Troubleshooting](/cloud/troubleshooting).
+Full walkthrough: [Open Source Quickstart](/open-source/quickstart). Re-check anytime with `am doctor --smoke`.
 
-Already created a project in the console? Run `am init --project <slug>` instead.
+Already created a Local project in the console? Run `am init --local --project <slug>` instead.
 
 ### Instance status
 
-Check what `am init` connected and configured, without re-running the whole setup flow:
+Check what `am init --local` connected and configured:
 
 ```bash
 am instance status
 am instance status --show-secrets
 ```
 
-`--show-secrets` is how you find the `CORE_API_KEY` `am init` configured for your Core, if you need it for a direct SDK, MCP, or `curl` call — see [Authentication → Local: Core token or `CORE_API_KEY`](/cloud/authentication#local-core-token-or-core_api_key).
+`--show-secrets` prints the `CORE_API_KEY` `am init --local` configured for your Core — see [Authentication → Local: Core token or `CORE_API_KEY`](/cloud/authentication#local-core-token-or-core_api_key).
 
 ### Migration
 
@@ -79,7 +120,79 @@ am migrate export --project <local-project-slug>
 am migrate import --file <path-to-export.jsonl> --target-project <cloud-project-slug>
 ```
 
-Memory-only — trace history doesn't move. Full walkthrough, prerequisites, and console verification: [Migrate to Atomic Memory](/cloud/how-to/migrate).
+**Export** requires an **active Connected Local profile**. Switch with `am config profile use <local-profile>` before exporting. Export fails without mutating your profile if the active profile is Hosted Cloud.
+
+**Import** sends records in chunks of 500 per request. v1 supports `--mode merge` only (the default). Imported memories merge with existing scope data; `--mode replace-scope` is rejected by the Cloud API today.
+
+Memory-only — trace history doesn't move. Full walkthrough: [Migrate to Atomic Memory](/cloud/how-to/migrate).
+
+### Agent host MCP: manual install
+
+After `am init`, wire AtomicMemory into Cursor, Claude Code, or Codex with the **manual MCP configs** in each host's integration guide. Do **not** use `am integrate` on **Hosted Cloud** in current CLI releases. See [Known product defects](#known-product-defects-am-integrate) below.
+
+Manual Hosted Cloud MCP env (set in the host config or your shell):
+
+`am init` saves a per-install CLI key for `am memory *`, but it does **not** print that secret. Create a dedicated MCP key and copy its one-time output:
+
+```bash
+am key create mcp
+export ATOMICMEMORY_API_KEY="amc_..."  # paste from "API key secret (shown once): ..."
+export ATOMICMEMORY_API_URL=https://api.atomicstrata.ai
+export ATOMICMEMORY_SCOPE_USER="you@company.com"   # stable per-person identity
+export ATOMICMEMORY_SCOPE_LOCK=true                # reject caller scope overrides
+# Do not set ATOMICMEMORY_SCOPE_NAMESPACE on Hosted Cloud today. See below.
+```
+
+Or create a key named `mcp` on the project's [API Keys](/cloud/how-to/api-keys) page and copy the one-time reveal banner into `ATOMICMEMORY_API_KEY`.
+
+Pin `@atomicmemory/mcp-server@0.1.5` in the host MCP launch args. Per-host examples: [Integrations](/integrations/overview#wire-mcp-manually).
+
+#### Known product defects (am integrate)
+
+`am integrate` exists in the CLI but is **not safe to document as a Hosted Cloud install path** until these defects are fixed in `atomicmemory-internal`:
+
+-   **Namespace asymmetry:** the generator sets `ATOMICMEMORY_SCOPE_NAMESPACE=<project_id>` and `ATOMICMEMORY_SCOPE_LOCK=true`, but ingest omits that namespace while search filters by it, so ingested facts can be invisible to recall.
+-   **Scope user lock:** the generator derives `ATOMICMEMORY_SCOPE_USER` from `$USER`, `$USERNAME`, or `default` and locks it. The documented `--scope-user` flag is rejected in the integrate subcommand position and ignored even when passed at the top level, so common OS usernames (`ubuntu`, `runner`, `default`) can collide across people in the same Hosted project.
+
+Use manual MCP with an explicit `ATOMICMEMORY_SCOPE_USER`, `ATOMICMEMORY_SCOPE_LOCK=true`, and **omit** `ATOMICMEMORY_SCOPE_NAMESPACE` on Hosted Cloud until product ships fixes.
+
+### Public CLI release contract
+
+Before production deploy, run:
+
+```bash
+npm run check:public-cli
+```
+
+That script downloads the live public binary from `get.atomicstrata.ai` and asserts `am init --help` lists standalone `--local` and `--cloud` flags.
+
+| Gate | Enforcement | Blocks |
+| --- | --- | --- |
+| **Merge (docs quality)** | [CI](https://github.com/atomicstrata/am-docs-internal/actions/workflows/ci.yml) on PRs: typecheck + build | Broken docs only |
+| **Deploy** | [Deploy](https://github.com/atomicstrata/am-docs-internal/actions/workflows/deploy.yml) on `main`: contract before Pages upload | Production until public `am` matches |
+| **Release readiness** | [Public CLI contract](https://github.com/atomicstrata/am-docs-internal/actions/workflows/public-cli-contract.yml) on `main`/`staging` push or manual dispatch | Signals CLI lag after merge; not a PR check |
+
+PR CI runs only [CI](https://github.com/atomicstrata/am-docs-internal/actions/workflows/ci.yml) (typecheck + build). The live contract check does **not** run on pull requests.
+
+**Merge when docs CI is green.** Production deploy stays blocked on `main` until `npm run check:public-cli` passes and the deploy workflow succeeds.
+
+### Diagnostics
+
+| Command | What it checks |
+| --- | --- |
+| `am doctor` | Auth preflight, connect wiring (skipped for Hosted Cloud profile), optional `--smoke` |
+| `am doctor --smoke` | End-to-end ingest → search → delete (Connected Local pipeline) |
+| `am auth doctor` | OAuth endpoints and API reachability |
+| `am connect doctor` | Local profile, login, Cloud sync key, Core health |
+| `am integrate doctor` | MCP host config vs active profile |
+
+```bash
+am doctor
+am doctor --smoke          # Connected Local round-trip
+am auth doctor
+am connect doctor          # Local only
+am integrate doctor
+```
 
 ### Dashboard commands (OAuth)
 
@@ -90,48 +203,63 @@ am overview
 
 Uses PKCE + browser — no config file required. The public OAuth `client_id` is baked into the binary.
 
-### Atomic Memory memory commands (API key)
+### Memory commands
 
-For managed hosting after upgrading to Free:
+After `am init` (Hosted Cloud), the CLI stores your project API key. You do not need to export `ATOMICMEMORY_API_KEY` for normal use:
 
 ```bash
-export ATOMICMEMORY_API_URL=https://api.atomicstrata.ai
-export ATOMICMEMORY_API_KEY=amc_dev_xxxxxxxxxxxxxxxx
-
 am memory ingest "I prefer aisle seats when flying."
 am memory search "seat preference"
 am memory list
 ```
 
-Get your API key from the [developer console](https://memory.atomicstrata.ai) during onboarding or under **API Keys**. See the [Quickstart](/quickstart) for the full path.
+Init-managed Hosted profiles ignore a stale `ATOMICMEMORY_API_KEY` in your shell. To force a one-off override, set `ATOMICMEMORY_API_KEY_FORCE=1`. For hand-created Cloud profiles or SDK/MCP clients outside the CLI, export the key from the console:
+
+```bash
+export ATOMICMEMORY_API_URL=https://api.atomicstrata.ai
+export ATOMICMEMORY_API_KEY=amc_dev_xxxxxxxxxxxxxxxx
+```
+
+See [Authentication](/cloud/authentication) and the [Quickstart](/quickstart).
 
 ### Defaults
 
 | Setting | Default |
 | --- | --- |
 | API URL | `https://api.atomicstrata.ai` |
+| Default profile | `cloud` (Hosted Cloud after plain `am init`) |
 | OAuth callback | `http://127.0.0.1:9876/callback` |
 
-Override with environment variables or `~/.atomicmemory/` credentials after `am auth login`.
+Config and credentials live under the OS application support directory:
+
+-   macOS: `~/Library/Application Support/ai.atomicstrata.atomicmemory/`
+-   Linux: `$XDG_CONFIG_HOME/atomicmemory/` (default `~/.config/atomicmemory/`)
+
+`~/.atomicmemory/env` is PATH activation only — not where API keys are stored.
+
+Override API URL with `ATOMICMEMORY_API_URL`, active profile with `ATOMICMEMORY_PROFILE`, or `am config profile use`.
 
 ### Common commands
 
-Grouped by job, not alphabetically — each group links back to the section above with the full walkthrough.
+Grouped by job — each group links back to the section above.
 
 #### Init & doctor
 
 | Command | Description |
 | --- | --- |
-| `am init` | Connected Local activation (sign-in, Core, verify) |
-| `am init --project <slug>` | Connect to an existing console project instead of creating one |
-| `am doctor --smoke` | Re-check memory pipeline |
+| `am init` | Hosted Cloud activation (default) |
+| `am init --local` | Connected Local (Docker + OpenAI) |
+| `am init --project <id-or-slug>` | Connect to an existing console project |
+| `am doctor` | Auth + wiring checks for the active profile |
+| `am doctor --smoke` | End-to-end memory round-trip (Connected Local) |
+| `am integrate doctor` | MCP host config vs active profile |
 
 #### Connect & instance
 
 | Command | Description |
 | --- | --- |
 | `am auth login` | Browser OAuth login for dashboard commands |
-| `am instance status` | Show what `am init` connected |
+| `am instance status` | Show what `am init --local` connected |
 | `am instance status --show-secrets` | Same, including the local `CORE_API_KEY` |
 
 #### Memory
@@ -154,10 +282,10 @@ Grouped by job, not alphabetically — each group links back to the section abov
 
 | Command | Description |
 | --- | --- |
-| `am overview` | Dashboard overview via your browser session — run `am overview --help` for exact scope |
+| `am overview` | Dashboard overview via your browser session |
 | `am org list` | List organizations |
 | `am project list` | List projects |
-| `am key create` | Create an API key |
+| `am key create <name>` | Create a Cloud API key; prints a one-time `amc_…` secret |
 
 ### Uninstall
 
@@ -165,28 +293,28 @@ Grouped by job, not alphabetically — each group links back to the section abov
 curl -fsSL https://get.atomicstrata.ai/install.sh | sh -s -- --uninstall
 ```
 
-Removes binaries and PATH block. Credentials under `~/.atomicmemory/` are left intact unless you purge them manually.
+Removes binaries and PATH blocks. Config and credentials in the application support directory are left intact unless you purge them manually.
 
 ### Related docs
 
--   [Open Source Quickstart](/open-source/quickstart) — Connected Local activation
--   [Quickstart](/quickstart) — create a project and your first memory
+-   [Quickstart](/quickstart) — Hosted Cloud first memory loop
+-   [Open Source Quickstart](/open-source/quickstart) — Connected Local via `am init --local`
 -   [Migrate to Atomic Memory](/cloud/how-to/migrate) — move memories with `am migrate`
--   [Troubleshooting](/cloud/troubleshooting) — recover from a failed `am init` or `am doctor --smoke`
+-   [Troubleshooting](/cloud/troubleshooting) — recover from a failed init or doctor run
 -   [Authentication](/cloud/authentication) — API key vs OAuth
--   [npm CLI (advanced)](/cli) — self-hosted core workflows without Cloud
+-   [npm CLI (legacy)](/cli#core-cli-atomicmemorycli) — advanced self-hosted workflows
 
 ---
 
 ## Core CLI (@atomicmemory/cli)
 
-`@atomicmemory/cli` is the Node.js command line for direct self-hosted core workflows. It is separate from the Atomic Memory CLI (`am` from [get.atomicstrata.ai](https://get.atomicstrata.ai)) — use the `am` section above and the [Open Source Quickstart](/open-source/quickstart) for Connected Local activation.
+`@atomicmemory/cli` is the legacy Node.js command line for direct self-hosted core workflows. **`am`** from [get.atomicstrata.ai](https://get.atomicstrata.ai) is the supported path for sign-in, `am init`, memory commands, and agent MCP install. The npm package remains published for `import --type llmwiki` and teams that rely on the Ink terminal UI.
 
 `atomicmemory` is also separate from the MCP server: `atomicmemory-mcp` is a stdio process for agent hosts, while this package is a terminal tool for setup, diagnostics, memory operations, and stable script output.
 
 The CLI uses the same backend-agnostic SDK provider model as the rest of Open Source. The current CLI surface supports `atomicmemory` and `mem0`. Additional SDK providers require a CLI adapter, spec, and config-schema update before they are selectable from command scripts.
 
-The npm CLI does **not** start a memory backend by itself. Direct memory commands need a configured Open Source service — usually Core from the [Open Source Quickstart](/open-source/quickstart) or your own deployment. For Claude Code personal use, prefer the [Claude Code plugin](/integrations/coding-agents/claude-code/local): it installs the MCP server, skill, hooks, and auto-managed local runtime for you.
+The npm CLI does **not** start a memory backend by itself. Direct memory commands need a configured Open Source service — usually Core from the [Open Source Quickstart](/open-source/quickstart) via `am init --local`, or your own deployment. For Claude Code personal use, prefer the [Claude Code plugin](/integrations/coding-agents/claude-code/local): it installs the MCP server, skill, hooks, and auto-managed local runtime for you.
 
 ### What you get
 
@@ -218,10 +346,10 @@ npx -y @atomicmemory/cli
 | Path | Use when | Start here |
 | --- | --- | --- |
 | Claude Code plugin | You want personal Claude Code memory with local runtime management and no separate API key for extraction. | [Claude Code Local](/integrations/coding-agents/claude-code/local) |
-| Connected Local (recommended) | You want Core on your machine with console visibility. | [Open Source Quickstart](/open-source/quickstart) via the `am` section above (`am init`). |
+| Connected Local (recommended) | You want Core on your machine with console visibility. | [Open Source Quickstart](/open-source/quickstart) via `am init --local`. |
 | Direct CLI against local core | You run `atomicmemory-core` yourself and want npm terminal commands. | [Open Source Quickstart](/open-source/quickstart), then configure a `local` profile below. |
 | Direct CLI against a self-hosted service | Your team operates Open Source behind its own URL and token. | Configure a `self-hosted` profile below. |
-| Atomic Memory | You want managed memory hosting. | the `am` section above and [Quickstart](/quickstart). |
+| Hosted Cloud | You want managed memory hosting. | `am init` and [Quickstart](/quickstart). |
 | Mem0 adapter | You want the CLI shape against a Mem0 backend. | Use `--provider mem0`; Open Source-only commands are capability-gated. |
 
 ### Configure
@@ -249,7 +377,7 @@ atomicmemory init \
 | `self-hosted` | Your team operates the service and owns the network boundary. |
 | `authenticated-wrapper` | A hosted or shared endpoint is protected by an authenticated wrapper. |
 
-For environment-only configuration:
+For environment-only configuration (npm **`atomicmemory`** CLI local profiles — not Hosted Cloud MCP):
 
 ```bash
 export ATOMICMEMORY_PROVIDER="atomicmemory"
@@ -264,7 +392,7 @@ Configuration precedence is:
 
 1.  CLI flags
 2.  `ATOMICMEMORY_*` environment variables
-3.  `~/.atomicmemory/config.json`
+3.  `~/.atomicmemory/config.json` (npm CLI profile file)
 4.  command defaults
 
 `atomicmemory config show` redacts saved API keys.

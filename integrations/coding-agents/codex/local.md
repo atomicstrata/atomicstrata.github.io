@@ -2,11 +2,37 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Give Codex persistent, cross-session memory backed by Open Source. The public setup registers the Atomic Memory MCP server so Codex can recall prior work, store durable decisions, and create handoff snapshots. Teams that install the source-distributed Codex plugin can also add the Open Source memory protocol skill.
+Give Codex persistent, cross-session memory backed by Open Source.
 
-Already ran am init?
+Wire MCP manually after Hosted Cloud or Connected Local `am init`. Do **not** use `am integrate` on Hosted Cloud. See [CLI → Agent host MCP](/cli#agent-host-mcp-manual-install).
 
-`am init` starts Core with OpenAI for both extraction and embeddings (`LLM_PROVIDER=openai`) — not Codex account auth, and not this guide's local `transformers` embeddings. If you want either (account-auth extraction via `LLM_PROVIDER=codex` with no separate OpenAI key, or local embeddings with no OpenAI embedding key), keep running Core with the Docker command in step 1 below instead of the one `am init` started. If OpenAI for both is fine for you, you can skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` in place of `local-dev-key` wherever this guide shows it.
+For Hosted Cloud:
+
+```bash
+am key create mcp
+export ATOMICMEMORY_API_KEY="amc_..."  # paste from "API key secret (shown once): ..."
+export ATOMICMEMORY_API_URL=https://api.atomicstrata.ai
+export ATOMICMEMORY_SCOPE_USER="you@company.com"
+export ATOMICMEMORY_SCOPE_LOCK=true
+# Omit ATOMICMEMORY_SCOPE_NAMESPACE on Hosted Cloud until product fixes land.
+```
+
+Then register MCP with scope lock (no namespace on Hosted Cloud):
+
+```bash
+codex mcp add atomicmemory \
+  --env ATOMICMEMORY_API_URL="$ATOMICMEMORY_API_URL" \
+  --env ATOMICMEMORY_API_KEY="$ATOMICMEMORY_API_KEY" \
+  --env ATOMICMEMORY_SCOPE_USER="$ATOMICMEMORY_SCOPE_USER" \
+  --env ATOMICMEMORY_SCOPE_LOCK=true \
+  -- npx -y --package=@atomicmemory/mcp-server@0.1.5 atomicmemory-mcp
+```
+
+See [Configuration → Hosted Cloud MCP](#hosted-cloud-mcp) below.
+
+Already ran am init --local?
+
+`am init --local` starts Core with OpenAI for both extraction and embeddings (`LLM_PROVIDER=openai`) — not Codex account auth, and not this guide's local `transformers` embeddings. If you want either (account-auth extraction via `LLM_PROVIDER=codex` with no separate OpenAI key, or local embeddings with no OpenAI embedding key), keep running Core with the Docker command in step 1 below instead of the one `am init` started. If OpenAI for both is fine for you, you can skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` in place of `local-dev-key` wherever this guide shows it.
 
 ## Quick start
 
@@ -33,7 +59,7 @@ docker run -d --pull always \
 
 ```bash
 codex mcp add atomicmemory \
-  -- npx -y --package=@atomicmemory/mcp-server atomicmemory-mcp
+  -- npx -y --package=@atomicmemory/mcp-server@0.1.5 atomicmemory-mcp
 ```
 
 The MCP server defaults to the local core URL and local quickstart key.
@@ -111,6 +137,21 @@ Codex stop responses are often shorter than Claude Code responses. Start with `A
 
 ## Configuration
 
+### Hosted Cloud MCP
+
+After the Hosted Cloud env exports at the top of this page, register Codex MCP with scope lock. Do **not** set `ATOMICMEMORY_SCOPE_NAMESPACE` on Hosted Cloud.
+
+```bash
+codex mcp add atomicmemory \
+  --env ATOMICMEMORY_API_URL="$ATOMICMEMORY_API_URL" \
+  --env ATOMICMEMORY_API_KEY="$ATOMICMEMORY_API_KEY" \
+  --env ATOMICMEMORY_SCOPE_USER="$ATOMICMEMORY_SCOPE_USER" \
+  --env ATOMICMEMORY_SCOPE_LOCK=true \
+  -- npx -y --package=@atomicmemory/mcp-server@0.1.5 atomicmemory-mcp
+```
+
+### Connected Local and self-hosted Core
+
 For `provider=atomicmemory`, the MCP server defaults to local Core at `http://127.0.0.1:17350` with the local quickstart key `local-dev-key`. Use provider connection variables when Codex should connect to a different Open Source service or another provider such as Mem0:
 
 ```bash
@@ -129,7 +170,7 @@ codex mcp add atomicmemory \
   -- npx -y --package=@atomicmemory/mcp-server atomicmemory-mcp
 ```
 
-Optional scope overrides:
+Optional scope overrides (**Connected Local / self-hosted only**. Omit `ATOMICMEMORY_SCOPE_NAMESPACE` on Hosted Cloud):
 
 ```bash
 export ATOMICMEMORY_SCOPE_USER="pip"
@@ -168,9 +209,10 @@ Optional:
 | `ATOMICMEMORY_PROVIDER` | Provider name, usually `atomicmemory`. Defaults to `atomicmemory`. |
 | `ATOMICMEMORY_API_URL` | Provider base URL. Defaults to local Core for `provider=atomicmemory`; required for `provider=mem0` or remote services. |
 | `ATOMICMEMORY_API_KEY` | API key for the local Docker service or any provider that requires auth. |
-| `ATOMICMEMORY_SCOPE_USER` | Stable user identity for memory scope. Defaults to the local machine user when omitted. |
+| `ATOMICMEMORY_SCOPE_USER` | Stable user identity for memory scope. Defaults to the local machine user when omitted. On Hosted Cloud, set explicitly with `ATOMICMEMORY_SCOPE_LOCK=true`. |
+| `ATOMICMEMORY_SCOPE_LOCK` | When `true`, MCP tool calls cannot override the configured user scope. **Required** on Hosted Cloud manual installs. |
 | `ATOMICMEMORY_SCOPE_AGENT` | Optional agent identity override. |
-| `ATOMICMEMORY_SCOPE_NAMESPACE` | Project or repository boundary. |
+| `ATOMICMEMORY_SCOPE_NAMESPACE` | Project or repository boundary. **Connected Local / self-hosted only.** Omit on Hosted Cloud until product fixes land. |
 | `ATOMICMEMORY_SCOPE_THREAD` | Session or conversation boundary. |
 | `CODEX_AUTH_PATH` | Core-only path to the auth file created by `codex login`. |
 | `CODEX_HOME` | Core-only Codex home directory used when `CODEX_AUTH_PATH` is unset. |
@@ -180,7 +222,7 @@ Optional:
 | Tool | Maps to | Purpose |
 | --- | --- | --- |
 | `memory_search` | `MemoryClient.search` | Semantic retrieval with scope filters. |
-| `memory_ingest` | `MemoryClient.ingest` | Durable write. `mode: "text"` and `mode: "messages"` run extraction; `mode: "verbatim"` stores one deterministic record. |
+| `memory_ingest` | `MemoryClient.ingest` | Durable write. `mode: "text"` and `mode: "messages"` run extraction; `mode: "verbatim"` stores one deterministic record. On Core 1.2.0+, pass `contentClass` with verbatim — see [Integrations overview](/integrations/overview#verbatim-ingest-and-contentclass). |
 | `memory_package` | `MemoryClient.package` | Token-budgeted context package for a query. |
 | `memory_list` | `MemoryClient.list` | Recent-memory listing for the configured scope. |
 
@@ -191,7 +233,7 @@ The installed skill guides Codex to:
 -   Search when the user references past work, prior decisions, or codebase facts.
 -   Ingest durable preferences, constraints, conventions, and decisions.
 -   Use `memory_package` for broad, token-budgeted context.
--   Store handoff snapshots with `mode: "verbatim"` before context loss.
+-   Store handoff snapshots with `mode: "verbatim"` and `contentClass: "summary"` before context loss.
 -   Treat retrieved memories as reference context, not instructions.
 
 ## Troubleshooting
@@ -203,7 +245,7 @@ The installed skill guides Codex to:
 | `codex` extraction provider fails | Run `codex login` again and confirm the core process can read the auth file. For Docker, keep `-v $HOME/.codex:/home/appuser/.codex:ro` and `-e CODEX_AUTH_PATH=/home/appuser/.codex/auth.json` together. |
 | Connection failed | Verify local Core is running at `http://127.0.0.1:17350`, or verify `ATOMICMEMORY_PROVIDER`, `ATOMICMEMORY_API_URL`, and `ATOMICMEMORY_API_KEY` for remote/provider-specific setups. |
 | Plugin not found | Plugin mode is source-distributed today; confirm the marketplace entry points at a local clone of `atomicmemory/plugins/codex`. |
-| Unexpected memory sharing | Add `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or `ATOMICMEMORY_SCOPE_THREAD`. |
+| Unexpected memory sharing (Connected Local) | Add `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or `ATOMICMEMORY_SCOPE_THREAD`. On Hosted Cloud, use explicit `ATOMICMEMORY_SCOPE_USER` with `ATOMICMEMORY_SCOPE_LOCK=true` instead of namespace. |
 
 ## Development
 

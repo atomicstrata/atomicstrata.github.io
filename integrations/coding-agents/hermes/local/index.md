@@ -4,9 +4,9 @@
 
 Give Hermes Agent persistent, cross-session memory backed by Open Source. Unlike MCP-backed coding-agent plugins, Hermes uses a native Python memory provider that participates directly in prefetch, turn sync, and shutdown hooks. The published npm installer copies the provider into your Hermes profile; the provider then uses the published Atomic Memory Python SDK from the Hermes Python environment.
 
-Already ran am init?
+Already ran am init --local?
 
-`am init`'s Core uses OpenAI for both extraction and embeddings. If you want this guide's local `transformers` embeddings (embeddings are computed locally; no embedding API calls), keep running Core with the Docker command in step 1 below. Otherwise, skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` instead of `local-dev-key`.
+`am init --local` starts Core with OpenAI for both extraction and embeddings. If you want this guide's local `transformers` embeddings (embeddings are computed locally; no embedding API calls), keep running Core with the Docker command in step 1 below. Otherwise, skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` instead of `local-dev-key`.
 
 ## Quick start
 
@@ -146,8 +146,19 @@ The published npm package is the supported distribution path for the provider it
 | --- | --- | --- |
 | `atomicmemory_search` | `MemoryClient.search` | Search Open Source by meaning. |
 | `atomicmemory_context` | `MemoryClient.package` | Build an injection-ready context package. |
-| `atomicmemory_conclude` | `MemoryClient.ingest` | Store one explicit durable fact verbatim. |
+| `atomicmemory_conclude` | `MemoryClient.ingest` | Store one explicit durable fact verbatim. **Requires** `content_class` (`summary` or `redacted` on default-policy Core; `raw` only when `RAW_CONTENT_POLICY=allow`) on plugin **0.2.0+**. |
 | `atomicmemory_profile` | `MemoryClient.list` | List recent records for the current user. |
+
+Example:
+
+```python
+atomicmemory_conclude(
+    conclusion="User prefers terse answers.",
+    content_class="summary",
+)
+```
+
+See [Integrations overview](/integrations/overview#verbatim-ingest-and-contentclass).
 
 ## Lifecycle hooks
 

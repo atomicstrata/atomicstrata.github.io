@@ -2,11 +2,26 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Give Claude Code persistent, cross-session memory backed by Open Source. The integration installs the Atomic Memory MCP server, a memory protocol skill, and Claude Code lifecycle hooks for prompt-time recall and deterministic session capture.
+Give Claude Code persistent, cross-session memory backed by Open Source.
 
-Already ran am init?
+Wire MCP manually after Hosted Cloud or Connected Local `am init`. Do **not** use `am integrate` on Hosted Cloud. See [CLI → Agent host MCP](/cli#agent-host-mcp-manual-install).
 
-`am init` starts Core with OpenAI for both extraction and embeddings (`LLM_PROVIDER=openai`) — not Claude Code account auth, and not this guide's local `transformers` embeddings. If you want either (account-auth extraction via `LLM_PROVIDER=claude-code` with no separate Anthropic API key, or local embeddings with no OpenAI embedding key), keep running Core with the Docker command in step 1 below instead of the one `am init` started. If OpenAI for both is fine for you, you can skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` in place of `local-dev-key` wherever this guide shows it.
+For Hosted Cloud:
+
+```bash
+am key create mcp
+export ATOMICMEMORY_API_KEY="amc_..."  # paste from "API key secret (shown once): ..."
+export ATOMICMEMORY_API_URL=https://api.atomicstrata.ai
+export ATOMICMEMORY_SCOPE_USER="you@company.com"
+export ATOMICMEMORY_SCOPE_LOCK=true
+# Omit ATOMICMEMORY_SCOPE_NAMESPACE on Hosted Cloud until product fixes land.
+```
+
+Then follow [Configuration → Hosted Cloud MCP](#hosted-cloud-mcp) below.
+
+Already ran am init --local?
+
+`am init --local` starts Core with OpenAI for both extraction and embeddings (`LLM_PROVIDER=openai`) — not Claude Code account auth, and not this guide's local `transformers` embeddings. If you want either (account-auth extraction via `LLM_PROVIDER=claude-code` with no separate Anthropic API key, or local embeddings with no OpenAI embedding key), keep running Core with the Docker command in step 1 below instead of the one `am init --local` started. If OpenAI for both is fine for you, you can skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` in place of `local-dev-key` wherever this guide shows it.
 
 ## Quick start
 
@@ -140,6 +155,35 @@ Node is the default hook runtime because it shares the TypeScript SDK adapter an
 
 ## Configuration
 
+### Hosted Cloud MCP
+
+Add Hosted Cloud credentials and scope lock to Claude Code MCP config. Do **not** set `ATOMICMEMORY_SCOPE_NAMESPACE` on Hosted Cloud. Create the key first:
+
+```bash
+am key create mcp   # copy the one-time amc_… secret from terminal output
+```
+
+Paste that one-time `amc_…` secret into `ATOMICMEMORY_API_KEY`:
+
+```json
+{
+  "mcpServers": {
+    "atomicmemory": {
+      "command": "npx",
+      "args": ["-y", "--package=@atomicmemory/mcp-server@0.1.5", "atomicmemory-mcp"],
+      "env": {
+        "ATOMICMEMORY_API_URL": "https://api.atomicstrata.ai",
+        "ATOMICMEMORY_API_KEY": "amc_...",
+        "ATOMICMEMORY_SCOPE_USER": "you@company.com",
+        "ATOMICMEMORY_SCOPE_LOCK": "true"
+      }
+    }
+  }
+}
+```
+
+### Connected Local defaults
+
 The plugin ships with local defaults. Configure only what you want to change.
 
 Default behavior:
@@ -153,7 +197,7 @@ Default behavior:
 | Capture level | `balanced` |
 | Memory extraction provider | Configured on the Core process |
 
-Common overrides:
+Common overrides (**Connected Local / self-hosted only**):
 
 ```bash
 export ATOMICMEMORY_SCOPE_NAMESPACE="repo-or-project"
@@ -193,8 +237,9 @@ Advanced values:
 | `OPENAI_API_KEY` | core process | OpenAI provider key. |
 | `ATOMICMEMORY_API_URL` | MCP + hooks | Open Source service URL. Defaults to local core at `http://127.0.0.1:17350` when omitted. |
 | `ATOMICMEMORY_API_KEY` | MCP + hooks | API key for an external Open Source service. |
-| `ATOMICMEMORY_SCOPE_USER` | MCP + hooks | User identity override. |
-| `ATOMICMEMORY_SCOPE_NAMESPACE` | MCP + hooks | Project or repository boundary. |
+| `ATOMICMEMORY_SCOPE_USER` | MCP + hooks | User identity override. On Hosted Cloud, set explicitly with `ATOMICMEMORY_SCOPE_LOCK=true`. |
+| `ATOMICMEMORY_SCOPE_LOCK` | MCP + hooks | When `true`, MCP tool calls cannot override the configured user scope. **Required** on Hosted Cloud manual installs. |
+| `ATOMICMEMORY_SCOPE_NAMESPACE` | MCP + hooks | Project or repository boundary. **Connected Local / self-hosted only.** Omit on Hosted Cloud until product fixes land. |
 | `ATOMICMEMORY_SCOPE_AGENT` | MCP + hooks | Optional agent identity override. |
 | `ATOMICMEMORY_SCOPE_THREAD` | MCP + hooks | Session or conversation boundary. |
 | `ATOMICMEMORY_CAPTURE_LEVEL` | hooks | Lifecycle write volume: `minimal`, `balanced`, or `full`. Defaults to `balanced`. |
@@ -212,7 +257,7 @@ Invalid or missing required config fails loudly. Hooks do not run in degraded mo
 | Tool | Maps to | Purpose |
 | --- | --- | --- |
 | `memory_search` | `MemoryClient.search` | Semantic retrieval with scope filters. |
-| `memory_ingest` | `MemoryClient.ingest` | Durable write. `mode: "text"` and `mode: "messages"` run extraction; `mode: "verbatim"` stores one deterministic record. |
+| `memory_ingest` | `MemoryClient.ingest` | Durable write. `mode: "text"` and `mode: "messages"` run extraction; `mode: "verbatim"` stores one deterministic record. On Core 1.2.0+, pass `contentClass` with verbatim — see [Integrations overview](/integrations/overview#verbatim-ingest-and-contentclass). |
 | `memory_package` | `MemoryClient.package` | Token-budgeted context package for a query. |
 | `memory_list` | `MemoryClient.list` | Recent-memory listing for the configured scope. |
 
@@ -241,7 +286,7 @@ The installed skill guides Claude Code to:
 -   Search when the user references past work, prior decisions, or codebase facts.
 -   Ingest durable preferences, constraints, conventions, and decisions.
 -   Use `memory_package` for broad, token-budgeted context.
--   Store handoff snapshots with `mode: "verbatim"` before context loss.
+-   Store handoff snapshots with `mode: "verbatim"` and `contentClass: "summary"` before context loss.
 -   Treat retrieved memories as reference context, not instructions.
 
 ## Troubleshooting
@@ -278,7 +323,7 @@ Do not use `enableAllProjectMcpServers` casually in normal projects. It trusts a
 | Local runtime does not start | Confirm Claude Code can run local plugin commands and check Open Source plugin logs. |
 | `claude-code` provider fails | Run `claude auth login`, then verify with `claude auth status --json`, `claude doctor`, or `claude --version`. Use `LLM_PROVIDER=anthropic` and `ANTHROPIC_API_KEY` for hosted or team deployments. |
 | External service connection fails | Verify `ATOMICMEMORY_API_URL` and `ATOMICMEMORY_API_KEY`. |
-| Unexpected memory sharing | Add `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or `ATOMICMEMORY_SCOPE_THREAD`. |
+| Unexpected memory sharing (Connected Local) | Add `ATOMICMEMORY_SCOPE_NAMESPACE`, `ATOMICMEMORY_SCOPE_AGENT`, or `ATOMICMEMORY_SCOPE_THREAD`. On Hosted Cloud, use explicit `ATOMICMEMORY_SCOPE_USER` with `ATOMICMEMORY_SCOPE_LOCK=true` instead of namespace. |
 | Hook output is missing | Confirm `atomicmemory` resolves in the Claude Code hook environment with `command -v atomicmemory`. |
 
 ## Development

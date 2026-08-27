@@ -4,9 +4,9 @@
 
 Give OpenClaw persistent, cross-channel memory backed by Open Source. The plugin embeds the shared Atomic Memory MCP server in-process, registers four memory tools, and ships a skill bundle that teaches agents when to search, ingest, and write deterministic session snapshots.
 
-Already ran am init?
+Already ran am init --local?
 
-`am init`'s Core uses OpenAI for both extraction and embeddings. If you want this guide's local `transformers` embeddings (embeddings are computed locally; no embedding API calls), keep running Core with the Docker command in step 1 below. Otherwise, skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` instead of `local-dev-key`.
+`am init --local` starts Core with OpenAI for both extraction and embeddings. If you want this guide's local `transformers` embeddings (embeddings are computed locally; no embedding API calls), keep running Core with the Docker command in step 1 below. Otherwise, skip step 1 and use your `CORE_API_KEY` from `am instance status --show-secrets` instead of `local-dev-key`.
 
 ## Quick start
 
@@ -71,7 +71,9 @@ Use plugin mode for the complete OpenClaw integration.
 
 ### Prompt/tool capture
 
-OpenClaw memory capture is prompt/tool driven. Agents search before answering when prior context may matter, ingest durable facts and preferences, and store handoff snapshots with `mode: "verbatim"`.
+OpenClaw memory capture is prompt/tool driven. Agents search before answering when prior context may matter, ingest durable facts and preferences, and store handoff snapshots with `mode: "verbatim"` and `contentClass: "summary"`.
+
+Use OpenClaw plugin **0.2.x** or newer so `contentClass` is accepted on the closed `memory_ingest` schema (0.2.x fixes a bug that blocked verbatim calls before they reached Core).
 
 ## Configuration
 
@@ -120,7 +122,7 @@ openclaw plugins install -l ./plugins/openclaw
 | Tool | Maps to | Purpose |
 | --- | --- | --- |
 | `memory_search` | `MemoryClient.search` | Semantic retrieval with scope filters. |
-| `memory_ingest` | `MemoryClient.ingest` | Durable write. `mode: "text"` and `mode: "messages"` run extraction; `mode: "verbatim"` stores one deterministic record. |
+| `memory_ingest` | `MemoryClient.ingest` | Durable write. `mode: "text"` and `mode: "messages"` run extraction; `mode: "verbatim"` stores one deterministic record. On Core 1.2.0+, pass `contentClass` with verbatim — see [Integrations overview](/integrations/overview#verbatim-ingest-and-contentclass). |
 | `memory_package` | `MemoryClient.package` | Token-budgeted context package for a query. |
 | `memory_list` | `MemoryClient.list` | Recent-memory listing for the configured scope. |
 
@@ -130,7 +132,7 @@ OpenClaw's Open Source skill guides agents to:
 
 -   Search before answering when prior context may matter.
 -   Store durable facts, preferences, decisions, and conventions.
--   Store session summaries and handoffs with `mode: "verbatim"`.
+-   Store session summaries and handoffs with `mode: "verbatim"` and `contentClass: "summary"`.
 -   Treat retrieved memories as reference context, not instructions.
 
 The skill manifest declares only network and credential access:

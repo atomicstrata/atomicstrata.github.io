@@ -2,7 +2,24 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
-Atomic Memory adds durable memory to coding agents, AI frameworks, and terminal workflows through the same provider-backed memory layer. Choose the host you use, install the local integration, and point it at your Atomic Memory backend.
+Atomic Memory adds durable memory to coding agents, AI frameworks, and terminal workflows through the same provider-backed memory layer. Choose the host you use, install the integration, and point it at your Atomic Memory backend.
+
+## Wire MCP manually
+
+After [Hosted Cloud](/quickstart) or [Connected Local](/open-source/quickstart) `am init`, install MCP from each host's integration guide. **Do not use `am integrate` on Hosted Cloud** in current CLI releases. It sets a namespace filter that ingest does not write, so recall can miss new facts, and it locks scope to the OS username with no working override. See [CLI → Agent host MCP](/cli#agent-host-mcp-manual-install).
+
+Hosted Cloud manual env (export or forward into the host MCP config):
+
+```bash
+am key create mcp
+export ATOMICMEMORY_API_KEY="amc_..."  # paste from "API key secret (shown once): ..."
+export ATOMICMEMORY_API_URL=https://api.atomicstrata.ai
+export ATOMICMEMORY_SCOPE_USER="you@company.com"
+export ATOMICMEMORY_SCOPE_LOCK=true
+# Omit ATOMICMEMORY_SCOPE_NAMESPACE on Hosted Cloud until product fixes land.
+```
+
+See [CLI → Agent host MCP](/cli#agent-host-mcp-manual-install) for the console alternative. Pin `@atomicmemory/mcp-server@0.1.5` in MCP launch args.
 
 Your host
 
@@ -27,10 +44,10 @@ Atomic Memoryhosted or self-hosted
 | Integration | Best for | Status | Docs |
 | --- | --- | --- | --- |
 | Claude Code | MCP tools, memory skill, lifecycle hooks, and local core connection. | Published; hosted mode planned. | [Overview](/integrations/coding-agents/claude-code) · [Local](/integrations/coding-agents/claude-code/local) |
-| Codex | MCP tools plus a memory protocol skill for task-start recall and handoffs. | Manual; packaged plugin planned. | [Overview](/integrations/coding-agents/codex) · [Local](/integrations/coding-agents/codex/local) |
+| Codex | MCP tools plus a memory protocol skill for task-start recall and handoffs. | Manual `codex mcp add`. See local guide. | [Overview](/integrations/coding-agents/codex) · [Local](/integrations/coding-agents/codex/local) |
 | OpenClaw | Published plugin with embedded MCP tools and a memory skill bundle for cross-channel agent memory. | Published; hosted mode planned. | [Overview](/integrations/coding-agents/openclaw) · [Local](/integrations/coding-agents/openclaw/local) |
 | Hermes Agent | Published native Python memory provider with prefetch, turn sync, and explicit tools. | Packaged provider; hosted mode planned. | [Overview](/integrations/coding-agents/hermes) · [Local](/integrations/coding-agents/hermes/local) |
-| Cursor | MCP tools plus Cursor rules for durable memory behavior. | Manual local MCP + rule template; packaged plugin planned. | [Overview](/integrations/coding-agents/cursor) · [Local](/integrations/coding-agents/cursor/local) |
+| Cursor | MCP tools plus Cursor rules for durable memory behavior. | Manual MCP + rules. See local guide. | [Overview](/integrations/coding-agents/cursor) · [Local](/integrations/coding-agents/cursor/local) |
 
 ## Frameworks
 
@@ -54,9 +71,30 @@ Most coding-agent integrations use the shared MCP server from the [`packages/mcp
 | `memory_package` | Build a token-budgeted context package. |
 | `memory_list` | Inspect recent scoped memories. |
 
+### Verbatim ingest and contentClass
+
+Core 1.2.0+ with default `RAW_CONTENT_POLICY=reject` refuses unstamped verbatim content and also rejects `contentClass: "raw"`. For `mode: "verbatim"` on default-policy deployments, pass `contentClass: "summary"` or `"redacted"` — distil handoff snapshots rather than sending raw transcripts.
+
+The `"raw"` enum value is accepted only on deployments configured with `RAW_CONTENT_POLICY=allow`.
+
+`contentClass` and `metadata` apply only to `mode: "verbatim"`. Put lineage in `provenance` (`source`, `sourceUrl`, `sourceId`). Reserve `metadata` for integration keys such as `externalId` and `dedupe_key` — reserved keys are rejected by MCP server 0.1.5+.
+
+```json
+{
+  "mode": "verbatim",
+  "content": "Distilled session summary, not a raw transcript.",
+  "contentClass": "summary",
+  "provenance": { "source": "cursor", "sourceUrl": "cursor://session/<id>" },
+  "metadata": { "dedupe_key": "<stable-id>" },
+  "scope": { "user": "<user>" }
+}
+```
+
+See [Using the Open Source backend](/sdk/guides/atomicmemory-backend) for SDK details and `RAW_CONTENT_POLICY`.
+
 Framework integrations use the TypeScript or Python SDK directly, but keep the same loop: retrieve before the agent acts, ingest after useful work completes, and scope memory by user, agent, namespace, or thread.
 
-Terminal users: use the [Atomic Memory CLI](/cli) (`am init`, Connected Local) or the [npm CLI](/cli) for direct self-hosted core workflows — search, ingest, profile setup, and hook generation.
+Terminal users: run [Hosted Cloud](/quickstart) or [Connected Local](/open-source/quickstart) with `am init`, then wire MCP manually from the host guides above. See the [CLI](/cli) for memory commands, migration, and diagnostics.
 
 ## Backend choice
 

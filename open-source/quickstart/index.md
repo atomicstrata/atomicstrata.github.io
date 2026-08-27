@@ -2,13 +2,17 @@
 
 > Agent index: [llms.txt](/llms.txt)
 
+Public CLI release timing
+
+Connected Local requires `am init --local` on the cloud-first CLI. If `am init --help` does not list `--local` (for example on public **`am` 0.2.0**), use plain **`am init`** below instead — that is the Connected Local path on the current public release.
+
 **Outcome:** run Atomic Memory Open Source locally, store one travel preference, retrieve it later, and inspect the activity in the console.
 
 **You need:** Docker, an OpenAI API key, and macOS or Linux.
 
-This guide uses the CLI’s default local scope. When your app uses the SDK or HTTP API, you provide the scope explicitly — see [How memory works](/how-memory-works).
+This guide uses Connected Local (`am init --local`). Plain `am init` without `--local` follows the Hosted Cloud path — see [Quickstart](/quickstart). When your app uses the SDK or HTTP API, you provide the scope explicitly — see [How memory works](/how-memory-works).
 
-1.  1Run the engine`am init` signs in, starts Core, and verifies the pipeline.
+1.  1Run the engine`am init --local` signs in, starts Core, and verifies the pipeline.
 2.  2Remember a preference`am memory ingest` writes one durable fact.
 3.  3Use it later`am memory search` retrieves it; the console shows the trace.
 
@@ -19,14 +23,14 @@ curl -fsSL https://get.atomicstrata.ai/install.sh | sh
 source "$HOME/.atomicmemory/env"
 
 export OPENAI_API_KEY="sk-..."
-am init
+am init --local   # or plain `am init` on public am 0.2.0
 ```
 
-`am init` opens a browser for secure sign-in, starts Core in Docker, connects your console, and verifies the memory pipeline. Success looks like **Verified** in the terminal and an **Online** runtime in the dashboard.
+`am init --local` opens a browser for secure sign-in, starts Core in Docker, connects your console, and verifies the memory pipeline. Success looks like **Verified** in the terminal and an **Online** runtime in the dashboard.
 
 Your memories remain on your machine. A Connected Local project sends runtime heartbeats and operation traces to the console so you can see that the pipeline is healthy; it does not send your memory content there.
 
-Already created a project in the console? Run `am init --project <slug>`.
+Already created a Local project in the console? Run `am init --local --project <slug>`.
 
 ## 2. Remember a travel preference
 

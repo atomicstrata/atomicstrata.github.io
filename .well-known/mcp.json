@@ -10,7 +10,7 @@
       "repository": "https://github.com/atomicstrata/atomicmemory/tree/main/packages/mcp-server",
       "package": "@atomicmemory/mcp-server",
       "command": "npx",
-      "args": ["-y", "--package=@atomicmemory/mcp-server", "atomicmemory-mcp"],
+      "args": ["-y", "--package=@atomicmemory/mcp-server@0.1.5", "atomicmemory-mcp"],
       "instructions": "https://docs.atomicstrata.ai/integrations/coding-agents/claude-code"
     }
   },
@@ -21,7 +21,7 @@
     },
     {
       "name": "memory_ingest",
-      "description": "AUDN-mutating ingest (mode: text or messages) or deterministic verbatim ingest (mode: verbatim). Saves durable facts, preferences, decisions."
+      "description": "AUDN-mutating ingest (mode: text or messages) or deterministic verbatim ingest (mode: verbatim). For verbatim on default-policy Core, set contentClass to summary or redacted; raw requires RAW_CONTENT_POLICY=allow."
     },
     {
       "name": "memory_package",
@@ -34,11 +34,12 @@
   ],
   "config": {
     "env": [
-      { "name": "ATOMICMEMORY_API_URL", "required": false, "description": "URL of the memory backend. Defaults to local AtomicMemory core at http://127.0.0.1:3050 for provider=atomicmemory; required for mem0." },
+      { "name": "ATOMICMEMORY_API_URL", "required": false, "description": "URL of the memory backend. Defaults to local AtomicMemory core at http://127.0.0.1:17350 for provider=atomicmemory; required for mem0 and Hosted Cloud." },
       { "name": "ATOMICMEMORY_API_KEY", "required": false, "secret": true, "description": "Optional bearer credential forwarded to providers that require HTTP authorization." },
       { "name": "ATOMICMEMORY_PROVIDER", "required": false, "enum": ["atomicmemory", "mem0"], "description": "Backend provider. Defaults to atomicmemory." },
-      { "name": "ATOMICMEMORY_SCOPE_USER", "required": false, "description": "User scope for the MCP session." },
-      { "name": "ATOMICMEMORY_SCOPE_NAMESPACE", "required": false, "description": "Namespace/workspace scope for the MCP session." },
+      { "name": "ATOMICMEMORY_SCOPE_USER", "required": false, "description": "User scope for the MCP session. Set explicitly on Hosted Cloud with ATOMICMEMORY_SCOPE_LOCK=true." },
+      { "name": "ATOMICMEMORY_SCOPE_LOCK", "required": false, "description": "When true, MCP tool calls cannot override ATOMICMEMORY_SCOPE_USER. Set to true on Hosted Cloud manual installs." },
+      { "name": "ATOMICMEMORY_SCOPE_NAMESPACE", "required": false, "description": "Namespace/workspace scope. Omit on Hosted Cloud until ingest/search namespace parity ships; optional on Connected Local." },
       { "name": "ATOMICMEMORY_SCOPE_AGENT", "required": false, "description": "Agent scope for the MCP session." }
     ]
   },
