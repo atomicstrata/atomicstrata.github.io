@@ -6,6 +6,8 @@ A TypeScript client for memory and artifact storage, pluggable across backends.
 
 `@atomicmemory/sdk` is a platform utility, not a framework. It gives application code a single, typed API for ingest, search, context assembly, and optional artifact storage, and it stays agnostic to which memory engine sits behind it. The same client can talk to a self-hosted `atomicmemory-core`, a Mem0 or Hindsight service, an llm-wiki-compiler wiki, or a custom backend you wire yourself.
 
+Working in Python? The same surface ships as the [`atomicmemory` package on PyPI](https://pypi.org/project/atomicmemory/); see the [Python SDK](/sdk/python) page.
+
 ## Value Prop
 
 -   **Backend-agnostic via `MemoryProvider`.** Every operation routes through the `MemoryProvider` interface. Swap `atomicmemory-core` for Mem0, Hindsight, an llmwiki wiki, or a provider you write, with a config change, not a rewrite. Apps inspect provider capabilities at runtime and gracefully degrade when a backend does not support an extension (packaging, temporal search, versioning, etc.).

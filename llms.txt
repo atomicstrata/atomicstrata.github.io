@@ -77,6 +77,7 @@
 - [Node.js / server-side](https://docs.atomicstrata.ai/sdk/guides/nodejs-server.md): Using the SDK server-side is supported, the package is ESM + CJS, has no browser-only code on its critical path, and the subpath storage primitives run anywhere Node does.
 - [Swapping backends](https://docs.atomicstrata.ai/sdk/guides/swapping-backends.md): The SDK's provider architecture makes the capability of swapping backends real; this guide covers the operational story.
 - [SDK Overview](https://docs.atomicstrata.ai/sdk/overview.md): A TypeScript client for memory and artifact storage, pluggable across backends.
+- [Python SDK](https://docs.atomicstrata.ai/sdk/python.md): The atomicmemory package on PyPI is
 - [SDK Quickstart](https://docs.atomicstrata.ai/sdk/quickstart.md): Install, initialize, and make your first ingest and search, with MemoryClient wired to a running atomicmemory-core.
 
 ## Integrations
