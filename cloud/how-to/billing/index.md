@@ -21,22 +21,34 @@ info
 
 ## How it works
 
-Only writes are metered. Every `ingest` consumes processed tokens that count toward your plan's monthly allowance and reset at the end of each billing period; retrieval and storage are unmetered. When you reach the monthly write-token cap, writes pause until you upgrade or the period resets — search and storage keep working the whole time.
+Plans meter **memory operations (MO)** — weighted API work — not writes alone. Ingest, search/expand, and lighter reads all draw from the same monthly MO allowance; deletes are free. Storage itself is not charged as MO.
 
-Exact write-token allowances can change per plan and aren't repeated here — see your Organization's current allowance and usage on [Usage & Limits](/cloud/how-to/usage), or in the plan details shown at checkout when you upgrade.
+Approximate weights (same contract as Cloud pricing):
+
+| Action | Memory operations |
+| --- | --- |
+| Ingest with extraction | 3 |
+| Ingest verbatim | 1 |
+| Search and expand | 1 |
+| Get and list | 0.1 (1 per 10 calls) |
+| Delete | free |
+
+That is why a month with ~3,300 fully extracted documents can land near a 10,000-operation allowance: extraction-weighted ingest, not document count, drives the meter — and searches count too.
+
+Exact allowances vary by plan and are not repeated here — see your Organization's current allowance and usage on [Usage & Limits](/cloud/how-to/usage), or the plan details at checkout when you upgrade.
 
 Only Organization admins can change the subscription or upgrade to Free; other members see billing read-only.
 
 info
 
-Reaching the monthly write-token limit pauses ingestion only. Retrieval and storage stay available — upgrade, or wait for the next billing period, to resume writes.
+Reaching the monthly MO limit pauses billable API work (ingest, search, expand, and other metered calls) until you upgrade or the period resets. Storage of what you already wrote stays available.
 
 ## Key capabilities
 
 -   **Organization-scoped** — one plan covers all of the org's projects.
 -   **Type-aware limits** — Local and Cloud project counts are tracked and capped separately, matching what each plan unlocks.
 -   **Self-serve Free upgrade** — go from Open Source to Free without a sales call.
--   **Writes-only metering** — retrieval and storage are unmetered within limits.
+-   **MO metering** — ingest, search/expand, and reads draw from the monthly operation allowance (deletes free; storage not charged as MO).
 -   **Demo-led Team/Corporate** — usage beyond Free is a sales conversation, not a self-serve checkout.
 -   **Role-gated** — only org admins can change the plan.
 
