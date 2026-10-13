@@ -35,17 +35,18 @@ This is **not** the Node.js `@atomicmemory/cli` package below. The npm CLI is de
 
 ### Install
 
-Canonical one-liner (install + onboard):
+Canonical one-liner (install **and** run `am init`):
 
 ```bash
 curl --proto '=https' --tlsv1.2 -fsSL https://get.atomicstrata.ai/install.sh | sh -s -- --init
 ```
 
-Install only (run `am init` yourself):
+Install only (binary on PATH; you still must run `am init` next):
 
 ```bash
 curl -fsSL https://get.atomicstrata.ai/install.sh | sh
 source "$HOME/.atomicmemory/env"
+am init
 ```
 
 Prebuilt binaries for macOS and Linux (x86\_64 + arm64). Installs to `~/.local/bin` by default and adds the **`am`** symlink. PATH activation lives in `~/.atomicmemory/env`. Credentials are stored separately (see [Defaults](#defaults) below).
@@ -61,6 +62,15 @@ Skip PATH modification:
 ```bash
 curl -fsSL https://get.atomicstrata.ai/install.sh | sh -s -- --no-modify-path
 ```
+
+Do I need `am init` after install?
+
+**Yes.** Install alone only puts `am` on your PATH. You must run `am init` before memory commands, project linking, or agent MCP install — unless you used the `--init` one-liner above, which runs `am init` for you.
+
+Pick a path in the next two sections:
+
+1.  **[Hosted Cloud (default)](#hosted-cloud-am-init-default)** — plain `am init`
+2.  **[Connected Local](#connected-local-am-init---local-opt-in)** — `am init --local` (opt-in; not the default after a fresh cloud-first install)
 
 ### Hosted Cloud: am init (default)
 
@@ -87,13 +97,14 @@ With zero Cloud projects and `--yes` (or no TTY), init prints the onboarding URL
 
 Full SDK walkthrough: [Quickstart](/quickstart). Something not working? See [Troubleshooting](/cloud/troubleshooting).
 
-### Connected Local — am init --local
+### Connected Local: am init --local (opt-in)
 
-Run Core on your machine with console visibility. Requires Docker and an OpenAI API key:
+Connected Local is the **second** init path, not the default after install. Use it when you want Core on this machine with console visibility. Default path needs Docker and an OpenAI API key; pass `--slm` for host Metal SLM instead (no OpenAI key — see `am init --help` on public `am` 0.4.0+):
 
 ```bash
 export OPENAI_API_KEY="sk-..."
 am init --local
+# or: am init --local --slm
 ```
 
 Full walkthrough: [Open Source Quickstart](/open-source/quickstart). Re-check anytime with `am doctor --smoke`.
@@ -120,7 +131,7 @@ am migrate export --project <local-project-slug>
 am migrate import --file <path-to-export.jsonl> --target-project <cloud-project-slug>
 ```
 
-**Export** requires an **active Connected Local profile**. Switch with `am config profile use <local-profile>` before exporting. Export fails without mutating your profile if the active profile is Hosted Cloud.
+**Export** requires an **active Connected Local profile**. Switch with `am config profile use <local-profile>` before exporting (see [Switch Hosted Cloud and Connected Local](/cloud/faq/switch-cli-profiles)). Export fails without mutating your profile if the active profile is Hosted Cloud.
 
 **Import** sends records in chunks of 500 per request. v1 supports `--mode merge` only (the default). Imported memories merge with existing scope data; `--mode replace-scope` is rejected by the Cloud API today.
 
@@ -237,7 +248,7 @@ Config and credentials live under the OS application support directory:
 
 `~/.atomicmemory/env` is PATH activation only — not where API keys are stored.
 
-Override API URL with `ATOMICMEMORY_API_URL`, active profile with `ATOMICMEMORY_PROFILE`, or `am config profile use`.
+Override API URL with `ATOMICMEMORY_API_URL`, active profile with `ATOMICMEMORY_PROFILE`, or `am config profile use`. See [Switch Hosted Cloud and Connected Local](/cloud/faq/switch-cli-profiles).
 
 ### Common commands
 
@@ -248,7 +259,7 @@ Grouped by job — each group links back to the section above.
 | Command | Description |
 | --- | --- |
 | `am init` | Hosted Cloud activation (default) |
-| `am init --local` | Connected Local (Docker + OpenAI) |
+| `am init --local` | Connected Local (Docker + OpenAI; or `--slm`) |
 | `am init --project <id-or-slug>` | Connect to an existing console project |
 | `am doctor` | Auth + wiring checks for the active profile |
 | `am doctor --smoke` | End-to-end memory round-trip (Connected Local) |
@@ -299,6 +310,7 @@ Removes binaries and PATH blocks. Config and credentials in the application supp
 
 -   [Quickstart](/quickstart) — Hosted Cloud first memory loop
 -   [Open Source Quickstart](/open-source/quickstart) — Connected Local via `am init --local`
+-   [Switch Hosted Cloud and Connected Local](/cloud/faq/switch-cli-profiles) — keep both profiles; switch default vs one-off
 -   [Migrate to Atomic Memory](/cloud/how-to/migrate) — move memories with `am migrate`
 -   [Troubleshooting](/cloud/troubleshooting) — recover from a failed init or doctor run
 -   [Authentication](/cloud/authentication) — API key vs OAuth

@@ -33,7 +33,7 @@ Approximate weights (same contract as Cloud pricing):
 | Get and list | 0.1 (1 per 10 calls) |
 | Delete | free |
 
-That is why a month with ~3,300 fully extracted documents can land near a 10,000-operation allowance: extraction-weighted ingest, not document count, drives the meter — and searches count too.
+Document count is not the meter. A month with ~3,300 fully extracted documents can land near a 10,000-operation allowance because each extraction-weighted ingest costs **3 MO** (3,300 × 3 ≈ 9,900). Each search or expand then adds **1 MO** on top of that ingest total. Verbatim ingest is cheaper (1 MO); get/list are lighter still.
 
 Exact allowances vary by plan and are not repeated here — see your Organization's current allowance and usage on [Usage & Limits](/cloud/how-to/usage), or the plan details at checkout when you upgrade.
 

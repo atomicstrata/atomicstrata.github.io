@@ -6,10 +6,10 @@ The SDK's reference documentation comes in two shapes: **hand-written** contract
 
 ## What lives here
 
-Three pages, each covering something human writing adds that generated docs cannot:
+These pages describe contracts and handling guidance beyond the generated types:
 
 -   **[MemoryProvider contract](/sdk/api/memory-provider)**, the interface you implement when [writing a custom provider](/sdk/guides/custom-provider). This is an authoring contract, not a reference listing, the focus is on obligations (required methods, `capabilities()` rules, extension-resolution semantics), not signatures.
--   **[Errors](/sdk/api/errors)**, the `AtomicMemoryError` hierarchy with a handling cheatsheet. Small, stable, and worth reading linearly.
+-   **[Errors](/sdk/api/errors)**, the `MemoryProviderError` hierarchy for memory operations and the separate `AtomicMemoryError` hierarchy for other SDK utilities, with handling examples.
 
 ## What's generated
 

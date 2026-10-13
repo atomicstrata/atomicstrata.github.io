@@ -136,6 +136,7 @@ See [Authentication → Local: Core token or `CORE_API_KEY`](/cloud/authenticati
 
 -   [Quickstart](/quickstart) — Hosted Cloud with plain `am init`
 -   [Open Source Quickstart](/open-source/quickstart) — Connected Local with `am init --local`
+-   [Switch Hosted Cloud and Connected Local](/cloud/faq/switch-cli-profiles) — both profiles, default vs one-off switch
 -   [Atomic Memory CLI](/cli) — full command reference
 -   [Authentication](/cloud/authentication) — which credential goes where
 -   [Migrate to Atomic Memory](/cloud/how-to/migrate) — moving memories from Local to Cloud

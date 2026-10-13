@@ -2,6 +2,11 @@
 
 > Standardized platform layer for AI memory, pluggable at every seam.
 
+## Related indexes
+
+- [Atomic Strata company index](https://www.atomicstrata.ai/llms.txt): Company context, enterprise offerings, and public writing.
+- [AtomicMemory product index](https://memory.atomicstrata.ai/llms.txt): Product context, hosted and open-source setup, and integration entry points.
+
 ## Start here
 
 - [How memory works](https://docs.atomicstrata.ai/how-memory-works.md): Outcome: understand what Atomic Memory stores, how it retrieves useful
@@ -12,6 +17,7 @@
 
 - [Authentication](https://docs.atomicstrata.ai/cloud/authentication.md): Atomic Memory and Core each authenticate requests differently.
 - [Developer Console](https://docs.atomicstrata.ai/cloud/console.md): The Atomic Memory developer console at memory.atomicstrata.ai is a Next.js dashboard for provisioning projects, managing API keys, exploring memories, and inspecting AUDN mutation traces.
+- [Switch Hosted Cloud and Connected Local](https://docs.atomicstrata.ai/cloud/faq/switch-cli-profiles.md): FAQ for installing both CLI profiles and switching the active default between Hosted Cloud and Connected Local.
 - [Managing API Keys](https://docs.atomicstrata.ai/cloud/how-to/api-keys.md): The API Keys page issues and manages the Atomic Memory credentials your application uses to authenticate against a Cloud project's memory API.
 - [Reading the Audit Log](https://docs.atomicstrata.ai/cloud/how-to/audit-log.md): The Audit Log records the administrative actions taken on a Cloud project - key, settings, and lifecycle changes - so you can see who changed what and when.
 - [Plans & Billing](https://docs.atomicstrata.ai/cloud/how-to/billing.md): Plans & Billing shows your Organization's current plan and tracks project and memory-operation usage against it.
@@ -57,14 +63,14 @@
 
 ## SDK
 
-- [Errors](https://docs.atomicstrata.ai/sdk/api/errors.md): Every error the SDK throws descends from AtomicMemoryError.
+- [Errors](https://docs.atomicstrata.ai/sdk/api/errors.md): Memory provider operations use the MemoryProviderError hierarchy.
 - [MemoryProvider contract](https://docs.atomicstrata.ai/sdk/api/memory-provider.md): This is the authoring contract for anyone implementing a MemoryProvider.
 - [Reference overview](https://docs.atomicstrata.ai/sdk/api/overview.md): The SDK's reference documentation comes in two shapes: hand-written contract pages (here, under API Reference) and generated type / method docs produced from the SDK's source.
 - [Architecture](https://docs.atomicstrata.ai/sdk/concepts/architecture.md): MemoryClient is a layered dispatcher.
 - [Capabilities](https://docs.atomicstrata.ai/sdk/concepts/capabilities.md): Not every memory backend supports every operation.
 - [Embeddings](https://docs.atomicstrata.ai/sdk/concepts/embeddings.md): The SDK ships local embedding generation through @huggingface/transformers.
 - [Memory providers](https://docs.atomicstrata.ai/sdk/concepts/provider-model.md): The provider model is what makes MemoryClient backend-agnostic.
-- [Scopes and identity](https://docs.atomicstrata.ai/sdk/concepts/scopes-and-identity.md): Every SDK operation carries a scope, the partition the memory lives in.
+- [Scopes and identity](https://docs.atomicstrata.ai/sdk/concepts/scopes-and-identity.md): Memory requests carry a scope.
 - [Storage adapters](https://docs.atomicstrata.ai/sdk/concepts/storage-adapters.md): This page describes the SDK's client-side key/value storage adapters.
 - [Artifact storage](https://docs.atomicstrata.ai/sdk/guides/artifact-storage.md): The SDKs expose core's artifact-storage API for applications that need to
 - [Using the atomicmemory backend](https://docs.atomicstrata.ai/sdk/guides/atomicmemory-backend.md): AtomicMemoryProvider is the SDK's HTTP client for atomicmemory-core.
@@ -78,7 +84,7 @@
 - [Swapping backends](https://docs.atomicstrata.ai/sdk/guides/swapping-backends.md): The SDK's provider architecture makes the capability of swapping backends real; this guide covers the operational story.
 - [SDK Overview](https://docs.atomicstrata.ai/sdk/overview.md): A TypeScript client for memory and artifact storage, pluggable across backends.
 - [Python SDK](https://docs.atomicstrata.ai/sdk/python.md): The atomicmemory package on PyPI is
-- [SDK Quickstart](https://docs.atomicstrata.ai/sdk/quickstart.md): Install, initialize, and make your first ingest and search, with MemoryClient wired to a running atomicmemory-core.
+- [SDK Quickstart](https://docs.atomicstrata.ai/sdk/quickstart.md): Save a preference, then retrieve it with MemoryClient.
 
 ## Integrations
 
@@ -112,9 +118,9 @@
 - [OpenAI Agents SDK](https://docs.atomicstrata.ai/integrations/frameworks/openai-agents.md): Atomic Memory integrates with the OpenAI Agents SDK through an adapter that augments run input with memory and ingests completed turns back into durable storage.
 - [OpenAI Agents SDK Cloud](https://docs.atomicstrata.ai/integrations/frameworks/openai-agents/cloud.md): Cloud deployment details for the OpenAI Agents SDK adapter are coming soon.
 - [OpenAI Agents SDK Local](https://docs.atomicstrata.ai/integrations/frameworks/openai-agents/local.md): Give OpenAI Agents SDK applications persistent memory backed by Open Source.
-- [Vercel AI SDK](https://docs.atomicstrata.ai/integrations/frameworks/vercel-ai-sdk.md): Atomic Memory integrates with Vercel AI SDK through an adapter that handles retrieval before the model call and durable ingest after the turn completes.
-- [Vercel AI SDK Cloud](https://docs.atomicstrata.ai/integrations/frameworks/vercel-ai-sdk/cloud.md): Cloud deployment details for the Vercel AI SDK adapter are coming soon.
-- [Vercel AI SDK Local](https://docs.atomicstrata.ai/integrations/frameworks/vercel-ai-sdk/local.md): Give Vercel AI SDK applications persistent memory backed by Open Source.
+- [Vercel AI SDK](https://docs.atomicstrata.ai/integrations/frameworks/vercel-ai-sdk.md): Build a model call that can save and recall memory.
+- [Vercel AI SDK Cloud](https://docs.atomicstrata.ai/integrations/frameworks/vercel-ai-sdk/cloud.md): Configure your server-side memory client with the Cloud API endpoint and a project API key.
+- [Vercel AI SDK Local](https://docs.atomicstrata.ai/integrations/frameworks/vercel-ai-sdk/local.md): Connect your server-side AI SDK application to local Core.
 - [Integrations](https://docs.atomicstrata.ai/integrations/overview.md): Atomic Memory adds durable memory to coding agents, AI frameworks, and terminal workflows through the same provider-backed memory layer.
 
 ## API Reference

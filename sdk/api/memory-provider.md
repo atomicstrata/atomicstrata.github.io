@@ -65,7 +65,17 @@ Both are async. Both may throw; `initialize` errors propagate to the caller of `
 
 ## Error expectations
 
-Throw errors from the SDK's error hierarchy when you can, `NetworkError` for wire failures, `ConfigurationError` for bad config, `UnsupportedOperationError` when a caller requests something you don't implement. See [Errors](/sdk/api/errors). If you throw something else, wrap it at the boundary; do not let arbitrary errors leak through `MemoryService`, callers rely on the hierarchy for programmatic handling.
+Memory operations use the `MemoryProviderError` hierarchy:
+
+-   `MemoryTransportError` for connection failures, timeouts, or cancellation, including failures while reading a response body.
+-   `UnsupportedOperationError` for an unsupported operation.
+-   `InvalidScopeError` for missing required scope fields.
+-   `RateLimitError` for provider rate limits.
+-   `MemoryProviderError` for other provider failures.
+
+`BaseMemoryProvider` preserves these errors and wraps other operation failures in `MemoryProviderError`. Providers that implement `MemoryProvider` directly must classify failures at their own operation boundary.
+
+`NetworkError` and `ConfigurationError` belong to the separate `AtomicMemoryError` hierarchy. Do not use `NetworkError` for memory-provider transport failures. Reserve `ConfigurationError` for configuration validation before memory operations. Keep backend response bodies, credentials, and error causes out of public logs and model output. See [Errors](/sdk/api/errors) for handling examples.
 
 ## Minimal example
 

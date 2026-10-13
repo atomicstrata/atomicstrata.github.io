@@ -21,43 +21,57 @@ Working in Python? The same surface ships as the [`atomicmemory` package on PyPI
 import { MemoryClient } from '@atomicmemory/sdk';
 
 const memory = new MemoryClient({
-  providers: {
-    atomicmemory: {
-      apiUrl: 'http://localhost:17350',
-      apiKey: 'local-dev-key',
-    },
-  },
+	providers: {
+		atomicmemory: {
+			apiUrl: 'https://api.atomicstrata.ai',
+			apiKey: process.env.ATOMICMEMORY_API_KEY!,
+		},
+	},
 });
 await memory.initialize();
 
 await memory.ingest({
-  mode: 'messages',
-  messages: [{ role: 'user', content: 'I prefer aisle seats.' }],
-  scope: { user: 'u1' },
+	mode: 'text',
+	content: 'I prefer aisle seats.',
+	scope: { user: 'demo-user' },
 });
 
-const results = await memory.search({
-  query: 'seat preference',
-  scope: { user: 'u1' },
+const page = await memory.search({
+	query: 'seat preference',
+	scope: { user: 'demo-user' },
+	limit: 5,
 });
+
+for (const { memory: record } of page.results) {
+	console.log(record.content);
+}
 ```
+
+Set `ATOMICMEMORY_API_KEY` to a Cloud project key on the server. The [quickstart](/sdk/quickstart) walks through setup, saving, retrieval, and explicit local configuration. The SDK currently requires the URL and key configuration; zero-config initialization is not available yet. Resolve `scope.user` from your authenticated server session in an application. Text ingest uses extraction, so a single input need not produce one memory.
+
+To expose search and ingest to an AI SDK model, see [Vercel AI SDK memory tools](/integrations/frameworks/vercel-ai-sdk). That guide documents the new package's unreleased status and AI SDK 6 compatibility.
 
 `MemoryClient` composes a `MemoryService` under the hood and exposes the pure memory API: `ingest`, `search`, `package`, `get`, `list`, `delete`, plus `capabilities` / `getExtension` / `getProviderStatus` for capability inspection, and an `atomicmemory` getter that returns the full [Open Source namespace handle](/sdk/api/memory-provider) (lifecycle, audit, lessons, config, agents). The surface is intentionally small, application-layer concerns such as identity resolution, capture policy, or injection gating belong in consumer code, not in the SDK.
 
-Use `AtomicMemoryClient` when you also need storage artifacts:
+Use `AtomicMemoryClient` when you also need storage artifacts. This local example uses a Core token, not a Cloud project key. Set `CORE_API_KEY` to the token shown by `am instance status --show-secrets`, as described in the [local quickstart](/sdk/quickstart#configure-a-local-backend).
 
 ```ts
 import { AtomicMemoryClient } from '@atomicmemory/sdk';
 
+const storageApiKey = process.env.CORE_API_KEY;
+if (!storageApiKey?.trim()) throw new Error('Missing CORE_API_KEY');
+
 const client = new AtomicMemoryClient({
   apiUrl: 'http://localhost:17350',
-  apiKey: process.env.ATOMICMEMORY_API_KEY!,
+  apiKey: storageApiKey,
+  allowPrivateNetworks: true,
   userId: 'u1',
   memory: {
     providers: {
       atomicmemory: {
         apiUrl: 'http://localhost:17350',
-        apiKey: process.env.ATOMICMEMORY_API_KEY!,
+        apiKey: storageApiKey,
+        allowPrivateNetworks: true,
       },
     },
   },
@@ -77,6 +91,8 @@ The first three topologies route through `MemoryClient`. The fourth composes the
 ## Browser-safe entry
 
 For browser applications that talk to a backend-hosted core through `MemoryClient` and don't need on-device storage or embeddings, import from the `./browser` subpath, a slim bundle that omits `storage`, `embedding`, `search`, and `utils`:
+
+Browser-safe describes the bundle, not credential security. Keep Cloud project keys and Core tokens on your server. Browser applications can call your authenticated server instead of receiving those credentials.
 
 ```ts
 import { MemoryClient } from '@atomicmemory/sdk/browser';

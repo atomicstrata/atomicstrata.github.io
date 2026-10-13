@@ -103,3 +103,4 @@ You completed the smallest durable-memory loop: write a preference, retrieve it 
 -   [Authentication](/cloud/authentication) — which credential goes where
 -   [Integrations](/integrations/overview) — manual MCP wiring for agent hosts
 -   [Open Source Quickstart](/open-source/quickstart) — run Core locally with `am init --local`
+-   [Switch Hosted Cloud and Connected Local](/cloud/faq/switch-cli-profiles) — keep both profiles; switch default vs one-off

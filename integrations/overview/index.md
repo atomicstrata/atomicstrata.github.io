@@ -53,7 +53,7 @@ Atomic Memoryhosted or self-hosted
 
 | Integration | Best for | Status | Docs |
 | --- | --- | --- | --- |
-| Vercel AI SDK | Pre-call retrieval and post-call ingest around `generateText` / `streamText`. | Published; hosted mode planned. | [Overview](/integrations/frameworks/vercel-ai-sdk) · [Local](/integrations/frameworks/vercel-ai-sdk/local) |
+| Vercel AI SDK | User-scoped search and ingest tools for `generateText` and `streamText`, plus opt-in retrieval and ingest helpers. | `@atomicmemory/vercel-ai-sdk`: implemented, publish pending. | [Overview](/integrations/frameworks/vercel-ai-sdk) · [Local](/integrations/frameworks/vercel-ai-sdk/local) · [Cloud](/integrations/frameworks/vercel-ai-sdk/cloud) |
 | OpenAI Agents SDK | Memory-aware `run()` flows and optional function tools. | Published; hosted mode planned. | [Overview](/integrations/frameworks/openai-agents) · [Local](/integrations/frameworks/openai-agents/local) |
 | LangChain (JS) | Memory search/ingest tools and helper functions around an injected SDK client. | Published; hosted mode planned. | [Overview](/integrations/frameworks/langchain-js) · [Local](/integrations/frameworks/langchain-js/local) |
 | Langflow | Custom visual-flow components for explicit store, prompt-ready search context, read-only chat memory, and scoped deletion. | Published; hosted mode planned. | [Overview](/integrations/frameworks/langflow) · [Local](/integrations/frameworks/langflow/local) |
@@ -92,7 +92,7 @@ The `"raw"` enum value is accepted only on deployments configured with `RAW_CONT
 
 See [Using the Open Source backend](/sdk/guides/atomicmemory-backend) for SDK details and `RAW_CONTENT_POLICY`.
 
-Framework integrations use the TypeScript or Python SDK directly, but keep the same loop: retrieve before the agent acts, ingest after useful work completes, and scope memory by user, agent, namespace, or thread.
+Framework integrations use the TypeScript or Python SDK directly. Choose model-selected tools or application-owned retrieval and ingest. Supported scope fields and isolation depend on the provider. See [Scopes and identity](/sdk/concepts/scopes-and-identity).
 
 Terminal users: run [Hosted Cloud](/quickstart) or [Connected Local](/open-source/quickstart) with `am init`, then wire MCP manually from the host guides above. See the [CLI](/cli) for memory commands, migration, and diagnostics.
 
