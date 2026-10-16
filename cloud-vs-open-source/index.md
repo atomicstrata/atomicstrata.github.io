@@ -25,9 +25,9 @@ Connected Local`am init --local` — Core on your machine, console shows runtime
 | **Console** | Memories, operation traces | Runtime status, memories, operation traces |
 | **Account** | Sign-in + Cloud project | Sign-in creates a free Open Source org |
 | **Good for** | Fastest first memory, production API traffic | Local dev, on-machine content, evaluation |
-| **Plan** | Free tier ($0 self-serve upgrade) | Open Source — free forever, one Local project |
+| **Plan** | Basic ($0 self-serve upgrade) | Open Source — free forever, one Local project |
 
-Team and Corporate plans are demo-led — [book a demo](https://atomicstrata.ai/demo) for pooled usage, more projects, and governed deployments.
+Pro, Max, and Scale are self-serve plans for higher usage and more projects. For custom usage or contract terms, [book a demo](https://atomicstrata.ai/demo) to discuss Enterprise. See [Plans & Billing](/cloud/how-to/billing).
 
 ## Choose Hosted Cloud when
 

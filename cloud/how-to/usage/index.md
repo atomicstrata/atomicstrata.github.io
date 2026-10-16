@@ -9,11 +9,11 @@ The **Usage** page is the project's meter. It shows how much traffic the memory 
 -   Reports **request** counts: ingest, search, and package calls, plus total tokens processed.
 -   Reports **storage**: stored memories, stored traces, embedding operations, and bytes used.
 -   Charts **request volume over the last 30 days**, split by ingest, search, and package.
--   Surfaces your **plan limits** - Local and Cloud project counts, tracked separately by type, and monthly memory operations - with a link to manage the plan.
+-   Surfaces your **plan limits**: project counts and monthly memory operations, with a link to manage the plan. Open Source and Basic have separate Local and Cloud project caps; Pro, Max, and Scale use one combined project cap.
 
 ## How it works
 
-Plan limits are **Organization-scoped**: your Local and Cloud project counts (tracked separately by type) and monthly memory-operation allowance apply across your whole Organization, and the MO meter resets each billing period. The stat cards and the volume chart below them are **project-scoped** - they count only this project's traffic and storage. When a project has seen no traffic in the last 30 days, the chart is replaced by an empty state rather than a flat line.
+Plan limits are **workspace-scoped**: project counts and the monthly memory-operation allowance apply across your whole workspace. Open Source and Basic cap Local and Cloud projects separately; Pro, Max, and Scale cap the combined count. The MO meter resets each billing period. The stat cards and the volume chart below them are **project-scoped** - they count only this project's traffic and storage. When a project has seen no traffic in the last 30 days, the chart is replaced by an empty state rather than a flat line.
 
 info
 

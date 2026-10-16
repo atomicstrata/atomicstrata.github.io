@@ -124,7 +124,7 @@ am instance status --show-secrets
 
 ### Migration
 
-Move memories from a Local project into a Cloud project after upgrading to Free:
+Move memories from a Local project into a Cloud project after upgrading to Basic:
 
 ```bash
 am migrate export --project <local-project-slug>

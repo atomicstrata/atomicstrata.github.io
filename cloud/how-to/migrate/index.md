@@ -6,7 +6,7 @@ Already running a **Local** project? `am migrate export` and `am migrate import`
 
 ## Prerequisites
 
--   Your Organization is on **Free** or higher. Cloud import requires Free or higher — Open Source doesn't unlock an Atomic Memory project to import into. See [Plans & Billing](/cloud/how-to/billing).
+-   Your workspace is on **Basic** or higher. Cloud import requires Basic or higher — Open Source doesn't unlock an Atomic Memory project to import into. See [Plans & Billing](/cloud/how-to/billing).
 -   Your Local Core is running and connected (`am init` completed — see the [Open Source Quickstart](/open-source/quickstart)). `am migrate export` reads directly from your live Core and creates the JSONL transfer file at export time — it's not a backup file you maintain yourself ahead of time.
 -   A **Cloud** project already exists to import into — create one from the [Quickstart](/quickstart) if you haven't yet.
 

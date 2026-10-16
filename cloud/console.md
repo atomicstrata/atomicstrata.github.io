@@ -14,7 +14,7 @@ New users follow a guided path:
 2.  The console provisions a default **Local** project (slug `default`) — Open Source starts with one Connected Local project and no Atomic Memory project.
 3.  **Connect Core**: run `am init` in your terminal. It signs you in, starts Core, connects this project, and verifies the memory pipeline end to end.
 4.  Once the runtime reports **Online**, the console hands off to the project **Overview** — no key to create or redeem first.
-5.  Optional: upgrade to **Free** (self-serve, $0) from **Billing** to unlock one Atomic Memory project.
+5.  Optional: upgrade to **Basic** (self-serve, $0) from **Billing** to unlock one Atomic Memory project.
 
 See the [Quickstart](/quickstart) for the full walkthrough, from creating a project to verifying your first memory here.
 

@@ -43,7 +43,7 @@ A leaked or retired service is contained by revoking one key, not re-credentiali
 
 ## Plan considerations
 
-This pattern works best when each service gets its **own Cloud project** (a key is scoped to a project, not shared across projects). Free includes one Cloud project, so giving several services each their own project needs a plan with enough Cloud projects for that — Team or Corporate. See [Plans & Billing](/cloud/how-to/billing) for what each plan includes.
+This pattern works best when each service gets its **own Cloud project** (a key is scoped to a project, not shared across projects). Basic includes one Cloud project. For several services, choose a plan with enough projects: Pro includes three, Max five, and Scale ten by default. Local and Cloud projects share that allowance on paid plans. Check your workspace's Billing page for its current limits and see [Plans & Billing](/cloud/how-to/billing) for the available plans.
 
 ## Get started
 

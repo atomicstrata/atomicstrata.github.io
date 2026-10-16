@@ -3056,7 +3056,7 @@ am instance status --show-secrets
 
 ### Migration
 
-Move memories from a Local project into a Cloud project after upgrading to Free:
+Move memories from a Local project into a Cloud project after upgrading to Basic:
 
 ```bash
 am migrate export --project <local-project-slug>
@@ -3627,9 +3627,9 @@ Connected Local`am init --local` — Core on your machine, console shows runtime
 | **Console** | Memories, operation traces | Runtime status, memories, operation traces |
 | **Account** | Sign-in + Cloud project | Sign-in creates a free Open Source org |
 | **Good for** | Fastest first memory, production API traffic | Local dev, on-machine content, evaluation |
-| **Plan** | Free tier ($0 self-serve upgrade) | Open Source — free forever, one Local project |
+| **Plan** | Basic ($0 self-serve upgrade) | Open Source — free forever, one Local project |
 
-Team and Corporate plans are demo-led — [book a demo](https://atomicstrata.ai/demo) for pooled usage, more projects, and governed deployments.
+Pro, Max, and Scale are self-serve plans for higher usage and more projects. For custom usage or contract terms, [book a demo](https://atomicstrata.ai/demo) to discuss Enterprise. See [Plans & Billing](/cloud/how-to/billing).
 
 ## Choose Hosted Cloud when
 
@@ -3849,7 +3849,7 @@ New users follow a guided path:
 2.  The console provisions a default **Local** project (slug `default`) — Open Source starts with one Connected Local project and no Atomic Memory project.
 3.  **Connect Core**: run `am init` in your terminal. It signs you in, starts Core, connects this project, and verifies the memory pipeline end to end.
 4.  Once the runtime reports **Online**, the console hands off to the project **Overview** — no key to create or redeem first.
-5.  Optional: upgrade to **Free** (self-serve, $0) from **Billing** to unlock one Atomic Memory project.
+5.  Optional: upgrade to **Basic** (self-serve, $0) from **Billing** to unlock one Atomic Memory project.
 
 See the [Quickstart](/quickstart) for the full walkthrough, from creating a project to verifying your first memory here.
 
@@ -4136,26 +4136,26 @@ Source: https://docs.atomicstrata.ai/cloud/how-to/billing
 
 > Agent index: [llms.txt](/llms.txt)
 
-**Plans & Billing** shows your Organization's current plan and how much of it you've used. It's scoped to the Organization, so one plan covers every project the org owns.
+**Plans & Billing** shows your workspace's current plan and how much of it you've used. One plan covers every project in the workspace. The account menu and the API call a workspace an organization.
 
 ## Plans
 
-| Plan | Local projects | Cloud projects | How you get it |
-| --- | --- | --- | --- |
-| **Open Source** | 1 | 0 | Default on signup — free forever |
-| **Free** | 1 (kept) | 1 | Self-serve $0 upgrade, right here in Billing |
-| **Team** | Custom | Custom | Demo-led — talk to sales |
-| **Corporate** | Custom | Custom | Demo-led — talk to sales |
+| Plan | How you get it |
+| --- | --- |
+| **Open Source** | Default on sign-in; one Local project, no Cloud project |
+| **Basic** | $0 upgrade in Billing; one Local and one Cloud project |
+| **Pro**, **Max**, **Scale** | Choose a paid plan in Billing, or redeem an eligible timed plan coupon |
+| **Enterprise** | Contact sales for a custom agreement |
 
-Every Organization starts on **Open Source**: one Connected Local project, full console visibility, no Atomic Memory project. **Upgrade to Free** in Billing to keep that Local project and unlock one Atomic Memory project — it's a self-serve $0 checkout, no sales conversation required. **Team** and **Corporate** cover usage beyond Free's single Cloud project and are demo-led; request a demo rather than self-serve checkout.
+Billing shows your workspace's current plan and the available changes. **Basic** is the plan named `free` in the API and some older billing records. Plan allowances appear in [Usage & Limits](/cloud/how-to/usage). Only workspace admins can change the plan or redeem a coupon.
 
 info
 
-**Developer** is a legacy plan. Existing subscribers keep their grandfathered limits and billing continues to work, but it is no longer offered to new Organizations — upgrade to **Free** instead.
+**Founding Developer** is a legacy plan. Existing subscribers keep their subscription; new subscribers choose Pro, Max or Scale.
 
 ## How it works
 
-Plans meter **memory operations (MO)** — weighted API work — not writes alone. Ingest, search/expand, and lighter reads all draw from the same monthly MO allowance; deletes are free. Storage itself is not charged as MO.
+Plans meter **memory operations (MO)**. Each API operation has a weight; writing a memory is one kind of operation. Ingest, search/expand, and lighter reads all draw from the same monthly MO allowance; deletes are free. Storage itself is not charged as MO.
 
 Approximate weights (same contract as Cloud pricing):
 
@@ -4169,9 +4169,9 @@ Approximate weights (same contract as Cloud pricing):
 
 Document count is not the meter. A month with ~3,300 fully extracted documents can land near a 10,000-operation allowance because each extraction-weighted ingest costs **3 MO** (3,300 × 3 ≈ 9,900). Each search or expand then adds **1 MO** on top of that ingest total. Verbatim ingest is cheaper (1 MO); get/list are lighter still.
 
-Exact allowances vary by plan and are not repeated here — see your Organization's current allowance and usage on [Usage & Limits](/cloud/how-to/usage), or the plan details at checkout when you upgrade.
+Exact allowances vary by plan and are not repeated here. See your workspace's current allowance and usage on [Usage & Limits](/cloud/how-to/usage), or the plan details at checkout when you upgrade.
 
-Only Organization admins can change the subscription or upgrade to Free; other members see billing read-only.
+Only workspace admins can change the subscription or choose another plan; other members see billing read-only.
 
 info
 
@@ -4179,12 +4179,16 @@ Reaching the monthly MO limit pauses billable API work (ingest, search, expand, 
 
 ## Key capabilities
 
--   **Organization-scoped** — one plan covers all of the org's projects.
--   **Type-aware limits** — Local and Cloud project counts are tracked and capped separately, matching what each plan unlocks.
--   **Self-serve Free upgrade** — go from Open Source to Free without a sales call.
--   **MO metering** — ingest, search/expand, and reads draw from the monthly operation allowance (deletes free; storage not charged as MO).
--   **Demo-led Team/Corporate** — usage beyond Free is a sales conversation, not a self-serve checkout.
--   **Role-gated** — only org admins can change the plan.
+-   **Workspace-scoped**. One plan covers all of the workspace's projects.
+-   **Project limits**. Open Source and Basic cap Local and Cloud projects separately. Pro, Max, and Scale cap the combined count.
+-   **Self-serve plans**. Choose Basic, Pro, Max or Scale in Billing.
+-   **MO metering**. Ingest, search/expand, and reads draw from the monthly operation allowance (deletes free; storage not charged as MO).
+-   **Enterprise agreements**. Contact sales for custom usage and terms.
+-   **Role-gated**. Only workspace admins can change the plan.
+
+## Redeem a coupon
+
+If you have a coupon, open **Have a coupon? Redeem it here** in Billing. A workspace admin reviews and explicitly redeems the benefit. A shared coupon link keeps its code through account and workspace setup. See [Redeem a coupon](/cloud/how-to/redeem-coupons) for the steps, expiry behavior, and eligibility requirements.
 
 ## Related
 
@@ -4314,7 +4318,7 @@ Already running a **Local** project? `am migrate export` and `am migrate import`
 
 ## Prerequisites
 
--   Your Organization is on **Free** or higher. Cloud import requires Free or higher — Open Source doesn't unlock an Atomic Memory project to import into. See [Plans & Billing](/cloud/how-to/billing).
+-   Your workspace is on **Basic** or higher. Cloud import requires Basic or higher — Open Source doesn't unlock an Atomic Memory project to import into. See [Plans & Billing](/cloud/how-to/billing).
 -   Your Local Core is running and connected (`am init` completed — see the [Open Source Quickstart](/open-source/quickstart)). `am migrate export` reads directly from your live Core and creates the JSONL transfer file at export time — it's not a backup file you maintain yourself ahead of time.
 -   A **Cloud** project already exists to import into — create one from the [Quickstart](/quickstart) if you haven't yet.
 
@@ -4422,7 +4426,7 @@ Source: https://docs.atomicstrata.ai/cloud/how-to/projects
 
 -   Lists every project in the current Organization with its type (**Local** or **Cloud**), name, slug, and last activity, and links straight to its Overview. **Cloud** projects show a stored-memory count; **Local** projects may show `n/a` there since memory content stays on your Core.
 -   Creates new projects from **New project** — you pick a type, **Local** (Connected Local, backed by your own Core) or **Cloud** (Atomic Memory, fully managed).
--   Your plan determines how many of each type you can have: Open Source includes one Local project and zero Cloud projects; Free keeps your Local project and unlocks one Cloud project. See [Plans & Billing](/cloud/how-to/billing) for what's included.
+-   Your plan determines your project allowance. Open Source includes one Local project and zero Cloud projects; Basic includes one Local and one Cloud project. Pro, Max, and Scale share their project allowance across Local and Cloud projects. See [Plans & Billing](/cloud/how-to/billing) for what's included.
 
 ## How it works
 
@@ -4439,7 +4443,7 @@ A Local project's Core must be reachable from your browser (`am init` wires this
 
 -   **Isolated projects** — memories, keys, traces, and usage stay scoped to a single project.
 -   **Local or Cloud** — run Core yourself, or let Atomic Memory host the data.
--   **Type-aware limits** — Local and Cloud project counts are capped separately by your plan, and the page shows usage against each.
+-   **Project limits** — Open Source and Basic cap Local and Cloud projects separately. Paid plans cap the combined count.
 
 ## Related
 
@@ -4447,6 +4451,58 @@ A Local project's Core must be reachable from your browser (`am init` wires this
 -   [API Keys](/cloud/how-to/api-keys)
 -   [Plans & Billing](/cloud/how-to/billing)
 -   [What is Memories](/cloud/how-to/what-is-memories)
+
+---
+
+## Redeem a coupon
+
+Source: https://docs.atomicstrata.ai/cloud/how-to/redeem-coupons
+
+# Redeem a coupon
+
+> Agent index: [llms.txt](/llms.txt)
+
+Redeem a coupon from Billing to activate its plan benefit for your workspace. You need an AtomicMemory account and an admin role in the workspace that receives the benefit. If you open a shared coupon link before creating an account, the code stays with you through signup and normal workspace setup. You still review and explicitly redeem the benefit afterward.
+
+## Redeem your code
+
+1.  [Sign in to AtomicMemory](https://memory.atomicstrata.ai/login).
+2.  Open the account menu in the sidebar and check the current name. If you belong to several workspaces, open **Organization** and select the one that should receive the benefit. Switching takes you to Projects, so do this before you open Billing.
+3.  Open [Billing](https://memory.atomicstrata.ai/app/billing), then select **Have a coupon? Redeem it here**.
+4.  Enter your code in **Coupon code** and select **Check code**. Review the plan, duration, and workspace shown on the form.
+5.  Select **Redeem coupon**. The benefit starts when redemption succeeds. Confirmation shows your plan and expiry date.
+6.  Select **Back to Billing** to view the active benefit. Check [Usage](/cloud/how-to/usage) for your plan's allowance and current usage.
+
+A shared coupon link sends you to sign-in if necessary, then opens the same [redemption form](https://memory.atomicstrata.ai/app/billing/coupons) with the code filled in. If you need an account, choose signup from sign-in and finish normal workspace setup. The app then returns you to the coupon form. Account setup does not claim the benefit. Check the displayed workspace before selecting **Redeem coupon**.
+
+## Check the expiry
+
+Billing shows when your benefit ends. At expiry, your workspace returns to Basic and its limits apply. Your saved memories and projects remain in your account. Having many saved memories does not itself trigger deletion or a charge. If your current monthly usage exceeds Basic's allowance, metered operations can pause until the period resets or you choose another plan. New projects are blocked when you reach Basic's project limit. Existing projects are kept. Redemption requires no card and creates no payment subscription, automatic renewal, or charge. A timed plan coupon gives access to that plan's allowances; it does not add a separate cash or credit balance.
+
+AtomicMemory emails the person who redeemed the coupon a reminder during the seven days before expiry, and a notice during the seven days after the benefit ends. A notice missed in that window is not sent later. Check Billing for the current expiry even if no email arrives; a missing email does not mean the benefit failed to end or was extended. Extending the benefit updates the notice schedule. Email delivery does not control your plan's expiry.
+
+## Keep your plan after the coupon
+
+To stay on the coupon's plan after it ends, select **Keep Pro** (or Max or Scale) in Billing. Checkout asks for a card and shows your first charge date before you confirm. Eligible accounts aren't charged until the coupon's expiry date; if checkout shows a charge today, your account isn't eligible for that free period. Canceling later does not refund a charge that already happened. After a successful checkout the subscription replaces the coupon benefit, so canceling it does not restore the coupon. The expiry reminder email links to the same option.
+
+Choosing a different paid plan starts billing immediately and ends the coupon benefit. Review the payment terms before confirming checkout. A paid subscription follows its own billing terms; coupon expiry does not cancel it or change it to Basic. Coupon redemption itself never starts paid billing.
+
+## Add another coupon
+
+You can redeem different codes for the same plan while its benefit is active. The new coupon adds its months to your current expiry and keeps your remaining time. For example, if Pro ends on March 8, a new two-month Pro coupon extends it to May 8. Billing shows the updated expiry after redemption.
+
+Each code works once per workspace, and you can use it in only one workspace. Retrying the latest successful redemption does not add more time. A coupon for a different plan can be redeemed after the active benefit ends. An expired benefit does not reduce the duration of a new coupon; that benefit starts on redemption.
+
+## Resolve a redemption problem
+
+-   **Invalid or unavailable code:** Check the spelling and select **Check code** again. The code may have expired, been disabled, or reached its redemption limit.
+-   **Not a workspace admin:** Ask an admin of the intended workspace to redeem it.
+-   **Paid subscription or Polar trial:** Contact support from the app to review eligibility. A coupon does not replace an existing paid subscription or its trial. A Basic subscription through Polar does not prevent redemption.
+-   **Already claimed:** Retrying a successful claim in the same workspace keeps its original expiry; it does not extend it.
+-   **Claimed in another workspace:** You can use a code in only one workspace. If you already redeemed it elsewhere, it can't be applied to a second one.
+-   **Different plan from your active benefit:** Wait for the current benefit to end before redeeming that code. Coupons for different plans do not overlap.
+
+If you edit a checked code, select **Check code** again before redeeming.
 
 ---
 
@@ -4569,11 +4625,11 @@ The **Usage** page is the project's meter. It shows how much traffic the memory 
 -   Reports **request** counts: ingest, search, and package calls, plus total tokens processed.
 -   Reports **storage**: stored memories, stored traces, embedding operations, and bytes used.
 -   Charts **request volume over the last 30 days**, split by ingest, search, and package.
--   Surfaces your **plan limits** - Local and Cloud project counts, tracked separately by type, and monthly memory operations - with a link to manage the plan.
+-   Surfaces your **plan limits**: project counts and monthly memory operations, with a link to manage the plan. Open Source and Basic have separate Local and Cloud project caps; Pro, Max, and Scale use one combined project cap.
 
 ## How it works
 
-Plan limits are **Organization-scoped**: your Local and Cloud project counts (tracked separately by type) and monthly memory-operation allowance apply across your whole Organization, and the MO meter resets each billing period. The stat cards and the volume chart below them are **project-scoped** - they count only this project's traffic and storage. When a project has seen no traffic in the last 30 days, the chart is replaced by an empty state rather than a flat line.
+Plan limits are **workspace-scoped**: project counts and the monthly memory-operation allowance apply across your whole workspace. Open Source and Basic cap Local and Cloud projects separately; Pro, Max, and Scale cap the combined count. The MO meter resets each billing period. The stat cards and the volume chart below them are **project-scoped** - they count only this project's traffic and storage. When a project has seen no traffic in the last 30 days, the chart is replaced by an empty state rather than a flat line.
 
 info
 
@@ -5398,7 +5454,7 @@ A leaked or retired service is contained by revoking one key, not re-credentiali
 
 ## Plan considerations
 
-This pattern works best when each service gets its **own Cloud project** (a key is scoped to a project, not shared across projects). Free includes one Cloud project, so giving several services each their own project needs a plan with enough Cloud projects for that — Team or Corporate. See [Plans & Billing](/cloud/how-to/billing) for what each plan includes.
+This pattern works best when each service gets its **own Cloud project** (a key is scoped to a project, not shared across projects). Basic includes one Cloud project. For several services, choose a plan with enough projects: Pro includes three, Max five, and Scale ten by default. Local and Cloud projects share that allowance on paid plans. Check your workspace's Billing page for its current limits and see [Plans & Billing](/cloud/how-to/billing) for the available plans.
 
 ## Get started
 

@@ -8,7 +8,7 @@
 
 -   Lists every project in the current Organization with its type (**Local** or **Cloud**), name, slug, and last activity, and links straight to its Overview. **Cloud** projects show a stored-memory count; **Local** projects may show `n/a` there since memory content stays on your Core.
 -   Creates new projects from **New project** — you pick a type, **Local** (Connected Local, backed by your own Core) or **Cloud** (Atomic Memory, fully managed).
--   Your plan determines how many of each type you can have: Open Source includes one Local project and zero Cloud projects; Free keeps your Local project and unlocks one Cloud project. See [Plans & Billing](/cloud/how-to/billing) for what's included.
+-   Your plan determines your project allowance. Open Source includes one Local project and zero Cloud projects; Basic includes one Local and one Cloud project. Pro, Max, and Scale share their project allowance across Local and Cloud projects. See [Plans & Billing](/cloud/how-to/billing) for what's included.
 
 ## How it works
 
@@ -25,7 +25,7 @@ A Local project's Core must be reachable from your browser (`am init` wires this
 
 -   **Isolated projects** — memories, keys, traces, and usage stay scoped to a single project.
 -   **Local or Cloud** — run Core yourself, or let Atomic Memory host the data.
--   **Type-aware limits** — Local and Cloud project counts are capped separately by your plan, and the page shows usage against each.
+-   **Project limits** — Open Source and Basic cap Local and Cloud projects separately. Paid plans cap the combined count.
 
 ## Related
 

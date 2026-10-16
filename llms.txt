@@ -20,12 +20,13 @@
 - [Switch Hosted Cloud and Connected Local](https://docs.atomicstrata.ai/cloud/faq/switch-cli-profiles.md): FAQ for installing both CLI profiles and switching the active default between Hosted Cloud and Connected Local.
 - [Managing API Keys](https://docs.atomicstrata.ai/cloud/how-to/api-keys.md): The API Keys page issues and manages the Atomic Memory credentials your application uses to authenticate against a Cloud project's memory API.
 - [Reading the Audit Log](https://docs.atomicstrata.ai/cloud/how-to/audit-log.md): The Audit Log records the administrative actions taken on a Cloud project - key, settings, and lifecycle changes - so you can see who changed what and when.
-- [Plans & Billing](https://docs.atomicstrata.ai/cloud/how-to/billing.md): Plans & Billing shows your Organization's current plan and tracks project and memory-operation usage against it.
+- [Plans & Billing](https://docs.atomicstrata.ai/cloud/how-to/billing.md): Plans & Billing shows your workspace's current plan and tracks project and memory-operation usage against it.
 - [Resolving Conflicts](https://docs.atomicstrata.ai/cloud/how-to/conflicts.md): The Conflict queue is where an admin reviews competing beliefs the memory layer could not reconcile on its own and applies a resolution.
 - [The Dashboard](https://docs.atomicstrata.ai/cloud/how-to/dashboard.md): The Dashboard is a project's landing page - headline stats, copy-ready tool snippets, and recent activity in one view.
 - [Migrate to Atomic Memory](https://docs.atomicstrata.ai/cloud/how-to/migrate.md): Move memories from a Connected Local project into an Atomic Memory project with am migrate export and am migrate import.
 - [Using the Playground](https://docs.atomicstrata.ai/cloud/how-to/playground.md): The Playground lets you ingest memories and run searches against your project straight from the dashboard - no terminal, no client code.
 - [Projects](https://docs.atomicstrata.ai/cloud/how-to/projects.md): Projects are the isolated containers that hold your memories, API keys, and traces - Local (Connected Local, your own Core) or Cloud (Atomic Memory, fully managed).
+- [Redeem a coupon](https://docs.atomicstrata.ai/cloud/how-to/redeem-coupons.md): Apply a coupon to your AtomicMemory workspace without a card or automatic charge.
 - [Project Settings](https://docs.atomicstrata.ai/cloud/how-to/settings.md): Project Settings is where you rename a project, see where its memory data lives, export it, manage the organization, and delete the project.
 - [Understanding Traces](https://docs.atomicstrata.ai/cloud/how-to/traces.md): The Traces page records what your memory layer did on every request - each retrieval, mutation, and package call, inspectable down to the memories and reasoning involved.
 - [Usage & Limits](https://docs.atomicstrata.ai/cloud/how-to/usage.md): The Usage page reports a project's request volumes, storage metrics, and cost drivers alongside your Organization's plan limits.
